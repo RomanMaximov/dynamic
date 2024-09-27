@@ -1,0 +1,3 @@
+C:/C/C projects/DynamicCollection/cmake-build-debug/CMakeFiles/DynamicCollection.dir
+C:/C/C projects/DynamicCollection/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/C/C projects/DynamicCollection/cmake-build-debug/CMakeFiles/rebuild_cache.dir
