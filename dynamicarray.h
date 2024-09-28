@@ -33,15 +33,19 @@ StringList stringListOf(int, ...);
 
 void addAllInt(IntList, IntList);
 void addAllDouble(DoubleList, DoubleList);
+//void addAllStr(StringList, StringList);
 
 unsigned int getElemInt(IntList, int);
 double getElemDouble(DoubleList, int);
+//string getElemStr(StringList, int);
 
 void setElemInt(IntList, int, int);
 void setElemDouble(DoubleList, int, double);
+//void setElementStr(StringList, int, string);
 
 void removeElemInt(IntList, int);
 void removeElemDouble(DoubleList, int);
+void removeElemStr(StringList, int);
 
 char* toStringInt(IntList);
 char* toStringDouble(DoubleList);
@@ -52,6 +56,7 @@ void printArrayString(StringList);
 
 void clearInt(IntList);
 void clearDouble(DoubleList);
+void clearStrList(StringList);
 
 void deleteArrayInt(IntList);
 void deleteArrayDouble(DoubleList);
@@ -59,16 +64,22 @@ void deleteArrayString(StringList);
 
 void sortInt(IntList);
 void sortDouble(DoubleList);
+void sortStrList(StringList);
+void sortReverseStrList(StringList);
 
 bool containsInt(IntList, int);
 bool containsDouble(DoubleList, double);
+bool containsStr(StringList, string);
 
-int isEmptyInt(IntList);
-int isEmptyDouble(DoubleList);
+bool isEmptyInt(IntList);
+bool isEmptyDouble(DoubleList);
+bool isEmptyStrList(StringList);
 
 void reverseArrayInt(IntList);
 void reverseArrayDouble(DoubleList);
+void reverseArrayStr(StringList);
 
+bool equalsStrLists(StringList, StringList);
 
 #endif
 

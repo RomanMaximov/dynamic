@@ -106,7 +106,8 @@ typedef struct StrStrTreeMap {
 
 #define removeElem(T, V) _Generic((T), \
     DoubleList : removeElemDouble,\
-    IntList : removeElemInt \
+    IntList : removeElemInt,  \
+    StringList : removeElemStr \
 )(T, V)
 
 #define clear(T) _Generic((T), \
@@ -122,8 +123,9 @@ typedef struct StrStrTreeMap {
 )(T)
 
 #define sort(T) _Generic((T), \
-    DoubleArray* : sortDouble,\
-    IntList : sortInt \
+    DoubleList : sortDouble, \
+    IntList : sortInt, \
+    StringList : sortStrList \
 )(T)
 
 #define contains(T, V) _Generic((T), \

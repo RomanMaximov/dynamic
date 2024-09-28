@@ -17,7 +17,7 @@ void printString(string s);
 void deleteString(string s);
 /////
 char charAt(string s, int index);
-int containsStr(string str, string substr);
+int containsSubStr(string str, string substr);
 int startsWith(string str, string substr);
 int endsWith(string str, string substr);
 string reverseStr(string s);

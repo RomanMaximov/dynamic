@@ -218,7 +218,7 @@ char charAt(String* s, int index) {
     return ch;
 }
 
-int containsStr(String* str, String* substr) {
+int containsSubStr(String* str, String* substr) {
     if (str == NULL || substr == NULL)
         return 0;
 

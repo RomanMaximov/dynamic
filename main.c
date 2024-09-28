@@ -179,25 +179,32 @@ int main()
     deleteString(sub2);
     deleteString(sub3);
 
-    string s5 = stringOf("don,sun,dog,STRING,milk,bob,ron,See,str11,srt12,str13");
+    string s5 = stringOf("don,sun,dog");//,string,milk,bob,ron,see,str11,str12,str13");
     printString(s5);
     puts("============================================");
     StringList stringList = newList(stringList);
+    StringList stringList2 = newList(stringList2);
     add(stringList, stringOf("str1"));
-    printList(stringList);
     add(stringList, stringOf("str2"));
-    printList(stringList);
     add(stringList, stringOf("str3"));
     printList(stringList);
-    add(stringList, stringOf("str4"));
-    printList(stringList);
-    add(stringList, stringOf("str5"));
-    printList(stringList);
+    add(stringList2, stringOf("str1"));
+    add(stringList2, stringOf("str2"));
+    printList(stringList2);
+
+    if (equalsStrLists(stringList, stringList2)) {
+        puts("Lists are equals.");
+    } else {
+        puts("Lists are NOT equals.");
+    }
 
     StringList strings = split(s5, ',');
     printf("list->count: %d\n", strings->count);
     puts("Strings after split:");
-    add(strings, stringOf("PPPPPPPPPPPPPPPPPPPPP"));
+    add(strings, stringOf("pppp"));
+    printList(strings);
+    puts("remove string with index = 1");
+    removeElem(strings, 1);
     printList(strings);
     puts("print finished");
 
@@ -254,6 +261,7 @@ int main()
     deleteString(empty);
     deleteString(blank);
     deleteList(stringList);
+    deleteList(stringList2);
     deleteList(strings);
 
     return 0;

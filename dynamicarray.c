@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include "dynamicarray.h"
 
-String** increaseCapacity(StringList list);
+
 
 IntList newIntArray(IntList list) {
     list = (IntList)malloc(sizeof(IntArray));
@@ -252,6 +252,31 @@ void removeElemDouble(DoubleList list, int index) {
     free(temp);
 }
 
+void removeElemStr(StringList list, int index) {
+    if (index >= list->count) {
+        puts("Index value out of bound.");
+        return;
+    }
+
+    if (list->count == 1) {
+        free(list->str[0]);
+        list->count = 0;
+        /*list->capacity = 20;
+        list->data = (double*)malloc(list->capacity * sizeof(double));*/
+        return;
+    }
+    String** temp = malloc((list->count - index - 1) * sizeof(String*));
+    unsigned int sizeTemp = list->count - index - 1;
+    int counter = index;
+    ++counter;
+    for (int i = 0; i < sizeTemp; ++i) {
+        temp[i] = list->str[counter++];
+    }
+    memcpy(&list->str[index], temp, sizeTemp * sizeof(String));
+    list->count--;
+    free(temp);
+}
+
 char* toStringInt(IntList list) {
     char* text = NULL;
     if (list->count == 0) {
@@ -267,7 +292,7 @@ char* toStringInt(IntList list) {
     strcpy(text, "[");
     for (int i = 0; i < size(list) - 1; ++i) {
         sprintf(&text[strlen(text)], "%d,", list->data[i]);
-        if (strlen(text) > (int)count * 0.8) {
+        if (strlen(text) > (unsigned long long int)(count * 0.8)) {
             count *= 2;
             text = (char*)realloc(text, count * sizeof(char));
         }
@@ -293,13 +318,13 @@ char* toStringDouble(DoubleList list) {
     strcpy(text, "[");
     for (int i = 0; i < list->count - 1; ++i) {
         sprintf(&text[strlen(text)], "%f,", list->data[i]);
-        if (strlen(text) > (int)count * 0.8) {
+        if (strlen(text) > (unsigned long long int)(count * 0.8)) {
             count *= 2;
             text = (char*)realloc(text, count * sizeof(char));
         }
     }
 
-    sprintf(&text[strlen(text)], "%d", list->data[size(list) - 1]);
+    sprintf(&text[strlen(text)], "%f", list->data[size(list) - 1]);
     strcat(text, "]");
     return text;
 }
@@ -344,14 +369,21 @@ void clearInt(IntList list) {
     free(list->data);
     list->count = 0;
     list->capacity = 20;
-    list->data = (int*)malloc(list->capacity * sizeof(int));
+    list->data = malloc(list->capacity * sizeof(int));
 }
 
 void clearDouble(DoubleList list) {
     free(list->data);
     list->count = 0;
     list->capacity = 20;
-    list->data = (double*)malloc(list->capacity * sizeof(double));
+    list->data = malloc(list->capacity * sizeof(double));
+}
+
+void clearStrList(StringList list) {
+    free(list->str);
+    list->count = 0;
+    list->capacity = 20;
+    list->str = malloc(list->capacity * sizeof(String*));
 }
 
 void deleteArrayInt(IntList list) {
@@ -465,14 +497,104 @@ void quicksortDouble(double* arr, int low, int high)
         quicksortDouble(arr, low, j);
 }
 
+void quicksortStr(String** strList, int low, int high)
+{
+    int i = low;
+    int j = high - 1;
+    String* temp;
+    do {
+        while (j > i) {
+            if (compareTo(strList[i], strList[j]) == 1) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
+                ++i;
+                break;
+            }
+            --j;
+        }
+        while (i < j) {
+            if (compareTo(strList[i], strList[j]) == 1) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
+                --j;
+                break;
+            }
+            ++i;
+        }
+    } while (i < j);
+
+    if (i < high - 1)
+        quicksortStr(strList, i + 1, high);
+    if (low < j - 1)
+        quicksortStr(strList, low, j);
+}
+
+void quicksortReverseStr(String** strList, int low, int high)
+{
+    int i = low;
+    int j = high - 1;
+    String* temp;
+    do {
+        while (j > i) {
+            if (compareTo(strList[i], strList[j]) == -1) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
+                ++i;
+                break;
+            }
+            --j;
+        }
+        while (i < j) {
+            if (compareTo(strList[i], strList[j]) == -1) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
+                --j;
+                break;
+            }
+            ++i;
+        }
+    } while (i < j);
+
+    if (i < high - 1)
+        quicksortReverseStr(strList, i + 1, high);
+    if (low < j - 1)
+        quicksortReverseStr(strList, low, j);
+}
+
 void sortInt(IntList list) {
+    if (list == NULL)
+        return;
+
     int high = sizeIntArray(list);
     quicksortInt(list->data, 0, high);
 }
 
 void sortDouble(DoubleList list) {
+    if (list == NULL)
+        return;
+
     int high = sizeDoubleArray(list);
     quicksortDouble(list->data, 0, high);
+}
+
+void sortStrList(StringList list) {
+    if (list == NULL)
+        return;
+
+    int high = sizeStringArray(list);
+    quicksortStr(list->str, 0, high);
+}
+
+void sortReverseStrList(StringList list) {
+    if (list == NULL)
+        return;
+
+    int high = sizeStringArray(list);
+    quicksortReverseStr(list->str, 0, high);
 }
 
 bool containsInt(IntList list, int num) {
@@ -491,11 +613,16 @@ bool containsDouble(DoubleList list, double num) {
     return false;
 }
 
-int isEmptyInt(IntList list) {
-    return list->count == 0 ? true : false;
+bool isEmptyInt(IntList list) {
+    return list != NULL && list->count == 0;
 }
-int isEmptyDouble(DoubleList list) {
-    return list->count == 0 ? true : false;
+
+bool isEmptyDouble(DoubleList list) {
+    return list != NULL && list->count == 0;
+}
+
+bool isEmptyStrList(StringList list) {
+    return list != NULL && list->count == 0;
 }
 
 void reverseArrayInt(IntList list) {
@@ -522,6 +649,37 @@ void reverseArrayDouble(DoubleList list) {
         ++start;
         --end;
     }
+}
+
+void reverseArrayStr(StringList list) {
+    String** start = list->str;
+    String** end = list->str + (list->count - 1);
+    String* temp;
+    while (start <= end) {
+        temp = *start;
+        *start = *end;
+        *end = temp;
+        ++start;
+        --end;
+    }
+}
+
+bool equalsStrLists(StringList list1, StringList list2) {
+    if (list1 == NULL || list2 == NULL)
+        return false;
+
+    if (list1->count != list2->count)
+        return false;
+
+    unsigned int counter = list1->count;
+    for (int i = 0; i < counter; ++i) {
+        char* temp1 = list1->str[i]->data;
+        char* temp2 = list2->str[i]->data;
+
+        if (strcmp(temp1, temp2) != 0)
+            return false;
+    }
+    return true;
 }
 
 

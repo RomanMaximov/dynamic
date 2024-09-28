@@ -22,8 +22,8 @@
 
 void assertInt(unsigned int result, unsigned int nominal);
 void assertDouble(double , double);
-void assertNotNullInt(IntArray* arr);
-void assertNotNullDouble(DoubleArray*);
+void assertNotNullInt(IntList);
+void assertNotNullDouble(DoubleList);
 void test();
 
 
