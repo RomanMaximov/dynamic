@@ -19,11 +19,11 @@ int sizeStrStrMap(StrStrMap map) {
 }
 
 void addKeyToList(StrStrTree* data, StringList list) {
-    addStringElem(list, data->key);
+    addStrElem(data->key, list);
 }
 
 void addValueToList(StrStrTree** data, StringList list) {
-    addStringElem(list, (*data)->value);
+    addStrElem((*data)->value, list);
 }
 
 void getKeyInOrder(StrStrTree* data, StringList list) {

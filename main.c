@@ -184,12 +184,12 @@ int main()
     puts("============================================");
     StringList stringList = newList(stringList);
     StringList stringList2 = newList(stringList2);
-    add(stringList, stringOf("str1"));
-    add(stringList, stringOf("str2"));
-    add(stringList, stringOf("str3"));
+    add(stringOf("str1"), stringList);
+    add(stringOf("str2"), stringList);
+    add(stringOf("str3"), stringList);
     printList(stringList);
-    add(stringList2, stringOf("str1"));
-    add(stringList2, stringOf("str2"));
+    add(stringOf("str1"), stringList2);
+    add(stringOf("str2"), stringList2);
     printList(stringList2);
 
     if (equalsStrLists(stringList, stringList2)) {
@@ -201,12 +201,28 @@ int main()
     StringList strings = split(s5, ',');
     printf("list->count: %d\n", strings->count);
     puts("Strings after split:");
-    add(strings, stringOf("pppp"));
+    add("pppp", strings);
     printList(strings);
     puts("remove string with index = 1");
     removeElem(strings, 1);
     printList(strings);
     puts("print finished");
+
+    setElem("Set elem", strings, 2);
+    printList(strings);
+
+    int t1[5] = {1,2,3,4,5};
+    int t2[2] = {2, 5};
+    IntList baseList = listOfArr(baseList, t1, 5);
+    IntList removeList = listOfArr(removeList, t2, 2);
+    printList(baseList);
+    printList(removeList);
+    removeAllInt(baseList, removeList);
+    printList(baseList);
+    printf("Count of baseList = %d\n", baseList->count);
+    deleteList(baseList);
+    deleteList(removeList);
+
 
     string s6 = joinStrList("-", strings);
     printString(s6);
@@ -223,6 +239,22 @@ int main()
         puts("string is blank.");
     else
         puts("string is NOT blank.");
+
+    IntList intList = listOf(intList, 3, 333,444,555);
+    printList(intList);
+    deleteList(intList);
+
+    char t[1];
+    StringList strListFromCharArr = listOf(t, 3, "aaa1", "bbb1", "ccc1");
+    printList(strListFromCharArr);
+    StringList strList = listOf(strList, 3, stringOf("aaa2"), stringOf("bbb2"), stringOf("ccc2"));
+    printList(strList);
+    char* charArr[] = {"aaa3", "bbb3", "ccc3"};
+    StringList strList2 = listOfArr(strList, charArr, 3);
+    printList(strList2);
+    deleteList(strListFromCharArr);
+    deleteList(strList);
+    deleteList(strList2);
 
     /*StrStrMap strStrMap = newStrStrMap(strStrMap);
     string s35 = stringOf("35");

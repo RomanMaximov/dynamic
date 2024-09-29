@@ -7,7 +7,8 @@
 #include <stdbool.h>
 #include "dynamicarray.h"
 
-
+void quickSortInt(int*, int, int);
+bool binarySearchInt(int elem, const int* arr, int high);
 
 IntList newIntArray(IntList list) {
     list = (IntList)malloc(sizeof(IntArray));
@@ -90,34 +91,87 @@ void addDoubleElem(DoubleList list, double num) {
     }
 }
 
-void addStringElem(StringList list, String* str) {
-    void* elem = &str;
-
+void addStrElem(String* str, StringList list) {
     if (list->count == list->capacity) {
         list->str = increaseCapacity(list);
-        memcpy(&list->str[list->count], elem, sizeof(String));
+        memcpy(&list->str[list->count], &str, sizeof(String));
         list->count++;
     } else {
-        memcpy(&list->str[list->count], elem, sizeof(String));
+        memcpy(&list->str[list->count], &str, sizeof(String));
         list->count++;
     }
 }
 
-IntList intArrayOf(IntList list, int temp[], int size) {
-    list = (IntList)malloc(sizeof(IntArray));
+void addCharArrElem(char* str, StringList list) {
+    string elem = stringOf(str);
+
+    if (list->count == list->capacity) {
+        list->str = increaseCapacity(list);
+        memcpy(&list->str[list->count], &elem, sizeof(String));
+        list->count++;
+    } else {
+        memcpy(&list->str[list->count], &elem, sizeof(String));
+        list->count++;
+    }
+}
+
+IntList listOfArrInt(IntList list, int* temp, int size) {
+    list = malloc(sizeof(IntArray));
     list->count = 0;
-    list->capacity = size;
+    list->capacity = size < 20 ? 20 : size;
     list->data = malloc(list->capacity * sizeof(int));
     for (int i = 0; i < size; ++i) {
-        int number = temp[i];
-        void* elem = &number;
-        memcpy(&list->data[list->count], elem, sizeof(int));
+        memcpy(&list->data[list->count], &temp[i], sizeof(int));
         list->count++;
     }
     return list;
 }
 
-StringList stringListOf(int size, ...) {
+IntList listOfInt(IntList list, int num, ...) {
+    list = newList(list);
+
+    va_list counter;
+    va_start(counter, num);
+
+    for (int i = 0; i < num; ++i) {
+        int arg = va_arg(counter, int);
+        list->data[i] = arg;
+        list->count++;
+    }
+    va_end(counter);
+
+    return list;
+}
+
+DoubleList listOfDouble(DoubleList list, int num, ...) {
+    list = newList(list);
+
+    va_list counter;
+    va_start(counter, num);
+
+    for (int i = 0; i < num; ++i) {
+        double arg = va_arg(counter, double);
+        list->data[i] = arg;
+        list->count++;
+    }
+    va_end(counter);
+
+    return list;
+}
+
+DoubleList listOfArrDouble(DoubleList list, double* temp, int size) {
+    list = malloc(sizeof(DoubleArray));
+    list->count = 0;
+    list->capacity = size < 20 ? 20 : size;
+    list->data = malloc(list->capacity * sizeof(double));
+    for (int i = 0; i < size; ++i) {
+        memcpy(&list->data[list->count], &temp[i], sizeof(double));
+        list->count++;
+    }
+    return list;
+}
+
+StringList listOfStrLiteral(char* arr, int size, ...) {
     StringList list = newList(list);
 
     va_list counter;
@@ -137,6 +191,49 @@ StringList stringListOf(int size, ...) {
         list->str[i]->count = dataSize;
         list->str[i]->capacity = dataSize;
         strcpy(list->str[i]->data, arg);
+        list->count++;
+    }
+    va_end(counter);
+
+    return list;
+}
+
+StringList listOfCharArr(StringList list, char* arr[], int size) {
+    list = newList(list);
+
+    unsigned long long int dataSize;
+    for (int i = 0; i < size; ++i) {
+        if (list->count == list->capacity) {
+            list->str = increaseCapacity(list);
+        }
+
+        char* data = arr[i];
+        dataSize = strlen(data);
+        list->str[i] = malloc(sizeof(String));
+        list->str[i]->data = malloc((dataSize + 1) * sizeof(char));
+        list->str[i]->count = dataSize;
+        list->str[i]->capacity = dataSize;
+        strcpy(list->str[i]->data, data);
+        list->count++;
+    }
+
+    return list;
+}
+
+StringList listOfStr(StringList list, int size, ...) {
+    list = newList(list);
+
+    va_list counter;
+    va_start(counter, size);
+
+    for (int i = 0; i < size; ++i) {
+        if (list->count == list->capacity) {
+            list->str = increaseCapacity(list);
+        }
+
+        string arg = va_arg(counter, string);
+        list->str[i] = malloc(sizeof(String));
+        list->str[i] = arg;
         list->count++;
     }
     va_end(counter);
@@ -204,12 +301,52 @@ double getElemDouble(DoubleList list, int index) {
     return -INT_MAX;
 }
 
+string getElemStr(StringList list, int index) {
+    if (list == NULL)
+        return NULL;
+
+    if (index >= list->count) {
+        puts("Index value out of bound.");
+        return NULL;
+    }
+
+    return stringOf(list->str[index]->data);
+}
+
 void setElemInt(IntList list, int index, int num) {
     list->data[index] = num;
 }
 
 void setElemDouble(DoubleList list, int index, double num) {
     list->data[index] = num;
+}
+
+bool setElemStr(string str, StringList list, int index) {
+    if (list == NULL)
+        return false;
+
+    if (index >= list->count) {
+        puts("Index value out of bound.");
+        return false;
+    }
+
+    list->str[index] = stringOf(str->data);
+
+    return true;
+}
+
+bool setElemCharArr(char* str, StringList list, int index) {
+    if (list == NULL)
+        return false;
+
+    if (index >= list->count) {
+        puts("Index value out of bound.");
+        return false;
+    }
+
+    list->str[index] = stringOf(str);
+
+    return true;
 }
 
 void removeElemInt(IntList list, int index) {
@@ -274,6 +411,38 @@ void removeElemStr(StringList list, int index) {
     }
     memcpy(&list->str[index], temp, sizeTemp * sizeof(String));
     list->count--;
+    free(temp);
+}
+
+void removeAllInt(IntList list1, IntList list2) {
+    if (list1 == NULL || list2 == NULL || list2->count > list1->count)
+        return;
+
+    int* temp = malloc(list1->count * sizeof(int));
+    int* indexList = malloc(list2->count * sizeof(int));
+    memcpy(&temp[0], list1->data, list1->count * sizeof(int));
+
+    int j = 0;
+    for (int i = 0; i < list2->count; ++i) {
+        int index = indexOfInt(list1, list2->data[i]);
+        if (index != -1)
+            indexList[j++] = index;
+    }
+
+    quickSortInt(indexList, 0, j - 1);
+    free(list1->data);
+    list1->data = malloc(list1->capacity * sizeof(int));
+
+    int index = 0;
+    for (int i = 0; i < list1->count; ++i) {
+        if (binarySearchInt(i, indexList, j - 1))
+            continue;
+
+        list1->data[index] = temp[index];
+        ++index;
+    }
+    list1->count -= j;
+    free(indexList);
     free(temp);
 }
 
@@ -419,17 +588,14 @@ void deleteArrayString(StringList list) {
     free(list);
 }
 
-void quicksortInt(int* arr, int low, int high)
+void quickSortInt(int* arr, int low, int high)
 {
     int i = low;
     int j = high - 1;
     int temp;
-    do
-    {
-        while (j > i)
-        {
-            if (arr[i] > arr[j])
-            {
+    do {
+        while (j > i) {
+            if (arr[i] > arr[j]) {
                 temp = arr[i];
                 arr[i] = arr[j];
                 arr[j] = temp;
@@ -438,10 +604,8 @@ void quicksortInt(int* arr, int low, int high)
             }
             --j;
         }
-        while (i < j)
-        {
-            if (arr[i] > arr[j])
-            {
+        while (i < j) {
+            if (arr[i] > arr[j]) {
                 temp = arr[i];
                 arr[i] = arr[j];
                 arr[j] = temp;
@@ -453,22 +617,19 @@ void quicksortInt(int* arr, int low, int high)
     } while (i < j);
 
     if (i < high - 1)
-        quicksortInt(arr, i + 1, high);
+        quickSortInt(arr, i + 1, high);
     if (low < j - 1)
-        quicksortInt(arr, low, j);
+        quickSortInt(arr, low, j);
 }
 
-void quicksortDouble(double* arr, int low, int high)
+void quickSortDouble(double* arr, int low, int high)
 {
     int i = low;
     int j = high - 1;
-    float temp;
-    do
-    {
-        while (j > i)
-        {
-            if (arr[i] > arr[j])
-            {
+    double temp;
+    do {
+        while (j > i) {
+            if (arr[i] > arr[j]) {
                 temp = arr[i];
                 arr[i] = arr[j];
                 arr[j] = temp;
@@ -477,10 +638,8 @@ void quicksortDouble(double* arr, int low, int high)
             }
             --j;
         }
-        while (i < j)
-        {
-            if (arr[i] > arr[j])
-            {
+        while (i < j) {
+            if (arr[i] > arr[j]) {
                 temp = arr[i];
                 arr[i] = arr[j];
                 arr[j] = temp;
@@ -492,12 +651,12 @@ void quicksortDouble(double* arr, int low, int high)
     } while (i < j);
 
     if (i < high - 1)
-        quicksortDouble(arr, i + 1, high);
+        quickSortDouble(arr, i + 1, high);
     if (low < j - 1)
-        quicksortDouble(arr, low, j);
+        quickSortDouble(arr, low, j);
 }
 
-void quicksortStr(String** strList, int low, int high)
+void quickSortStr(String** strList, int low, int high)
 {
     int i = low;
     int j = high - 1;
@@ -526,12 +685,12 @@ void quicksortStr(String** strList, int low, int high)
     } while (i < j);
 
     if (i < high - 1)
-        quicksortStr(strList, i + 1, high);
+        quickSortStr(strList, i + 1, high);
     if (low < j - 1)
-        quicksortStr(strList, low, j);
+        quickSortStr(strList, low, j);
 }
 
-void quicksortReverseStr(String** strList, int low, int high)
+void quickSortReverseStr(String** strList, int low, int high)
 {
     int i = low;
     int j = high - 1;
@@ -560,9 +719,9 @@ void quicksortReverseStr(String** strList, int low, int high)
     } while (i < j);
 
     if (i < high - 1)
-        quicksortReverseStr(strList, i + 1, high);
+        quickSortReverseStr(strList, i + 1, high);
     if (low < j - 1)
-        quicksortReverseStr(strList, low, j);
+        quickSortReverseStr(strList, low, j);
 }
 
 void sortInt(IntList list) {
@@ -570,7 +729,7 @@ void sortInt(IntList list) {
         return;
 
     int high = sizeIntArray(list);
-    quicksortInt(list->data, 0, high);
+    quickSortInt(list->data, 0, high);
 }
 
 void sortDouble(DoubleList list) {
@@ -578,7 +737,7 @@ void sortDouble(DoubleList list) {
         return;
 
     int high = sizeDoubleArray(list);
-    quicksortDouble(list->data, 0, high);
+    quickSortDouble(list->data, 0, high);
 }
 
 void sortStrList(StringList list) {
@@ -586,7 +745,7 @@ void sortStrList(StringList list) {
         return;
 
     int high = sizeStringArray(list);
-    quicksortStr(list->str, 0, high);
+    quickSortStr(list->str, 0, high);
 }
 
 void sortReverseStrList(StringList list) {
@@ -594,7 +753,7 @@ void sortReverseStrList(StringList list) {
         return;
 
     int high = sizeStringArray(list);
-    quicksortReverseStr(list->str, 0, high);
+    quickSortReverseStr(list->str, 0, high);
 }
 
 bool containsInt(IntList list, int num) {
@@ -682,6 +841,30 @@ bool equalsStrLists(StringList list1, StringList list2) {
     return true;
 }
 
+int indexOfInt(IntList list, int elem) {
+    if (list == NULL)
+        return -1;
 
+    for (int i = 0; i < sizeIntArray(list); ++i) {
+        if (list->data[i] == elem)
+            return i;
+    }
+    return -1;
+}
+
+bool binarySearchInt(int elem, const int* arr, int high) {
+    int low, middle;
+    low = 0;
+    while (low <= high) {
+        middle = (low + high) / 2;
+        if (elem < arr[middle])
+            high = middle - 1;
+        else if (elem > arr[middle])
+            low = middle + 1;
+        else
+            return true;
+    }
+    return false;
+}
 
 

@@ -10,7 +10,7 @@ void test() {
     free(arrInt);
 
     int temp[] = {23, 67, 55, 4};
-    arrInt = listOf(arrInt, temp, 4);
+    arrInt = listOfArr(arrInt, temp, 4);
     printf("%s ", "array not null");
     assertNotNull(arrInt);
     printf("%s ", "count");

@@ -60,9 +60,17 @@ typedef struct StrStrTreeMap {
     StringList : newStringArray \
 )(T)
 
-#define listOf(T, V, K) _Generic((T), \
-    DoubleList : doubleArrayOf,\
-    IntList : intArrayOf \
+#define listOf(T, V, ...) _Generic((T), \
+    DoubleList : listOfDouble, \
+    IntList : listOfInt, \
+    StringList : listOfStr,  \
+    char* : listOfStrLiteral \
+)(T, V, __VA_ARGS__)
+
+#define listOfArr(T, V, K) _Generic((T), \
+    DoubleList : listOfArrDouble,\
+    IntList : listOfArrInt,              \
+    StringList : listOfCharArr  \
 )(T, V, K)
 
 #define printList(T) _Generic((T), \
@@ -81,7 +89,8 @@ typedef struct StrStrTreeMap {
 #define add(T, V) _Generic((T), \
     IntList: addIntElem, \
     DoubleList: addDoubleElem, \
-    StringList: addStringElem \
+    string: addStrElem, \
+    char* : addCharArrElem \
 )(T, V)
 
 #define addAll(T, V) _Generic((T), \
@@ -96,7 +105,9 @@ typedef struct StrStrTreeMap {
 
 #define setElem(T, V, K) _Generic((T), \
     DoubleList : setElemDouble,\
-    IntList : setElemInt \
+    IntList : setElemInt, \
+    string : setElemStr,  \
+    char* : setElemCharArr \
 )(T, V, K)
 
 #define toString(T) _Generic((T), \
@@ -112,7 +123,8 @@ typedef struct StrStrTreeMap {
 
 #define clear(T) _Generic((T), \
     DoubleList : clearDouble,\
-    IntList : clearInt,     \
+    IntList : clearInt, \
+    StringList : clearStrList, \
     StrStrMap : clearStrStrMap \
 )(T)
 
