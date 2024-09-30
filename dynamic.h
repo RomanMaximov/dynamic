@@ -70,7 +70,7 @@ typedef struct StrStrTreeMap {
 #define listOfArr(T, V, K) _Generic((T), \
     DoubleList : listOfArrDouble,\
     IntList : listOfArrInt,              \
-    StringList : listOfCharArr  \
+    StringList : listOfArrChar  \
 )(T, V, K)
 
 #define printList(T) _Generic((T), \
@@ -95,7 +95,8 @@ typedef struct StrStrTreeMap {
 
 #define addAll(T, V) _Generic((T), \
     DoubleList : addAllDouble,\
-    IntList : addAllInt \
+    IntList : addAllInt, \
+    StringList : addAllStr  \
 )(T, V)
 
 #define getElem(T, V) _Generic((T), \
@@ -114,6 +115,13 @@ typedef struct StrStrTreeMap {
     DoubleList : toStringDouble,\
     IntList : toStringInt \
 )(T)
+
+#define indexOf(T, V) _Generic((T), \
+    DoubleList : indexOfDouble,\
+    IntList : indexOfInt, \
+    StringList : indexOfStrList,    \
+    string : indexOfStr  \
+)(T, V)
 
 #define removeElem(T, V) _Generic((T), \
     DoubleList : removeElemDouble,\
@@ -142,7 +150,14 @@ typedef struct StrStrTreeMap {
 
 #define contains(T, V) _Generic((T), \
     DoubleList : containsDouble,\
-    IntList : containsInt \
+    IntList : containsInt,  \
+    StringList : containsStr \
+)(T, V)
+
+#define containsAll(T, V) _Generic((T), \
+    DoubleList : containsAllDouble,\
+    IntList : containsAllInt,  \
+    StringList : containsAllStr \
 )(T, V)
 
 #define isEmpty(T) _Generic((T), \

@@ -208,11 +208,12 @@ char charAt(String* s, int index) {
         return '1';
     }
 
-    int length = s->count - 1;
-    if (index >= length) {
-        puts("Out of bound exception.");
+    unsigned int length = s->count - 1;
+    if (index < 0 || index >= length) {
+        puts("Error: Index value out of bound.");
         return '1';
     }
+
     const char* str = s->data;
     char ch = *(str + index);
     return ch;
@@ -294,7 +295,7 @@ string reverseStr(string s) {
     return stringOf(temp);
 }
 
-long indexOf(string s, char ch) {
+long indexOfStr(string s, char ch) {
     if (s == NULL || s->count == 0)
         return -1;
 
@@ -311,7 +312,7 @@ long indexOf(string s, char ch) {
     return -1;
 }
 
-long indexOfStr(string str, string sub) {
+long indexOfSubStr(string str, string sub) {
     if (str == NULL || sub == NULL || sub->count > str->count)
         return -1;
 

@@ -192,7 +192,7 @@ int main()
     add(stringOf("str2"), stringList2);
     printList(stringList2);
 
-    if (equalsStrLists(stringList, stringList2)) {
+    if (isEqualStrLists(stringList, stringList2)) {
         puts("Lists are equals.");
     } else {
         puts("Lists are NOT equals.");
@@ -247,11 +247,23 @@ int main()
     char t[1];
     StringList strListFromCharArr = listOf(t, 3, "aaa1", "bbb1", "ccc1");
     printList(strListFromCharArr);
+
     StringList strList = listOf(strList, 3, stringOf("aaa2"), stringOf("bbb2"), stringOf("ccc2"));
     printList(strList);
+
     char* charArr[] = {"aaa3", "bbb3", "ccc3"};
     StringList strList2 = listOfArr(strList, charArr, 3);
     printList(strList2);
+    addAll(strList, strList2);
+    add(stringOf("oooooooooo"), strList2);
+    printList(strList);
+    if (containsAll(strList, strList2)) {
+        puts("Contains all.");
+    } else {
+        puts("Not contains all.");
+    }
+
+
     deleteList(strListFromCharArr);
     deleteList(strList);
     deleteList(strList2);

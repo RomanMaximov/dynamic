@@ -30,7 +30,7 @@ void addCharArrElem(char*, StringList);
 
 IntList listOfArrInt(IntList, int*, int);
 DoubleList listOfArrDouble(DoubleList, double*, int);
-StringList listOfCharArr(StringList, char* arr[], int);
+StringList listOfArrChar(StringList, char* arr[], int);
 
 IntList listOfInt(IntList, int, ...);
 DoubleList listOfDouble(DoubleList, int, ...);
@@ -39,7 +39,7 @@ StringList listOfStrLiteral(char*, int, ...);
 
 void addAllInt(IntList, IntList);
 void addAllDouble(DoubleList, DoubleList);
-//void addAllStr(StringList, StringList);
+void addAllStr(StringList, StringList);
 
 unsigned int getElemInt(IntList, int);
 double getElemDouble(DoubleList, int);
@@ -80,6 +80,14 @@ bool containsInt(IntList, int);
 bool containsDouble(DoubleList, double);
 bool containsStr(StringList, string);
 
+bool containsAllInt(IntList, IntList);
+bool containsAllDouble(DoubleList, DoubleList);
+bool containsAllStr(StringList, StringList);
+
+// containsAny()
+
+// subtract(Collection, Collection);
+
 bool isEmptyInt(IntList);
 bool isEmptyDouble(DoubleList);
 bool isEmptyStrList(StringList);
@@ -89,10 +97,14 @@ void reverseArrayDouble(DoubleList);
 void reverseArrayStr(StringList);
 
 int indexOfInt(IntList, int);
-//int indexOfDouble(DoubleList, double);
-//int indexOfStr(StringList, string);
+int indexOfDouble(DoubleList, double);
+int indexOfStrList(StringList, string);
 
-bool equalsStrLists(StringList, StringList);
+bool isEqualStrLists(StringList, StringList);
+
+
+// emptyIfNull()
+// return collection == null ? emptyCollection() : collection;
 
 #endif
 

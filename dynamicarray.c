@@ -37,8 +37,6 @@ StringList newStringArray(StringList temp) {
     return list;
 }
 
-
-
 int sizeIntArray(IntList list) {
     return (int)list->count;
 }
@@ -115,18 +113,6 @@ void addCharArrElem(char* str, StringList list) {
     }
 }
 
-IntList listOfArrInt(IntList list, int* temp, int size) {
-    list = malloc(sizeof(IntArray));
-    list->count = 0;
-    list->capacity = size < 20 ? 20 : size;
-    list->data = malloc(list->capacity * sizeof(int));
-    for (int i = 0; i < size; ++i) {
-        memcpy(&list->data[list->count], &temp[i], sizeof(int));
-        list->count++;
-    }
-    return list;
-}
-
 IntList listOfInt(IntList list, int num, ...) {
     list = newList(list);
 
@@ -134,6 +120,7 @@ IntList listOfInt(IntList list, int num, ...) {
     va_start(counter, num);
 
     for (int i = 0; i < num; ++i) {
+        // TODO сделать проверку на превышение capacity
         int arg = va_arg(counter, int);
         list->data[i] = arg;
         list->count++;
@@ -150,24 +137,13 @@ DoubleList listOfDouble(DoubleList list, int num, ...) {
     va_start(counter, num);
 
     for (int i = 0; i < num; ++i) {
+        // TODO сделать проверку на превышение capacity
         double arg = va_arg(counter, double);
         list->data[i] = arg;
         list->count++;
     }
     va_end(counter);
 
-    return list;
-}
-
-DoubleList listOfArrDouble(DoubleList list, double* temp, int size) {
-    list = malloc(sizeof(DoubleArray));
-    list->count = 0;
-    list->capacity = size < 20 ? 20 : size;
-    list->data = malloc(list->capacity * sizeof(double));
-    for (int i = 0; i < size; ++i) {
-        memcpy(&list->data[list->count], &temp[i], sizeof(double));
-        list->count++;
-    }
     return list;
 }
 
@@ -181,7 +157,7 @@ StringList listOfStrLiteral(char* arr, int size, ...) {
 
     for (int i = 0; i < size; ++i) {
         if (list->count == list->capacity) {
-            list->str = increaseCapacity(list);
+            list->str = increaseCapacity(list);  // TODO сделать общую функцию через дженерик
         }
 
         char* arg = va_arg(counter, char*);
@@ -194,28 +170,6 @@ StringList listOfStrLiteral(char* arr, int size, ...) {
         list->count++;
     }
     va_end(counter);
-
-    return list;
-}
-
-StringList listOfCharArr(StringList list, char* arr[], int size) {
-    list = newList(list);
-
-    unsigned long long int dataSize;
-    for (int i = 0; i < size; ++i) {
-        if (list->count == list->capacity) {
-            list->str = increaseCapacity(list);
-        }
-
-        char* data = arr[i];
-        dataSize = strlen(data);
-        list->str[i] = malloc(sizeof(String));
-        list->str[i]->data = malloc((dataSize + 1) * sizeof(char));
-        list->str[i]->count = dataSize;
-        list->str[i]->capacity = dataSize;
-        strcpy(list->str[i]->data, data);
-        list->count++;
-    }
 
     return list;
 }
@@ -241,17 +195,51 @@ StringList listOfStr(StringList list, int size, ...) {
     return list;
 }
 
-DoubleList doubleArrayOf(DoubleList list, double temp[], int size) {
-    list = (DoubleList)malloc(sizeof(DoubleArray));
+IntList listOfArrInt(IntList list, int* temp, int size) {
+    list = malloc(sizeof(IntArray));
     list->count = 0;
-    list->capacity = size;
-    list->data = (double*)malloc(list->capacity * sizeof(double));
+    list->capacity = size < 20 ? 20 : size;
+    list->data = malloc(list->capacity * sizeof(int));
     for (int i = 0; i < size; ++i) {
-        double number = temp[i];
-        void* elem = &number;
-        memcpy(&list->data[list->count], elem, sizeof(double));
+        // TODO сделать проверку на превышение capacity
+        memcpy(&list->data[list->count], &temp[i], sizeof(int));
         list->count++;
     }
+    return list;
+}
+
+DoubleList listOfArrDouble(DoubleList list, double* temp, int size) {
+    list = malloc(sizeof(DoubleArray));
+    list->count = 0;
+    list->capacity = size < 20 ? 20 : size;
+    list->data = malloc(list->capacity * sizeof(double));
+    for (int i = 0; i < size; ++i) {
+        // TODO сделать проверку на превышение capacity
+        memcpy(&list->data[list->count], &temp[i], sizeof(double));
+        list->count++;
+    }
+    return list;
+}
+
+StringList listOfArrChar(StringList list, char* arr[], int size) {
+    list = newList(list);
+
+    unsigned long long int dataSize;
+    for (int i = 0; i < size; ++i) {
+        if (list->count == list->capacity) {
+            list->str = increaseCapacity(list);
+        }
+
+        char* data = arr[i];
+        dataSize = strlen(data);
+        list->str[i] = malloc(sizeof(String));
+        list->str[i]->data = malloc((dataSize + 1) * sizeof(char));
+        list->str[i]->count = dataSize;
+        list->str[i]->capacity = dataSize;
+        strcpy(list->str[i]->data, data);
+        list->count++;
+    }
+
     return list;
 }
 
@@ -285,28 +273,62 @@ void addAllDouble(DoubleList dest, DoubleList from) {
     }
 }
 
-unsigned int getElemInt(IntList list, int index) {
-    if (list->count > 0) {
-        if (index < list->count)
-            return list->data[index];
+void addAllStr(StringList dest, StringList from) {
+    int sizeFrom = size(from);
+    int sizeDest = size(dest);
+    if ((sizeDest + sizeFrom) > dest->capacity) {
+        dest->capacity += sizeFrom;
+        dest->str = realloc(dest->str, dest->capacity * sizeof(String*));
+        for (int i = sizeFrom; i < sizeFrom + sizeDest; ++i) {
+            dest->str[i] = stringOf(from->str[i]->data);
+        }
+        dest->count += sizeFrom;
     }
-    return -INT_MAX;
+    else {
+        int indexFrom = 0;
+        for (int i = sizeDest; i < sizeFrom + sizeDest; ++i) {
+            dest->str[i] = stringOf(from->str[indexFrom++]->data);
+        }
+        dest->count += sizeFrom;
+    }
+}
+
+unsigned int getElemInt(IntList list, int index) {
+    if (list == NULL) {
+        puts("ERROR: List is null.");
+        return EXIT_FAILURE;
+    }
+
+    if (index < 0 || index >= list->count) {
+        puts("ERROR: Index value out of bound.");
+        return EXIT_FAILURE;
+    }
+
+    return list->data[index];
 }
 
 double getElemDouble(DoubleList list, int index) {
-    if (list->count > 0) {
-        if (index < list->count)
-            return list->data[index];
+    if (list == NULL) {
+        puts("ERROR: List is null.");
+        return EXIT_FAILURE;
     }
-    return -INT_MAX;
+
+    if (index < 0 || index >= list->count) {
+        puts("ERROR: Index value out of bound.");
+        return EXIT_FAILURE;
+    }
+
+    return list->data[index];
 }
 
 string getElemStr(StringList list, int index) {
-    if (list == NULL)
+    if (list == NULL) {
+        puts("ERROR: List is null.");
         return NULL;
+    }
 
-    if (index >= list->count) {
-        puts("Index value out of bound.");
+    if (index < 0 || index >= list->count) {
+        puts("ERROR: Index value out of bound.");
         return NULL;
     }
 
@@ -772,6 +794,55 @@ bool containsDouble(DoubleList list, double num) {
     return false;
 }
 
+bool containsStr(StringList list, string str) {
+    if (list == NULL)
+        return false;
+
+    for (int i = 0; i < list->count; ++i) {
+        if (compareTo(list->str[i], str) == 0)
+            return true;
+    }
+    return false;
+}
+
+bool containsAllInt(IntList list1, IntList list2) {
+    if (list1 == NULL || list2 == NULL || list2->count > list1->count)
+        return false;
+
+    for (int i = 0; i < list2->count; ++i) {
+        if (indexOfInt(list1, list2->data[i]) == -1)
+            return false;
+    }
+
+    return true;
+}
+
+bool containsAllDouble(DoubleList list1, DoubleList list2) {
+    if (list1 == NULL || list2 == NULL || list2->count > list1->count)
+        return false;
+
+    for (int i = 0; i < list1->count; ++i) {
+        for (int j = 0; j < list2->count; ++j) {
+            if (fabs(list1->data[i] - list2->data[j]) > 0.000001)
+                return false;
+        }
+    }
+
+    return true;
+}
+
+bool containsAllStr(StringList list1, StringList list2) {
+    if (list1 == NULL || list2 == NULL || list2->count > list1->count)
+        return false;
+
+    for (int i = 0; i < list2->count; ++i) {
+        if (indexOfStrList(list1, list2->str[i]) == -1)
+            return false;
+    }
+
+    return true;
+}
+
 bool isEmptyInt(IntList list) {
     return list != NULL && list->count == 0;
 }
@@ -823,7 +894,7 @@ void reverseArrayStr(StringList list) {
     }
 }
 
-bool equalsStrLists(StringList list1, StringList list2) {
+bool isEqualStrLists(StringList list1, StringList list2) {
     if (list1 == NULL || list2 == NULL)
         return false;
 
@@ -845,8 +916,30 @@ int indexOfInt(IntList list, int elem) {
     if (list == NULL)
         return -1;
 
-    for (int i = 0; i < sizeIntArray(list); ++i) {
+    for (int i = 0; i < list->count; ++i) {
         if (list->data[i] == elem)
+            return i;
+    }
+    return -1;
+}
+
+int indexOfDouble(DoubleList list, double elem) {
+    if (list == NULL)
+        return -1;
+
+    for (int i = 0; i < list->count; ++i) {
+        if (fabs(list->data[i] - elem) < 0.000001)
+            return i;
+    }
+    return -1;
+}
+
+int indexOfStrList(StringList list, string str) {
+    if (list == NULL)
+        return -1;
+
+    for (int i = 0; i < list->count; ++i) {
+        if (compareTo(list->str[i], str) == 0)
             return i;
     }
     return -1;
