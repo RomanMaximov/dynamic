@@ -10,10 +10,21 @@
 
 
 IntLinkedList newIntLinkedList();
-unsigned int sizeList(IntLinkedList);
+// DoubleLinkedList newDoubleLinkedList();
+// StringLinkedList newStrLinkedList();
+
+int sizeIntLinkedList(IntLinkedList);
+// int sizeDoubleLinkedList(DoubleLinkedList);
+// int sizeStrLinkedList(StringLinkedList);
+
 bool isEmptyIntLinkedList(IntLinkedList);
-void fillNode(LinkedListInt*, unsigned int);
-void insertBegin(IntLinkedList, unsigned int);
+// bool isEmptyDoubleLinkedList(DoubleLinkedList);
+// bool isEmptyStrLinkedList(StringLinkedList);
+
+void fillNode(IntNode, int);
+
+
+void insertBegin(IntLinkedList, int);
 void insertEnd(IntLinkedList, unsigned int);
 IntLinkedList linkedListOf(int, ...);
 void printLinkedList(IntLinkedList);

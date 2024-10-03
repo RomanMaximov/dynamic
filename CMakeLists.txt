@@ -13,4 +13,4 @@ add_executable(DynamicCollection main.c
         string.h
         dynamicarray.h
         dynamic.h
-        testarray.c)
+        testarray.c dynamicset.h)

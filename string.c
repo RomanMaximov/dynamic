@@ -231,25 +231,25 @@ int containsSubStr(String* str, String* substr) {
         return 0;
 }
 
-int startsWith(string str, string substr) {
+bool startsWith(string str, string substr) {
     if (str == NULL || substr == NULL || substr->count > str->count)
-        return 0;
+        return false;
 
     const char* text = str->data;
     const char* sub = substr->data;
     while(*sub != '\0') {
         if (*text != *sub)
-            return 0;
+            return false;
 
         ++text;
         ++sub;
     }
-    return 1;
+    return true;
 }
 
-int endsWith(string str, string substr) {
+bool endsWith(string str, string substr) {
     if (str == NULL || substr == NULL || substr->count > str->count)
-        return 0;
+        return false;
 
     const char* text = str->data;
     const char* sub = substr->data;
@@ -260,12 +260,12 @@ int endsWith(string str, string substr) {
 
     while(*sub != '\0') {
         if (*text != *sub)
-            return 0;
+            return false;
 
         ++text;
         ++sub;
     }
-    return 1;
+    return true;
 }
 
 string reverseStr(string s) {
@@ -325,7 +325,7 @@ long indexOfSubStr(string str, string sub) {
     while(*text != '\0') {
         ++counter;
         if (*text == *subCurrent) {
-            int isEqual = sub->count - 2;
+            unsigned int isEqual = sub->count - 2;
             textCurrent = text;
             ++textCurrent;
             ++subCurrent;
@@ -338,11 +338,12 @@ long indexOfSubStr(string str, string sub) {
                 ++subCurrent;
             }
 
-            if (isEqual == 0)
+            if (isEqual == 0) {
                 return counter - 1;
-            else
+            } else {
                 ++text;
                 subCurrent = substr;
+            }
         } else {
             ++text;
         }
@@ -430,20 +431,6 @@ StringList split(string s, char delimeter) {
     return list;
 }
 
-String** increaseCapacity(StringList list) {
-    list->capacity *= 2;
-    String** temp = list->str;
-    list->str = malloc(list->capacity * sizeof(String*));
-    for (int i = 0; i < list->capacity; ++i) {
-        list->str[i] = NULL;
-    }
-    for (int i = 0; i < list->count; ++i) {
-        memcpy(&list->str[i], &temp[i], sizeof(String));
-    }
-
-    return list->str;
-}
-
 string joinStrList(char* delimeter, StringList list) {
     unsigned int count = 0;
     unsigned int letterCounter = 0;
@@ -479,24 +466,49 @@ string joinStrList(char* delimeter, StringList list) {
     return s;
 }
 
-int isEmptyStr(string s) {
-    if (s == NULL || length(s) == 0)
-        return 1;
-    else
-        return 0;
+bool isEmptyStr(string s) {
+    return  s == NULL || s->count == 0;
 }
 
-int isBlank(string s) {
-    if (s == NULL || length(s) == 0)
-        return 0;
+bool isBlank(string s) {
+    if (s == NULL || s->count == 0)
+        return false;
 
     char* text = s->data;
     while (*text != '\0') {
         if (*text != ' ')
-            return 0;
+            return false;
 
         ++text;
     }
-    return 1;
+    return true;
+}
+
+bool isNotBlank(string s) {
+    if (s == NULL || s->count == 0)
+        return false;
+
+    char* text = s->data;
+    while (*text != '\0') {
+        if (*text != ' ')
+            return true;
+
+        ++text;
+    }
+    return false;
+}
+
+String** increaseCapacity(StringList list) {
+    list->capacity *= 2;
+    String** temp = list->str;
+    list->str = malloc(list->capacity * sizeof(String*));
+    for (int i = 0; i < list->capacity; ++i) {
+        list->str[i] = NULL;
+    }
+    for (int i = 0; i < list->count; ++i) {
+        memcpy(&list->str[i], &temp[i], sizeof(String));
+    }
+
+    return list->str;
 }
 

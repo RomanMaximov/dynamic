@@ -17,11 +17,11 @@
 
 IntList newIntArray(IntList);
 DoubleList newDoubleArray(DoubleList);
-StringList newStringArray(StringList);
+StringList newStrArray(StringList);
 
-int sizeIntArray(IntList);
-int sizeDoubleArray(DoubleArray*);
-int sizeStringArray(StringList);
+int sizeIntList(IntList);
+int sizeDoubleList(DoubleArray*);
+int sizeStrList(StringList);
 
 void addIntElem(IntList, int);
 void addDoubleElem(DoubleList, double);
@@ -85,16 +85,21 @@ bool containsAllDouble(DoubleList, DoubleList);
 bool containsAllStr(StringList, StringList);
 
 // containsAny()
+bool containsAnyInt(IntList, IntList);
+bool containsAnyDouble(DoubleList, DoubleList);
+bool containsAnyStr(StringList, StringList);
 
 // subtract(Collection, Collection);
+IntList subtractInt(IntList, IntList);
+StringList subtractStr(StringList, StringList);
 
 bool isEmptyInt(IntList);
 bool isEmptyDouble(DoubleList);
 bool isEmptyStrList(StringList);
 
-void reverseArrayInt(IntList);
-void reverseArrayDouble(DoubleList);
-void reverseArrayStr(StringList);
+void reverseListInt(IntList);
+void reverseListDouble(DoubleList);
+void reverseListStr(StringList);
 
 int indexOfInt(IntList, int);
 int indexOfDouble(DoubleList, double);
@@ -102,9 +107,9 @@ int indexOfStrList(StringList, string);
 
 bool isEqualStrLists(StringList, StringList);
 
-
-// emptyIfNull()
-// return collection == null ? emptyCollection() : collection;
+IntList emptyIfNullInt(IntList);
+DoubleList emptyIfNullDouble(DoubleList);
+StringList emptyIfNullStr(StringList);
 
 #endif
 

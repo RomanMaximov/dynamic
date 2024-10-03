@@ -263,10 +263,17 @@ int main()
         puts("Not contains all.");
     }
 
+    puts("===========================================");
+    printList(strList);
+    printList(strList2);
+    StringList subList = subtractStr(strList, strList2);
+    printList(subList);
+
 
     deleteList(strListFromCharArr);
     deleteList(strList);
     deleteList(strList2);
+    deleteList(subList);
 
     /*StrStrMap strStrMap = newStrStrMap(strStrMap);
     string s35 = stringOf("35");

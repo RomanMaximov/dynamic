@@ -1,22 +1,21 @@
 #ifndef DYNAMIC_H
 #define DYNAMIC_H
 
-#define true 1
-#define false 0
+#include <stdbool.h>
 
+
+typedef struct NodeInt {
+    int data;
+    struct NodeInt* next;
+    struct NodeInt* prev;
+} NodeInt;
 
 typedef struct LinkedListInt {
-    unsigned int number;
-    struct LinkedListInt* next;
-    struct LinkedListInt* prev;
-} LinkedListInt;
-
-typedef struct intLinkedList {
     unsigned int count;
-    struct LinkedListInt* linkedList;
-    struct LinkedListInt* begin;
-    struct LinkedListInt* end;
-} intLinkedList;
+    NodeInt* nodes;
+    NodeInt* begin;
+    NodeInt* end;
+} LinkedListInt;
 
 typedef struct IntArray {
     unsigned int count;
@@ -57,7 +56,7 @@ typedef struct StrStrTreeMap {
 #define newList(T) _Generic((T), \
     DoubleList : newDoubleArray,\
     IntList : newIntArray, \
-    StringList : newStringArray \
+    StringList : newStrArray \
 )(T)
 
 #define listOf(T, V, ...) _Generic((T), \
@@ -80,9 +79,9 @@ typedef struct StrStrTreeMap {
 )(T)
 
 #define size(T) _Generic((T), \
-    DoubleList : sizeDoubleArray, \
-    IntList : sizeIntArray, \
-    StringList : sizeStringArray, \
+    DoubleList : sizeDoubleList, \
+    IntList : sizeIntList, \
+    StringList : sizeStrList, \
     StrStrMap : sizeStrStrMap \
 )(T)
 
@@ -160,18 +159,34 @@ typedef struct StrStrTreeMap {
     StringList : containsAllStr \
 )(T, V)
 
+#define containsAny(T, V) _Generic((T), \
+    DoubleList : containsAnyDouble,\
+    IntList : containsAnyInt,  \
+    StringList : containsAnyStr \
+)(T, V)
+
 #define isEmpty(T) _Generic((T), \
     DoubleList : isEmptyDouble,\
-    IntList : isEmptyInt \
+    IntList : isEmptyInt, \
+    StringList : isEmptyStrList, \
+    string : isEmptyStr  \
 )(T)
 
-#define reverseArray(T) _Generic((T), \
-    DoubleList : reverseArrayDouble,\
-    IntList : reverseArrayInt \
+#define reverseList(T) _Generic((T), \
+    DoubleList : reverseListDouble,\
+    IntList : reverseListInt, \
+    StringList : reverseListStr  \
+)(T)
+
+#define emptyIfNull(T) _Generic((T), \
+    DoubleList : emptyIfNullDouble, \
+    IntList : emptyIfNullInt, \
+    StringList : emptyIfNullStr \
 )(T)
 
 
-typedef intLinkedList* IntLinkedList;
+typedef LinkedListInt* IntLinkedList;
+typedef NodeInt* IntNode;
 typedef String* string;
 typedef StringArray* StringList;
 typedef IntArray* IntList;

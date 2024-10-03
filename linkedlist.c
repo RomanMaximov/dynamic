@@ -2,58 +2,57 @@
 
 
 IntLinkedList newIntLinkedList() {
-    IntLinkedList data = malloc(sizeof(intLinkedList));
-    data->count = 0;
-    data->linkedList = NULL;
-    return data;
+    IntLinkedList list = malloc(sizeof(IntLinkedList));
+    list->count = 0;
+    list->nodes = NULL;
+    return list;
 }
 
-unsigned int sizeList(IntLinkedList list) {
-    return list->count;
+int sizeList(IntLinkedList list) {
+    return (int)list->count;
 }
 
 bool isEmptyIntLinkedList(IntLinkedList list) {
-    return list->count == 0 ? true : false;
+    return list == NULL || list->count == 0;
 }
 
-void fillNode(LinkedListInt* node, unsigned int num) {
-    node->number = num;
+void fillNode(IntNode node, int num) {
+    node->data = num;
     node->next = NULL;
     node->prev = NULL;
 }
 
-void insertBegin(IntLinkedList list, unsigned int num) {
-    LinkedListInt* newNodeStart = NULL;
-    LinkedListInt* newNodeEnd = NULL;
-    LinkedListInt* current = NULL;
+void insertBegin(IntLinkedList list, int num) {
+    IntNode newNodeStart = NULL;
+    IntNode newNodeEnd = NULL;
+    IntNode current = NULL;
 
     if (list->count == 0) {
-        newNodeEnd = malloc(sizeof(LinkedListInt));
+        newNodeEnd = malloc(sizeof(NodeInt));
         if (newNodeEnd != NULL) {
             fillNode(newNodeEnd, num);
         }
 
-        newNodeEnd->next = list->linkedList;
-        list->linkedList = newNodeEnd;
-        list->begin = list->linkedList;
+        newNodeEnd = list->nodes;
+        list->nodes = newNodeEnd;
+        list->begin = list->nodes;
         list->end = newNodeEnd;
-    }
-    else {
-        newNodeStart = malloc(sizeof(LinkedListInt));
+    } else {
+        newNodeStart = malloc(sizeof(NodeInt));
         if (newNodeStart != NULL) {
             fillNode(newNodeStart, num);
         }
 
-        newNodeStart->next = list->linkedList;
-        list->linkedList->prev = newNodeStart;
-        list->linkedList = newNodeStart;
-        list->begin = list->linkedList;
+        newNodeStart->next = list->nodes;
+        list->nodes->prev = newNodeStart;
+        list->nodes = newNodeStart;
+        list->begin = list->nodes;
     }
 
     list->count++;
 }
 
-void insertEnd(IntLinkedList list, unsigned int num) {
+/*void insertEnd(IntLinkedList list, unsigned int num) {
     LinkedListInt* newNodeEnd = NULL;
     LinkedListInt* newNode = NULL;
     LinkedListInt* current = list->end;
@@ -81,9 +80,9 @@ void insertEnd(IntLinkedList list, unsigned int num) {
     }
 
     list->count++;
-}
+}*/
 
-IntLinkedList linkedListOf(int paramCount, ...) {
+/*IntLinkedList linkedListOf(int paramCount, ...) {
     IntLinkedList data = malloc(sizeof(intLinkedList));
     data->count = 0;
     data->linkedList = NULL;
@@ -95,9 +94,9 @@ IntLinkedList linkedListOf(int paramCount, ...) {
     }
     va_end(param);
     return data;
-}
+}*/
 
-void printLinkedList(IntLinkedList list) {
+/*void printLinkedList(IntLinkedList list) {
     LinkedListInt* current = list->linkedList;
     printf("%s", "[");
     while (current != NULL) {
@@ -108,8 +107,9 @@ void printLinkedList(IntLinkedList list) {
         current = current->next;
     }
     printf("%s\n", "]");
-}
+}*/
 
+/*
 void deleteLinkedList(IntLinkedList list) {
     if (list != NULL) {
         list->begin = NULL;
@@ -119,4 +119,4 @@ void deleteLinkedList(IntLinkedList list) {
         }
         free(list);
     }
-}
+}*/
