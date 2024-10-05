@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "dynamic.h"
-#include "dynamicarray.h"
-#include "linkedlist.h"
-#include "testarray.h"
-#include "string.h"
-#include "map.h"
+//#include "dynamicarray.h"
+//#include "linkedlist.h"
+//#include "string.h"
+//#include "map.h"
 
 int main()
 {
@@ -171,7 +170,6 @@ int main()
     s2 = reverseStr(s2);
     printString(s2);
     printf("char index: %d\n", indexOf(s2, '?'));
-    printf("str index: %d\n", indexOfStr(s2, sub3));
     deleteString(s2);
     deleteString(s3);
     deleteString(s4);
@@ -199,10 +197,10 @@ int main()
     }
 
     StringList strings = split(s5, ',');
-    printf("list->count: %d\n", strings->count);
     puts("Strings after split:");
     add("pppp", strings);
     printList(strings);
+
     puts("remove string with index = 1");
     removeElem(strings, 1);
     printList(strings);
@@ -219,10 +217,11 @@ int main()
     printList(removeList);
     removeAllInt(baseList, removeList);
     printList(baseList);
-    printf("Count of baseList = %d\n", baseList->count);
+    printf("Count of baseList = %d\n", size(baseList));
     deleteList(baseList);
     deleteList(removeList);
 
+    IntList fff = newList(fff);
 
     string s6 = joinStrList("-", strings);
     printString(s6);
@@ -269,11 +268,12 @@ int main()
     StringList subList = subtractStr(strList, strList2);
     printList(subList);
 
-
     deleteList(strListFromCharArr);
     deleteList(strList);
     deleteList(strList2);
     deleteList(subList);
+
+
 
     /*StrStrMap strStrMap = newStrStrMap(strStrMap);
     string s35 = stringOf("35");

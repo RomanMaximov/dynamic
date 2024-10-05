@@ -8,9 +8,4 @@ add_executable(DynamicCollection main.c
         map.c
         string.c
         linkedlist.c
-        linkedlist.h
-        map.h
-        string.h
-        dynamicarray.h
-        dynamic.h
-        testarray.c dynamicset.h)
+        testarray.c)

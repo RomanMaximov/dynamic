@@ -2,6 +2,9 @@
 #define DYNAMIC_H
 
 #include <stdbool.h>
+#include "dynamicarray.h"
+#include "string.h"
+#include "map.h"
 
 
 typedef struct NodeInt {
@@ -17,41 +20,12 @@ typedef struct LinkedListInt {
     NodeInt* end;
 } LinkedListInt;
 
-typedef struct IntArray {
-    unsigned int count;
-    int* data;
-    unsigned int capacity;
-} IntArray;
-
-typedef struct DoubleArray {
-    unsigned int count;
-    double* data;
-    unsigned int capacity;
-} DoubleArray;
-
-typedef struct String {
-    unsigned int count;
-    char* data;
-    unsigned int capacity;
-} String;
-
-typedef struct StringArray {
-    unsigned int count;
-    String** str;
-    unsigned int capacity;
-} StringArray;
-
-typedef struct StrStrTree {
-    String* key;
-    String* value;
-    struct StrStrTree* left;
-    struct StrStrTree* right;
-} StrStrTree;
-
-typedef struct StrStrTreeMap {
-    unsigned int count;
-    struct StrStrTree* data;
-} StrStrTreeMap;
+typedef struct IntArray IntArray;
+typedef struct DoubleArray DoubleArray;
+typedef struct String String;
+typedef struct StringArray StringArray;
+typedef struct StrStrTree StrStrTree;
+typedef struct StrStrTreeMap StrStrTreeMap;
 
 #define newList(T) _Generic((T), \
     DoubleList : newDoubleArray,\
@@ -184,15 +158,15 @@ typedef struct StrStrTreeMap {
     StringList : emptyIfNullStr \
 )(T)
 
+#define subtract(T, V) _Generic((T), \
+    DoubleList : subtractDouble,\
+    IntList : subtractInt,  \
+    StringList : subtractStr \
+)(T, V)
+
 
 typedef LinkedListInt* IntLinkedList;
 typedef NodeInt* IntNode;
-typedef String* string;
-typedef StringArray* StringList;
-typedef IntArray* IntList;
-typedef DoubleArray* DoubleList;
-typedef StrStrTreeMap* StrStrMap;
-
 
 #endif
 

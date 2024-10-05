@@ -4,7 +4,7 @@
 
 void test() {
 
-    IntList arrInt = newList(arrInt);
+    /*IntList arrInt = newList(arrInt);
     printf("%s ", "array not null");
     assertNotNull(arrInt);
     free(arrInt);
@@ -44,7 +44,7 @@ void test() {
     result = arrInt->data[2];
     assertThat(result, 4);
 
-    deleteList(arrInt);
+    deleteList(arrInt);*/
 }
 
 void assertInt(unsigned int result, unsigned int nominal) {

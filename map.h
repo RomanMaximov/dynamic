@@ -2,8 +2,13 @@
 #define MAP_H
 
 #include <stdbool.h>
-#include "dynamic.h"
+#include "string.h"
+#include "dynamicarray.h"
 
+typedef struct StrStrTree StrStrTree;
+typedef struct StrStrTreeMap StrStrTreeMap;
+typedef struct String String;
+typedef struct StringArray StringArray;
 
 typedef struct EntrySet {
     String* key;
@@ -16,6 +21,9 @@ typedef struct EntrySetArray {
 } EntrySetArray;
 
 typedef EntrySetArray* EntrySetList;
+typedef StrStrTreeMap* StrStrMap;
+typedef String* string;
+typedef StringArray* StringList;
 
 
 StrStrMap newStrStrMap(StrStrMap);

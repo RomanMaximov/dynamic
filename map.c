@@ -3,7 +3,32 @@
 #include <stdbool.h>
 #include "map.h"
 #include "dynamicarray.h"
+#include "string.h"
 
+
+typedef struct StrStrTree {
+    String* key;
+    String* value;
+    struct StrStrTree* left;
+    struct StrStrTree* right;
+} StrStrTree;
+
+typedef struct StrStrTreeMap {
+    unsigned int count;
+    struct StrStrTree* data;
+} StrStrTreeMap;
+
+typedef struct String {
+    unsigned int count;
+    char* data;
+    unsigned int capacity;
+} String;
+
+typedef struct StringArray {
+    unsigned int count;
+    String** str;
+    unsigned int capacity;
+} StringArray;
 
 
 StrStrMap newStrStrMap(StrStrMap map) {
@@ -35,7 +60,7 @@ void getKeyInOrder(StrStrTree* data, StringList list) {
 }
 
 StringList getKeyList(StrStrMap map) {
-    StringList keyList = newList(keyList);
+    StringList keyList = newStrArray(keyList);
     if (map->data != NULL && keyList != NULL) {
         getKeyInOrder(map->data, keyList);
     }
@@ -51,7 +76,7 @@ void getValueInOrder(StrStrTree** data, StringList list) {
 }
 
 StringList getValueList(StrStrMap map) {
-    StringList valueList = newList(valueList);
+    StringList valueList = newStrArray(valueList);
     if (map->data != NULL && valueList != NULL) {
         getValueInOrder(&map->data, valueList);
     }

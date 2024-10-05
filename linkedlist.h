@@ -13,6 +13,8 @@ IntLinkedList newIntLinkedList();
 // DoubleLinkedList newDoubleLinkedList();
 // StringLinkedList newStrLinkedList();
 
+IntLinkedList linkedListOfInt(IntLinkedList, int, ...);
+
 int sizeIntLinkedList(IntLinkedList);
 // int sizeDoubleLinkedList(DoubleLinkedList);
 // int sizeStrLinkedList(StringLinkedList);
@@ -21,14 +23,41 @@ bool isEmptyIntLinkedList(IntLinkedList);
 // bool isEmptyDoubleLinkedList(DoubleLinkedList);
 // bool isEmptyStrLinkedList(StringLinkedList);
 
-void fillNode(IntNode, int);
+
+//void insertBeginInt(IntLinkedList, int);
+// void insertBeginDouble(DoubleLinkedList, double );
+// void insertBeginStr(StringLinkedList, string);
 
 
-void insertBegin(IntLinkedList, int);
-void insertEnd(IntLinkedList, unsigned int);
-IntLinkedList linkedListOf(int, ...);
-void printLinkedList(IntLinkedList);
-void deleteLinkedList(IntLinkedList);
+void insertEndInt(IntLinkedList, int);  // add
+// void insertEndDouble(DoubleLinkedList, double );
+// void insertEndStr(StringLinkedList, string);
 
+
+
+
+void printIntLinkedList(IntLinkedList);
+
+
+void deleteIntLinkedList(IntLinkedList);
+
+// add
+// addAll
+// get(int index)
+// set(index, elem)
+// indexOf
+// toString
+// sort
+// clear
+// contains
+// containsAll
+// containsAny
+// remove
+// removeAll
+// subtract
+// isEmpry
+// reverseList
+// isEqualLists
+// emptyIfNull
 
 #endif

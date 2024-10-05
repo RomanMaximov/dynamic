@@ -6,6 +6,19 @@
 #include "dynamicarray.h"
 
 
+typedef struct String {
+    unsigned int count;
+    char* data;
+    unsigned int capacity;
+} String;
+
+typedef struct StringArray {
+    unsigned int count;
+    String** str;
+    unsigned int capacity;
+} StringArray;
+
+
 string stringOf(char* s) {
     string str = malloc(sizeof(String));
     int length = 0;
@@ -219,16 +232,16 @@ char charAt(String* s, int index) {
     return ch;
 }
 
-int containsSubStr(String* str, String* substr) {
+bool containsSubStr(String* str, String* substr) {
     if (str == NULL || substr == NULL)
-        return 0;
+        return false;
 
     char *substring = strstr(str->data, substr->data);
 
     if(substring)
-        return 1;
+        return true;
     else
-        return 0;
+        return false;
 }
 
 bool startsWith(string str, string substr) {
@@ -295,13 +308,13 @@ string reverseStr(string s) {
     return stringOf(temp);
 }
 
-long indexOfStr(string s, char ch) {
+int indexOfStr(string s, char ch) {
     if (s == NULL || s->count == 0)
         return -1;
 
     const char* text = s->data;
 
-    long counter = 0;
+    int counter = 0;
     while(*text != '\0') {
         if (*text == ch)
             return counter;
@@ -312,7 +325,7 @@ long indexOfStr(string s, char ch) {
     return -1;
 }
 
-long indexOfSubStr(string str, string sub) {
+int indexOfSubStr(string str, string sub) {
     if (str == NULL || sub == NULL || sub->count > str->count)
         return -1;
 
@@ -320,7 +333,7 @@ long indexOfSubStr(string str, string sub) {
     char* textCurrent = text;
     char* substr = sub->data;
     char* subCurrent = substr;
-    long counter = 0;
+    int counter = 0;
 
     while(*text != '\0') {
         ++counter;
@@ -353,7 +366,7 @@ long indexOfSubStr(string str, string sub) {
 }
 
 StringList split(string s, char delimeter) {
-    StringList list = newList(list);
+    StringList list = newStrArray(list);
 
     char* text = s->data;
     char* current = text;

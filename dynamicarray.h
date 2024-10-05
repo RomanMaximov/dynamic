@@ -9,18 +9,25 @@
 #include <string.h>
 #include <stdbool.h>
 #include "string.h"
-#include "dynamic.h"
 #include "map.h"
 
 
+typedef struct IntArray IntArray;
+typedef struct DoubleArray DoubleArray;
+typedef struct StringArray StringArray;
+typedef struct String String;
 
+typedef IntArray* IntList;
+typedef DoubleArray* DoubleList;
+typedef StringArray* StringList;
+typedef String* string;
 
 IntList newIntArray(IntList);
 DoubleList newDoubleArray(DoubleList);
 StringList newStrArray(StringList);
 
 int sizeIntList(IntList);
-int sizeDoubleList(DoubleArray*);
+int sizeDoubleList(DoubleList);
 int sizeStrList(StringList);
 
 void addIntElem(IntList, int);
@@ -54,7 +61,9 @@ void removeElemInt(IntList, int);
 void removeElemDouble(DoubleList, int);
 void removeElemStr(StringList, int);
 
-void removeAllInt(IntList, IntList);
+bool removeAllInt(IntList, IntList);
+bool removeAllDouble(DoubleList, DoubleList);
+bool removeAllStr(StringList, StringList);
 
 char* toStringInt(IntList);
 char* toStringDouble(DoubleList);
@@ -84,13 +93,12 @@ bool containsAllInt(IntList, IntList);
 bool containsAllDouble(DoubleList, DoubleList);
 bool containsAllStr(StringList, StringList);
 
-// containsAny()
 bool containsAnyInt(IntList, IntList);
 bool containsAnyDouble(DoubleList, DoubleList);
 bool containsAnyStr(StringList, StringList);
 
-// subtract(Collection, Collection);
 IntList subtractInt(IntList, IntList);
+DoubleList subtractDouble(DoubleList, DoubleList);
 StringList subtractStr(StringList, StringList);
 
 bool isEmptyInt(IntList);
@@ -106,6 +114,8 @@ int indexOfDouble(DoubleList, double);
 int indexOfStrList(StringList, string);
 
 bool isEqualStrLists(StringList, StringList);
+// bool isEqualIntLists(IntList, IntList);
+// bool isEqualDoubleLists(DoubleList, DoubleList);
 
 IntList emptyIfNullInt(IntList);
 DoubleList emptyIfNullDouble(DoubleList);
