@@ -14,7 +14,7 @@ typedef struct NodeInt {
 } NodeInt;
 
 typedef struct LinkedListInt {
-    unsigned int count;
+    int count;
     NodeInt* nodes;
     NodeInt* begin;
     NodeInt* end;

@@ -265,13 +265,13 @@ int main()
     puts("===========================================");
     printList(strList);
     printList(strList2);
-    StringList subList = subtractStr(strList, strList2);
-    printList(subList);
+    removeAllStr(strList, strList2);
+    printList(strList);
 
     deleteList(strListFromCharArr);
     deleteList(strList);
     deleteList(strList2);
-    deleteList(subList);
+    
 
 
 

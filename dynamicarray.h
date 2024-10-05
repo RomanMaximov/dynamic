@@ -48,7 +48,7 @@ void addAllInt(IntList, IntList);
 void addAllDouble(DoubleList, DoubleList);
 void addAllStr(StringList, StringList);
 
-unsigned int getElemInt(IntList, int);
+int getElemInt(IntList, int);
 double getElemDouble(DoubleList, int);
 string getElemStr(StringList, int);
 

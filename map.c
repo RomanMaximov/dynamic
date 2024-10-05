@@ -14,20 +14,20 @@ typedef struct StrStrTree {
 } StrStrTree;
 
 typedef struct StrStrTreeMap {
-    unsigned int count;
+    int count;
     struct StrStrTree* data;
 } StrStrTreeMap;
 
 typedef struct String {
-    unsigned int count;
+    int count;
     char* data;
-    unsigned int capacity;
+    int capacity;
 } String;
 
 typedef struct StringArray {
-    unsigned int count;
+    int count;
     String** str;
-    unsigned int capacity;
+    int capacity;
 } StringArray;
 
 
@@ -40,7 +40,7 @@ StrStrMap newStrStrMap(StrStrMap map) {
 }
 
 int sizeStrStrMap(StrStrMap map) {
-    return (int)map->count;
+    return map->count;
 }
 
 void addKeyToList(StrStrTree* data, StringList list) {
@@ -100,7 +100,7 @@ int keySearch(string str, StringList keyList, int high)
     return -1;
 }
 
-void insertEntry(StrStrTree** data, string key, string value, unsigned int* counter) {
+void insertEntry(StrStrTree** data, string key, string value, int* counter) {
     if (*data == NULL) {
         *data = (StrStrTree*) malloc(sizeof (StrStrTree));
         (*data)->key = key;

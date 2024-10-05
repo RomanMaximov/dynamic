@@ -7,15 +7,15 @@
 
 
 typedef struct String {
-    unsigned int count;
+    int count;
     char* data;
-    unsigned int capacity;
+    int capacity;
 } String;
 
 typedef struct StringArray {
-    unsigned int count;
+    int count;
     String** str;
-    unsigned int capacity;
+    int capacity;
 } StringArray;
 
 
@@ -47,7 +47,7 @@ string emptyStr() {
 }
 
 int length(string s) {
-    return (int) s->count;
+    return s->count;
 }
 
 int compareTo(string s1, string s2) {
@@ -78,7 +78,7 @@ String* toLowerCase(String* s) {
     }
 
     int index;
-    unsigned int count = s->count;
+    int count = s->count;
 
     char temp[count];
     strcpy(temp, s->data);
@@ -101,7 +101,7 @@ String* toUpperCase(String* s) {
     }
 
     int index;
-    unsigned int count = s->count;
+    int count = s->count;
     char temp[count];
 
     strcpy(temp, s->data);
@@ -135,7 +135,7 @@ String* concat(String* s1, String* s2) {
         return NULL;
     }
 
-    unsigned int count = s1->count + s2->count;
+    int count = s1->count + s2->count;
     char temp[count];
     strcpy(temp, s1->data);
     strcat(temp, s2->data);
@@ -153,7 +153,7 @@ String* replace(String* s1, char ch1, char ch2) {
         return NULL;
     }
 
-    unsigned int count = s1->count;
+    int count = s1->count;
     char temp[count];
     strcpy(temp, s1->data);
 
@@ -172,7 +172,7 @@ string join(char* delimeter, int countParams, ...) {
     va_list counter;
     va_start(counter, countParams);
 
-    unsigned int count = 0;
+    int count = 0;
     int number = 0;
     for (int i = 0; i < countParams; ++i) {
         String* tempStr = va_arg(counter, String*);
@@ -221,7 +221,7 @@ char charAt(String* s, int index) {
         return '1';
     }
 
-    unsigned int length = s->count - 1;
+    int length = s->count - 1;
     if (index < 0 || index >= length) {
         puts("Error: Index value out of bound.");
         return '1';
@@ -338,7 +338,7 @@ int indexOfSubStr(string str, string sub) {
     while(*text != '\0') {
         ++counter;
         if (*text == *subCurrent) {
-            unsigned int isEqual = sub->count - 2;
+            int isEqual = sub->count - 2;
             textCurrent = text;
             ++textCurrent;
             ++subCurrent;
@@ -445,8 +445,8 @@ StringList split(string s, char delimeter) {
 }
 
 string joinStrList(char* delimeter, StringList list) {
-    unsigned int count = 0;
-    unsigned int letterCounter = 0;
+    int count = 0;
+    int letterCounter = 0;
 
     for (int i = 0; i < list->count; ++i) {
         char* tempStr = list->str[i]->data;

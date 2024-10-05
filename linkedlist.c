@@ -26,7 +26,7 @@ IntLinkedList linkedListOfInt(IntLinkedList temp, int paramCount, ...) {
 }
 
 int sizeList(IntLinkedList list) {
-    return (int)list->count;
+    return list->count;
 }
 
 bool isEmptyIntLinkedList(IntLinkedList list) {

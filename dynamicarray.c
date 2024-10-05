@@ -10,27 +10,27 @@
 
 
 typedef struct IntArray {
-    unsigned int count;
+    int count;
     int* data;
-    unsigned int capacity;
+    int capacity;
 } IntArray;
 
 typedef struct DoubleArray {
-    unsigned int count;
+    int count;
     double* data;
-    unsigned int capacity;
+    int capacity;
 } DoubleArray;
 
 typedef struct StringArray {
-    unsigned int count;
+    int count;
     String** str;
-    unsigned int capacity;
+    int capacity;
 } StringArray;
 
 typedef struct String {
-    unsigned int count;
+    int count;
     char* data;
-    unsigned int capacity;
+    int capacity;
 } String;
 
 typedef IntArray* IntList;
@@ -75,15 +75,15 @@ StringList newStrArray(StringList temp) {
 }
 
 int sizeIntList(IntList list) {
-    return (int)list->count;
+    return list->count;
 }
 
 int sizeDoubleList(DoubleList list) {
-    return (int)list->count;
+    return list->count;
 }
 
 int sizeStrList(StringList list) {
-    return (int)list->count;
+    return list->count;
 }
 
 void addIntElem(IntList list, int num) {
@@ -289,7 +289,7 @@ void addAllInt(IntList dest, IntList from) {
     int sizeDest = sizeIntList(dest);
     if ((sizeDest + sizeFrom) > dest->capacity) {
         dest->capacity += sizeFrom;
-        dest->data = (int*)realloc(dest->data, dest->capacity * sizeof(int));
+        dest->data = realloc(dest->data, dest->capacity * sizeof(int));
         memcpy(&dest->data[dest->count], from->data, sizeFrom * sizeof(int));
         dest->count += sizeFrom;
     } else {
@@ -303,7 +303,7 @@ void addAllDouble(DoubleList dest, DoubleList from) {
     int sizeDest = sizeDoubleList(dest);
     if ((sizeDest + sizeFrom) > dest->capacity) {
         dest->capacity += sizeFrom;
-        dest->data = (double*)realloc(dest->data, dest->capacity * sizeof(double));
+        dest->data = realloc(dest->data, dest->capacity * sizeof(double));
         memcpy(&dest->data[dest->count], from->data, sizeFrom * sizeof(double));
         dest->count += sizeFrom;
     } else {
@@ -331,7 +331,7 @@ void addAllStr(StringList dest, StringList from) {
     }
 }
 
-unsigned int getElemInt(IntList list, int index) {
+int getElemInt(IntList list, int index) {
     if (list == NULL) {
         puts("ERROR: List is null.");
         return EXIT_FAILURE;
@@ -414,10 +414,10 @@ void removeElemInt(IntList list, int index) {
         free(list->data);
         list->count = 0;
         list->capacity = 20;
-        list->data = (int*)malloc(list->capacity * sizeof(int));
+        list->data = malloc(list->capacity * sizeof(int));
         return;
     }
-    int* temp = (int*)malloc((list->count - index - 1) * sizeof(int));
+    int* temp = malloc((list->count - index - 1) * sizeof(int));
     int sizeTemp = list->count - index - 1;
     int counter = index;
     ++counter;
@@ -434,10 +434,10 @@ void removeElemDouble(DoubleList list, int index) {
         free(list->data);
         list->count = 0;
         list->capacity = 20;
-        list->data = (double*)malloc(list->capacity * sizeof(double));
+        list->data = malloc(list->capacity * sizeof(double));
         return;
     }
-    double * temp = (double*)malloc((list->count - index - 1) * sizeof(double));
+    double * temp = malloc((list->count - index - 1) * sizeof(double));
     unsigned int sizeTemp = list->count - index - 1;
     int counter = index;
     ++counter;
@@ -586,7 +586,7 @@ char* toStringInt(IntList list) {
     }
 
     int count = 256;
-    text = (char*)malloc(count * sizeof(char));
+    text = malloc(count * sizeof(char));
     strcpy(text, "[");
     for (int i = 0; i < list->count - 1; ++i) {
         sprintf(&text[strlen(text)], "%d,", list->data[i]);
@@ -818,8 +818,7 @@ void quickSortStr(String** strList, int low, int high)
         quickSortStr(strList, low, j);
 }
 
-void quickSortReverseStr(String** strList, int low, int high)
-{
+void quickSortReverseStr(String** strList, int low, int high) {
     int i = low;
     int j = high - 1;
     String* temp;
