@@ -114,8 +114,8 @@ int indexOfDouble(DoubleList, double);
 int indexOfStrList(StringList, string);
 
 bool isEqualStrLists(StringList, StringList);
-// bool isEqualIntLists(IntList, IntList);
-// bool isEqualDoubleLists(DoubleList, DoubleList);
+bool isEqualIntLists(IntList, IntList);
+bool isEqualDoubleLists(DoubleList, DoubleList);
 
 IntList emptyIfNullInt(IntList);
 DoubleList emptyIfNullDouble(DoubleList);

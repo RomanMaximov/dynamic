@@ -1006,7 +1006,7 @@ bool isEqualStrLists(StringList list1, StringList list2) {
     if (list1->count != list2->count)
         return false;
 
-    unsigned int counter = list1->count;
+    int counter = list1->count;
     for (int i = 0; i < counter; ++i) {
         char* temp1 = list1->str[i]->data;
         char* temp2 = list2->str[i]->data;
@@ -1014,6 +1014,36 @@ bool isEqualStrLists(StringList list1, StringList list2) {
         if (strcmp(temp1, temp2) != 0)
             return false;
     }
+    return true;
+}
+
+bool isEqualIntLists(IntList list1, IntList list2) {
+    if (list1 == NULL || list2 == NULL)
+        return false;
+
+    if (list1->count != list2->count)
+        return false;
+
+    for (int i = 0; i < list1->count; ++i) {
+        if (list1->data[i] != list2->data[i])
+            return false;
+    }
+
+    return true;
+}
+
+bool isEqualDoubleLists(DoubleList list1, DoubleList list2) {
+    if (list1 == NULL || list2 == NULL)
+        return false;
+
+    if (list1->count != list2->count)
+        return false;
+
+    for (int i = 0; i < list1->count; ++i) {
+        if (fabs(list1->data[i] - list2->data[i]) > 0.000001)
+            return false;
+    }
+
     return true;
 }
 

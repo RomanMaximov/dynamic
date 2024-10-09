@@ -164,6 +164,12 @@ typedef struct StrStrTreeMap StrStrTreeMap;
     StringList : subtractStr \
 )(T, V)
 
+#define isEqualLists(T, V) _Generic((T), \
+    DoubleList : isEqualDoubleLists,\
+    IntList : isEqualIntLists,  \
+    StringList : isEqualStrLists \
+)(T, V)
+
 
 typedef LinkedListInt* IntLinkedList;
 typedef NodeInt* IntNode;
