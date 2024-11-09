@@ -373,12 +373,30 @@ string getElemStr(StringList list, int index) {
     return stringOf(list->str[index]->data);
 }
 
-void setElemInt(IntList list, int index, int num) {
+bool setElemInt(IntList list, int index, int num) {
+    if (list == NULL)
+        return false;
+
+    if (index >= list->count) {
+        puts("Index value out of bound.");
+        return false;
+    }
+
     list->data[index] = num;
+    return true;
 }
 
-void setElemDouble(DoubleList list, int index, double num) {
+bool  setElemDouble(DoubleList list, int index, double num) {
+    if (list == NULL)
+        return false;
+
+    if (index >= list->count) {
+        puts("Index value out of bound.");
+        return false;
+    }
+
     list->data[index] = num;
+    return true;
 }
 
 bool setElemStr(string str, StringList list, int index) {
@@ -391,7 +409,6 @@ bool setElemStr(string str, StringList list, int index) {
     }
 
     list->str[index] = stringOf(str->data);
-
     return true;
 }
 
@@ -405,7 +422,6 @@ bool setElemCharArr(char* str, StringList list, int index) {
     }
 
     list->str[index] = stringOf(str);
-
     return true;
 }
 
@@ -592,7 +608,7 @@ char* toStringInt(IntList list) {
         sprintf(&text[strlen(text)], "%d,", list->data[i]);
         if (strlen(text) > (unsigned long long int)(count * 0.8)) {
             count *= 2;
-            text = (char*)realloc(text, count * sizeof(char));
+            text = realloc(text, count * sizeof(char));
         }
     }
 

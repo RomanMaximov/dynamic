@@ -272,8 +272,12 @@ int main()
     deleteList(strList);
     deleteList(strList2);
     
+    IntLinkedList linkedList = listOf(linkedList, 3, 4, 15, 2);
+    printIntLL(linkedList);
+    sortIntLL(linkedList);
+    printIntLL(linkedList);
 
-
+    deleteIntLL(linkedList);
 
     /*StrStrMap strStrMap = newStrStrMap(strStrMap);
     string s35 = stringOf("35");

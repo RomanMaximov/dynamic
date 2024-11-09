@@ -17,10 +17,11 @@
 
 typedef struct LinkedListInt LinkedListInt;
 typedef struct NodeInt NodeInt;
+typedef struct String String;
 
 typedef LinkedListInt* IntLinkedList;
 typedef NodeInt* IntNode;
-
+typedef String* string;
 
 IntLinkedList newIntLinkedList();
 // DoubleLinkedList newDoubleLinkedList();
@@ -55,20 +56,48 @@ void printIntLL(IntLinkedList);
 void deleteIntLL(IntLinkedList);
 
 
-void addIntElemLL(IntLinkedList, int);
+void addIntElemLL(IntLinkedList, int, int*);
 //void addDoubleElemLL(DoubleLinkedList, double);
 //void addStrElemLL(StrLinkedList, string);
 
-// addAll
-// get(int index)
-// set(index, elem)
-// indexOf
+void addAllIntElemLL(IntLinkedList, IntLinkedList);
+//void addDoubleElemLL(DoubleLinkedList, DoubleLinkedList);
+//void addStrElemLL(StrLinkedList, StrLinkedList);
+
+int getIntElemLL(IntLinkedList, int);
+//double getDoubleElemLL(DoubleLinkedList, int);
+//string getStrElemLL(StrLinkedList, int);
+
+bool setIntElemLL(IntLinkedList, int, int);
+//bool setDoubleElemLL(DoubleLinkedList, int, double);
+//bool setStrElemLL(StrLinkedList, int, string);
+
+int indexOfIntLL(IntLinkedList, int);
+//double indexOfDoubleLL(DoubleLinkedList, double);
+//string indexOfStrLL(StrLinkedList, int);
+
 // toString
-// sort
-// clear
-// contains
-// containsAll
-// containsAny
+
+void sortIntLL(IntLinkedList);
+//void sortDoubleLL(DoubleLinkedList);
+//void sortStrLL(StrLinkedList);
+
+void clearIntLL(IntLinkedList);
+//void clearDoubleLL(DoubleLinkedList);
+//void clearStrLL(StrLinkedList);
+
+bool containsIntLL(IntLinkedList, int);
+//bool containsDoubleLL(DoubleLinkedList, double);
+//bool containsStrLL(StrLinkedList, string);
+
+bool containsAllIntLL(IntLinkedList, IntLinkedList);
+//bool containsAllDoubleLL(DoubleLinkedList, DoubleLinkedList);
+//bool containsAllStrLL(StrLinkedList, StrLinkedList);
+
+bool containsAnyIntLL(IntLinkedList, IntLinkedList);
+//bool containsAnyDoubleLL(DoubleLinkedList, DoubleLinkedList);
+//bool containsAnyStrLL(StrLinkedList, StrLinkedList);
+
 // remove
 // removeAll
 // subtract

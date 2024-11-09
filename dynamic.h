@@ -32,6 +32,7 @@
 #include "dynamicarray.h"
 #include "string.h"
 #include "map.h"
+#include "linkedlist.h"
 
 
 typedef struct LinkedListInt LinkedListInt;
@@ -53,7 +54,8 @@ typedef struct StrStrTreeMap StrStrTreeMap;
     DoubleList : listOfDouble, \
     IntList : listOfInt, \
     StringList : listOfStr,  \
-    char* : listOfStrLiteral \
+    char* : listOfStrLiteral,           \
+    IntLinkedList: linkedListOfInt          \
 )(T, V, __VA_ARGS__)
 
 #define listOfArr(T, V, K) _Generic((T), \
@@ -85,8 +87,13 @@ typedef struct StrStrTreeMap StrStrTreeMap;
 #define addAll(T, V) _Generic((T), \
     DoubleList : addAllDouble,\
     IntList : addAllInt, \
-    StringList : addAllStr  \
+    StringList : addAllStr         \
 )(T, V)
+//  IntList:   _Generic((V),\
+//        IntLinkedList:   addAllIntListLL,\
+//        IntSet: addAllIntListSet
+//    ),\                                   \
+
 
 #define getElem(T, V) _Generic((T), \
     DoubleList : getElemDouble,\

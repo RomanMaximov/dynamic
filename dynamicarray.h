@@ -58,8 +58,8 @@ int getElemInt(IntList, int);
 double getElemDouble(DoubleList, int);
 string getElemStr(StringList, int);
 
-void setElemInt(IntList, int, int);
-void setElemDouble(DoubleList, int, double);
+bool setElemInt(IntList, int, int);
+bool setElemDouble(DoubleList, int, double);
 bool setElemStr(string, StringList, int);
 bool setElemCharArr(char*, StringList, int);
 

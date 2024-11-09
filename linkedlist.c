@@ -8,14 +8,22 @@
 #include "linkedlist.h"
 
 // structures
+typedef struct String {
+    int count;
+    char* data;
+    int capacity;
+} String;
+
 typedef struct NodeInt {
     int data;
+    int index;
     struct NodeInt* next;
     struct NodeInt* prev;
 } NodeInt;
 
 typedef struct LinkedListInt {
     int count;
+    int index;
     NodeInt* nodes;
     NodeInt* begin;
     NodeInt* end;
@@ -26,27 +34,31 @@ typedef NodeInt* IntNode;
 
 
 // prototypes
-void static fillNode(IntNode node, int num);
-void static insertBeginInt(IntLinkedList list, int num);
+void static fillNode(IntNode node, int num, int* index);
+void static insertBeginInt(IntLinkedList list, int num, int* index);
+static void quickSortInt(int* arr, int low, int high);
+static bool binarySearchInt(int elem, const int* arr, int high);
 
 
 // funcs
 IntLinkedList newIntLinkedList() {
-    IntLinkedList list = malloc(sizeof(IntLinkedList));
+    IntLinkedList list = malloc(sizeof(LinkedListInt));
     list->count = 0;
+    list->index = 0;
     list->nodes = NULL;
     return list;
 }
 
 IntLinkedList linkedListOfInt(IntLinkedList temp, int paramCount, ...) {
-    IntLinkedList list = malloc(sizeof(IntLinkedList));
+    IntLinkedList list = malloc(sizeof(LinkedListInt));
     list->count = 0;
+    list->index = 0;
     list->nodes = NULL;
 
     va_list param;
     va_start(param, paramCount);
     for (int i = 0; i < paramCount; ++i) {
-        addIntElemLL(list, va_arg(param, int));
+        addIntElemLL(list, va_arg(param, int), &list->index);
     }
     va_end(param);
     return list;
@@ -60,7 +72,7 @@ bool isEmptyIntLinkedList(IntLinkedList list) {
     return list == NULL || list->count == 0;
 }
 
-void static insertBeginInt(IntLinkedList list, int num) {
+void static insertBeginInt(IntLinkedList list, int num, int* index) {
     IntNode newNodeStart = NULL;
     IntNode newNodeEnd = NULL;
     IntNode current = NULL;
@@ -68,7 +80,7 @@ void static insertBeginInt(IntLinkedList list, int num) {
     if (list->count == 0) {
         newNodeEnd = malloc(sizeof(NodeInt));
         if (newNodeEnd != NULL) {
-            fillNode(newNodeEnd, num);
+            fillNode(newNodeEnd, num, index);
         }
 
         newNodeEnd = list->nodes;
@@ -78,7 +90,7 @@ void static insertBeginInt(IntLinkedList list, int num) {
     } else {
         newNodeStart = malloc(sizeof(NodeInt));
         if (newNodeStart != NULL) {
-            fillNode(newNodeStart, num);
+            fillNode(newNodeStart, num, index);
         }
 
         newNodeStart->next = list->nodes;
@@ -90,7 +102,7 @@ void static insertBeginInt(IntLinkedList list, int num) {
     list->count++;
 }
 
-void addIntElemLL(IntLinkedList list, int num) {
+void addIntElemLL(IntLinkedList list, int num, int* index) {
     IntNode newNodeEnd = NULL;
     IntNode newNode = NULL;
     IntNode current = list->end;
@@ -98,17 +110,18 @@ void addIntElemLL(IntLinkedList list, int num) {
     if (list->count == 0) {
         newNode = malloc(sizeof(NodeInt));
         if (newNode != NULL) {
-            fillNode(newNode, num);
+            fillNode(newNode, num, index);
         }
 
         newNode->next = list->nodes;
         list->nodes = newNode;
         list->begin = list->nodes;
         list->end = newNode;
+        list->begin = newNode;
     } else {
         newNodeEnd = malloc(sizeof(NodeInt));
         if (newNodeEnd != NULL) {
-            fillNode(newNodeEnd, num);
+            fillNode(newNodeEnd, num, index);
         }
 
         current->next = newNodeEnd;
@@ -119,8 +132,170 @@ void addIntElemLL(IntLinkedList list, int num) {
     list->count++;
 }
 
-void printIntLL(IntLinkedList list) {
+void addAllIntElemLL(IntLinkedList list1, IntLinkedList list2) {
+    if (list1 == NULL || list2 == NULL) return;
+
+    IntNode current = list2->nodes;
+    while (current != NULL) {
+        addIntElemLL(list1, current->data, &list1->index);
+        current = current->next;
+    }
+}
+
+int getIntElemLL(IntLinkedList list, int index) {
+    if (index >= list->count) {
+        puts("Index value out of bound.");
+        return INT_MAX;
+    }
+
     IntNode current = list->nodes;
+    while (current != NULL) {
+        if (current->index == index)
+            return current->data;
+
+        current = current->next;
+    }
+    return INT_MAX;
+}
+
+void sortIntLL(IntLinkedList list) {
+    int arr[list->count];
+    IntNode current = list->begin;
+    IntNode temp = list->begin;
+    int index = 0;
+    while (current != NULL) {
+        arr[index++] = current->data;
+        current = current->next;
+    }
+
+    quickSortInt(arr, 0, list->count);
+
+    index = 0;
+    while (temp != NULL) {
+        temp->data = arr[index++];
+        temp = temp->next;
+    }
+}
+
+bool setIntElemLL(IntLinkedList list, int index, int num) {
+    if (list == NULL)
+        return false;
+
+    if (index >= list->count) {
+        puts("Index value out of bound.");
+        return false;
+    }
+
+    IntNode current = list->begin;
+    while (current != NULL) {
+        if (index == current->index) {
+            current->data = num;
+            return true;
+        }
+        current = current->next;
+    }
+    return false;
+}
+
+int indexOfIntLL(IntLinkedList list, int num) {
+    if (list == NULL)
+        return -1;
+
+    IntNode current = list->begin;
+    while (current != NULL) {
+        if (num == current->data)
+            return list->index;
+
+        current = current->next;
+    }
+    return -1;
+}
+
+void clearIntLL(IntLinkedList list) {
+    if (list == NULL)
+        return;
+
+    IntNode current = list->begin;
+    IntNode temp = NULL;
+
+    while (current != NULL) {
+        temp = current;
+        current = current->next;
+        free(temp);
+    }
+
+    list->count = 0;
+    list->index = 0;
+    list->begin = NULL;
+    list->end = NULL;
+    list->nodes = NULL;
+}
+
+bool containsIntLL(IntLinkedList list, int num) {
+    if (list == NULL) return false;
+
+    IntNode current = list->begin;
+    while (current != NULL) {
+        if (num == current->data)
+            return true;
+
+        current = current->next;
+    }
+    return false;
+}
+
+bool containsAllIntLL(IntLinkedList list1, IntLinkedList list2) {
+    if (list1 == NULL || list2 == NULL) return false;
+
+    int arr[list1->count];
+    IntNode current = list1->begin;
+    IntNode temp = list2->begin;
+
+    int index = 0;
+    while (current != NULL) {
+        arr[index++] = current->data;
+        current = current->next;
+    }
+
+    quickSortInt(arr, 0, list1->count);
+
+    while (temp != NULL) {
+        if (!binarySearchInt(temp->data, arr, list1->count - 1))
+            return false;
+
+        temp = temp->next;
+    }
+
+    return true;
+}
+
+bool containsAnyIntLL(IntLinkedList list1, IntLinkedList list2) {
+    if (list1 == NULL || list2 == NULL) return false;
+
+    int arr[list1->count];
+    IntNode current = list1->begin;
+    IntNode temp = list2->begin;
+
+    int index = 0;
+    while (current != NULL) {
+        arr[index++] = current->data;
+        current = current->next;
+    }
+
+    quickSortInt(arr, 0, list1->count);
+
+    while (temp != NULL) {
+        if (binarySearchInt(temp->data, arr, list1->count - 1))
+            return true;
+
+        temp = temp->next;
+    }
+
+    return false;
+}
+
+void printIntLL(IntLinkedList list) {
+    IntNode current = list->begin;
     printf("%s", "[");
     while (current != NULL) {
         if (current->next == NULL)
@@ -134,24 +309,77 @@ void printIntLL(IntLinkedList list) {
 
 
 void deleteIntLL(IntLinkedList list) {
-    IntNode current = list->nodes;
+    if (list == NULL)
+        return;
+
+    IntNode current = list->begin;
     IntNode temp = NULL;
 
-    if (list != NULL) {
-        list->count = 0;
-        list->begin = NULL;
-        list->end = NULL;
-        while (current != NULL) {
-            temp = current;
-            current = current->next;
-            free(temp);
-        }
+    while (current != NULL) {
+        temp = current;
+        current = current->next;
+        free(temp);
     }
+
+    list->begin = NULL;
+    list->end = NULL;
+    list->nodes = NULL;
+
     free(list);
 }
 
-void static fillNode(IntNode node, int num) {
+static void fillNode(IntNode node, int num, int* index) {
     node->data = num;
+    node->index = *index;
     node->next = NULL;
     node->prev = NULL;
+    ++(*index);
+}
+
+static void quickSortInt(int* arr, int low, int high) {
+    int i = low;
+    int j = high - 1;
+    int temp;
+    do {
+        while (j > i) {
+            if (arr[i] > arr[j]) {
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+                ++i;
+                break;
+            }
+            --j;
+        }
+        while (i < j) {
+            if (arr[i] > arr[j]) {
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+                --j;
+                break;
+            }
+            ++i;
+        }
+    } while (i < j);
+
+    if (i < high - 1)
+        quickSortInt(arr, i + 1, high);
+    if (low < j - 1)
+        quickSortInt(arr, low, j);
+}
+
+static bool binarySearchInt(int elem, const int* arr, int high) {
+    int low, middle;
+    low = 0;
+    while (low <= high) {
+        middle = (low + high) / 2;
+        if (elem < arr[middle])
+            high = middle - 1;
+        else if (elem > arr[middle])
+            low = middle + 1;
+        else
+            return true;
+    }
+    return false;
 }
