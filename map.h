@@ -1,3 +1,10 @@
+//
+// Created by Roman Maximov on 09.11.2024.
+// License: MIT License.
+// Copyright (c) 2024 Roman Maximov.
+//
+
+
 #ifndef MAP_H
 #define MAP_H
 

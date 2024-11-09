@@ -1,3 +1,9 @@
+//
+// Created by Roman Maximov on 09.11.2024.
+// License: MIT License.
+// Copyright (c) 2024 Roman Maximov.
+//
+
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
@@ -7,6 +13,13 @@
 #include <limits.h>
 #include <stdbool.h>
 #include "dynamic.h"
+
+
+typedef struct LinkedListInt LinkedListInt;
+typedef struct NodeInt NodeInt;
+
+typedef LinkedListInt* IntLinkedList;
+typedef NodeInt* IntNode;
 
 
 IntLinkedList newIntLinkedList();
@@ -29,19 +42,23 @@ bool isEmptyIntLinkedList(IntLinkedList);
 // void insertBeginStr(StringLinkedList, string);
 
 
-void insertEndInt(IntLinkedList, int);  // add
+//void insertEndInt(IntLinkedList, int);  // add
 // void insertEndDouble(DoubleLinkedList, double );
 // void insertEndStr(StringLinkedList, string);
 
 
 
 
-void printIntLinkedList(IntLinkedList);
+void printIntLL(IntLinkedList);
 
 
-void deleteIntLinkedList(IntLinkedList);
+void deleteIntLL(IntLinkedList);
 
-// add
+
+void addIntElemLL(IntLinkedList, int);
+//void addDoubleElemLL(DoubleLinkedList, double);
+//void addStrElemLL(StrLinkedList, string);
+
 // addAll
 // get(int index)
 // set(index, elem)
@@ -55,7 +72,7 @@ void deleteIntLinkedList(IntLinkedList);
 // remove
 // removeAll
 // subtract
-// isEmpry
+// isEmpty
 // reverseList
 // isEqualLists
 // emptyIfNull

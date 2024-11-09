@@ -1,9 +1,36 @@
+//
+// Created by Roman Maximov on 09.11.2024.
+// License: MIT License.
+// Copyright (c) 2024 Roman Maximov.
+//
+
+
 #include "linkedlist.h"
 
+// structures
+typedef struct NodeInt {
+    int data;
+    struct NodeInt* next;
+    struct NodeInt* prev;
+} NodeInt;
+
+typedef struct LinkedListInt {
+    int count;
+    NodeInt* nodes;
+    NodeInt* begin;
+    NodeInt* end;
+} LinkedListInt;
+
+typedef LinkedListInt* IntLinkedList;
+typedef NodeInt* IntNode;
 
 
-void fillNode(IntNode node, int num);
+// prototypes
+void static fillNode(IntNode node, int num);
+void static insertBeginInt(IntLinkedList list, int num);
 
+
+// funcs
 IntLinkedList newIntLinkedList() {
     IntLinkedList list = malloc(sizeof(IntLinkedList));
     list->count = 0;
@@ -19,7 +46,7 @@ IntLinkedList linkedListOfInt(IntLinkedList temp, int paramCount, ...) {
     va_list param;
     va_start(param, paramCount);
     for (int i = 0; i < paramCount; ++i) {
-        insertEndInt(list, va_arg(param, int));
+        addIntElemLL(list, va_arg(param, int));
     }
     va_end(param);
     return list;
@@ -33,7 +60,7 @@ bool isEmptyIntLinkedList(IntLinkedList list) {
     return list == NULL || list->count == 0;
 }
 
-/*void insertBeginInt(IntLinkedList list, int num) {
+void static insertBeginInt(IntLinkedList list, int num) {
     IntNode newNodeStart = NULL;
     IntNode newNodeEnd = NULL;
     IntNode current = NULL;
@@ -61,9 +88,9 @@ bool isEmptyIntLinkedList(IntLinkedList list) {
     }
 
     list->count++;
-}*/
+}
 
-void insertEndInt(IntLinkedList list, int num) {    // add
+void addIntElemLL(IntLinkedList list, int num) {
     IntNode newNodeEnd = NULL;
     IntNode newNode = NULL;
     IntNode current = list->end;
@@ -92,9 +119,7 @@ void insertEndInt(IntLinkedList list, int num) {    // add
     list->count++;
 }
 
-
-
-void printIntLinkedList(IntLinkedList list) {
+void printIntLL(IntLinkedList list) {
     IntNode current = list->nodes;
     printf("%s", "[");
     while (current != NULL) {
@@ -108,7 +133,7 @@ void printIntLinkedList(IntLinkedList list) {
 }
 
 
-void deleteIntLinkedList(IntLinkedList list) {
+void deleteIntLL(IntLinkedList list) {
     IntNode current = list->nodes;
     IntNode temp = NULL;
 
@@ -122,9 +147,10 @@ void deleteIntLinkedList(IntLinkedList list) {
             free(temp);
         }
     }
+    free(list);
 }
 
-void fillNode(IntNode node, int num) {
+void static fillNode(IntNode node, int num) {
     node->data = num;
     node->next = NULL;
     node->prev = NULL;

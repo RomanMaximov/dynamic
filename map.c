@@ -1,3 +1,10 @@
+//
+// Created by Roman Maximov on 09.11.2024.
+// License: MIT License.
+// Copyright (c) 2024 Roman Maximov.
+//
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -246,13 +253,13 @@ bool containsValue(StrStrMap map, string value) {
     return isValue(&map->data, value->data);
 }
 
-void deleteNode(StrStrTree** data) {
+void deleteAllNode(StrStrTree** data) {
     if (*data == NULL)
         return;
 
     // Удаляем поддеревья
-    deleteNode(&((*data)->left));
-    deleteNode(&((*data)->right));
+    deleteAllNode(&((*data)->left));
+    deleteAllNode(&((*data)->right));
 
     free((*data)->key->data);
     (*data)->key->data = NULL;
@@ -271,7 +278,7 @@ void clearStrStrMap(StrStrMap map) {
         return;
     } else {
         if (map->data != NULL) {
-            deleteNode(&map->data);
+            deleteAllNode(&map->data);
             map->data = NULL;
             map->count = 0;
         } else {
