@@ -8,7 +8,7 @@
 #include "dynamicarray.h"
 
 
-
+// structures
 typedef struct IntArray {
     int count;
     int* data;
@@ -38,6 +38,8 @@ typedef DoubleArray* DoubleList;
 typedef StringArray* StringList;
 typedef String* string;
 
+
+// prototypes
 void quickSortInt(int*, int, int);
 void quickSortDouble(double *, int, int);
 bool binarySearchInt(int elem, const int* arr, int high);
@@ -46,7 +48,9 @@ int* increaseCapacityInt(IntList);
 IntList copyIntList(IntList dest, IntList from);
 StringList copyStrList(StringList dest, StringList from);
 DoubleList copyDoubleList(DoubleList dest, DoubleList from);
+static String** increaseCapacity(StringList list);
 
+// funcs
 IntList newIntArray(IntList temp) {
     IntList list = malloc(sizeof(IntArray));
     list->count = 0;
@@ -338,7 +342,7 @@ int getElemInt(IntList list, int index) {
     }
 
     if (index < 0 || index >= list->count) {
-        puts("ERROR: Index value out of bound.");
+        printf("Index %d out of bounds for length %d\n", index, list->count);
         return EXIT_FAILURE;
     }
 
@@ -352,7 +356,7 @@ double getElemDouble(DoubleList list, int index) {
     }
 
     if (index < 0 || index >= list->count) {
-        puts("ERROR: Index value out of bound.");
+        printf("Index %d out of bounds for length %d\n", index, list->count);
         return EXIT_FAILURE;
     }
 
@@ -366,7 +370,7 @@ string getElemStr(StringList list, int index) {
     }
 
     if (index < 0 || index >= list->count) {
-        puts("ERROR: Index value out of bound.");
+        printf("Index %d out of bounds for length %d\n", index, list->count);
         return NULL;
     }
 
@@ -378,7 +382,7 @@ bool setElemInt(IntList list, int index, int num) {
         return false;
 
     if (index >= list->count) {
-        puts("Index value out of bound.");
+        printf("Index %d out of bounds for length %d\n", index, list->count);
         return false;
     }
 
@@ -391,7 +395,7 @@ bool  setElemDouble(DoubleList list, int index, double num) {
         return false;
 
     if (index >= list->count) {
-        puts("Index value out of bound.");
+        printf("Index %d out of bounds for length %d\n", index, list->count);
         return false;
     }
 
@@ -404,7 +408,7 @@ bool setElemStr(string str, StringList list, int index) {
         return false;
 
     if (index >= list->count) {
-        puts("Index value out of bound.");
+        printf("Index %d out of bounds for length %d\n", index, list->count);
         return false;
     }
 
@@ -417,7 +421,7 @@ bool setElemCharArr(char* str, StringList list, int index) {
         return false;
 
     if (index >= list->count) {
-        puts("Index value out of bound.");
+        printf("Index %d out of bounds for length %d\n", index, list->count);
         return false;
     }
 
@@ -425,13 +429,20 @@ bool setElemCharArr(char* str, StringList list, int index) {
     return true;
 }
 
-void removeElemInt(IntList list, int index) {
+bool removeElemInt(IntList list, int index) {
+    if (list == NULL) return false;
+
+    if (index >= list->count) {
+        printf("Index %d out of bounds for length %d\n", index, list->count);
+        return false;
+    }
+
     if (list->count == 1) {
         free(list->data);
         list->count = 0;
         list->capacity = 20;
         list->data = malloc(list->capacity * sizeof(int));
-        return;
+        return true;
     }
     int* temp = malloc((list->count - index - 1) * sizeof(int));
     int sizeTemp = list->count - index - 1;
@@ -443,50 +454,67 @@ void removeElemInt(IntList list, int index) {
     memcpy(&list->data[index], temp, sizeTemp * sizeof(int));
     list->count--;
     free(temp);
+
+    return true;
 }
 
-void removeElemDouble(DoubleList list, int index) {
+bool removeElemDouble(DoubleList list, int index) {
+    if (list == NULL) return false;
+
+    if (index >= list->count) {
+        printf("Index %d out of bounds for length %d\n", index, list->count);
+        return false;
+    }
+
     if (list->count == 1) {
         free(list->data);
         list->count = 0;
         list->capacity = 20;
         list->data = malloc(list->capacity * sizeof(double));
-        return;
+        return true;
     }
     double * temp = malloc((list->count - index - 1) * sizeof(double));
     unsigned int sizeTemp = list->count - index - 1;
     int counter = index;
     ++counter;
+
     for (int i = 0; i < sizeTemp; ++i) {
         temp[i] = list->data[counter++];
     }
     memcpy(&list->data[index], temp, sizeTemp * sizeof(double));
     list->count--;
     free(temp);
+
+    return true;
 }
 
-void removeElemStr(StringList list, int index) {
+bool removeElemStr(StringList list, int index) {
+    if (list == NULL) return false;
+
     if (index >= list->count) {
-        puts("Index value out of bound.");
-        return;
+        printf("Index %d out of bounds for length %d\n", index, list->count);
+        return false;
     }
 
     if (list->count == 1) {
         free(list->str[0]);
         list->count = 0;
-        return;
+        return true;
     }
 
     String** temp = malloc((list->count - index - 1) * sizeof(String*));
     unsigned int sizeTemp = list->count - index - 1;
     int counter = index;
     ++counter;
+
     for (int i = 0; i < sizeTemp; ++i) {
         temp[i] = list->str[counter++];
     }
     memcpy(&list->str[index], temp, sizeTemp * sizeof(String));
     list->count--;
     free(temp);
+
+    return true;
 }
 
 bool removeAllInt(IntList list1, IntList list2) {
@@ -1317,4 +1345,18 @@ StringList copyStrList(StringList dest, StringList from) {
         dest->count++;
     }
     return dest;
+}
+
+static String** increaseCapacity(StringList list) {
+    list->capacity *= 2;
+    String** temp = list->str;
+    list->str = malloc(list->capacity * sizeof(String*));
+    for (int i = 0; i < list->capacity; ++i) {
+        list->str[i] = NULL;
+    }
+    for (int i = 0; i < list->count; ++i) {
+        memcpy(&list->str[i], &temp[i], sizeof(String));
+    }
+
+    return list->str;
 }

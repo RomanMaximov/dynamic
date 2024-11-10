@@ -272,9 +272,9 @@ int main()
     deleteList(strList);
     deleteList(strList2);
     
-    IntLinkedList linkedList = listOf(linkedList, 3, 4, 15, 2);
+    IntLinkedList linkedList = listOf(linkedList, 3, 10, 4, 7);
     printIntLL(linkedList);
-    sortIntLL(linkedList);
+    removeIntLL(linkedList, 2);
     printIntLL(linkedList);
 
     deleteIntLL(linkedList);

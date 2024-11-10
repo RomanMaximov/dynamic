@@ -11,7 +11,7 @@
 #include "string.h"
 #include "dynamicarray.h"
 
-
+// structures
 typedef struct String {
     int count;
     char* data;
@@ -25,6 +25,11 @@ typedef struct StringArray {
 } StringArray;
 
 
+// prototypes
+static String** increaseCapacity(StringList list);
+
+
+// funcs
 string stringOf(char* s) {
     string str = malloc(sizeof(String));
     int length = 0;
@@ -517,7 +522,11 @@ bool isNotBlank(string s) {
     return false;
 }
 
-String** increaseCapacity(StringList list) {
+string defaultIfNull(string s1, string s2) {
+    return s1 == NULL ? s2 : s1;
+}
+
+static String** increaseCapacity(StringList list) {
     list->capacity *= 2;
     String** temp = list->str;
     list->str = malloc(list->capacity * sizeof(String*));

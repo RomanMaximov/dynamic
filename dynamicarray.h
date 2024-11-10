@@ -63,9 +63,9 @@ bool setElemDouble(DoubleList, int, double);
 bool setElemStr(string, StringList, int);
 bool setElemCharArr(char*, StringList, int);
 
-void removeElemInt(IntList, int);
-void removeElemDouble(DoubleList, int);
-void removeElemStr(StringList, int);
+bool removeElemInt(IntList, int);
+bool removeElemDouble(DoubleList, int);
+bool removeElemStr(StringList, int);
 
 bool removeAllInt(IntList, IntList);
 bool removeAllDouble(DoubleList, DoubleList);

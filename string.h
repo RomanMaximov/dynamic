@@ -42,9 +42,7 @@ bool isEmptyStr(string s);
 bool isBlank(string s);
 bool isNotBlank(string s);
 string joinStrList(char* delimeter, StringList list);
-
-// service functions
-String** increaseCapacity(StringList list);
+string defaultIfNull(string, string);
 
 
 #endif

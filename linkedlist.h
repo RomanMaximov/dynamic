@@ -43,18 +43,14 @@ bool isEmptyIntLinkedList(IntLinkedList);
 // void insertBeginStr(StringLinkedList, string);
 
 
-//void insertEndInt(IntLinkedList, int);  // add
-// void insertEndDouble(DoubleLinkedList, double );
-// void insertEndStr(StringLinkedList, string);
-
-
-
-
 void printIntLL(IntLinkedList);
+//void printDoubleLL(DoubleLinkedList);
+//void printStrLL(StrLinkedList);
 
 
 void deleteIntLL(IntLinkedList);
-
+//void deleteDoubleLL(DoubleLinkedList);
+//void deleteStrLL(StrLinkedList);
 
 void addIntElemLL(IntLinkedList, int, int*);
 //void addDoubleElemLL(DoubleLinkedList, double);
@@ -98,7 +94,10 @@ bool containsAnyIntLL(IntLinkedList, IntLinkedList);
 //bool containsAnyDoubleLL(DoubleLinkedList, DoubleLinkedList);
 //bool containsAnyStrLL(StrLinkedList, StrLinkedList);
 
-// remove
+bool removeIntLL(IntLinkedList, int);
+//bool removeDoubleLL(DoubleLinkedList, int);
+//bool removeStrLL(StrLinkedList, int);
+
 // removeAll
 // subtract
 // isEmpty
