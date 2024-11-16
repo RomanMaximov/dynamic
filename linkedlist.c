@@ -6,6 +6,7 @@
 
 
 #include "linkedlist.h"
+#include "linkedlistservice/intlinkedlist.h"
 
 // structures
 typedef struct String {
@@ -21,16 +22,50 @@ typedef struct NodeInt {
 } NodeInt;
 
 // LinkedList data encapsulation
-typedef struct InnnerIntLL {
+typedef struct InnerIntLL {
     int count;
     int index;
     NodeInt* nodes;
     NodeInt* begin;
     NodeInt* end;
-} InnnerIntLL;
+} InnerIntLL;
+
+typedef struct NodeDouble {
+    double data;
+    struct NodeDouble* next;
+    struct NodeDouble* prev;
+} NodeDouble;
+
+// LinkedList data encapsulation
+typedef struct InnerDoubleLL {
+    int count;
+    int index;
+    NodeDouble* nodes;
+    NodeDouble* begin;
+    NodeDouble* end;
+} InnerDoubleLL;
+
+typedef struct NodeStr {
+    string data;
+    struct NodeStr* next;
+    struct NodeStr* prev;
+} NodeStr;
+
+// LinkedList data encapsulation
+typedef struct InnerStrLL {
+    int count;
+    int index;
+    NodeStr* nodes;
+    NodeStr* begin;
+    NodeStr* end;
+} InnerStrLL;
 
 typedef LinkedListInt* IntLinkedList;
 typedef NodeInt* IntNode;
+typedef LinkedListDouble* DoubleLinkedList;
+typedef NodeDouble* DoubleNode;
+typedef LinkedListStr* StrLinkedList;
+typedef NodeStr* StrNode;
 
 
 // custom types
@@ -50,10 +85,10 @@ static void deleteNodeInt(IntLinkedList list, IntNode current, IntNode previous)
 static void deleteFirstNodeInt(IntLinkedList list, IntNode current);
 static bool removeNodeInt(IntLinkedList list, IntNode current, IntNode previous, int index);
 static void toArrAndSort(IntLinkedList list, int* arr);
-void _initFuncs(IntLinkedList list);
+static void _initFuncs_(IntLinkedList list);
 
 // prototypes common funcs
-void* add(TypeLL type);
+static void* add(TypeLL type);
 static void* addAll(TypeLL type);
 static void* get(TypeLL type);
 static void* set(TypeLL type);
@@ -74,21 +109,21 @@ static void* delete(TypeLL type);
 // funcs
 IntLinkedList newIntLinkedList() {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
-    list->inner = malloc(sizeof(InnnerIntLL));
+    list->inner = malloc(sizeof(InnerIntLL));
     list->inner->count = 0;
     list->inner->index = 0;
     list->inner->nodes = NULL;
-    _initFuncs(list);
+    _initFuncs_(list);
     return list;
 }
 
 IntLinkedList linkedListOfInt(IntLinkedList temp, int paramCount, ...) {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
-    list->inner = malloc(sizeof(InnnerIntLL));
+    list->inner = malloc(sizeof(InnerIntLL));
     list->inner->count = 0;
     list->inner->index = 0;
     list->inner->nodes = NULL;
-    _initFuncs(list);
+    _initFuncs_(list);
 
     va_list param;
     va_start(param, paramCount);
@@ -107,7 +142,7 @@ bool isEmptyIntLinkedList(IntLinkedList list) {
     return list == NULL || list->inner->count == 0;
 }
 
-void static insertBeginInt(IntLinkedList list, int num, int* index) {
+/*static void insertBeginInt(IntLinkedList list, int num, int* index) {
     IntNode newNodeStart = NULL;
     IntNode newNodeEnd = NULL;
     IntNode current = NULL;
@@ -135,9 +170,9 @@ void static insertBeginInt(IntLinkedList list, int num, int* index) {
     }
 
     list->inner->count++;
-}
+}*/
 
-void addIntElemLL(IntLinkedList list, int num) {
+/*void addIntElemLL(IntLinkedList list, int num) {
     IntNode newNodeEnd = NULL;
     IntNode newNode = NULL;
     IntNode current = list->inner->end;
@@ -166,7 +201,7 @@ void addIntElemLL(IntLinkedList list, int num) {
     }
 
     list->inner->count++;
-}
+}*/
 
 void addAllIntElemLL(IntLinkedList list1, IntLinkedList list2) {
     if (list1 == NULL || list2 == NULL) return;
@@ -215,7 +250,7 @@ void sortIntLL(IntLinkedList list) {
     }
 }
 
-bool setIntElemLL(IntLinkedList list, int index, int num) {
+/*bool setIntElemLL(IntLinkedList list, int index, int num) {
     if (list == NULL)
         return false;
 
@@ -235,7 +270,7 @@ bool setIntElemLL(IntLinkedList list, int index, int num) {
         current = current->next;
     }
     return false;
-}
+}*/
 
 int indexOfIntLL(IntLinkedList list, int num) {
     if (list == NULL)
@@ -360,7 +395,7 @@ void printIntLL(IntLinkedList list) {
 }
 
 
-void deleteIntLL(IntLinkedList list) { // TODO
+void deleteIntLL(IntLinkedList list) {
     if (list == NULL)
         return;
 
@@ -505,7 +540,8 @@ static void toArrAndSort(IntLinkedList list, int* arr) {
     quickSortInt(arr, 0, list->inner->count);
 }
 
-void* add(TypeLL type) {
+// common functions
+static void* add(TypeLL type) {
     switch (type) {
         case INT_LL:
             return addIntElemLL;
@@ -514,6 +550,16 @@ void* add(TypeLL type) {
     return NULL;
 }
 
-void _initFuncs(IntLinkedList list) {
+static void* set(TypeLL type) {
+    switch (type) {
+        case INT_LL:
+            return setIntElemLL;
+    }
+
+    return NULL;
+}
+
+ static void _initFuncs_(IntLinkedList list) {
     list->add = add(INT_LL);
+    list->set = set(INT_LL);
 }

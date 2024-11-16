@@ -85,11 +85,23 @@ build CMakeFiles/DynamicCollection.dir/testarray.c.obj: C_COMPILER__DynamicColle
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
   OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir
 
-build CMakeFiles/DynamicCollection.dir/arrcustom.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/arrcustom.c || cmake_object_order_depends_target_DynamicCollection
-  DEP_FILE = CMakeFiles\DynamicCollection.dir\arrcustom.c.obj.d
+build CMakeFiles/DynamicCollection.dir/linkedlistservice/intlinkedlist.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/linkedlistservice/intlinkedlist.c || cmake_object_order_depends_target_DynamicCollection
+  DEP_FILE = CMakeFiles\DynamicCollection.dir\linkedlistservice\intlinkedlist.c.obj.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu11
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
-  OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir
+  OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir\linkedlistservice
+
+build CMakeFiles/DynamicCollection.dir/linkedlistservice/doublelinkedlist.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/linkedlistservice/doublelinkedlist.c || cmake_object_order_depends_target_DynamicCollection
+  DEP_FILE = CMakeFiles\DynamicCollection.dir\linkedlistservice\doublelinkedlist.c.obj.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  OBJECT_DIR = CMakeFiles\DynamicCollection.dir
+  OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir\linkedlistservice
+
+build CMakeFiles/DynamicCollection.dir/linkedlistservice/strlinkedlist.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/linkedlistservice/strlinkedlist.c || cmake_object_order_depends_target_DynamicCollection
+  DEP_FILE = CMakeFiles\DynamicCollection.dir\linkedlistservice\strlinkedlist.c.obj.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  OBJECT_DIR = CMakeFiles\DynamicCollection.dir
+  OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir\linkedlistservice
 
 
 # =============================================================================
@@ -99,7 +111,7 @@ build CMakeFiles/DynamicCollection.dir/arrcustom.c.obj: C_COMPILER__DynamicColle
 #############################################
 # Link the executable DynamicCollection.exe
 
-build DynamicCollection.exe: C_EXECUTABLE_LINKER__DynamicCollection_Debug CMakeFiles/DynamicCollection.dir/main.c.obj CMakeFiles/DynamicCollection.dir/dynamicarray.c.obj CMakeFiles/DynamicCollection.dir/map.c.obj CMakeFiles/DynamicCollection.dir/string.c.obj CMakeFiles/DynamicCollection.dir/linkedlist.c.obj CMakeFiles/DynamicCollection.dir/testarray.c.obj CMakeFiles/DynamicCollection.dir/arrcustom.c.obj
+build DynamicCollection.exe: C_EXECUTABLE_LINKER__DynamicCollection_Debug CMakeFiles/DynamicCollection.dir/main.c.obj CMakeFiles/DynamicCollection.dir/dynamicarray.c.obj CMakeFiles/DynamicCollection.dir/map.c.obj CMakeFiles/DynamicCollection.dir/string.c.obj CMakeFiles/DynamicCollection.dir/linkedlist.c.obj CMakeFiles/DynamicCollection.dir/testarray.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/intlinkedlist.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/doublelinkedlist.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/strlinkedlist.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir

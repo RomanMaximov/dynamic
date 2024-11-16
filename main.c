@@ -273,9 +273,12 @@ int main()
     deleteList(strList2);*/
     
     IntLinkedList linkedList = linkedListOfInt(linkedList, 3, 10, 4, 7);
-    linkedList->add(linkedList, 99);
+    linkedList-> add(linkedList, 99);
     printIntLL(linkedList);
     removeIntLL(linkedList, 1);
+    if (linkedList->set(linkedList, 2, 5555)) {
+        puts("SET works correctly");
+    }
     printIntLL(linkedList);
 
     deleteIntLL(linkedList);

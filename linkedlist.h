@@ -12,12 +12,17 @@
 #include <stdarg.h>
 #include <limits.h>
 #include <stdbool.h>
-//#include "dynamic.h"
+#include "linkedlistservice/intlinkedlist.h"
+#include "linkedlistservice/doublelinkedlist.h"
+#include "linkedlistservice/strlinkedlist.h"
 
+// structures
+typedef struct NodeInt NodeInt;
+typedef struct NodeDouble NodeDouble;
+typedef struct String String;
 
-//typedef struct LinkedListInt LinkedListInt;
 typedef struct LinkedListInt {
-    struct InnnerIntLL* inner;   // private field
+    struct InnerIntLL* inner;   // private field
     // funcs pointers
     void (*add)(struct LinkedListInt* list, int number);
     void (*addAll)(struct LinkedListInt* list1, struct LinkedListInt* list2);
@@ -30,105 +35,83 @@ typedef struct LinkedListInt {
     bool (*containsAll)(struct LinkedListInt* list1, struct LinkedListInt* list2);
     bool (*containsAny)(struct LinkedListInt* list1, struct LinkedListInt* list2);
     bool (*removeElem)(struct LinkedListInt* list, int number);
+    bool (*removeAll)(struct LinkedListInt* list1, struct LinkedListInt* list2);
+    struct LinkedListInt* (*subtract)(struct LinkedListInt* list1, struct LinkedListInt* list2);
+    bool (*isEmpty)(struct LinkedListInt* list);
+    void (*reverse)(struct LinkedListInt* list);
+    bool (*isEquals)(struct LinkedListInt* list1, struct LinkedListInt* list2);
+    struct LinkedListInt* (*emptyIfNull)(struct LinkedListInt* list);
 
     int (*size)(struct LinkedListInt* list);
-    bool (*isEmpty)(struct LinkedListInt* list);
-    void (*print)(struct LinkedListInt* list);
-    void (*delete)(struct LinkedListInt* list);
+    void (*printList)(struct LinkedListInt* list);
+    void (*deleteList)(struct LinkedListInt* list);
 } LinkedListInt;
 
-typedef struct NodeInt NodeInt;
-typedef struct String String;
+typedef struct LinkedListDouble {
+    struct InnerDoubleLL* inner;   // private field
+    // funcs pointers
+    void (*add)(struct LinkedListDouble* list, double number);
+    void (*addAll)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
+    double (*get)(struct LinkedListDouble* list, int index);
+    bool (*set)(struct LinkedListDouble* list, int index, double number);
+    int (*indexOf)(struct LinkedListDouble* list, double number);
+    void (*sort)(struct LinkedListDouble* list);
+    void (*clear)(struct LinkedListDouble* list);
+    bool (*contains)(struct LinkedListDouble* list, double number);
+    bool (*containsAll)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
+    bool (*containsAny)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
+    bool (*removeElem)(struct LinkedListDouble* list, double number);
+    bool (*removeAll)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
+    struct LinkedListDouble* (*subtract)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
+    bool (*isEmpty)(struct LinkedListDouble* list);
+    void (*reverse)(struct LinkedListDouble* list);
+    bool (*isEquals)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
+    struct LinkedListDouble* (*emptyIfNull)(struct LinkedListDouble* list);
 
+    int (*size)(struct LinkedListDouble* list);
+    void (*printList)(struct LinkedListDouble* list);
+    void (*deleteList)(struct LinkedListDouble* list);
+} LinkedListDouble;
+
+typedef struct LinkedListStr {
+    struct InnerStrLL* inner;   // private field
+    // funcs pointers
+    void (*add)(struct LinkedListStr* list, String* s);
+    void (*addAll)(struct LinkedListStr* list1, struct LinkedListStr* list2);
+    String* (*get)(struct LinkedListStr* list, int index);
+    bool (*set)(struct LinkedListStr* list, int index, String* s);
+    int (*indexOf)(struct LinkedListStr* list, String* s);
+    void (*sort)(struct LinkedListStr* list);
+    void (*clear)(struct LinkedListStr* list);
+    bool (*contains)(struct LinkedListStr* list, String* s);
+    bool (*containsAll)(struct LinkedListStr* list1, struct LinkedListStr* list2);
+    bool (*containsAny)(struct LinkedListStr* list1, struct LinkedListStr* list2);
+    bool (*removeElem)(struct LinkedListStr* list, String* s);
+    bool (*removeAll)(struct LinkedListStr* list1, struct LinkedListStr* list2);
+    struct LinkedListStr* (*subtract)(struct LinkedListStr* list1, struct LinkedListStr* list2);
+    bool (*isEmpty)(struct LinkedListStr* list);
+    void (*reverse)(struct LinkedListStr* list);
+    bool (*isEquals)(struct LinkedListStr* list1, struct LinkedListStr* list2);
+    struct LinkedListStr* (*emptyIfNull)(struct LinkedListStr* list);
+
+    int (*size)(struct LinkedListStr* list);
+    void (*printList)(struct LinkedListStr* list);
+    void (*deleteList)(struct LinkedListStr* list);
+} LinkedListStr;
 
 typedef LinkedListInt* IntLinkedList;
-typedef NodeInt* IntNode;
+typedef LinkedListDouble* DoubleLinkedList;
+typedef LinkedListStr* StrLinkedList;
 typedef String* string;
 
-
-
-
-
+// func prototypes
 IntLinkedList newIntLinkedList();
-// DoubleLinkedList newDoubleLinkedList();
-// StringLinkedList newStrLinkedList();
+DoubleLinkedList newDoubleLinkedList();
+StrLinkedList newStrLinkedList();
 
 IntLinkedList linkedListOfInt(IntLinkedList, int, ...);
+DoubleLinkedList linkedListOfDouble(DoubleLinkedList, int, ...);
+StrLinkedList linkedListOfStr(StrLinkedList, int, ...);
 
-int sizeIntLinkedList(IntLinkedList);
-// int sizeDoubleLinkedList(DoubleLinkedList);
-// int sizeStrLinkedList(StringLinkedList);
-
-bool isEmptyIntLinkedList(IntLinkedList);
-// bool isEmptyDoubleLinkedList(DoubleLinkedList);
-// bool isEmptyStrLinkedList(StringLinkedList);
-
-
-//void insertBeginInt(IntLinkedList, int);
-// void insertBeginDouble(DoubleLinkedList, double );
-// void insertBeginStr(StringLinkedList, string);
-
-
-void printIntLL(IntLinkedList);
-//void printDoubleLL(DoubleLinkedList);
-//void printStrLL(StrLinkedList);
-
-
-void deleteIntLL(IntLinkedList);
-//void deleteDoubleLL(DoubleLinkedList);
-//void deleteStrLL(StrLinkedList);
-
-void addIntElemLL(IntLinkedList, int);  // done
-//void addDoubleElemLL(DoubleLinkedList, double);
-//void addStrElemLL(StrLinkedList, string);
-
-void addAllIntElemLL(IntLinkedList, IntLinkedList);
-//void addDoubleElemLL(DoubleLinkedList, DoubleLinkedList);
-//void addStrElemLL(StrLinkedList, StrLinkedList);
-
-int getIntElemLL(IntLinkedList, int);
-//double getDoubleElemLL(DoubleLinkedList, int);
-//string getStrElemLL(StrLinkedList, int);
-
-bool setIntElemLL(IntLinkedList, int, int);
-//bool setDoubleElemLL(DoubleLinkedList, int, double);
-//bool setStrElemLL(StrLinkedList, int, string);
-
-int indexOfIntLL(IntLinkedList, int);
-//double indexOfDoubleLL(DoubleLinkedList, double);
-//string indexOfStrLL(StrLinkedList, int);
-
-// toString
-
-void sortIntLL(IntLinkedList);
-//void sortDoubleLL(DoubleLinkedList);
-//void sortStrLL(StrLinkedList);
-
-void clearIntLL(IntLinkedList);
-//void clearDoubleLL(DoubleLinkedList);
-//void clearStrLL(StrLinkedList);
-
-bool containsIntLL(IntLinkedList, int);
-//bool containsDoubleLL(DoubleLinkedList, double);
-//bool containsStrLL(StrLinkedList, string);
-
-bool containsAllIntLL(IntLinkedList, IntLinkedList);
-//bool containsAllDoubleLL(DoubleLinkedList, DoubleLinkedList);
-//bool containsAllStrLL(StrLinkedList, StrLinkedList);
-
-bool containsAnyIntLL(IntLinkedList, IntLinkedList);
-//bool containsAnyDoubleLL(DoubleLinkedList, DoubleLinkedList);
-//bool containsAnyStrLL(StrLinkedList, StrLinkedList);
-
-bool removeIntLL(IntLinkedList, int);
-//bool removeDoubleLL(DoubleLinkedList, int);
-//bool removeStrLL(StrLinkedList, int);
-
-// removeAll
-// subtract
-// isEmpty
-// reverseList
-// isEqualLists
-// emptyIfNull
 
 #endif

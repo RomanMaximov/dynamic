@@ -8,4 +8,5 @@ add_executable(DynamicCollection main.c
         map.c
         string.c
         linkedlist.c
-        testarray.c set.h arrcustom.h arrcustom.c)
+        testarray.c set.h
+        linkedlistservice/intlinkedlist.h linkedlistservice/intlinkedlist.c linkedlistservice/doublelinkedlist.h linkedlistservice/doublelinkedlist.c linkedlistservice/strlinkedlist.h linkedlistservice/strlinkedlist.c)
