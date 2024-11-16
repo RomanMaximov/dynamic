@@ -47,7 +47,8 @@ typedef struct StrStrTreeMap StrStrTreeMap;
 #define newList(T) _Generic((T), \
     DoubleList : newDoubleArray,\
     IntList : newIntArray, \
-    StringList : newStrArray \
+    StringList : newStrArray,     \
+    IntLinkedList : newIntLinkedList  \
 )(T)
 
 #define listOf(T, V, ...) _Generic((T), \
@@ -77,12 +78,12 @@ typedef struct StrStrTreeMap StrStrTreeMap;
     StrStrMap : sizeStrStrMap \
 )(T)
 
-#define add(T, V) _Generic((T), \
+/*#define add(T, V) _Generic((T), \
     IntList: addIntElem, \
     DoubleList: addDoubleElem, \
     string: addStrElem, \
     char* : addCharArrElem \
-)(T, V)
+)(T, V)*/
 
 #define addAll(T, V) _Generic((T), \
     DoubleList : addAllDouble,\
@@ -192,8 +193,6 @@ typedef struct StrStrTreeMap StrStrTreeMap;
     IntList : isEqualIntLists,  \
     StringList : isEqualStrLists \
 )(T, V)
-
-
 
 
 #endif

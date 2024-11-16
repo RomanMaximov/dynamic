@@ -12,16 +12,42 @@
 #include <stdarg.h>
 #include <limits.h>
 #include <stdbool.h>
-#include "dynamic.h"
+//#include "dynamic.h"
 
 
-typedef struct LinkedListInt LinkedListInt;
+//typedef struct LinkedListInt LinkedListInt;
+typedef struct LinkedListInt {
+    struct InnnerIntLL* inner;   // private field
+    // funcs pointers
+    void (*add)(struct LinkedListInt* list, int number);
+    void (*addAll)(struct LinkedListInt* list1, struct LinkedListInt* list2);
+    int (*get)(struct LinkedListInt* list, int index);
+    bool (*set)(struct LinkedListInt* list, int index, int number);
+    int (*indexOf)(struct LinkedListInt* list, int number);
+    void (*sort)(struct LinkedListInt* list);
+    void (*clear)(struct LinkedListInt* list);
+    bool (*contains)(struct LinkedListInt* list, int number);
+    bool (*containsAll)(struct LinkedListInt* list1, struct LinkedListInt* list2);
+    bool (*containsAny)(struct LinkedListInt* list1, struct LinkedListInt* list2);
+    bool (*removeElem)(struct LinkedListInt* list, int number);
+
+    int (*size)(struct LinkedListInt* list);
+    bool (*isEmpty)(struct LinkedListInt* list);
+    void (*print)(struct LinkedListInt* list);
+    void (*delete)(struct LinkedListInt* list);
+} LinkedListInt;
+
 typedef struct NodeInt NodeInt;
 typedef struct String String;
+
 
 typedef LinkedListInt* IntLinkedList;
 typedef NodeInt* IntNode;
 typedef String* string;
+
+
+
+
 
 IntLinkedList newIntLinkedList();
 // DoubleLinkedList newDoubleLinkedList();
@@ -52,7 +78,7 @@ void deleteIntLL(IntLinkedList);
 //void deleteDoubleLL(DoubleLinkedList);
 //void deleteStrLL(StrLinkedList);
 
-void addIntElemLL(IntLinkedList, int, int*);
+void addIntElemLL(IntLinkedList, int);  // done
 //void addDoubleElemLL(DoubleLinkedList, double);
 //void addStrElemLL(StrLinkedList, string);
 

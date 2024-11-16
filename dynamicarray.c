@@ -39,7 +39,8 @@ typedef StringArray* StringList;
 typedef String* string;
 
 
-// prototypes
+
+// funcs prototypes
 void quickSortInt(int*, int, int);
 void quickSortDouble(double *, int, int);
 bool binarySearchInt(int elem, const int* arr, int high);
@@ -48,7 +49,7 @@ int* increaseCapacityInt(IntList);
 IntList copyIntList(IntList dest, IntList from);
 StringList copyStrList(StringList dest, StringList from);
 DoubleList copyDoubleList(DoubleList dest, DoubleList from);
-static String** increaseCapacity(StringList list);
+static String** increaseCapacityStr(StringList list);
 
 // funcs
 IntList newIntArray(IntList temp) {
@@ -122,7 +123,7 @@ void addStrElem(String* str, StringList list) {
     if (str == NULL || list == NULL) return;
 
     if (list->count == list->capacity) {
-        list->str = increaseCapacity(list);
+        list->str = increaseCapacityStr(list);
         memcpy(&list->str[list->count], &str, sizeof(String));
         list->count++;
     } else {
@@ -137,7 +138,7 @@ void addCharArrElem(char* str, StringList list) {
     string elem = stringOf(str);
 
     if (list->count == list->capacity) {
-        list->str = increaseCapacity(list);
+        list->str = increaseCapacityStr(list);
         memcpy(&list->str[list->count], &elem, sizeof(String));
         list->count++;
     } else {
@@ -196,7 +197,7 @@ StringList listOfStrLiteral(char* arr, int size, ...) {
 
     for (int i = 0; i < size; ++i) {
         if (list->count == list->capacity) {
-            list->str = increaseCapacity(list);
+            list->str = increaseCapacityStr(list);
         }
 
         char* arg = va_arg(counter, char*);
@@ -221,7 +222,7 @@ StringList listOfStr(StringList temp, int size, ...) {
 
     for (int i = 0; i < size; ++i) {
         if (list->count == list->capacity) {
-            list->str = increaseCapacity(list);
+            list->str = increaseCapacityStr(list);
         }
 
         string arg = va_arg(counter, string);
@@ -272,7 +273,7 @@ StringList listOfArrChar(StringList temp, char* arr[], int size) {
     unsigned long long int dataSize;
     for (int i = 0; i < size; ++i) {
         if (list->count == list->capacity) {
-            list->str = increaseCapacity(list);
+            list->str = increaseCapacityStr(list);
         }
 
         char* data = arr[i];
@@ -1262,7 +1263,7 @@ StringList subtractStr(StringList list1, StringList list2) {
     for (int i = 0; i < copyList->count; ++i) {
         if (copyList->str[i] != NULL) {
             if (temp->count == temp->capacity) {
-                temp->str = increaseCapacity(temp);
+                temp->str = increaseCapacityStr(temp);
             }
             temp->str[index++] = stringOf(copyList->str[i]->data);
             temp->count++;
@@ -1339,7 +1340,7 @@ StringList copyStrList(StringList dest, StringList from) {
     dest = newStrArray(dest);
     for (int i = 0; i < from->count; ++i) {
         if (dest->count == dest->capacity) {
-            dest->str = increaseCapacity(dest);
+            dest->str = increaseCapacityStr(dest);
         }
         dest->str[i] = stringOf(from->str[i]->data);
         dest->count++;
@@ -1347,7 +1348,7 @@ StringList copyStrList(StringList dest, StringList from) {
     return dest;
 }
 
-static String** increaseCapacity(StringList list) {
+static String** increaseCapacityStr(StringList list) {
     list->capacity *= 2;
     String** temp = list->str;
     list->str = malloc(list->capacity * sizeof(String*));

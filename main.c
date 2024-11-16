@@ -182,7 +182,7 @@ int main()
     puts("============================================");
     StringList stringList = newList(stringList);
     StringList stringList2 = newList(stringList2);
-    add(stringOf("str1"), stringList);
+    /*add(stringOf("str1"), stringList);
     add(stringOf("str2"), stringList);
     add(stringOf("str3"), stringList);
     printList(stringList);
@@ -270,11 +270,12 @@ int main()
 
     deleteList(strListFromCharArr);
     deleteList(strList);
-    deleteList(strList2);
+    deleteList(strList2);*/
     
-    IntLinkedList linkedList = listOf(linkedList, 3, 10, 4, 7);
+    IntLinkedList linkedList = linkedListOfInt(linkedList, 3, 10, 4, 7);
+    linkedList->add(linkedList, 99);
     printIntLL(linkedList);
-    removeIntLL(linkedList, 2);
+    removeIntLL(linkedList, 1);
     printIntLL(linkedList);
 
     deleteIntLL(linkedList);
@@ -313,11 +314,11 @@ int main()
     puts("====ok====");*/
 
 
-    deleteString(empty);
+    /*deleteString(empty);
     deleteString(blank);
     deleteList(stringList);
     deleteList(stringList2);
-    deleteList(strings);
+    deleteList(strings);*/
 
     return 0;
 }
