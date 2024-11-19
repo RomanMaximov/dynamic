@@ -77,17 +77,12 @@ typedef enum TypeLL {
     STR_LL
 } TypeLL;
 
-#define getType(T, V) _Generic((T), \
-    IntLinkedList : getIntLLType, \
-    DoubleLinkedList : getDoubleLLType, \
-    StrLinkedList : getStrLLType \
-)(T, V)
-
-
 
 // prototypes common funcs
-static void _initFuncs_(TypeLL type, void* data);
+static void initFuncs(TypeLL type, void* data);
 static void initInt(IntLinkedList list, TypeLL type);
+static void initDouble(DoubleLinkedList list, TypeLL type);
+static void initStr(StrLinkedList list, TypeLL type);
 static void* add(TypeLL type);
 static void* addAll(TypeLL type);
 static void* get(TypeLL type);
@@ -115,21 +110,10 @@ static void* deleteList(TypeLL type);
 IntLinkedList newIntLinkedList() {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
     list->inner = malloc(sizeof(InnerIntLL));
-    _initFuncs_(INT_LL, (void*)list);
     list->inner->count = 0;
     list->inner->index = 0;
     list->inner->nodes = NULL;
-
-    return list;
-}
-
-DoubleLinkedList newDoubleLinkedList() {
-    DoubleLinkedList list = malloc(sizeof(LinkedListDouble));
-    list->inner = malloc(sizeof(InnerDoubleLL));
-    _initFuncs_(DOUBLE_LL, (void*)list);
-    list->inner->count = 0;
-    list->inner->index = 0;
-    list->inner->nodes = NULL;
+    initFuncs(INT_LL, (void*)list);
 
     return list;
 }
@@ -140,7 +124,7 @@ IntLinkedList linkedListOfInt(IntLinkedList temp, int paramCount, ...) {
     list->inner->count = 0;
     list->inner->index = 0;
     list->inner->nodes = NULL;
-    _initFuncs_(INT_LL, (void*)list);
+    initFuncs(INT_LL, (void*)list);
 
     va_list param;
     va_start(param, paramCount);
@@ -151,15 +135,43 @@ IntLinkedList linkedListOfInt(IntLinkedList temp, int paramCount, ...) {
     return list;
 }
 
+DoubleLinkedList newDoubleLinkedList() {
+    DoubleLinkedList list = malloc(sizeof(LinkedListDouble));
+    list->inner = malloc(sizeof(InnerDoubleLL));
+    list->inner->count = 0;
+    list->inner->index = 0;
+    list->inner->nodes = NULL;
+    initFuncs(DOUBLE_LL, (void*)list);
+
+    return list;
+}
+
+DoubleLinkedList linkedListOfDouble(DoubleLinkedList temp, int paramCount, ...) {
+    DoubleLinkedList list = malloc(sizeof(LinkedListDouble));
+    list->inner = malloc(sizeof(InnerDoubleLL));
+    list->inner->count = 0;
+    list->inner->index = 0;
+    list->inner->nodes = NULL;
+    initFuncs(DOUBLE_LL, (void*)list);
+
+    va_list param;
+    va_start(param, paramCount);
+    for (int i = 0; i < paramCount; ++i) {
+        addDoubleElemLL(list, va_arg(param, int));
+    }
+    va_end(param);
+    return list;
+}
+
 // common functions
 static void* add(TypeLL type) {
     switch (type) {
         case INT_LL:
             return addIntElemLL;
-        /*case DOUBLE_LL:
+        case DOUBLE_LL:
             return addDoubleElemLL;
-        case STR_LL:
-            return addStrElemLL;*/
+        //case STR_LL:
+            //return addStrElemLL;
         default:
             return NULL;
     }
@@ -176,57 +188,28 @@ static void* set(TypeLL type) {
 
 
 
-/*IntLinkedList getIntLLType(IntLinkedList temp, void* data) {
-    IntLinkedList list = (IntLinkedList) data;
-    return list;
-}
-
-DoubleLinkedList getDoubleLLType(DoubleLinkedList temp, void* data) {
-    DoubleLinkedList list = (DoubleLinkedList) data;
-    return list;
-}
-
-StrLinkedList getStrLLType(StrLinkedList temp, void* data) {
-    StrLinkedList list = (StrLinkedList) data;
-    return list;
-}*/
-
- static void _initFuncs_(TypeLL type, void* data) {
-     IntLinkedList intList;
-     // DoubleLinkedList list
-     // StrLinkedList list
-
-     void* list;
-     switch (type) {
-         case INT_LL:
-             intList = (IntLinkedList) data;
-             initInt(intList, type);
-     }
 
 
-}
-
-static void initInt(IntLinkedList list, TypeLL type) {
-    list->add = add(type);
-    //list->addAll = addAll(type);
-    //list->get = get(type);
-    list->set = set(type);
-    //list->indexOf = indexOf(type);
-    //list->sort = sort(type);
-    //list->clear = clear(type);
-    //list->contains = contains(type);
-    //list->containsAll = containsAll(type);
-    //list->containsAny = containsAny(type);
-    //list->removeElem = removeElem(type);
-    //list->removeAll = removeAll(type);
-    //list->subtract = subtract(type);
-    //list->isEmpty = isEmpty(type);
-    //list->reverse = reverse(type);
-    //list->isEquals = isEquals(type);
-    //list->emptyIfNull = emptyIfNull(type);
-
-    //list->size = size(type);
-    //list->printList = printList(type);
-    //list->deleteList = deleteList(type);
+ static void initFuncs(TypeLL type, void* data) {
+     type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->add = add(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->add = add(type) : (((StrLinkedList) data)->add = add(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->addAll = addAll(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->addAll = addAll(type) : (((StrLinkedList) data)->addAll = addAll(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->get = get(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->get = get(type) : (((StrLinkedList) data)->get = get(type));
+     type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->set = set(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->set = set(type) : (((StrLinkedList) data)->set = set(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->indexOf = indexOf(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->indexOf = indexOf(type) : (((StrLinkedList) data)->indexOf = indexOf(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->sort = sort(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->sort = sort(type) : (((StrLinkedList) data)->sort = sort(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->clear = clear(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->clear = clear(type) : (((StrLinkedList) data)->clear = clear(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->contains = contains(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->contains = contains(type) : (((StrLinkedList) data)->contains = contains(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->containsAll = containsAll(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->containsAll = containsAll(type) : (((StrLinkedList) data)->containsAll = containsAll(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->containsAny = containsAny(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->containsAny = containsAny(type) : (((StrLinkedList) data)->containsAny = containsAny(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->removeElem = removeElem(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->removeElem = removeElem(type) : (((StrLinkedList) data)->removeElem = removeElem(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->removeAll = removeAll(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->removeAll = removeAll(type) : (((StrLinkedList) data)->removeAll = removeAll(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->subtract = subtract(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->subtract = subtract(type) : (((StrLinkedList) data)->subtract = subtract(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->isEmpty = isEmpty(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->isEmpty = isEmpty(type) : (((StrLinkedList) data)->isEmpty = isEmpty(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->reverse = reverse(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->reverse = reverse(type) : (((StrLinkedList) data)->reverse = reverse(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->isEquals = isEquals(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->isEquals = isEquals(type) : (((StrLinkedList) data)->isEquals = isEquals(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->emptyIfNull = emptyIfNull(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->emptyIfNull = emptyIfNull(type) : (((StrLinkedList) data)->emptyIfNull = emptyIfNull(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->size = size(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->size = size(type) : (((StrLinkedList) data)->size = size(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->printList = printList(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->printList = printList(type) : (((StrLinkedList) data)->printList = printList(type));
+     //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->deleteList = deleteList(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->deleteList = deleteList(type) : (((StrLinkedList) data)->deleteList = deleteList(type));
 }
 

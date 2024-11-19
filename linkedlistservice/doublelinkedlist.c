@@ -26,3 +26,47 @@ typedef struct InnerDoubleLL {
 typedef struct NodeDouble NodeDouble;
 typedef NodeDouble* DoubleNode;
 
+
+// funcs prototypes
+static void fillNodeDouble(DoubleNode node, double num, int* index);
+
+
+// funcs
+void addDoubleElemLL(DoubleLinkedList list, double num) {
+    DoubleNode newNodeEnd = NULL;
+    DoubleNode newNode = NULL;
+    DoubleNode current = list->inner->end;
+    int* index = &list->inner->index;
+
+    if (list->inner->count == 0) {
+        newNode = malloc(sizeof(NodeDouble));
+        if (newNode != NULL) {
+            fillNodeDouble(newNode, num, index);
+        }
+
+        newNode->next = list->inner->nodes;
+        list->inner->nodes = newNode;
+        list->inner->begin = list->inner->nodes;
+        list->inner->end = newNode;
+        list->inner->begin = newNode;
+    } else {
+        newNodeEnd = malloc(sizeof(NodeDouble));
+        if (newNodeEnd != NULL) {
+            fillNodeDouble(newNodeEnd, num, index);
+        }
+
+        current->next = newNodeEnd;
+        newNodeEnd->prev = current;
+        list->inner->end = newNodeEnd;
+    }
+
+    list->inner->count++;
+}
+
+static void fillNodeDouble(DoubleNode node, double num, int* index) {
+    node->data = num;
+    node->next = NULL;
+    node->prev = NULL;
+    ++(*index);
+}
+
