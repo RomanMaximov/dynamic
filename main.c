@@ -207,17 +207,17 @@ int main()
     puts("print finished");
 
     setElem("Set elem", strings, 2);
-    printList(strings);
+    printList(strings);*/
 
     int t1[5] = {1,2,3,4,5};
-    int t2[2] = {2, 5};
+    int t2[6] = {2, 5,1, 3, 4, 6};
     IntList baseList = listOfArr(baseList, t1, 5);
-    IntList removeList = listOfArr(removeList, t2, 2);
+    IntList removeList = listOfArr(removeList, t2, 6);
     printList(baseList);
     printList(removeList);
     removeAllInt(baseList, removeList);
     printList(baseList);
-    printf("Count of baseList = %d\n", size(baseList));
+    /*printf("Count of baseList = %d\n", size(baseList));
     deleteList(baseList);
     deleteList(removeList);
 
@@ -271,8 +271,15 @@ int main()
     deleteList(strListFromCharArr);
     deleteList(strList);
     deleteList(strList2);*/
-    
-    IntLinkedList linkedList = linkedListOfInt(linkedList, 3, 10, 4, 7);
+
+    puts("===========================================");
+    IntLinkedList linkedList = linkedListOfInt(linkedList, 5, 77, 4, 7, 56, 10);
+    printIntLL(linkedList);
+    IntLinkedList linkedList2 = linkedListOfInt(linkedList2, 5, 77, 4, 7, 56, 10);
+    printIntLL(linkedList2);
+
+    removeAllIntLL(linkedList, linkedList2);
+    printIntLL(linkedList);
     linkedList-> add(linkedList, 99);
     printIntLL(linkedList);
     removeIntLL(linkedList, 1);

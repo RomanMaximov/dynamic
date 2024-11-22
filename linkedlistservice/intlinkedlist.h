@@ -14,14 +14,6 @@ typedef struct LinkedListInt LinkedListInt;
 typedef LinkedListInt* IntLinkedList;
 
 
-int sizeIntLinkedList(IntLinkedList);
-
-bool isEmptyIntLinkedList(IntLinkedList);
-
-void printIntLL(IntLinkedList);
-
-void deleteIntLL(IntLinkedList);
-
 void addIntElemLL(IntLinkedList, int);
 
 void addAllIntElemLL(IntLinkedList, IntLinkedList);
@@ -46,17 +38,25 @@ bool containsAnyIntLL(IntLinkedList, IntLinkedList);
 
 bool removeIntLL(IntLinkedList, int);
 
-bool removeAllIntLL(IntLinkedList, IntLinkedList);  // TODO
+bool removeAllIntLL(IntLinkedList, IntLinkedList);
 
-IntLinkedList subtractIntLL(IntLinkedList, IntLinkedList);  // TODO
+IntLinkedList subtractIntLL(IntLinkedList, IntLinkedList);
 
-bool isEmptyIntLL(IntLinkedList);  // TODO
+bool isEmptyIntLL(IntLinkedList);
 
-void reverseIntLL(IntLinkedList);  // TODO
+void reverseIntLL(IntLinkedList);
 
-bool isEqualListsIntLL(IntLinkedList, IntLinkedList);  // TODO
+bool isEqualListsIntLL(IntLinkedList, IntLinkedList);
 
-IntLinkedList emptyIfNullIntLL(IntLinkedList);  // TODO
+IntLinkedList emptyIfNullIntLL(IntLinkedList);
+
+int sizeIntLL(IntLinkedList);
+
+bool isEmptyIntLL(IntLinkedList);
+
+void printIntLL(IntLinkedList);
+
+void deleteIntLL(IntLinkedList);
 
 
 #endif

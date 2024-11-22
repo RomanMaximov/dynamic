@@ -182,11 +182,11 @@ typedef struct StrStrTreeMap StrStrTreeMap;
     StringList : emptyIfNullStr \
 )(T)
 
-#define subtract(T, V) _Generic((T), \
+/*#define subtract(T, V) _Generic((T), \
     DoubleList : subtractDouble,\
     IntList : subtractInt,  \
     StringList : subtractStr \
-)(T, V)
+)(T, V)*/
 
 #define isEqualLists(T, V) _Generic((T), \
     DoubleList : isEqualDoubleLists,\

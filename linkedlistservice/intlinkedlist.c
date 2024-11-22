@@ -31,11 +31,17 @@ typedef NodeInt* IntNode;
 // funcs prototypes
 static void fillNodeInt(IntNode node, int num, int* index);
 static void quickSortInt(int* arr, int low, int high);
-static bool binarySearchInt(int elem, const int* arr, int high);
+static bool binarySearch(int elem, const int* arr, int high);
 static void deleteNodeInt(IntLinkedList list, IntNode current, IntNode previous);
 static void deleteFirstNodeInt(IntLinkedList list, IntNode current);
 static bool removeNodeInt(IntLinkedList list, IntNode current, IntNode previous, int index);
+static void deleteAllNodes(IntLinkedList list);
 static void toArrAndSort(IntLinkedList list, int* arr);
+static void copyLLToArray(IntLinkedList list, int* arr);
+static int indexOf(int* arr, int size, int num);
+static IntLinkedList copyIntLL(IntLinkedList list);
+static void reverseArr(int* arr, int size);
+
 
 static void insertBeginInt(IntLinkedList list, int num, int* index) {
     IntNode newNodeStart = NULL;
@@ -172,11 +178,13 @@ int indexOfIntLL(IntLinkedList list, int num) {
         return -1;
 
     IntNode current = list->inner->begin;
+    int index = 0;
     while (current != NULL) {
         if (num == current->data)
-            return list->inner->index;
+            return index;
 
         current = current->next;
+        ++index;
     }
     return -1;
 }
@@ -223,7 +231,7 @@ bool containsAllIntLL(IntLinkedList list1, IntLinkedList list2) {
     toArrAndSort(list1, arr);
 
     while (temp != NULL) {
-        if (!binarySearchInt(temp->data, arr, list1->inner->count - 1))
+        if (!binarySearch(temp->data, arr, list1->inner->count))
             return false;
 
         temp = temp->next;
@@ -241,7 +249,7 @@ bool containsAnyIntLL(IntLinkedList list1, IntLinkedList list2) {
     toArrAndSort(list1, arr);
 
     while (temp != NULL) {
-        if (binarySearchInt(temp->data, arr, list1->inner->count - 1))
+        if (binarySearch(temp->data, arr, list1->inner->count))
             return true;
 
         temp = temp->next;
@@ -274,6 +282,97 @@ bool removeIntLL(IntLinkedList list, int index) {
     }
 
     return removeNodeInt(list, current, previous, index);
+}
+
+bool removeAllIntLL(IntLinkedList list1, IntLinkedList list2) {
+    if (list1 == NULL || list2 ==NULL) return false;
+
+    int listSize = list1->inner->count;
+    int* temp = malloc(listSize * sizeof(int));
+    int* filtered = malloc(listSize * sizeof(int));
+    int* tempForBS = malloc(listSize * sizeof(int));
+
+    copyLLToArray(list1, temp);
+    copyLLToArray(list1, tempForBS);
+    quickSortInt(tempForBS, 0, listSize);
+
+    int j = 0;
+    IntNode current2 = list2->inner->begin;
+    while (current2 != NULL) {
+        bool isExist = binarySearch(current2->data, tempForBS, listSize);
+        if (isExist) {
+            *(filtered + j) = current2->data;
+            ++j;
+        }
+
+        current2 = current2->next;
+    }
+
+    deleteAllNodes(list1);
+
+    list1->inner->count = 0;
+    list1->inner->index = 0;
+
+    quickSortInt(filtered, 0, j);
+    for (int i = 0; i < listSize; ++i) {
+        if (binarySearch(*(temp + i), filtered, j))
+            continue;
+
+        addIntElemLL(list1, *(temp + i));
+    }
+
+    free(tempForBS);
+    free(filtered);
+    free(temp);
+
+    return true;
+}
+
+IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
+    if (isEmptyIntLL(list1)) {
+        return newIntLinkedList();
+    }
+
+    if (isEmptyIntLL(list2)) {
+        return copyIntLL(list1);
+    }
+
+    int listSize = list1->inner->count;
+    int* temp = malloc(listSize * sizeof(int));
+    int* filtered = malloc(listSize * sizeof(int));
+    int* tempForBS = malloc(listSize * sizeof(int));
+
+    copyLLToArray(list1, temp);
+    copyLLToArray(list1, tempForBS);
+    quickSortInt(tempForBS, 0, listSize);
+
+    int j = 0;
+    IntNode current2 = list2->inner->begin;
+    while (current2 != NULL) {
+        bool isExist = binarySearch(current2->data, tempForBS, listSize);
+        if (isExist) {
+            *(filtered + j) = current2->data;
+            ++j;
+        }
+
+        current2 = current2->next;
+    }
+
+    IntLinkedList newLL = newIntLinkedList();
+
+    quickSortInt(filtered, 0, j);
+    for (int i = 0; i < listSize; ++i) {
+        if (binarySearch(*(temp + i), filtered, j))
+            continue;
+
+        addIntElemLL(newLL, *(temp + i));
+    }
+
+    free(tempForBS);
+    free(filtered);
+    free(temp);
+
+    return newLL;
 }
 
 void printIntLL(IntLinkedList list) {
@@ -314,12 +413,52 @@ void deleteIntLL(IntLinkedList list) {
     free(list);
 }
 
-int sizeList(IntLinkedList list) {
+int sizeIntLL(IntLinkedList list) {
     return list->inner->count;
 }
 
-bool isEmptyIntLinkedList(IntLinkedList list) {
+bool isEmptyIntLL(IntLinkedList list) {
     return list == NULL || list->inner->count == 0;
+}
+
+void reverseIntLL(IntLinkedList list) {
+    int* arr = malloc(list->inner->count * sizeof(int));
+    copyLLToArray(list, arr);
+
+    reverseArr(arr, list->inner->count);
+
+    IntNode current = list->inner->begin;
+    int index = 0;
+    while (current != NULL) {
+        current->data = *(arr + index);
+        current = current->next;
+        ++index;
+    }
+}
+
+bool isEqualListsIntLL(IntLinkedList list1, IntLinkedList list2) {
+    if (list1 == NULL || list2 == NULL)
+        return false;
+
+    if (list1->inner->count != list2->inner->count)
+        return false;
+
+    IntNode current1 = list1->inner->begin;
+    IntNode current2 = list2->inner->begin;
+
+    while (current1 != NULL) {
+        if (current1->data != current2->data)
+            return false;
+
+        current1 = current1->next;
+        current2 = current2->next;
+    }
+
+    return true;
+}
+
+IntLinkedList emptyIfNullIntLL(IntLinkedList list) {
+    return list == NULL ? newIntLinkedList() : list;
 }
 
 static void deleteFirstNodeInt(IntLinkedList list, IntNode current) {
@@ -410,14 +549,15 @@ static void quickSortInt(int* arr, int low, int high) {
         quickSortInt(arr, low, j);
 }
 
-static bool binarySearchInt(int elem, const int* arr, int high) {
+static bool binarySearch(int elem, const int* arr, int high) {
     int low, middle;
+    --high;
     low = 0;
     while (low <= high) {
         middle = (low + high) / 2;
-        if (elem < arr[middle])
+        if (elem < *(arr + middle))
             high = middle - 1;
-        else if (elem > arr[middle])
+        else if (elem > *(arr + middle))
             low = middle + 1;
         else
             return true;
@@ -441,4 +581,67 @@ static void fillNodeInt(IntNode node, int num, int* index) {
     node->next = NULL;
     node->prev = NULL;
     ++(*index);
+}
+
+static int indexOf(int* arr, int size, int num) {
+    for (int i = 0; i < size; ++i) {
+        if (num == *(arr + i)) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+static void copyLLToArray(IntLinkedList list, int* arr) {
+    IntNode current = list->inner->begin;
+    int index = 0;
+    while (current != NULL) {
+        *(arr + index++) = current->data;
+        current = current->next;
+    }
+}
+
+static void deleteAllNodes(IntLinkedList list) {
+    if (list->inner != NULL) {
+        IntNode current = list->inner->begin;
+        IntNode temp = NULL;
+
+        while (current != NULL) {
+            temp = current;
+            current = current->next;
+            free(temp);
+        }
+
+        list->inner->begin = NULL;
+        list->inner->end = NULL;
+        list->inner->nodes = NULL;
+    }
+}
+
+static IntLinkedList copyIntLL(IntLinkedList list) {
+    IntLinkedList temp = newIntLinkedList();
+    IntNode current = list->inner->begin;
+
+    while (current != NULL) {
+        addIntElemLL(temp, current->data);
+        current = current->next;
+    }
+    return temp;
+}
+
+static void reverseArr(int* arr, int size) {
+    --size;
+    int* start = arr;
+    int* end = arr + size;
+
+    int temp;
+    while (start < end) {
+        temp = *start;
+        *start = *end;
+        *end = temp;
+
+        ++start;
+        --end;
+    }
 }

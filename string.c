@@ -65,9 +65,9 @@ int compareTo(string s1, string s2) {
     return strcmp(s1->data, s2->data);
 }
 
-int binarySearch(char ch, const char* arr, int high)
-{
+int binarySearch(char ch, const char* arr, int high) {
     int low, middle;
+    --high;
     low = 0;
     while (low <= high)
     {

@@ -539,13 +539,14 @@ bool removeAllInt(IntList list1, IntList list2) {
 
     int index = 0;
     for (int i = 0; i < list1->count; ++i) {
-        if (binarySearchInt(i, indexList, j - 1)) // 1
+        if (binarySearchInt(i, indexList, j)) // 1
             continue;
 
         list1->data[index] = temp[i];
         ++index;
     }
     list1->count -= j;
+    if (list1->count == 0) list1->data = NULL;
     free(indexList);
     free(temp);
 
@@ -573,13 +574,14 @@ bool removeAllDouble(DoubleList list1, DoubleList list2) {
 
     int index = 0;
     for (int i = 0; i < list1->count; ++i) {
-        if (binarySearchInt(i, indexList, j - 1)) // 1
+        if (binarySearchInt(i, indexList, j)) // 1
             continue;
 
         list1->data[index] = temp[i];
         ++index;
     }
     list1->count -= j;
+    if (list1->count == 0) list1->data = NULL;
     free(indexList);
     free(temp);
 
@@ -607,13 +609,14 @@ bool removeAllStr(StringList list1, StringList list2) {
 
     int index = 0;
     for (int i = 0; i < list1->count; ++i) {
-        if (binarySearchInt(i, indexList, j - 1)) // 1
+        if (binarySearchInt(i, indexList, j)) // 1
             continue;
 
         list1->str[index] = temp[i];
         ++index;
     }
     list1->count -= j;
+    if (list1->count == 0) list1->str = NULL;
     free(indexList);
     free(temp);
 
@@ -1275,6 +1278,7 @@ StringList subtractStr(StringList list1, StringList list2) {
 
 bool binarySearchInt(int elem, const int* arr, int high) {
     int low, middle;
+    --high;
     low = 0;
     while (low <= high) {
         middle = (low + high) / 2;
