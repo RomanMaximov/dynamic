@@ -209,14 +209,17 @@ int main()
     setElem("Set elem", strings, 2);
     printList(strings);*/
 
-    int t1[5] = {1,2,3,4,5};
+    int t1[5] = {1,2,3,4,5555};
     int t2[6] = {2, 5,1, 3, 4, 6};
     IntList baseList = listOfArr(baseList, t1, 5);
     IntList removeList = listOfArr(removeList, t2, 6);
-    printList(baseList);
-    printList(removeList);
-    removeAllInt(baseList, removeList);
-    printList(baseList);
+    char* toString = toStringInt(baseList);
+    puts(toString);
+
+    //printList(baseList);
+    //printList(removeList);
+    //removeAllInt(baseList, removeList);
+    //printList(baseList);
     /*printf("Count of baseList = %d\n", size(baseList));
     deleteList(baseList);
     deleteList(removeList);

@@ -14,51 +14,50 @@ typedef struct LinkedListDouble LinkedListDouble;
 typedef LinkedListDouble* DoubleLinkedList;
 
 
-int sizeDoubleLinkedList(DoubleLinkedList);    // TODO
 
-bool isEmptyDoubleLinkedList(DoubleLinkedList);    // TODO
+void addDoubleElemLL(DoubleLinkedList, double);
 
-//void insertBeginDouble(DoubleLinkedList, double );    // TODO
+void addAllDoubleElemLL(DoubleLinkedList, DoubleLinkedList);
 
-void printDoubleLL(DoubleLinkedList);    // TODO
+double getDoubleElemLL(DoubleLinkedList, int);
 
-void deleteDoubleLL(DoubleLinkedList);    // TODO
+bool setDoubleElemLL(DoubleLinkedList, int, double);
 
-void addDoubleElemLL(DoubleLinkedList, double);    // TODO
-
-void addAllDoubleElemLL(DoubleLinkedList, DoubleLinkedList);    // TODO
-
-double getDoubleElemLL(DoubleLinkedList, int);    // TODO
-
-bool setDoubleElemLL(DoubleLinkedList, int, double);    // TODO
-
-double indexOfDoubleLL(DoubleLinkedList, double);    // TODO
+int indexOfDoubleLL(DoubleLinkedList, double);
 
 // toString
 
-void sortDoubleLL(DoubleLinkedList);    // TODO
+void sortDoubleLL(DoubleLinkedList);
 
-void clearDoubleLL(DoubleLinkedList);    // TODO
+void clearDoubleLL(DoubleLinkedList);
 
-bool containsDoubleLL(DoubleLinkedList, double);    // TODO
+bool containsDoubleLL(DoubleLinkedList, double);
 
-bool containsAllDoubleLL(DoubleLinkedList, DoubleLinkedList);    // TODO
+bool containsAllDoubleLL(DoubleLinkedList, DoubleLinkedList);
 
-bool containsAnyDoubleLL(DoubleLinkedList, DoubleLinkedList);    // TODO
+bool containsAnyDoubleLL(DoubleLinkedList, DoubleLinkedList);
 
-bool removeDoubleLL(DoubleLinkedList, int); // by index   // TODO
+bool removeDoubleLL(DoubleLinkedList, int);
 
-bool removeAllDoubleLL(DoubleLinkedList, DoubleLinkedList);    // TODO
+bool removeAllDoubleLL(DoubleLinkedList, DoubleLinkedList);
 
-DoubleLinkedList subtractDoubleLL(DoubleLinkedList, DoubleLinkedList);    // TODO
+DoubleLinkedList subtractDoubleLL(DoubleLinkedList, DoubleLinkedList);
 
-bool isEmptyDoubleLL(DoubleLinkedList);    // TODO
+bool isEmptyDoubleLL(DoubleLinkedList);
 
-void reverseDoubleLL(DoubleLinkedList);    // TODO
+void reverseDoubleLL(DoubleLinkedList);
 
-bool isEqualListsDoubleLL(DoubleLinkedList, DoubleLinkedList);    // TODO
+bool isEqualListsDoubleLL(DoubleLinkedList, DoubleLinkedList);
 
-DoubleLinkedList emptyIfNullDoubleLL(DoubleLinkedList);    // TODO
+DoubleLinkedList emptyIfNullDoubleLL(DoubleLinkedList);
+
+int sizeDoubleLinkedList(DoubleLinkedList);
+
+bool isEmptyDoubleLinkedList(DoubleLinkedList);
+
+void printDoubleLL(DoubleLinkedList);
+
+void deleteDoubleLL(DoubleLinkedList);
 
 
 #endif
