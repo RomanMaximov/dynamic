@@ -35,7 +35,6 @@ static bool binarySearch(int elem, const int* arr, int high);
 static void deleteNodeInt(IntLinkedList list, IntNode current, IntNode previous);
 static void deleteFirstNodeInt(IntLinkedList list, IntNode current);
 static bool removeNodeInt(IntLinkedList list, IntNode current, IntNode previous, int index);
-static void deleteAllNodes(IntLinkedList list);
 static void toArrAndSort(IntLinkedList list, int* arr);
 static void copyLLToArray(IntLinkedList list, int* arr);
 static int indexOf(int* arr, int size, int num);
@@ -223,7 +222,7 @@ bool containsIntLL(IntLinkedList list, int num) {
 }
 
 bool containsAllIntLL(IntLinkedList list1, IntLinkedList list2) {
-    if (list1 == NULL || list2 == NULL) return false;
+    if (list1 == NULL || list2 == NULL || list2->inner->count > list1->inner->count) return false;
 
     int arr[list1->inner->count];
     IntNode temp = list2->inner->begin;
@@ -308,10 +307,7 @@ bool removeAllIntLL(IntLinkedList list1, IntLinkedList list2) {
         current2 = current2->next;
     }
 
-    deleteAllNodes(list1);
-
-    list1->inner->count = 0;
-    list1->inner->index = 0;
+    clearIntLL(list1);
 
     quickSortInt(filtered, 0, j);
     for (int i = 0; i < listSize; ++i) {
@@ -330,7 +326,8 @@ bool removeAllIntLL(IntLinkedList list1, IntLinkedList list2) {
 
 IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
     if (isEmptyIntLL(list1)) {
-        return newIntLinkedList();
+        IntLinkedList temp = NULL;
+        return newIntLinkedList(temp);
     }
 
     if (isEmptyIntLL(list2)) {
@@ -358,7 +355,7 @@ IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
         current2 = current2->next;
     }
 
-    IntLinkedList newLL = newIntLinkedList();
+    IntLinkedList newLL = newIntLinkedList(newLL);
 
     quickSortInt(filtered, 0, j);
     for (int i = 0; i < listSize; ++i) {
@@ -458,7 +455,7 @@ bool isEqualListsIntLL(IntLinkedList list1, IntLinkedList list2) {
 }
 
 IntLinkedList emptyIfNullIntLL(IntLinkedList list) {
-    return list == NULL ? newIntLinkedList() : list;
+    return list == NULL ? newIntLinkedList(list) : list;
 }
 
 static void deleteFirstNodeInt(IntLinkedList list, IntNode current) {
@@ -602,25 +599,8 @@ static void copyLLToArray(IntLinkedList list, int* arr) {
     }
 }
 
-static void deleteAllNodes(IntLinkedList list) {
-    if (list->inner != NULL) {
-        IntNode current = list->inner->begin;
-        IntNode temp = NULL;
-
-        while (current != NULL) {
-            temp = current;
-            current = current->next;
-            free(temp);
-        }
-
-        list->inner->begin = NULL;
-        list->inner->end = NULL;
-        list->inner->nodes = NULL;
-    }
-}
-
 static IntLinkedList copyIntLL(IntLinkedList list) {
-    IntLinkedList temp = newIntLinkedList();
+    IntLinkedList temp = newIntLinkedList(temp);
     IntNode current = list->inner->begin;
 
     while (current != NULL) {

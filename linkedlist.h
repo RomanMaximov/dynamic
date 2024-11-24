@@ -12,6 +12,7 @@
 #include <stdarg.h>
 #include <limits.h>
 #include <stdbool.h>
+#include "string.h"
 #include "linkedlistservice/intlinkedlist.h"
 #include "linkedlistservice/doublelinkedlist.h"
 #include "linkedlistservice/strlinkedlist.h"
@@ -76,7 +77,7 @@ typedef struct LinkedListDouble {
 typedef struct LinkedListStr {
     struct InnerStrLL* inner;   // private field
     // funcs pointers
-    void (*add)(struct LinkedListStr* list, String* s);
+    void (*add)(struct LinkedListStr* list, string s);
     void (*addAll)(struct LinkedListStr* list1, struct LinkedListStr* list2);
     String* (*get)(struct LinkedListStr* list, int index);
     bool (*set)(struct LinkedListStr* list, int index, String* s);
@@ -105,9 +106,9 @@ typedef LinkedListStr* StrLinkedList;
 typedef String* string;
 
 // func prototypes
-IntLinkedList newIntLinkedList();
-DoubleLinkedList newDoubleLinkedList();
-StrLinkedList newStrLinkedList();
+IntLinkedList newIntLinkedList(IntLinkedList);
+DoubleLinkedList newDoubleLinkedList(DoubleLinkedList);
+StrLinkedList newStrLinkedList(StrLinkedList);
 
 IntLinkedList linkedListOfInt(IntLinkedList, int, ...);
 DoubleLinkedList linkedListOfDouble(DoubleLinkedList, int, ...);

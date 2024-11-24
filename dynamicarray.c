@@ -119,20 +119,21 @@ void addDoubleElem(DoubleList list, double num) {
     }
 }
 
-void addStrElem(String* str, StringList list) {
+void addStrElem(StringList list, string str) {
     if (str == NULL || list == NULL) return;
 
+    string temp = stringOf(str->data);
     if (list->count == list->capacity) {
         list->str = increaseCapacityStr(list);
-        memcpy(&list->str[list->count], &str, sizeof(String));
+        memcpy(&list->str[list->count], &temp, sizeof(String));
         list->count++;
     } else {
-        memcpy(&list->str[list->count], &str, sizeof(String));
+        memcpy(&list->str[list->count], &temp, sizeof(String));
         list->count++;
     }
 }
 
-void addCharArrElem(char* str, StringList list) {
+void addCharArrElem(StringList list, char* str) {
     if (str == NULL || list == NULL) return;
 
     string elem = stringOf(str);
@@ -187,7 +188,7 @@ DoubleList listOfDouble(DoubleList temp, int num, ...) {
     return list;
 }
 
-StringList listOfStrLiteral(char* arr, int size, ...) {
+StringList listOfStrLiteral(StringList temp, char* arr, int size, ...) {
     StringList list = newStrArray(list);
 
     va_list counter;

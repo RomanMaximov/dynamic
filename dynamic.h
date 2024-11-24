@@ -54,9 +54,12 @@ typedef struct StrStrTreeMap StrStrTreeMap;
 #define listOf(T, V, ...) _Generic((T), \
     DoubleList : listOfDouble, \
     IntList : listOfInt, \
-    StringList : listOfStr,  \
-    char* : listOfStrLiteral,           \
-    IntLinkedList: linkedListOfInt          \
+    StringList : _Generic((V),      \
+        char* : listOfStrLiteral,  \
+        char* arr[] : listOfArrChar,  \
+        default : listOfStr,  \
+    ), \
+    IntLinkedList : linkedListOfInt          \
 )(T, V, __VA_ARGS__)
 
 #define listOfArr(T, V, K) _Generic((T), \

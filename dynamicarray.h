@@ -39,7 +39,7 @@ StringList listOfArrChar(StringList, char* arr[], int);
 IntList listOfInt(IntList, int, ...);
 DoubleList listOfDouble(DoubleList, int, ...);
 StringList listOfStr(StringList, int, ...);
-StringList listOfStrLiteral(char*, int, ...);
+StringList listOfStrLiteral(StringList, char*, int, ...);
 
 
 
@@ -49,8 +49,8 @@ int sizeStrList(StringList);
 
 void addIntElem(IntList, int);
 void addDoubleElem(DoubleList, double);
-void addStrElem(string, StringList);
-void addCharArrElem(char*, StringList);
+void addStrElem(StringList, string);
+void addCharArrElem(StringList, char*);
 
 void addAllInt(IntList, IntList);
 void addAllDouble(DoubleList, DoubleList);

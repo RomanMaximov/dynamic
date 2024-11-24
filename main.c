@@ -177,11 +177,34 @@ int main()
     deleteString(sub2);
     deleteString(sub3);
 
-    string s5 = stringOf("don,sun,dog");//,string,milk,bob,ron,see,str11,str12,str13");
+    /*string s5 = stringOf("don,sun,dog");//,string,milk,bob,ron,see,str11,str12,str13");
     printString(s5);
     puts("============================================");
     StringList stringList = newList(stringList);
-    StringList stringList2 = newList(stringList2);
+    StringList stringList2 = newList(stringList2);*/
+
+
+    string ll1 = stringOf("s1");
+    string ll2 = stringOf("s2");
+    string ll3 = stringOf("s3");
+    string ll4 = stringOf("s4");
+    string ll5 = stringOf("s5");
+    StrLinkedList strLL = newStrLinkedList(strLL);
+    StrLinkedList strLL2 = newStrLinkedList(strLL2);
+    addStrElemLL(strLL, ll1);
+    addStrElemLL(strLL, ll3);
+    addStrElemLL(strLL, ll4);
+    addStrElemLL(strLL, ll2);
+    addStrElemLL(strLL2, ll2);
+    addStrElemLL(strLL2, ll1);
+    if (containsAllStrLL(strLL, strLL2)) {
+        puts("strLL contains all from strLL2");
+    } else {
+        puts("strLL contains NOT all from strLL2");
+    }
+
+
+    puts("");
     /*add(stringOf("str1"), stringList);
     add(stringOf("str2"), stringList);
     add(stringOf("str3"), stringList);
@@ -208,13 +231,6 @@ int main()
 
     setElem("Set elem", strings, 2);
     printList(strings);*/
-
-    int t1[5] = {1,2,3,4,5555};
-    int t2[6] = {2, 5,1, 3, 4, 6};
-    IntList baseList = listOfArr(baseList, t1, 5);
-    IntList removeList = listOfArr(removeList, t2, 6);
-    char* toString = toStringInt(baseList);
-    puts(toString);
 
     //printList(baseList);
     //printList(removeList);

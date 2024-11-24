@@ -104,7 +104,7 @@ static void* deleteList(TypeLL type);
 
 
 // funcs
-IntLinkedList newIntLinkedList() {
+IntLinkedList newIntLinkedList(IntLinkedList temp) {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
     list->inner = malloc(sizeof(InnerIntLL));
     list->inner->count = 0;
@@ -136,7 +136,7 @@ IntLinkedList linkedListOfInt(IntLinkedList temp, int paramCount, ...) {
     return list;
 }
 
-DoubleLinkedList newDoubleLinkedList() {
+DoubleLinkedList newDoubleLinkedList(DoubleLinkedList temp) {
     DoubleLinkedList list = malloc(sizeof(LinkedListDouble));
     list->inner = malloc(sizeof(InnerDoubleLL));
     list->inner->count = 0;
@@ -168,6 +168,38 @@ DoubleLinkedList linkedListOfDouble(DoubleLinkedList temp, int paramCount, ...) 
     return list;
 }
 
+StrLinkedList newStrLinkedList(StrLinkedList temp) {
+    StrLinkedList list = malloc(sizeof(LinkedListStr));
+    list->inner = malloc(sizeof(InnerStrLL));
+    list->inner->count = 0;
+    list->inner->index = 0;
+    list->inner->nodes = NULL;
+    list->inner->begin = NULL;
+    list->inner->end = NULL;
+    initFuncs(STR_LL, (void*)list);
+
+    return list;
+}
+
+StrLinkedList linkedListOfStr(StrLinkedList temp, int paramCount, ...) {
+    StrLinkedList list = malloc(sizeof(LinkedListStr));
+    list->inner = malloc(sizeof(InnerStrLL));
+    list->inner->count = 0;
+    list->inner->index = 0;
+    list->inner->nodes = NULL;
+    list->inner->begin = NULL;
+    list->inner->end = NULL;
+    initFuncs(STR_LL, (void*)list);
+
+    va_list param;
+    va_start(param, paramCount);
+    for (int i = 0; i < paramCount; ++i) {
+        addStrElemLL(list, va_arg(param, string));
+    }
+    va_end(param);
+    return list;
+}
+
 // common functions
 static void* add(TypeLL type) {
     switch (type) {
@@ -175,8 +207,8 @@ static void* add(TypeLL type) {
             return addIntElemLL;
         case DOUBLE_LL:
             return addDoubleElemLL;
-        //case STR_LL:
-            //return addStrElemLL;
+        case STR_LL:
+            addStrElemLL;
         default:
             return NULL;
     }

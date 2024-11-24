@@ -34,7 +34,6 @@ static bool binarySearch(double elem, const double* arr, int high);
 static void deleteNodeDouble(DoubleLinkedList list, DoubleNode current, DoubleNode previous);
 static void deleteFirstNodeDouble(DoubleLinkedList list, DoubleNode current);
 static bool removeNodeDouble(DoubleLinkedList list, DoubleNode current, DoubleNode previous, int index);
-static void deleteAllNodes(DoubleLinkedList list);
 static void toArrAndSort(DoubleLinkedList list, double* arr);
 static void copyLLToArray(DoubleLinkedList list, double* arr);
 static int indexOf(const double* arr, int size, double num);
@@ -192,7 +191,7 @@ bool containsDoubleLL(DoubleLinkedList list, double num) {
 }
 
 bool containsAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
-    if (list1 == NULL || list2 == NULL) return false;
+    if (list1 == NULL || list2 == NULL || list2->inner->count > list1->inner->count) return false;
 
     double arr[list1->inner->count];
     DoubleNode temp = list2->inner->begin;
@@ -277,10 +276,7 @@ bool removeAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
         current2 = current2->next;
     }
 
-    deleteAllNodes(list1);
-
-    list1->inner->count = 0;
-    list1->inner->index = 0;
+    clearDoubleLL(list1);
 
     quickSortDouble(filtered, 0, j);
     for (int i = 0; i < listSize; ++i) {
@@ -299,7 +295,8 @@ bool removeAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
 
 DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
     if (isEmptyDoubleLL(list1)) {
-        return newDoubleLinkedList();
+        DoubleLinkedList temp = NULL;
+        return newDoubleLinkedList(temp);
     }
 
     if (isEmptyDoubleLL(list2)) {
@@ -327,7 +324,7 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2
         current2 = current2->next;
     }
 
-    DoubleLinkedList newLL = newDoubleLinkedList();
+    DoubleLinkedList newLL = newDoubleLinkedList(newLL);
 
     quickSortDouble(filtered, 0, j);
     for (int i = 0; i < listSize; ++i) {
@@ -427,7 +424,7 @@ bool isEqualListsDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
 }
 
 DoubleLinkedList emptyIfNullDoubleLL(DoubleLinkedList list) {
-    return list == NULL ? newDoubleLinkedList() : list;
+    return list == NULL ? newDoubleLinkedList(list) : list;
 }
 
 static void deleteFirstNodeDouble(DoubleLinkedList list, DoubleNode current) {
@@ -564,25 +561,8 @@ static void copyLLToArray(DoubleLinkedList list, double* arr) {
     }
 }
 
-static void deleteAllNodes(DoubleLinkedList list) {
-    if (list->inner != NULL) {
-        DoubleNode current = list->inner->begin;
-        DoubleNode temp = NULL;
-
-        while (current != NULL) {
-            temp = current;
-            current = current->next;
-            free(temp);
-        }
-
-        list->inner->begin = NULL;
-        list->inner->end = NULL;
-        list->inner->nodes = NULL;
-    }
-}
-
 static DoubleLinkedList copyDoubleLL(DoubleLinkedList list) {
-    DoubleLinkedList temp = newDoubleLinkedList();
+    DoubleLinkedList temp = newDoubleLinkedList(temp);
     DoubleNode current = list->inner->begin;
 
     while (current != NULL) {

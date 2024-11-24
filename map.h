@@ -36,7 +36,7 @@ typedef StringArray* StringList;
 StrStrMap newStrStrMap(StrStrMap);
 int sizeStrStrMap(StrStrMap);
 bool put(StrStrMap, string key, string value);
-string get(StrStrMap, string key);
+//string get(StrStrMap, string key);
 StringList getValueList(StrStrMap map);
 StringList getKeyList(StrStrMap map);
 EntrySetList getEntrySetList(StrStrMap);

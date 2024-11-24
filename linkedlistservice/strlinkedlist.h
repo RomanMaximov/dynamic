@@ -16,37 +16,28 @@ typedef struct String String;
 typedef String* string;
 
 
-int sizeStrLinkedList(StrLinkedList);    // TODO
+void addStrElemLL(StrLinkedList, string);
+void addArrCharLL(StrLinkedList, char* arr);
 
-bool isEmptyStrLinkedList(StrLinkedList);    // TODO
+void addAllStrElemLL(StrLinkedList, StrLinkedList);
 
-//void insertBeginStr(StrLinkedList, string);
+string getStrElemLL(StrLinkedList, int);
 
-void printStrLL(StrLinkedList);    // TODO
+bool setStrElemLL(StrLinkedList, int, string);
 
-void deleteStrLL(StrLinkedList);    // TODO
-
-void addStrElemLL(StrLinkedList, string);    // TODO
-
-void addAllStrElemLL(StrLinkedList, StrLinkedList);    // TODO
-
-string getStrElemLL(StrLinkedList, int);    // TODO
-
-bool setStrElemLL(StrLinkedList, int, string);    // TODO
-
-string indexOfStrLL(StrLinkedList, int);    // TODO
+int indexOfStrLL(StrLinkedList, string);
 
 // toString
 
-void sortStrLL(StrLinkedList);    // TODO
+void sortStrLL(StrLinkedList);
 
-void clearStrLL(StrLinkedList);    // TODO
+void clearStrLL(StrLinkedList);
 
-bool containsStrLL(StrLinkedList, string);    // TODO
+bool containsStrLL(StrLinkedList, string);
 
-bool containsAllStrLL(StrLinkedList, StrLinkedList);    // TODO
+bool containsAllStrLL(StrLinkedList, StrLinkedList);
 
-bool containsAnyStrLL(StrLinkedList, StrLinkedList);    // TODO
+bool containsAnyStrLL(StrLinkedList, StrLinkedList);
 
 bool removeStrLL(StrLinkedList, int); // by index
 
@@ -59,6 +50,14 @@ void reverseStrLL(StrLinkedList);    // TODO
 bool isEqualListsStrLL(StrLinkedList, StrLinkedList);    // TODO
 
 StrLinkedList emptyIfNullStrLL(StrLinkedList);    // TODO
+
+int sizeStrLinkedList(StrLinkedList);    // TODO
+
+bool isEmptyStrLinkedList(StrLinkedList);    // TODO
+
+void printStrLL(StrLinkedList);    // TODO
+
+void deleteStrLL(StrLinkedList);    // TODO
 
 
 #endif
