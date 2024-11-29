@@ -431,6 +431,8 @@ void reverseIntLL(IntLinkedList list) {
         current = current->next;
         ++index;
     }
+
+    free(arr);
 }
 
 bool isEqualListsIntLL(IntLinkedList list1, IntLinkedList list2) {

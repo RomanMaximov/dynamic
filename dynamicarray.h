@@ -86,7 +86,7 @@ void clearStrList(StringList);
 
 void deleteArrayInt(IntList);
 void deleteArrayDouble(DoubleList);
-void deleteArrayString(StringList);
+void deleteStrList(StringList);
 
 void sortInt(IntList);
 void sortDouble(DoubleList);

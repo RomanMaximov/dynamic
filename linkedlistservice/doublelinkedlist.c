@@ -400,6 +400,8 @@ void reverseDoubleLL(DoubleLinkedList list) {
         current = current->next;
         ++index;
     }
+
+    free(arr);
 }
 
 bool isEqualListsDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {

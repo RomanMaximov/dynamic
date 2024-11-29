@@ -197,11 +197,7 @@ int main()
     addStrElemLL(strLL, ll2);
     addStrElemLL(strLL2, ll2);
     addStrElemLL(strLL2, ll1);
-    if (containsAllStrLL(strLL, strLL2)) {
-        puts("strLL contains all from strLL2");
-    } else {
-        puts("strLL contains NOT all from strLL2");
-    }
+    removeAllStrLL(strLL, strLL2);
 
 
     puts("");

@@ -51,9 +51,9 @@ bool isEqualListsStrLL(StrLinkedList, StrLinkedList);    // TODO
 
 StrLinkedList emptyIfNullStrLL(StrLinkedList);    // TODO
 
-int sizeStrLinkedList(StrLinkedList);    // TODO
+int sizeStrLL(StrLinkedList);    // TODO
 
-bool isEmptyStrLinkedList(StrLinkedList);    // TODO
+bool isEmptyStrLL(StrLinkedList);    // TODO
 
 void printStrLL(StrLinkedList);    // TODO
 

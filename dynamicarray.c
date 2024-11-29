@@ -749,7 +749,7 @@ void deleteArrayDouble(DoubleList list) {
     }
 }
 
-void deleteArrayString(StringList list) {
+void deleteStrList(StringList list) {
     if (list == NULL) {
         printf("%s\n", "List is NULL.");
         return;
@@ -1273,7 +1273,7 @@ StringList subtractStr(StringList list1, StringList list2) {
             temp->count++;
         }
     }
-    deleteArrayString(copyList);
+    deleteStrList(copyList);
     return temp;
 }
 

@@ -44,6 +44,11 @@ typedef struct StringArray StringArray;
 typedef struct StrStrTree StrStrTree;
 typedef struct StrStrTreeMap StrStrTreeMap;
 
+
+/**
+ *  через дженерики создаем и удаляем коллекции
+ */
+
 #define newList(T) _Generic((T), \
     DoubleList : newDoubleArray,\
     IntList : newIntArray, \
@@ -139,7 +144,7 @@ typedef struct StrStrTreeMap StrStrTreeMap;
 #define deleteList(T) _Generic((T), \
     DoubleList : deleteArrayDouble,\
     IntList : deleteArrayInt, \
-    StringList : deleteArrayString \
+    StringList : deleteStrList \
 )(T)
 
 #define sort(T) _Generic((T), \
