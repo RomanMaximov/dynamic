@@ -373,13 +373,15 @@ IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
 }
 
 void printIntLL(IntLinkedList list) {
+    if (list == NULL || list->inner == NULL) return;
+
     IntNode current = list->inner->begin;
     printf("%s", "[");
     while (current != NULL) {
         if (current->next == NULL)
             printf("%d", current->data);
         else
-            printf("%d,", current->data);
+            printf("%d, ", current->data);
         current = current->next;
     }
     printf("%s\n", "]");

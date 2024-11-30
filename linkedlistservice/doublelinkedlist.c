@@ -342,13 +342,15 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2
 }
 
 void printDoubleLL(DoubleLinkedList list) {
+    if (list == NULL || list->inner == NULL) return;
+
     DoubleNode current = list->inner->begin;
     printf("%s", "[");
     while (current != NULL) {
         if (current->next == NULL)
             printf("%f", current->data);
         else
-            printf("%f,", current->data);
+            printf("%f, ", current->data);
         current = current->next;
     }
     printf("%s\n", "]");

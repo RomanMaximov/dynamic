@@ -451,7 +451,28 @@ StrLinkedList emptyIfNullStrLL(StrLinkedList list) {
 }
 
 void printStrLL(StrLinkedList list) {
+    if (list == NULL || list->inner == NULL) return;
 
+    StrNode current = list->inner->begin;
+    printf("%s", "[");
+    while (current != NULL) {
+        if (current->data == NULL || current->data->data == NULL) {
+            if (current->next == NULL)
+                printf("%s", "null");
+            else
+                printf("%s, ", "null");
+
+            current = current->next;
+            continue;
+        }
+
+        if (current->next == NULL)
+            printf("%s", current->data->data);
+        else
+            printf("%s, ", current->data->data);
+        current = current->next;
+    }
+    printf("%s\n", "]");
 }
 
 void deleteStrLL(StrLinkedList* list) {

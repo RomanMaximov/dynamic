@@ -677,6 +677,8 @@ char* toStringDouble(DoubleList list) {
 }
 
 void printArrayInt(IntList list) {
+    if (list == NULL) return;
+
     printf("%s", "[");
     int counter = (int)list->count;
     for (int i = 0; i < counter; ++i) {
@@ -689,8 +691,10 @@ void printArrayInt(IntList list) {
 }
 
 void printArrayDouble(DoubleList list) {
+    if (list == NULL) return;
+
     printf("%s", "[");
-    unsigned int counter = list->count;
+    int counter = list->count;
     for (int i = 0; i < counter; ++i) {
         if (i == counter - 1)
             printf("%f", list->data[i]);
@@ -700,8 +704,11 @@ void printArrayDouble(DoubleList list) {
     printf("%s\n", "]");
 }
 
+// TODO сделать возможно выводить список если некоторые строки равны null
 void printArrayString(StringList list) {
-    unsigned int counter = list->count;
+    if (list == NULL) return;
+
+    int counter = list->count;
     printf("%s", "[");
     for (int i = 0; i < counter; ++i) {
         if (i == counter - 1)
@@ -713,6 +720,8 @@ void printArrayString(StringList list) {
 }
 
 void clearInt(IntList list) {
+    if (list == NULL) return;
+
     free(list->data);
     list->count = 0;
     list->capacity = 20;
@@ -720,6 +729,8 @@ void clearInt(IntList list) {
 }
 
 void clearDouble(DoubleList list) {
+    if (list == NULL) return;
+
     free(list->data);
     list->count = 0;
     list->capacity = 20;
@@ -727,6 +738,8 @@ void clearDouble(DoubleList list) {
 }
 
 void clearStrList(StringList list) {
+    if (list == NULL) return;
+
     free(list->str);
     list->count = 0;
     list->capacity = 20;
@@ -741,6 +754,7 @@ void deleteArrayInt(IntList list) {
     }
 }
 
+// TODO доработать логику удаления, чтобы указатель после удаления был равен NULL. Чтобы повторное случайное удаление не вызывало ошибку.
 void deleteArrayDouble(DoubleList list) {
     if (list != NULL) {
         if (list->data != NULL)

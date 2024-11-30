@@ -8,6 +8,17 @@
 
 int main()
 {
+    int x = 10;
+    while (x != 0) {
+        if (x % 2 == 0)  {
+            --x;
+            continue;
+        }
+
+        printf("x = %d\n", x);
+        --x;
+    }
+
     /*IntArray* arrInt = null;
     arrInt = newArray(arrInt);
 
@@ -190,8 +201,6 @@ int main()
     string ll2 = stringOf("s2");
     string ll3 = stringOf("s3");
     string ll4 = stringOf("s4");
-    string ll5 = stringOf("s5");
-    deleteString(&ll5);
     StrLinkedList strLL = newStrLinkedList(strLL);
     StrLinkedList strLL2 = newStrLinkedList(strLL2);
     addStrElemLL(strLL, ll1);
@@ -200,11 +209,9 @@ int main()
     addStrElemLL(strLL, ll2);
     addStrElemLL(strLL2, ll2);
     addStrElemLL(strLL2, ll1);
-    removeAllStrLL(strLL, strLL2);
+    setStrElemLL(strLL, 3, NULL);
+    printStrLL(strLL);
 
-    deleteStrLL(&strLL);
-    deleteStrLL(&strLL);
-    deleteStrLL(&strLL2);
     puts("");
     /*add(stringOf("str1"), stringList);
     add(stringOf("str2"), stringList);
