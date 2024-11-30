@@ -217,13 +217,14 @@ string join(char* delimeter, int countParams, ...) {
     return s;
 }
 
-void deleteString(string s) {
-    if (s != NULL) {
-        if (s->data != NULL) {
-            free(s->data);
+void deleteString(string* s) {
+    if (s != NULL || *s != NULL) {
+        if ((*s)->data != NULL) {
+            free((*s)->data);
         }
-        free(s);
+        free(*s);
     }
+    *s = NULL;
 }
 
 char charAt(String* s, int index) {

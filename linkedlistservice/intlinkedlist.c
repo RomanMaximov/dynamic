@@ -386,12 +386,11 @@ void printIntLL(IntLinkedList list) {
 }
 
 
-void deleteIntLL(IntLinkedList list) {
-    if (list == NULL)
-        return;
+void deleteIntLL(IntLinkedList* list) {
+    if (list == NULL || *list == NULL) return;
 
-    if (list->inner != NULL) {
-        IntNode current = list->inner->begin;
+    if ((*list)->inner != NULL) {
+        IntNode current = (*list)->inner->begin;
         IntNode temp = NULL;
 
         while (current != NULL) {
@@ -400,14 +399,11 @@ void deleteIntLL(IntLinkedList list) {
             free(temp);
         }
 
-        list->inner->begin = NULL;
-        list->inner->end = NULL;
-        list->inner->nodes = NULL;
-
-        free(list->inner);
+        free((*list)->inner);
     }
 
-    free(list);
+    free(*list);
+    *list = NULL;
 }
 
 int sizeIntLL(IntLinkedList list) {

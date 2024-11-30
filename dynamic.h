@@ -46,7 +46,7 @@ typedef struct StrStrTreeMap StrStrTreeMap;
 
 
 /**
- *  через дженерики создаем и удаляем коллекции
+ *  через дженерики создаем и удаляем, выводим коллекции
  */
 
 #define newList(T) _Generic((T), \

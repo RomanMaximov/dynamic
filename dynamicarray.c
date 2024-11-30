@@ -758,7 +758,7 @@ void deleteStrList(StringList list) {
     if (list->str != NULL) {
         for (int i = 0; i < list->count; ++i) {
             if (list->str[i] != NULL) {
-                deleteString(list->str[i]);
+                deleteString(&(list->str[i]));
             }
         }
         free(list->str);

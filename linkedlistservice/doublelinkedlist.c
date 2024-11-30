@@ -355,12 +355,11 @@ void printDoubleLL(DoubleLinkedList list) {
 }
 
 
-void deleteDoubleLL(DoubleLinkedList list) {
-    if (list == NULL)
-        return;
+void deleteDoubleLL(DoubleLinkedList* list) {
+    if (list == NULL || *list == NULL) return;
 
-    if (list->inner != NULL) {
-        DoubleNode current = list->inner->begin;
+    if ((*list)->inner != NULL) {
+        DoubleNode current = (*list)->inner->begin;
         DoubleNode temp = NULL;
 
         while (current != NULL) {
@@ -369,14 +368,11 @@ void deleteDoubleLL(DoubleLinkedList list) {
             free(temp);
         }
 
-        list->inner->begin = NULL;
-        list->inner->end = NULL;
-        list->inner->nodes = NULL;
-
-        free(list->inner);
+        free((*list)->inner);
     }
 
-    free(list);
+    free(*list);
+    *list = NULL;
 }
 
 int sizeDoubleLL(DoubleLinkedList list) {

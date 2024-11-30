@@ -41,23 +41,23 @@ bool containsAnyStrLL(StrLinkedList, StrLinkedList);
 
 bool removeStrLL(StrLinkedList, int); // by index
 
-bool removeAllStrLL(StrLinkedList, StrLinkedList);    // TODO
+bool removeAllStrLL(StrLinkedList, StrLinkedList);
 
-StrLinkedList subtractStrLL(StrLinkedList, StrLinkedList);    // TODO
+StrLinkedList subtractStrLL(StrLinkedList, StrLinkedList);
 
-void reverseStrLL(StrLinkedList);    // TODO
+void reverseStrLL(StrLinkedList);
 
-bool isEqualListsStrLL(StrLinkedList, StrLinkedList);    // TODO
+bool isEqualListsStrLL(StrLinkedList, StrLinkedList);
 
-StrLinkedList emptyIfNullStrLL(StrLinkedList);    // TODO
+StrLinkedList emptyIfNullStrLL(StrLinkedList);
 
-int sizeStrLL(StrLinkedList);    // TODO
+int sizeStrLL(StrLinkedList);
 
-bool isEmptyStrLL(StrLinkedList);    // TODO
+bool isEmptyStrLL(StrLinkedList);
 
-void printStrLL(StrLinkedList);    // TODO
+void printStrLL(StrLinkedList);
 
-void deleteStrLL(StrLinkedList);    // TODO
+void deleteStrLL(StrLinkedList*);
 
 
 #endif

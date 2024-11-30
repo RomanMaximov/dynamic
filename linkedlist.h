@@ -42,10 +42,9 @@ typedef struct LinkedListInt {
     void (*reverse)(struct LinkedListInt* list);
     bool (*isEquals)(struct LinkedListInt* list1, struct LinkedListInt* list2);
     struct LinkedListInt* (*emptyIfNull)(struct LinkedListInt* list);
-
     int (*size)(struct LinkedListInt* list);
-    void (*printList)(struct LinkedListInt* list);
-    void (*deleteList)(struct LinkedListInt* list);
+    //void (*printList)(struct LinkedListInt* list);
+    //void (*deleteList)(struct LinkedListInt* list);
 } LinkedListInt;
 
 typedef struct LinkedListDouble {
@@ -68,10 +67,9 @@ typedef struct LinkedListDouble {
     void (*reverse)(struct LinkedListDouble* list);
     bool (*isEquals)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
     struct LinkedListDouble* (*emptyIfNull)(struct LinkedListDouble* list);
-
     int (*size)(struct LinkedListDouble* list);
-    void (*printList)(struct LinkedListDouble* list);
-    void (*deleteList)(struct LinkedListDouble* list);
+    //void (*printList)(struct LinkedListDouble* list);
+    //void (*deleteList)(struct LinkedListDouble* list);
 } LinkedListDouble;
 
 typedef struct LinkedListStr {
@@ -94,10 +92,9 @@ typedef struct LinkedListStr {
     void (*reverse)(struct LinkedListStr* list);
     bool (*isEquals)(struct LinkedListStr* list1, struct LinkedListStr* list2);
     struct LinkedListStr* (*emptyIfNull)(struct LinkedListStr* list);
-
     int (*size)(struct LinkedListStr* list);
-    void (*printList)(struct LinkedListStr* list);
-    void (*deleteList)(struct LinkedListStr* list);
+    //void (*printList)(struct LinkedListStr* list);
+    //void (*deleteList)(struct LinkedListStr* list);
 } LinkedListStr;
 
 typedef LinkedListInt* IntLinkedList;

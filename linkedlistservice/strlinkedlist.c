@@ -45,7 +45,6 @@ typedef StringArray* StringList;
 // prototypes
 static void fillNodeStr(StrNode node, char* s, int* index);
 static void quickSortStr(String** strList, int low, int high);
-int indexOfStrLL(StrLinkedList list, string s);
 static bool binarySearchStr(string s, String** strList, int high);
 static bool removeNodeStr(StrLinkedList list, StrNode current, StrNode previous, int index);
 static void deleteFirstNodeStr(StrLinkedList list, StrNode current);
@@ -142,10 +141,10 @@ bool setStrElemLL(StrLinkedList list, int index, string s) {
 void addAllStrElemLL(StrLinkedList list1, StrLinkedList list2) {
     if (list1 == NULL || list2 == NULL) return;
 
-    StrNode current = list2->inner->nodes;
-    while (current != NULL) {
-        addStrElemLL(list1, current->data);
-        current = current->next;
+    StrNode current2 = list2->inner->nodes;
+    while (current2 != NULL) {
+        addStrElemLL(list1, current2->data);
+        current2 = current2->next;
     }
 }
 
@@ -214,7 +213,7 @@ void clearStrLL(StrLinkedList list) {
         temp = current;
         current = current->next;
 
-        deleteString(temp->data);
+        deleteString(&(temp->data));
         free(temp);
     }
 
@@ -356,7 +355,7 @@ bool removeAllStrLL(StrLinkedList list1, StrLinkedList list2) {
     return true;
 }
 
-StrLinkedList subtractIStrLL(StrLinkedList list1, StrLinkedList list2) {
+StrLinkedList subtractStrLL(StrLinkedList list1, StrLinkedList list2) {
     if (isEmptyStrLL(list1)) {
         StrLinkedList temp = NULL;
         return newStrLinkedList(temp);
@@ -418,6 +417,10 @@ void reverseStrLL(StrLinkedList list) {
     deleteStrList(tempList);
 }
 
+int sizeStrLL(StrLinkedList list) {
+    return list->inner->count;
+}
+
 bool isEmptyStrLL(StrLinkedList list) {
     return list == NULL || list->inner->count == 0;
 }
@@ -445,6 +448,35 @@ bool isEqualListsStrLL(StrLinkedList list1, StrLinkedList list2) {
 
 StrLinkedList emptyIfNullStrLL(StrLinkedList list) {
     return list == NULL ? newStrLinkedList(list) : list;
+}
+
+void printStrLL(StrLinkedList list) {
+
+}
+
+void deleteStrLL(StrLinkedList* list) {
+    if (list == NULL || *list == NULL) return;
+
+    if ((*list)->inner != NULL) {
+        StrNode current = (*list)->inner->nodes;
+        StrNode temp = NULL;
+
+        while (current != NULL) {
+            temp = current;
+            current->prev = NULL;
+            current = current->next;
+
+            if (temp->data != NULL)
+                deleteString(&(temp->data));
+
+            free(temp);
+        }
+
+        free((*list)->inner);
+    }
+
+    free(*list);
+    *list = NULL;
 }
 
 static bool removeNodeStr(StrLinkedList list, StrNode current, StrNode previous, int index) {
@@ -483,7 +515,7 @@ static void deleteFirstNodeStr(StrLinkedList list, StrNode current) {
     list->inner->begin = current;
     list->inner->count--;
     list->inner->index--;
-    deleteString(temp->data);
+    deleteString(&(temp->data));
     free(temp);
 }
 
@@ -500,7 +532,7 @@ static void deleteNodeStr(StrLinkedList list, StrNode current, StrNode previous)
     previous->next = current;
     list->inner->count--;
     list->inner->index--;
-    deleteString(temp->data);
+    deleteString(&(temp->data));
     free(temp);
 }
 

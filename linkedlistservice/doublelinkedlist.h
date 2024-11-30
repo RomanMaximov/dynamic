@@ -51,13 +51,11 @@ bool isEqualListsDoubleLL(DoubleLinkedList, DoubleLinkedList);
 
 DoubleLinkedList emptyIfNullDoubleLL(DoubleLinkedList);
 
-int sizeDoubleLinkedList(DoubleLinkedList);
-
-bool isEmptyDoubleLinkedList(DoubleLinkedList);
+int sizeDoubleLL(DoubleLinkedList);
 
 void printDoubleLL(DoubleLinkedList);
 
-void deleteDoubleLL(DoubleLinkedList);
+void deleteDoubleLL(DoubleLinkedList*);
 
 
 #endif

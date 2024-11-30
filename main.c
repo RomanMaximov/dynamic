@@ -141,7 +141,9 @@ int main()
 
     s = toUpperCase(s);
     printString(s);
-    deleteString(s);
+    //delStr(&s);
+    deleteString(&s);
+
 
     string s2 = stringOf("How it was?");
     string s3 = stringOf("broken");
@@ -170,12 +172,12 @@ int main()
     s2 = reverseStr(s2);
     printString(s2);
     printf("char index: %d\n", indexOf(s2, '?'));
-    deleteString(s2);
-    deleteString(s3);
-    deleteString(s4);
-    deleteString(sub);
-    deleteString(sub2);
-    deleteString(sub3);
+    deleteString(&s2);
+    deleteString(&s3);
+    deleteString(&s4);
+    deleteString(&sub);
+    deleteString(&sub2);
+    deleteString(&sub3);
 
     /*string s5 = stringOf("don,sun,dog");//,string,milk,bob,ron,see,str11,str12,str13");
     printString(s5);
@@ -189,6 +191,7 @@ int main()
     string ll3 = stringOf("s3");
     string ll4 = stringOf("s4");
     string ll5 = stringOf("s5");
+    deleteString(&ll5);
     StrLinkedList strLL = newStrLinkedList(strLL);
     StrLinkedList strLL2 = newStrLinkedList(strLL2);
     addStrElemLL(strLL, ll1);
@@ -199,7 +202,9 @@ int main()
     addStrElemLL(strLL2, ll1);
     removeAllStrLL(strLL, strLL2);
 
-
+    deleteStrLL(&strLL);
+    deleteStrLL(&strLL);
+    deleteStrLL(&strLL2);
     puts("");
     /*add(stringOf("str1"), stringList);
     add(stringOf("str2"), stringList);
@@ -303,7 +308,7 @@ int main()
     }
     printIntLL(linkedList);
 
-    deleteIntLL(linkedList);
+    deleteIntLL(&linkedList);
 
     /*StrStrMap strStrMap = newStrStrMap(strStrMap);
     string s35 = stringOf("35");

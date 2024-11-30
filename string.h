@@ -28,7 +28,7 @@ string toLowerCase(string s1);
 string toUpperCase(string s1);
 string join(char* delimeter, int countParams, ...);
 void printString(string s);
-void deleteString(string s);
+void deleteString(string* s);
 char charAt(string s, int index);
 bool containsSubStr(string str, string substr);
 bool startsWith(string str, string substr);

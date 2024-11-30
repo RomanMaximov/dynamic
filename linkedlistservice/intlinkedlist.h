@@ -52,11 +52,9 @@ IntLinkedList emptyIfNullIntLL(IntLinkedList);
 
 int sizeIntLL(IntLinkedList);
 
-bool isEmptyIntLL(IntLinkedList);
-
 void printIntLL(IntLinkedList);
 
-void deleteIntLL(IntLinkedList);
+void deleteIntLL(IntLinkedList*);
 
 
 #endif
