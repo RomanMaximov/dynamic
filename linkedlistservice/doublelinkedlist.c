@@ -128,7 +128,7 @@ void sortDoubleLL(DoubleLinkedList list) {
     DoubleNode temp = list->inner->begin;
     int index = 0;
     while (current != NULL) {
-        *(arr + index++) = current->data;
+        arr[index++] = current->data;
         current = current->next;
     }
 
@@ -136,7 +136,7 @@ void sortDoubleLL(DoubleLinkedList list) {
 
     index = 0;
     while (temp != NULL) {
-        temp->data = *(arr + index++);
+        temp->data = arr[index++];
         temp = temp->next;
     }
 }
@@ -269,7 +269,7 @@ bool removeAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
     while (current2 != NULL) {
         bool isExist = binarySearch(current2->data, tempForBS, listSize);
         if (isExist) {
-            *(filtered + j) = current2->data;
+            filtered[j] = current2->data;
             ++j;
         }
 
@@ -280,10 +280,10 @@ bool removeAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
 
     quickSortDouble(filtered, 0, j);
     for (int i = 0; i < listSize; ++i) {
-        if (binarySearch(*(temp + i), filtered, j))
+        if (binarySearch(temp[i], filtered, j))
             continue;
 
-        addDoubleElemLL(list1, *(temp + i));
+        addDoubleElemLL(list1, temp[i]);
     }
 
     free(tempForBS);
@@ -317,7 +317,7 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2
     while (current2 != NULL) {
         bool isExist = binarySearch(current2->data, tempForBS, listSize);
         if (isExist) {
-            *(filtered + j) = current2->data;
+            filtered[j] = current2->data;
             ++j;
         }
 
@@ -328,10 +328,10 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2
 
     quickSortDouble(filtered, 0, j);
     for (int i = 0; i < listSize; ++i) {
-        if (binarySearch(*(temp + i), filtered, j))
+        if (binarySearch(temp[i], filtered, j))
             continue;
 
-        addDoubleElemLL(newLL, *(temp + i));
+        addDoubleElemLL(newLL, temp[i]);
     }
 
     free(tempForBS);
@@ -394,7 +394,7 @@ void reverseDoubleLL(DoubleLinkedList list) {
     DoubleNode current = list->inner->begin;
     int index = 0;
     while (current != NULL) {
-        current->data = *(arr + index);
+        current->data = arr[index];
         current = current->next;
         ++index;
     }
@@ -521,9 +521,9 @@ static bool binarySearch(double elem, const double* arr, int high) {
     low = 0;
     while (low <= high) {
         middle = (low + high) / 2;
-        if (elem < *(arr + middle))
+        if (elem < arr[middle])
             high = middle - 1;
-        else if (elem > *(arr + middle))
+        else if (elem > arr[middle])
             low = middle + 1;
         else
             return true;
@@ -535,7 +535,7 @@ static void toArrAndSort(DoubleLinkedList list, double * arr) {
     DoubleNode current = list->inner->begin;
     int index = 0;
     while (current != NULL) {
-        *(arr + index++) = current->data;
+        arr[index++] = current->data;
         current = current->next;
     }
 
@@ -544,7 +544,7 @@ static void toArrAndSort(DoubleLinkedList list, double * arr) {
 
 static int indexOf(const double* arr, int size, double num) {
     for (int i = 0; i < size; ++i) {
-        if (num == *(arr + i)) {
+        if (num == arr[i]) {
             return i;
         }
     }
@@ -556,7 +556,7 @@ static void copyLLToArray(DoubleLinkedList list, double* arr) {
     DoubleNode current = list->inner->begin;
     int index = 0;
     while (current != NULL) {
-        *(arr + index++) = current->data;
+        arr[index++] = current->data;
         current = current->next;
     }
 }

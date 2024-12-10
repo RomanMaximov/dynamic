@@ -6,6 +6,7 @@
       <file path="$PROJECT_DIR$/arraylist" />
       <file path="$PROJECT_DIR$/linkedlist" />
       <file path="$PROJECT_DIR$/linkedlistservice" />
+      <file path="$PROJECT_DIR$/setservice" />
     </sourceRoots>
   </component>
 </project>

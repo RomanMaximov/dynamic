@@ -1,23 +1,83 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "dynamic.h"
 //#include "dynamicarray.h"
 //#include "linkedlist.h"
 //#include "string.h"
 //#include "map.h"
 
+// Простая хэш-функция для строк (алгоритм djb2)
+unsigned long hashString(const char* str) {
+    unsigned long hash = 5381;
+    int c;
+
+    while ((c = *str++)) {
+        hash = ((hash << 5) + hash) + c;  // hash * 33 + c
+    }
+
+    return hash;
+}
+
+// Хэш-функция для целых чисел
+unsigned long hashInt(int num) {
+    return (unsigned long) num;
+}
+
+unsigned long hashDouble(double value) {
+    // Для хранения битового представления double используем 64-битный целочисленный тип
+    uint64_t intRepresentation;
+
+    // Копируем биты double в 64-битное целое число
+    memcpy(&intRepresentation, &value, sizeof(double));
+
+    // Используем это 64-битное число как хэш
+    return (unsigned long)(intRepresentation ^ (intRepresentation >> 32));
+}
+
 int main()
 {
-    int x = 10;
-    while (x != 0) {
-        if (x % 2 == 0)  {
-            --x;
-            continue;
-        }
 
-        printf("x = %d\n", x);
-        --x;
+    char charKey1[7] = "Photo";
+    int x = 42;
+    int y = 42;
+    char charKey2[7] = "Photo";
+
+    // Вычисляем хэш по адресу указателя
+    unsigned long hash_key1 = hashString(charKey1);
+    unsigned long hash_key2 = hashString(charKey2);
+    unsigned long hash_x = hashInt(x);
+    unsigned long hash_y = hashInt(y);
+
+    printf("Hash x: %lu\n", hash_x);
+    printf("Hash y: %lu\n", hash_y);
+    printf("Hash hash_key1: %lu\n", hash_key1);
+    printf("Hash hash_key2: %lu\n", hash_key2);
+
+    double d1 = 42.42;
+    double d2 = 42.42;
+    double d3 = -0.0;   // Пример с отрицательным нулем
+    double d4 = 0.0;    // Пример с обычным нулем
+
+    unsigned long hash1 = hashDouble(d1);
+    unsigned long hash2 = hashDouble(d2);
+    unsigned long hash3 = hashDouble(d3);
+    unsigned long hash4 = hashDouble(d4);
+
+    printf("Hash for d1: %lu\n", hash1);
+    printf("Hash for d2: %lu\n", hash2);
+    printf("Hash for d3 (negative 0): %lu\n", hash3);
+    printf("Hash for d4 (positive 0): %lu\n", hash4);
+
+    // Проверка хэшей на одинаковость
+    if (hash1 == hash2) {
+        printf("d1 and d2 hashes are the same.\n");
     }
+    if (hash3 == hash4) {
+        printf("d3 and d4 (negative 0 and positive 0) hashes are the same.\n");
+    }
+
+    ///////////   int index = hashCode(key) % capacity;  индекс бакета
 
     /*IntArray* arrInt = null;
     arrInt = newArray(arrInt);

@@ -97,10 +97,16 @@ typedef struct LinkedListStr {
     //void (*deleteList)(struct LinkedListStr* list);
 } LinkedListStr;
 
+typedef struct Itr {
+    void* data;
+    void* inner;
+} Itr;
+
 typedef LinkedListInt* IntLinkedList;
 typedef LinkedListDouble* DoubleLinkedList;
 typedef LinkedListStr* StrLinkedList;
 typedef String* string;
+typedef Itr* Iterator;
 
 // func prototypes
 IntLinkedList newIntLinkedList(IntLinkedList);

@@ -300,7 +300,7 @@ bool removeAllIntLL(IntLinkedList list1, IntLinkedList list2) {
     while (current2 != NULL) {
         bool isExist = binarySearch(current2->data, tempForBS, listSize);
         if (isExist) {
-            *(filtered + j) = current2->data;
+            filtered[j] = current2->data;
             ++j;
         }
 
@@ -311,10 +311,10 @@ bool removeAllIntLL(IntLinkedList list1, IntLinkedList list2) {
 
     quickSortInt(filtered, 0, j);
     for (int i = 0; i < listSize; ++i) {
-        if (binarySearch(*(temp + i), filtered, j))
+        if (binarySearch(temp[i], filtered, j))
             continue;
 
-        addIntElemLL(list1, *(temp + i));
+        addIntElemLL(list1, temp[i]);
     }
 
     free(tempForBS);
@@ -348,7 +348,7 @@ IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
     while (current2 != NULL) {
         bool isExist = binarySearch(current2->data, tempForBS, listSize);
         if (isExist) {
-            *(filtered + j) = current2->data;
+            filtered[j] = current2->data;
             ++j;
         }
 
@@ -359,10 +359,10 @@ IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
 
     quickSortInt(filtered, 0, j);
     for (int i = 0; i < listSize; ++i) {
-        if (binarySearch(*(temp + i), filtered, j))
+        if (binarySearch(temp[i], filtered, j))
             continue;
 
-        addIntElemLL(newLL, *(temp + i));
+        addIntElemLL(newLL, temp[i]);
     }
 
     free(tempForBS);
@@ -425,7 +425,7 @@ void reverseIntLL(IntLinkedList list) {
     IntNode current = list->inner->begin;
     int index = 0;
     while (current != NULL) {
-        current->data = *(arr + index);
+        current->data = arr[index];
         current = current->next;
         ++index;
     }
@@ -552,9 +552,9 @@ static bool binarySearch(int elem, const int* arr, int high) {
     low = 0;
     while (low <= high) {
         middle = (low + high) / 2;
-        if (elem < *(arr + middle))
+        if (elem < arr[middle])
             high = middle - 1;
-        else if (elem > *(arr + middle))
+        else if (elem > arr[middle])
             low = middle + 1;
         else
             return true;
@@ -582,7 +582,7 @@ static void fillNodeInt(IntNode node, int num, int* index) {
 
 static int indexOf(int* arr, int size, int num) {
     for (int i = 0; i < size; ++i) {
-        if (num == *(arr + i)) {
+        if (num == arr[i]) {
             return i;
         }
     }
@@ -594,7 +594,7 @@ static void copyLLToArray(IntLinkedList list, int* arr) {
     IntNode current = list->inner->begin;
     int index = 0;
     while (current != NULL) {
-        *(arr + index++) = current->data;
+        arr[index++] = current->data;
         current = current->next;
     }
 }

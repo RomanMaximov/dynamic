@@ -62,12 +62,19 @@ typedef struct InnerStrLL {
     NodeStr* end;
 } InnerStrLL;
 
+typedef struct IteratorInner {
+    int count;
+    bool (*hasNext)(void* data);
+    void* (*next)(void* data);
+} IteratorInner;
+
 typedef LinkedListInt* IntLinkedList;
 typedef NodeInt* IntNode;
 typedef LinkedListDouble* DoubleLinkedList;
 typedef NodeDouble* DoubleNode;
 typedef LinkedListStr* StrLinkedList;
 typedef NodeStr* StrNode;
+typedef Itr* Iterator;
 
 
 // custom types
@@ -104,6 +111,11 @@ static void* deleteList(TypeLL type);
 
 
 // funcs
+Iterator iterator(void* list) {
+    
+}
+
+
 IntLinkedList newIntLinkedList(IntLinkedList temp) {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
     list->inner = malloc(sizeof(InnerIntLL));

@@ -180,7 +180,7 @@ void sortStrLL(StrLinkedList list) {
 
     index = 0;
     while (temp != NULL) {
-        temp->data = stringOf((*(strList->str + index++))->data);
+        temp->data = stringOf(strList->str[index++]->data);
         temp = temp->next;
     }
     deleteStrList(strList);
@@ -342,10 +342,10 @@ bool removeAllStrLL(StrLinkedList list1, StrLinkedList list2) {
 
     quickSortStr(filtered->str, 0, filtered->count);
     for (int i = 0; i < listSize; ++i) {
-        if (binarySearchStr(*(tempList->str + i), filtered->str, filtered->count))
+        if (binarySearchStr(tempList->str[i], filtered->str, filtered->count))
             continue;
 
-        addStrElemLL(list1, *(tempList->str + i));
+        addStrElemLL(list1, tempList->str[i]);
     }
 
     deleteStrList(tempForBS);
@@ -387,10 +387,10 @@ StrLinkedList subtractStrLL(StrLinkedList list1, StrLinkedList list2) {
 
     quickSortStr(filtered->str, 0, filtered->count);
     for (int i = 0; i < listSize; ++i) {
-        if (binarySearchStr(*(tempList->str + i), filtered->str, filtered->count))
+        if (binarySearchStr(tempList->str[i], filtered->str, filtered->count))
             continue;
 
-        addStrElemLL(list1, *(tempList->str + i));
+        addStrElemLL(list1, tempList->str[i]);
     }
 
     deleteStrList(tempForBS);
@@ -409,7 +409,7 @@ void reverseStrLL(StrLinkedList list) {
     StrNode current = list->inner->begin;
     int index = 0;
     while (current != NULL) {
-        current->data = stringOf((*(tempList->str + index))->data);
+        current->data = stringOf(tempList->str[index]->data);
         current = current->next;
         ++index;
     }
@@ -563,20 +563,20 @@ static void quickSortStr(String** strList, int low, int high) {
     String* temp;
     do {
         while (j > i) {
-            if (compareTo(*(strList + i), *(strList + j)) > 0) {
-                temp = *(strList + i);
-                *(strList + i) = *(strList + j);
-                *(strList + j) = temp;
+            if (compareTo(strList[i], strList[j]) > 0) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
                 ++i;
                 break;
             }
             --j;
         }
         while (i < j) {
-            if (compareTo(*(strList + i), *(strList + j)) > 0) {
-                temp = *(strList + i);
-                *(strList + i) = *(strList + j);
-                *(strList + j) = temp;
+            if (compareTo(strList[i], strList[j]) > 0) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
                 --j;
                 break;
             }
@@ -596,9 +596,9 @@ static bool binarySearchStr(string s, String** strList, int high) {
     low = 0;
     while (low <= high) {
         middle = (low + high) / 2;
-        if (compareTo(s, *(strList + middle)) < 0)
+        if (compareTo(s, strList[middle]) < 0)
             high = middle - 1;
-        else if (compareTo(s, *(strList + middle)) > 0)
+        else if (compareTo(s, strList[middle]) > 0)
             low = middle + 1;
         else
             return true;

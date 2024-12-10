@@ -62,3 +62,14 @@
 46	93	7546826935821061	DynamicCollection.exe	79b6adddbb4a98a2
 1	45	7546827018547116	CMakeFiles/DynamicCollection.dir/main.c.obj	647b5c401215f17d
 45	92	7546827019007107	DynamicCollection.exe	79b6adddbb4a98a2
+1	50	7546876244025700	CMakeFiles/DynamicCollection.dir/main.c.obj	647b5c401215f17d
+4	116	7546876244685756	CMakeFiles/DynamicCollection.dir/dynamicarray.c.obj	73650d7bba36cd0f
+116	173	7546876245235752	DynamicCollection.exe	79b6adddbb4a98a2
+2	46	7546877882267838	CMakeFiles/DynamicCollection.dir/main.c.obj	647b5c401215f17d
+47	95	7546877882737839	DynamicCollection.exe	79b6adddbb4a98a2
+1	47	7546886526672205	CMakeFiles/DynamicCollection.dir/main.c.obj	647b5c401215f17d
+48	96	7546886527132203	DynamicCollection.exe	79b6adddbb4a98a2
+2	49	7546886766611741	CMakeFiles/DynamicCollection.dir/main.c.obj	647b5c401215f17d
+49	96	7546886767061719	DynamicCollection.exe	79b6adddbb4a98a2
+1	53	7546891702526056	CMakeFiles/DynamicCollection.dir/main.c.obj	647b5c401215f17d
+53	101	7546891702986046	DynamicCollection.exe	79b6adddbb4a98a2
