@@ -31,7 +31,12 @@ static String** increaseCapacity(StringList list);
 
 // funcs
 string stringOf(char* s) {
+    if (s == NULL) return NULL;
+
     string str = malloc(sizeof(String));
+    str->data = NULL;
+    str->count = 0;
+    str->capacity = 0;
     int length = 0;
     char* start = s;
     while(*start != '\0') {
@@ -39,11 +44,13 @@ string stringOf(char* s) {
         ++start;
     }
     if (length != 0) {
-        str->data = (char*)malloc((length + 1) * sizeof(char));
+        str->data = malloc((length + 1) * sizeof(char));
         strcpy(str->data, s);
     } else {
         str->data = NULL;
+        return str;
     }
+
     str->count = length;
     str->capacity = length;
     return str;
@@ -62,7 +69,8 @@ int length(string s) {
 }
 
 int compareTo(string s1, string s2) {
-    return strcmp(s1->data, s2->data);
+    int result = strcmp(s1->data, s2->data);
+    return result;
 }
 
 int binarySearch(char ch, const char* arr, int high) {

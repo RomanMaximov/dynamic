@@ -37,7 +37,6 @@ unsigned long hashDouble(double value) {
 
 int main()
 {
-
     char charKey1[7] = "Photo";
     int x = 42;
     int y = 42;
@@ -127,8 +126,11 @@ int main()
     //printArray(arr);
     //puts("============================================");
 
-    //IntArray* arr2 = arrayOf(1, 456);
-    //printArray(arr2);
+    //IntList arr2 = listOfInt(arr2, 2, 77, 88);
+    //addIntElem(arr2, 99);
+    //addIntElem(arr2, 111);
+    //addIntElem(arr2, 222);
+    //printArrayInt(arr2);
     //setElem(arr2, 0, 255);
     //printArray(arr2);
     //printf("size arr2: %d\n", size(arr2));
@@ -152,15 +154,21 @@ int main()
     //printf("size ss: %d\n", size(ss));
     //printArray(ss);
 
-    /*IntList arrInt = newList(arrInt);
-    add(arrInt, 55);
-    add(arrInt, 12);
-    add(arrInt, 13);
-    add(arrInt, 14);
-    add(arrInt, 15);
-    add(arrInt, 16);
-    printList(arrInt);
-    printf("arrInt capacity: %d\n", arrInt->capacity);
+    /*DoubleList arrDouble = newList(arrDouble);
+    addDoubleElem(arrDouble, 55.009);
+    addDoubleElem(arrDouble, 12.071);
+    addDoubleElem(arrDouble, 12.007);
+    addDoubleElem(arrDouble, 1.18);
+    addDoubleElem(arrDouble, 12.0069);
+    addDoubleElem(arrDouble, 16.00056);
+    addDoubleElem(arrDouble, 99.0000075);
+    addDoubleElem(arrDouble, 99.0000074);
+    printList(arrDouble);
+    sortDouble(arrDouble);
+    printList(arrDouble);*/
+    //sortIntReverse(arrInt);
+    //printList(arrInt);
+    /*printf("arrInt capacity: %d\n", arrInt->capacity);
 
     puts("============================================");
     int temp[] = { 111, 65, 112, 113, 7, 22 };
@@ -222,6 +230,11 @@ int main()
     string s4 = join("-", 3, s2, s3, s2);
     printString(s4);
 
+    char temp[1];
+    StringList stringList = listOfStrLiteral(stringList, temp, 9, "web", "cam", "bob", "g7", "acr", "web", "cat", "a1", "cat");
+    printArrayString(stringList);
+    sortStrList(stringList);
+    printArrayString(stringList);
 
     //printf("ch = %c\n", charAt(s2, 4));
     string sub = stringOf("See");

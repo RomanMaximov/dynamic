@@ -28,6 +28,7 @@ int indexOfDoubleLL(DoubleLinkedList, double);
 // toString
 
 void sortDoubleLL(DoubleLinkedList);
+void sortDoubleLLReverse(DoubleLinkedList);
 
 void clearDoubleLL(DoubleLinkedList);
 

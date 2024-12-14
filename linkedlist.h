@@ -31,6 +31,7 @@ typedef struct LinkedListInt {
     bool (*set)(struct LinkedListInt* list, int index, int number);
     int (*indexOf)(struct LinkedListInt* list, int number);
     void (*sort)(struct LinkedListInt* list);
+    void (*sortReverse)(struct LinkedListInt* list);
     void (*clear)(struct LinkedListInt* list);
     bool (*contains)(struct LinkedListInt* list, int number);
     bool (*containsAll)(struct LinkedListInt* list1, struct LinkedListInt* list2);
@@ -56,6 +57,7 @@ typedef struct LinkedListDouble {
     bool (*set)(struct LinkedListDouble* list, int index, double number);
     int (*indexOf)(struct LinkedListDouble* list, double number);
     void (*sort)(struct LinkedListDouble* list);
+    void (*sortReverse)(struct LinkedListDouble* list);
     void (*clear)(struct LinkedListDouble* list);
     bool (*contains)(struct LinkedListDouble* list, double number);
     bool (*containsAll)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
@@ -81,6 +83,7 @@ typedef struct LinkedListStr {
     bool (*set)(struct LinkedListStr* list, int index, String* s);
     int (*indexOf)(struct LinkedListStr* list, String* s);
     void (*sort)(struct LinkedListStr* list);
+    void (*sortReverse)(struct LinkedListStr* list);
     void (*clear)(struct LinkedListStr* list);
     bool (*contains)(struct LinkedListStr* list, String* s);
     bool (*containsAll)(struct LinkedListStr* list1, struct LinkedListStr* list2);

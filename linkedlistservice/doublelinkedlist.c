@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "doublelinkedlist.h"
 
 // structures
@@ -29,7 +30,6 @@ typedef NodeDouble* DoubleNode;
 
 // funcs prototypes
 static void fillNodeDouble(DoubleNode node, double num, int* index);
-static void quickSortDouble(double* arr, int low, int high);
 static bool binarySearch(double elem, const double* arr, int high);
 static void deleteNodeDouble(DoubleLinkedList list, DoubleNode current, DoubleNode previous);
 static void deleteFirstNodeDouble(DoubleLinkedList list, DoubleNode current);
@@ -39,6 +39,8 @@ static void copyLLToArray(DoubleLinkedList list, double* arr);
 static int indexOf(const double* arr, int size, double num);
 static DoubleLinkedList copyDoubleLL(DoubleLinkedList list);
 static void reverseArr(double* arr, int size);
+static int compareDouble(const void* elem1, const void* elem2);
+static int compareDoubleReverse(const void* elem1, const void* elem2);
 
 // funcs
 void addDoubleElemLL(DoubleLinkedList list, double num) {
@@ -132,7 +134,26 @@ void sortDoubleLL(DoubleLinkedList list) {
         current = current->next;
     }
 
-    quickSortDouble(arr, 0, list->inner->count);
+    qsort(arr, list->inner->count, sizeof(double), compareDouble);
+
+    index = 0;
+    while (temp != NULL) {
+        temp->data = arr[index++];
+        temp = temp->next;
+    }
+}
+
+void sortDoubleLLReverse(DoubleLinkedList list) {
+    double arr[list->inner->count];
+    DoubleNode current = list->inner->begin;
+    DoubleNode temp = list->inner->begin;
+    int index = 0;
+    while (current != NULL) {
+        arr[index++] = current->data;
+        current = current->next;
+    }
+
+    qsort(arr, list->inner->count, sizeof(double), compareDoubleReverse);
 
     index = 0;
     while (temp != NULL) {
@@ -262,7 +283,7 @@ bool removeAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
 
     copyLLToArray(list1, temp);
     copyLLToArray(list1, tempForBS);
-    quickSortDouble(tempForBS, 0, listSize);
+    qsort(tempForBS, listSize, sizeof(double), compareDouble);
 
     int j = 0;
     DoubleNode current2 = list2->inner->begin;
@@ -278,7 +299,7 @@ bool removeAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
 
     clearDoubleLL(list1);
 
-    quickSortDouble(filtered, 0, j);
+    qsort(filtered, j, sizeof(double), compareDouble);
     for (int i = 0; i < listSize; ++i) {
         if (binarySearch(temp[i], filtered, j))
             continue;
@@ -310,7 +331,7 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2
 
     copyLLToArray(list1, temp);
     copyLLToArray(list1, tempForBS);
-    quickSortDouble(tempForBS, 0, listSize);
+    qsort(tempForBS, listSize, sizeof(double), compareDouble);
 
     int j = 0;
     DoubleNode current2 = list2->inner->begin;
@@ -326,7 +347,7 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2
 
     DoubleLinkedList newLL = newDoubleLinkedList(newLL);
 
-    quickSortDouble(filtered, 0, j);
+    qsort(filtered, j, sizeof(double), compareDouble);
     for (int i = 0; i < listSize; ++i) {
         if (binarySearch(temp[i], filtered, j))
             continue;
@@ -482,39 +503,6 @@ static bool removeNodeDouble(DoubleLinkedList list, DoubleNode current, DoubleNo
     }
 }
 
-static void quickSortDouble(double* arr, int low, int high) {
-    int i = low;
-    int j = high - 1;
-    double temp;
-    do {
-        while (j > i) {
-            if (arr[i] > arr[j]) {
-                temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-                ++i;
-                break;
-            }
-            --j;
-        }
-        while (i < j) {
-            if (arr[i] > arr[j]) {
-                temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-                --j;
-                break;
-            }
-            ++i;
-        }
-    } while (i < j);
-
-    if (i < high - 1)
-        quickSortDouble(arr, i + 1, high);
-    if (low < j - 1)
-        quickSortDouble(arr, low, j);
-}
-
 static bool binarySearch(double elem, const double* arr, int high) {
     int low, middle;
     --high;
@@ -539,7 +527,7 @@ static void toArrAndSort(DoubleLinkedList list, double * arr) {
         current = current->next;
     }
 
-    quickSortDouble(arr, 0, list->inner->count);
+    qsort(arr, list->inner->count, sizeof(double), compareDouble);
 }
 
 static int indexOf(const double* arr, int size, double num) {
@@ -593,5 +581,17 @@ static void fillNodeDouble(DoubleNode node, double num, int* index) {
     node->next = NULL;
     node->prev = NULL;
     ++(*index);
+}
+
+static int compareDouble(const void* elem1, const void* elem2) {
+    return fabs((*(double*)elem1 - *(double*)elem2)) < 0.000000001
+           ? 0
+           : (*(double*)elem1 - *(double*)elem2) < 0 ? -1 : 1;
+}
+
+static int compareDoubleReverse(const void* elem1, const void* elem2) {
+    return fabs((*(double*)elem2 - *(double*)elem1)) < 0.000000001
+           ? 0
+           : (*(double*)elem2 - *(double*)elem1) < 0 ? -1 : 1;
 }
 

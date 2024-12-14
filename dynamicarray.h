@@ -89,6 +89,7 @@ void deleteArrayDouble(DoubleList);
 void deleteStrList(StringList);
 
 void sortInt(IntList);
+void sortIntReverse(IntList);
 void sortDouble(DoubleList);
 void sortStrList(StringList);
 void sortReverseStrList(StringList);

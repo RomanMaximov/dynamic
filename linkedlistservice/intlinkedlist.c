@@ -30,7 +30,6 @@ typedef NodeInt* IntNode;
 
 // funcs prototypes
 static void fillNodeInt(IntNode node, int num, int* index);
-static void quickSortInt(int* arr, int low, int high);
 static bool binarySearch(int elem, const int* arr, int high);
 static void deleteNodeInt(IntLinkedList list, IntNode current, IntNode previous);
 static void deleteFirstNodeInt(IntLinkedList list, IntNode current);
@@ -40,6 +39,8 @@ static void copyLLToArray(IntLinkedList list, int* arr);
 static int indexOf(int* arr, int size, int num);
 static IntLinkedList copyIntLL(IntLinkedList list);
 static void reverseArr(int* arr, int size);
+static int compareInt(const void* elem1, const void* elem2);
+static int compareIntReverse(const void* elem1, const void* elem2);
 
 
 static void insertBeginInt(IntLinkedList list, int num, int* index) {
@@ -163,7 +164,7 @@ void sortIntLL(IntLinkedList list) {
         current = current->next;
     }
 
-    quickSortInt(arr, 0, list->inner->count);
+    qsort(arr, list->inner->count, sizeof(int), compareInt);
 
     index = 0;
     while (temp != NULL) {
@@ -171,6 +172,26 @@ void sortIntLL(IntLinkedList list) {
         temp = temp->next;
     }
 }
+
+void sortIntLLReverse(IntLinkedList list) {
+    int arr[list->inner->count];
+    IntNode current = list->inner->begin;
+    IntNode temp = list->inner->begin;
+    int index = 0;
+    while (current != NULL) {
+        arr[index++] = current->data;
+        current = current->next;
+    }
+
+    qsort(arr, list->inner->count, sizeof(int), compareIntReverse);
+
+    index = 0;
+    while (temp != NULL) {
+        temp->data = arr[index++];
+        temp = temp->next;
+    }
+}
+
 
 int indexOfIntLL(IntLinkedList list, int num) {
     if (list == NULL)
@@ -293,7 +314,7 @@ bool removeAllIntLL(IntLinkedList list1, IntLinkedList list2) {
 
     copyLLToArray(list1, temp);
     copyLLToArray(list1, tempForBS);
-    quickSortInt(tempForBS, 0, listSize);
+    qsort(tempForBS, listSize, sizeof(int), compareInt);
 
     int j = 0;
     IntNode current2 = list2->inner->begin;
@@ -309,7 +330,7 @@ bool removeAllIntLL(IntLinkedList list1, IntLinkedList list2) {
 
     clearIntLL(list1);
 
-    quickSortInt(filtered, 0, j);
+    qsort(filtered, j, sizeof(int), compareInt);
     for (int i = 0; i < listSize; ++i) {
         if (binarySearch(temp[i], filtered, j))
             continue;
@@ -341,7 +362,7 @@ IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
 
     copyLLToArray(list1, temp);
     copyLLToArray(list1, tempForBS);
-    quickSortInt(tempForBS, 0, listSize);
+    qsort(tempForBS, listSize, sizeof(int), compareInt);
 
     int j = 0;
     IntNode current2 = list2->inner->begin;
@@ -357,7 +378,7 @@ IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
 
     IntLinkedList newLL = newIntLinkedList(newLL);
 
-    quickSortInt(filtered, 0, j);
+    qsort(filtered, j, sizeof(int), compareInt);
     for (int i = 0; i < listSize; ++i) {
         if (binarySearch(temp[i], filtered, j))
             continue;
@@ -513,39 +534,6 @@ static bool removeNodeInt(IntLinkedList list, IntNode current, IntNode previous,
     }
 }
 
-static void quickSortInt(int* arr, int low, int high) {
-    int i = low;
-    int j = high - 1;
-    int temp;
-    do {
-        while (j > i) {
-            if (arr[i] > arr[j]) {
-                temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-                ++i;
-                break;
-            }
-            --j;
-        }
-        while (i < j) {
-            if (arr[i] > arr[j]) {
-                temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-                --j;
-                break;
-            }
-            ++i;
-        }
-    } while (i < j);
-
-    if (i < high - 1)
-        quickSortInt(arr, i + 1, high);
-    if (low < j - 1)
-        quickSortInt(arr, low, j);
-}
-
 static bool binarySearch(int elem, const int* arr, int high) {
     int low, middle;
     --high;
@@ -570,7 +558,7 @@ static void toArrAndSort(IntLinkedList list, int* arr) {
         current = current->next;
     }
 
-    quickSortInt(arr, 0, list->inner->count);
+    qsort(arr, list->inner->count, sizeof(int), compareInt);
 }
 
 static void fillNodeInt(IntNode node, int num, int* index) {
@@ -624,4 +612,12 @@ static void reverseArr(int* arr, int size) {
         ++start;
         --end;
     }
+}
+
+static int compareInt(const void* elem1, const void* elem2) {
+    return (*(int*)elem1 - *(int*)elem2);
+}
+
+static int compareIntReverse(const void* elem1, const void* elem2) {
+    return (*(int*)elem2 - *(int*)elem1);
 }

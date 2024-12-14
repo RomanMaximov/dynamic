@@ -93,6 +93,7 @@ static void* get(TypeLL type);
 static void* set(TypeLL type);
 static void* indexOf(TypeLL type);
 static void* sort(TypeLL type);
+static void* sortReverse(TypeLL type);
 static void* clear(TypeLL type);
 static void* contains(TypeLL type);
 static void* containsAll(TypeLL type);
@@ -291,6 +292,19 @@ static void* sort(TypeLL type) {
     }
 }
 
+static void* sortReverse(TypeLL type) {
+    switch (type) {
+        case INT_LL:
+            return sortIntLLReverse;
+        case DOUBLE_LL:
+            return sortDoubleLLReverse;
+        case STR_LL:
+            return sortStrLLReverse;
+        default:
+            return NULL;
+    }
+}
+
 static void* clear(TypeLL type) {
     switch (type) {
         case INT_LL:
@@ -454,6 +468,7 @@ static void* size(TypeLL type) {
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->set = set(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->set = set(type) : (((StrLinkedList) data)->set = set(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->indexOf = indexOf(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->indexOf = indexOf(type) : (((StrLinkedList) data)->indexOf = indexOf(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->sort = sort(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->sort = sort(type) : (((StrLinkedList) data)->sort = sort(type));
+     type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->sortReverse = sortReverse(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->sortReverse = sortReverse(type) : (((StrLinkedList) data)->sortReverse = sortReverse(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->clear = clear(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->clear = clear(type) : (((StrLinkedList) data)->clear = clear(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->contains = contains(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->contains = contains(type) : (((StrLinkedList) data)->contains = contains(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->containsAll = containsAll(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->containsAll = containsAll(type) : (((StrLinkedList) data)->containsAll = containsAll(type));

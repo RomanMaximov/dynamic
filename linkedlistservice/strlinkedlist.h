@@ -30,6 +30,7 @@ int indexOfStrLL(StrLinkedList, string);
 // toString
 
 void sortStrLL(StrLinkedList);
+void sortStrLLReverse(StrLinkedList);
 
 void clearStrLL(StrLinkedList);
 

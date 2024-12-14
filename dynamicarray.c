@@ -5,8 +5,8 @@
 #include <math.h>
 #include <string.h>
 #include <stdbool.h>
+#include <assert.h>
 #include "dynamicarray.h"
-
 
 // structures
 typedef struct IntArray {
@@ -50,6 +50,10 @@ IntList copyIntList(IntList dest, IntList from);
 StringList copyStrList(StringList dest, StringList from);
 DoubleList copyDoubleList(DoubleList dest, DoubleList from);
 static String** increaseCapacityStr(StringList list);
+static int compareInt(const void* elem1, const void* elem2);
+static int compareReverse(const void* elem1, const void* elem2);
+static int compareDouble(const void* elem1, const void* elem2);
+static int compareStr(const void* elem1, const void* elem2);
 
 // funcs
 IntList newIntArray(IntList temp) {
@@ -120,16 +124,24 @@ void addDoubleElem(DoubleList list, double num) {
 }
 
 void addStrElem(StringList list, string str) {
-    if (str == NULL || list == NULL) return;
+    if (list == NULL) return;
 
-    string temp = stringOf(str->data);
-    if (list->count == list->capacity) {
-        list->str = increaseCapacityStr(list);
-        memcpy(&list->str[list->count], &temp, sizeof(String));
+    if (str == NULL) {
+        if (list->count == list->capacity)
+            list->str = increaseCapacityStr(list);
+
+        list->str[list->count] = NULL;
         list->count++;
     } else {
-        memcpy(&list->str[list->count], &temp, sizeof(String));
-        list->count++;
+        string temp = stringOf(str->data);
+        if (list->count == list->capacity) {
+            list->str = increaseCapacityStr(list);
+            memcpy(&list->str[list->count], &temp, sizeof(String));
+            list->count++;
+        } else {
+            memcpy(&list->str[list->count], &temp, sizeof(String));
+            list->count++;
+        }
     }
 }
 
@@ -534,7 +546,7 @@ bool removeAllInt(IntList list1, IntList list2) {
             indexList[j++] = index;
     }
 
-    quickSortInt(indexList, 0, j - 1);
+    qsort(indexList, j - 1, sizeof(int), compareInt);
     free(list1->data);
     list1->data = malloc(list1->capacity * sizeof(int));
 
@@ -569,7 +581,7 @@ bool removeAllDouble(DoubleList list1, DoubleList list2) {
             indexList[j++] = index;
     }
 
-    quickSortInt(indexList, 0, j - 1);
+    qsort(indexList, j - 1, sizeof(int), compareInt);
     free(list1->data);
     list1->data = malloc(list1->capacity * sizeof(double));
 
@@ -604,7 +616,7 @@ bool removeAllStr(StringList list1, StringList list2) {
             indexList[j++] = index;
     }
 
-    quickSortInt(indexList, 0, j - 1);
+    qsort(indexList, j - 1, sizeof(int), compareInt);
     free(list1->str);
     list1->str = malloc(list1->capacity * sizeof(string));
 
@@ -697,24 +709,30 @@ void printArrayDouble(DoubleList list) {
     int counter = list->count;
     for (int i = 0; i < counter; ++i) {
         if (i == counter - 1)
-            printf("%f", list->data[i]);
+            printf("%.9f", list->data[i]);
         else
-            printf("%f, ", list->data[i]);
+            printf("%.9f, ", list->data[i]);
     }
     printf("%s\n", "]");
 }
 
-// TODO сделать возможно выводить список если некоторые строки равны null
 void printArrayString(StringList list) {
     if (list == NULL) return;
 
     int counter = list->count;
     printf("%s", "[");
     for (int i = 0; i < counter; ++i) {
-        if (i == counter - 1)
-            printf("%s", list->str[i]->data);
-        else
-            printf("%s, ", list->str[i]->data);
+        if (i == counter - 1) {
+            if (list->str[i] == NULL || list->str[i]->data == NULL)
+                printf("%s", "null");
+            else
+                printf("%s", list->str[i]->data);
+        } else {
+            if (list->str[i] == NULL || list->str[i]->data == NULL)
+                printf("%s, ", "null");
+            else
+                printf("%s, ", list->str[i]->data);
+        }
     }
     printf("%s\n", "]");
 }
@@ -778,73 +796,6 @@ void deleteStrList(StringList list) {
         free(list->str);
     }
     free(list);
-}
-
-void quickSortInt(int* arr, int low, int high) {
-    int i = low;
-    int j = high - 1;
-    int temp;
-    do {
-        while (j > i) {
-            if (arr[i] > arr[j]) {
-                temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-                ++i;
-                break;
-            }
-            --j;
-        }
-        while (i < j) {
-            if (arr[i] > arr[j]) {
-                temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-                --j;
-                break;
-            }
-            ++i;
-        }
-    } while (i < j);
-
-    if (i < high - 1)
-        quickSortInt(arr, i + 1, high);
-    if (low < j - 1)
-        quickSortInt(arr, low, j);
-}
-
-void quickSortDouble(double* arr, int low, int high)
-{
-    int i = low;
-    int j = high - 1;
-    double temp;
-    do {
-        while (j > i) {
-            if (arr[i] > arr[j]) {
-                temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-                ++i;
-                break;
-            }
-            --j;
-        }
-        while (i < j) {
-            if (arr[i] > arr[j]) {
-                temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-                --j;
-                break;
-            }
-            ++i;
-        }
-    } while (i < j);
-
-    if (i < high - 1)
-        quickSortDouble(arr, i + 1, high);
-    if (low < j - 1)
-        quickSortDouble(arr, low, j);
 }
 
 void quickSortStr(String** strList, int low, int high)
@@ -919,7 +870,25 @@ void sortInt(IntList list) {
         return;
 
     int high = sizeIntList(list);
-    quickSortInt(list->data, 0, high);
+    //quickSortInt(list->data, 0, high);
+    qsort(list->data, high, sizeof(int), compareInt);
+}
+
+static int compareInt(const void* elem1, const void* elem2) {
+    return (*(int*)elem1 - *(int*)elem2);
+}
+
+void sortIntReverse(IntList list) {
+    if (list == NULL)
+        return;
+
+    int high = sizeIntList(list);
+    //quickSortInt(list->data, 0, high);
+    qsort(list->data, high, sizeof(int), compareReverse);
+}
+
+static int compareReverse(const void* elem1, const void* elem2) {
+    return (*(int*)elem2 - *(int*)elem1);
 }
 
 void sortDouble(DoubleList list) {
@@ -927,14 +896,20 @@ void sortDouble(DoubleList list) {
         return;
 
     int high = sizeDoubleList(list);
-    quickSortDouble(list->data, 0, high);
+    qsort(list->data, high, sizeof(double), compareDouble);
+}
+
+static int compareDouble(const void* elem1, const void* elem2) {
+    return fabs((*(double*)elem1 - *(double*)elem2)) < 0.000000001
+    ? 0
+    : (*(double*)elem1 - *(double*)elem2) < 0 ? -1 : 1;
 }
 
 void sortStrList(StringList list) {
     if (list == NULL)
         return;
 
-    int high = sizeStrList(list);
+    int high = list->count;
     quickSortStr(list->str, 0, high);
 }
 
@@ -1309,24 +1284,16 @@ bool binarySearchInt(int elem, const int* arr, int high) {
 
 double* increaseCapacityDouble(DoubleList list) {
     list->capacity *= 2;
-    double* temp = list->data;
-    list->data = malloc(list->capacity * sizeof(double));
-    for (int i = 0; i < list->count; ++i) {
-        memcpy(&list->data[i], &temp[i], sizeof(double));
-    }
-    free(temp);
+    list->data = realloc(list->data, list->capacity * sizeof(double));
+    assert(list->data != NULL);
 
     return list->data;
 }
 
 int* increaseCapacityInt(IntList list) {
-    list->capacity *= 2;
-    int* temp = list->data;
-    list->data = malloc(list->capacity * sizeof(int));
-    for (int i = 0; i < list->count; ++i) {
-        memcpy(&list->data[i], &temp[i], sizeof(int));
-    }
-    free(temp);
+    list->capacity *= 2;;
+    list->data = realloc(list->data, list->capacity * sizeof(int));
+    assert(list->data != NULL);
 
     return list->data;
 }
@@ -1359,7 +1326,7 @@ StringList copyStrList(StringList dest, StringList from) {
     dest = newStrArray(dest);
     for (int i = 0; i < from->count; ++i) {
         if (dest->count == dest->capacity) {
-            dest->str = increaseCapacityStr(dest);
+            //dest->str = increaseCapacityStr(dest);
         }
         dest->str[i] = stringOf(from->str[i]->data);
         dest->count++;
@@ -1368,15 +1335,17 @@ StringList copyStrList(StringList dest, StringList from) {
 }
 
 static String** increaseCapacityStr(StringList list) {
+    int oldSize = list->count;
     list->capacity *= 2;
     String** temp = list->str;
     list->str = malloc(list->capacity * sizeof(String*));
-    for (int i = 0; i < list->capacity; ++i) {
-        list->str[i] = NULL;
-    }
+    assert(list->str != NULL);
+
     for (int i = 0; i < list->count; ++i) {
         memcpy(&list->str[i], &temp[i], sizeof(String));
     }
+
+    memset(list->str + oldSize, 0xAB, (list->capacity - oldSize) * sizeof(String*));
 
     return list->str;
 }

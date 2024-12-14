@@ -45,6 +45,7 @@ typedef StringArray* StringList;
 // prototypes
 static void fillNodeStr(StrNode node, char* s, int* index);
 static void quickSortStr(String** strList, int low, int high);
+static void quickSortStrReverse(String** strList, int low, int high);
 static bool binarySearchStr(string s, String** strList, int high);
 static bool removeNodeStr(StrLinkedList list, StrNode current, StrNode previous, int index);
 static void deleteFirstNodeStr(StrLinkedList list, StrNode current);
@@ -177,6 +178,26 @@ void sortStrLL(StrLinkedList list) {
     }
 
     quickSortStr(strList->str, 0, strList->count);
+
+    index = 0;
+    while (temp != NULL) {
+        temp->data = stringOf(strList->str[index++]->data);
+        temp = temp->next;
+    }
+    deleteStrList(strList);
+}
+
+void sortStrLLReverse(StrLinkedList list) {
+    StringList strList = newStrArray(strList);
+    StrNode current = list->inner->begin;
+    StrNode temp = list->inner->begin;
+    int index = 0;
+    while (current != NULL) {
+        addStrElem(strList, current->data);
+        current = current->next;
+    }
+
+    quickSortStrReverse(strList->str, 0, strList->count);
 
     index = 0;
     while (temp != NULL) {
@@ -588,6 +609,39 @@ static void quickSortStr(String** strList, int low, int high) {
         quickSortStr(strList, i + 1, high);
     if (low < j - 1)
         quickSortStr(strList, low, j);
+}
+
+ static void quickSortStrReverse(String** strList, int low, int high) {
+    int i = low;
+    int j = high - 1;
+    String* temp;
+    do {
+        while (j > i) {
+            if (compareTo(strList[i], strList[j]) == -1) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
+                ++i;
+                break;
+            }
+            --j;
+        }
+        while (i < j) {
+            if (compareTo(strList[i], strList[j]) == -1) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
+                --j;
+                break;
+            }
+            ++i;
+        }
+    } while (i < j);
+
+    if (i < high - 1)
+        quickSortStrReverse(strList, i + 1, high);
+    if (low < j - 1)
+        quickSortStrReverse(strList, low, j);
 }
 
 static bool binarySearchStr(string s, String** strList, int high) {

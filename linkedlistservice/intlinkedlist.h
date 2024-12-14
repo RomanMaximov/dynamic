@@ -27,6 +27,7 @@ int indexOfIntLL(IntLinkedList, int);
 // toString
 
 void sortIntLL(IntLinkedList);
+void sortIntLLReverse(IntLinkedList);
 
 void clearIntLL(IntLinkedList);
 
