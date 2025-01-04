@@ -16,10 +16,11 @@
 #include "linkedlistservice/intlinkedlist.h"
 #include "linkedlistservice/doublelinkedlist.h"
 #include "linkedlistservice/strlinkedlist.h"
+#include "collectiontypes.h"
+#include "iterator.h"
+
 
 // structures
-typedef struct NodeInt NodeInt;
-typedef struct NodeDouble NodeDouble;
 typedef struct String String;
 
 typedef struct LinkedListInt {
@@ -44,6 +45,7 @@ typedef struct LinkedListInt {
     bool (*isEquals)(struct LinkedListInt* list1, struct LinkedListInt* list2);
     struct LinkedListInt* (*emptyIfNull)(struct LinkedListInt* list);
     int (*size)(struct LinkedListInt* list);
+    struct Itr* (*iterator)(struct LinkedListInt* list);
     //void (*printList)(struct LinkedListInt* list);
     //void (*deleteList)(struct LinkedListInt* list);
 } LinkedListInt;
@@ -70,6 +72,7 @@ typedef struct LinkedListDouble {
     bool (*isEquals)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
     struct LinkedListDouble* (*emptyIfNull)(struct LinkedListDouble* list);
     int (*size)(struct LinkedListDouble* list);
+    struct Itr* (*iterator)(struct LinkedListDouble* list);
     //void (*printList)(struct LinkedListDouble* list);
     //void (*deleteList)(struct LinkedListDouble* list);
 } LinkedListDouble;
@@ -96,20 +99,18 @@ typedef struct LinkedListStr {
     bool (*isEquals)(struct LinkedListStr* list1, struct LinkedListStr* list2);
     struct LinkedListStr* (*emptyIfNull)(struct LinkedListStr* list);
     int (*size)(struct LinkedListStr* list);
+    struct Itr* (*iterator)(struct LinkedListStr* list);
     //void (*printList)(struct LinkedListStr* list);
     //void (*deleteList)(struct LinkedListStr* list);
 } LinkedListStr;
-
-typedef struct Itr {
-    void* data;
-    void* inner;
-} Itr;
 
 typedef LinkedListInt* IntLinkedList;
 typedef LinkedListDouble* DoubleLinkedList;
 typedef LinkedListStr* StrLinkedList;
 typedef String* string;
 typedef Itr* Iterator;
+
+
 
 // func prototypes
 IntLinkedList newIntLinkedList(IntLinkedList);

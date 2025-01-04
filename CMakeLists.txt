@@ -8,5 +8,16 @@ add_executable(DynamicCollection main.c
         map.c
         string.c
         linkedlist.c
-        testarray.c set.h
-        linkedlistservice/intlinkedlist.h linkedlistservice/intlinkedlist.c linkedlistservice/doublelinkedlist.h linkedlistservice/doublelinkedlist.c linkedlistservice/strlinkedlist.h linkedlistservice/strlinkedlist.c)
+        testarray.c
+        linkedlistservice/intlinkedlist.h
+        linkedlistservice/intlinkedlist.c
+        linkedlistservice/doublelinkedlist.h
+        linkedlistservice/doublelinkedlist.c
+        linkedlistservice/strlinkedlist.h
+        linkedlistservice/strlinkedlist.c
+        collectiontypes.h
+        iterator.h
+        set.h
+        set.c
+        setservice/intset.h
+        setservice/intset.c)

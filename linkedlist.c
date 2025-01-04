@@ -6,9 +6,9 @@
 
 
 #include "linkedlist.h"
-#include "linkedlistservice/intlinkedlist.h"
-#include "linkedlistservice/doublelinkedlist.h"
-#include "linkedlistservice/strlinkedlist.h"
+//#include "linkedlistservice/intlinkedlist.h"
+//#include "linkedlistservice/doublelinkedlist.h"
+//#include "linkedlistservice/strlinkedlist.h"
 
 // structures
 typedef struct String {
@@ -62,11 +62,6 @@ typedef struct InnerStrLL {
     NodeStr* end;
 } InnerStrLL;
 
-typedef struct IteratorInner {
-    int count;
-    bool (*hasNext)(void* data);
-    void* (*next)(void* data);
-} IteratorInner;
 
 typedef LinkedListInt* IntLinkedList;
 typedef NodeInt* IntNode;
@@ -77,46 +72,34 @@ typedef NodeStr* StrNode;
 typedef Itr* Iterator;
 
 
-// custom types
-typedef enum TypeLL {
-    INT_LL,
-    DOUBLE_LL,
-    STR_LL
-} TypeLL;
-
-
 // prototypes common funcs
-static void initFuncs(TypeLL type, void* data);
-static void* add(TypeLL type);
-static void* addAll(TypeLL type);
-static void* get(TypeLL type);
-static void* set(TypeLL type);
-static void* indexOf(TypeLL type);
-static void* sort(TypeLL type);
-static void* sortReverse(TypeLL type);
-static void* clear(TypeLL type);
-static void* contains(TypeLL type);
-static void* containsAll(TypeLL type);
-static void* containsAny(TypeLL type);
-static void* removeElem(TypeLL type);
-static void* removeAll(TypeLL type);
-static void* subtract(TypeLL type);
-static void* isEmpty(TypeLL type);
-static void* reverse(TypeLL type);
-static void* isEquals(TypeLL type);
-static void* emptyIfNull(TypeLL type);
+static void initFuncs(Type type, void* data);
+static void* add(Type type);
+static void* addAll(Type type);
+static void* get(Type type);
+static void* set(Type type);
+static void* indexOf(Type type);
+static void* sort(Type type);
+static void* sortReverse(Type type);
+static void* clear(Type type);
+static void* contains(Type type);
+static void* containsAll(Type type);
+static void* containsAny(Type type);
+static void* removeElem(Type type);
+static void* removeAll(Type type);
+static void* subtract(Type type);
+static void* isEmpty(Type type);
+static void* reverse(Type type);
+static void* isEquals(Type type);
+static void* emptyIfNull(Type type);
 
-static void* size(TypeLL type);
-static void* printList(TypeLL type);
-static void* deleteList(TypeLL type);
+static void* size(Type type);
+static void* printList(Type type);
+static void* deleteList(Type type);
+static void* iterator(Type type);
 
 
 // funcs
-Iterator iterator(void* list) {
-    
-}
-
-
 IntLinkedList newIntLinkedList(IntLinkedList temp) {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
     list->inner = malloc(sizeof(InnerIntLL));
@@ -214,7 +197,7 @@ StrLinkedList linkedListOfStr(StrLinkedList temp, int paramCount, ...) {
 }
 
 // common init functions
-static void* add(TypeLL type) {
+static void* add(Type type) {
     switch (type) {
         case INT_LL:
             return addIntElemLL;
@@ -227,7 +210,7 @@ static void* add(TypeLL type) {
     }
 }
 
-static void* addAll(TypeLL type) {
+static void* addAll(Type type) {
     switch (type) {
         case INT_LL:
             return addAllIntElemLL;
@@ -240,7 +223,7 @@ static void* addAll(TypeLL type) {
     }
 }
 
-static void* get(TypeLL type) {
+static void* get(Type type) {
     switch (type) {
         case INT_LL:
             return getIntElemLL;
@@ -253,7 +236,7 @@ static void* get(TypeLL type) {
     }
 }
 
-static void* set(TypeLL type) {
+static void* set(Type type) {
     switch (type) {
         case INT_LL:
             return setIntElemLL;
@@ -266,7 +249,7 @@ static void* set(TypeLL type) {
     }
 }
 
-static void* indexOf(TypeLL type) {
+static void* indexOf(Type type) {
     switch (type) {
         case INT_LL:
             return indexOfIntLL;
@@ -279,7 +262,7 @@ static void* indexOf(TypeLL type) {
     }
 }
 
-static void* sort(TypeLL type) {
+static void* sort(Type type) {
     switch (type) {
         case INT_LL:
             return sortIntLL;
@@ -292,7 +275,7 @@ static void* sort(TypeLL type) {
     }
 }
 
-static void* sortReverse(TypeLL type) {
+static void* sortReverse(Type type) {
     switch (type) {
         case INT_LL:
             return sortIntLLReverse;
@@ -305,7 +288,7 @@ static void* sortReverse(TypeLL type) {
     }
 }
 
-static void* clear(TypeLL type) {
+static void* clear(Type type) {
     switch (type) {
         case INT_LL:
             return clearIntLL;
@@ -318,7 +301,7 @@ static void* clear(TypeLL type) {
     }
 }
 
-static void* contains(TypeLL type) {
+static void* contains(Type type) {
     switch (type) {
         case INT_LL:
             return containsIntLL;
@@ -331,7 +314,7 @@ static void* contains(TypeLL type) {
     }
 }
 
-static void* containsAll(TypeLL type) {
+static void* containsAll(Type type) {
     switch (type) {
         case INT_LL:
             return containsAllIntLL;
@@ -344,7 +327,7 @@ static void* containsAll(TypeLL type) {
     }
 }
 
-static void* containsAny(TypeLL type) {
+static void* containsAny(Type type) {
     switch (type) {
         case INT_LL:
             return containsAnyIntLL;
@@ -357,7 +340,7 @@ static void* containsAny(TypeLL type) {
     }
 }
 
-static void* removeElem(TypeLL type) {
+static void* removeElem(Type type) {
     switch (type) {
         case INT_LL:
             return removeIntLL;
@@ -370,7 +353,7 @@ static void* removeElem(TypeLL type) {
     }
 }
 
-static void* removeAll(TypeLL type) {
+static void* removeAll(Type type) {
     switch (type) {
         case INT_LL:
             return removeAllIntLL;
@@ -383,7 +366,7 @@ static void* removeAll(TypeLL type) {
     }
 }
 
-static void* subtract(TypeLL type) {
+static void* subtract(Type type) {
     switch (type) {
         case INT_LL:
             return subtractIntLL;
@@ -396,7 +379,7 @@ static void* subtract(TypeLL type) {
     }
 }
 
-static void* isEmpty(TypeLL type) {
+static void* isEmpty(Type type) {
     switch (type) {
         case INT_LL:
             return isEmptyIntLL;
@@ -409,7 +392,7 @@ static void* isEmpty(TypeLL type) {
     }
 }
 
-static void* reverse(TypeLL type) {
+static void* reverse(Type type) {
     switch (type) {
         case INT_LL:
             return reverseIntLL;
@@ -422,7 +405,7 @@ static void* reverse(TypeLL type) {
     }
 }
 
-static void* isEquals(TypeLL type) {
+static void* isEquals(Type type) {
     switch (type) {
         case INT_LL:
             return isEqualListsIntLL;
@@ -435,7 +418,7 @@ static void* isEquals(TypeLL type) {
     }
 }
 
-static void* emptyIfNull(TypeLL type) {
+static void* emptyIfNull(Type type) {
     switch (type) {
         case INT_LL:
             return emptyIfNullIntLL;
@@ -448,7 +431,7 @@ static void* emptyIfNull(TypeLL type) {
     }
 }
 
-static void* size(TypeLL type) {
+static void* size(Type type) {
     switch (type) {
         case INT_LL:
             return sizeIntLL;
@@ -461,7 +444,20 @@ static void* size(TypeLL type) {
     }
 }
 
- static void initFuncs(TypeLL type, void* data) {
+static void* iterator(Type type) {
+    switch (type) {
+        case INT_LL:
+            return iteratorIntLL;
+        case DOUBLE_LL:
+            //return iteratorDoubleLL;
+        case STR_LL:
+            //return iteratorStrLL;
+        default:
+            return NULL;
+    }
+}
+
+ static void initFuncs(Type type, void* data) {
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->add = add(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->add = add(type) : (((StrLinkedList) data)->add = add(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->addAll = addAll(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->addAll = addAll(type) : (((StrLinkedList) data)->addAll = addAll(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->get = get(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->get = get(type) : (((StrLinkedList) data)->get = get(type));
@@ -481,6 +477,7 @@ static void* size(TypeLL type) {
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->isEquals = isEquals(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->isEquals = isEquals(type) : (((StrLinkedList) data)->isEquals = isEquals(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->emptyIfNull = emptyIfNull(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->emptyIfNull = emptyIfNull(type) : (((StrLinkedList) data)->emptyIfNull = emptyIfNull(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->size = size(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->size = size(type) : (((StrLinkedList) data)->size = size(type));
+     type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->iterator = iterator(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->iterator = iterator(type) : (((StrLinkedList) data)->iterator = iterator(type));
      //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->printList = printList(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->printList = printList(type) : (((StrLinkedList) data)->printList = printList(type));
      //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->deleteList = deleteList(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->deleteList = deleteList(type) : (((StrLinkedList) data)->deleteList = deleteList(type));
 }

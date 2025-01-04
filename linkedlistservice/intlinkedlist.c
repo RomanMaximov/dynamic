@@ -24,8 +24,10 @@ typedef struct InnerIntLL {
     NodeInt* end;
 } InnerIntLL;
 
+
 typedef struct NodeInt NodeInt;
 typedef NodeInt* IntNode;
+typedef Itr* Iterator;
 
 
 // funcs prototypes
@@ -41,7 +43,8 @@ static IntLinkedList copyIntLL(IntLinkedList list);
 static void reverseArr(int* arr, int size);
 static int compareInt(const void* elem1, const void* elem2);
 static int compareIntReverse(const void* elem1, const void* elem2);
-
+static bool hasNext(Iterator iter);
+static int getIntValue(Iterator iter, IntLinkedList list);
 
 static void insertBeginInt(IntLinkedList list, int num, int* index) {
     IntNode newNodeStart = NULL;
@@ -477,6 +480,20 @@ bool isEqualListsIntLL(IntLinkedList list1, IntLinkedList list2) {
 
 IntLinkedList emptyIfNullIntLL(IntLinkedList list) {
     return list == NULL ? newIntLinkedList(list) : list;
+}
+
+Iterator iteratorIntLL(IntLinkedList list){
+    Iterator iter = malloc(sizeof(Itr));
+    iter->count = 0;
+    iter->data = list;
+    iter->collectionSize = list->inner->count;
+    iter->hasNext = (void*) hasNext(iter);
+    iter->type = INT_LL;
+    return iter;
+}
+
+static bool hasNext(Iterator iter) {
+    return iter->count < iter->collectionSize;
 }
 
 static void deleteFirstNodeInt(IntLinkedList list, IntNode current) {

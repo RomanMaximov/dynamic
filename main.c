@@ -7,6 +7,7 @@
 //#include "string.h"
 //#include "map.h"
 
+
 // Простая хэш-функция для строк (алгоритм djb2)
 unsigned long hashString(const char* str) {
     unsigned long hash = 5381;
@@ -374,9 +375,19 @@ int main()
 
     puts("===========================================");
     IntLinkedList linkedList = linkedListOfInt(linkedList, 5, 77, 4, 7, 56, 10);
+    //printf("linkedList[0] = %d\n", linkedList->get(linkedList, 0));
     printIntLL(linkedList);
     IntLinkedList linkedList2 = linkedListOfInt(linkedList2, 5, 77, 4, 7, 56, 10);
     printIntLL(linkedList2);
+
+    Iterator iterator = linkedList->iterator(linkedList);
+    if (iterator->hasNext) {
+        puts("iterator has next");
+        printf("index 0 value: %d\n", linkedList->get(linkedList, 0));
+        int number = nextValue(iterator);
+
+        printf("num: %d\n", number);
+    }
 
     removeAllIntLL(linkedList, linkedList2);
     printIntLL(linkedList);

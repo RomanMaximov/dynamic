@@ -7,11 +7,13 @@
 #ifndef INTLINKEDLIST_H
 #define INTLINKEDLIST_H
 
-#include <stdio.h>
 #include "../linkedlist.h"
 
 typedef struct LinkedListInt LinkedListInt;
+typedef struct Itr Itr;
 typedef LinkedListInt* IntLinkedList;
+typedef Itr* Iterator;
+
 
 
 void addIntElemLL(IntLinkedList, int);
@@ -52,6 +54,8 @@ bool isEqualListsIntLL(IntLinkedList, IntLinkedList);
 IntLinkedList emptyIfNullIntLL(IntLinkedList);
 
 int sizeIntLL(IntLinkedList);
+
+Iterator iteratorIntLL(IntLinkedList);
 
 void printIntLL(IntLinkedList);
 
