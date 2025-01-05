@@ -16,5 +16,10 @@ typedef Itr* Iterator;
 
 
 void addIntElemSet(IntSet, int);
+void addAllIntElemSet(IntSet, IntSet);
+void clearIntSet(IntSet);
+
+void printSet(IntSet);
+void deleteIntSet(IntSet*);
 
 #endif

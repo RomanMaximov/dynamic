@@ -58,6 +58,8 @@ IntSet newIntSet(IntSet temp) {
     set->inner->count = 0;
     set->inner->capacity = 16;
     set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeInt*));
+    for (int i = 0; i < set->inner->capacity; ++i)
+        set->inner->bucket[i] = NULL;
     
     initFuncs(INT_SET, (void*)set);
 

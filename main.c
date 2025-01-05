@@ -20,11 +20,6 @@ unsigned long hashString(const char* str) {
     return hash;
 }
 
-// Хэш-функция для целых чисел
-unsigned long hashInt(int num) {
-    return (unsigned long) num;
-}
-
 unsigned long hashDouble(double value) {
     // Для хранения битового представления double используем 64-битный целочисленный тип
     uint64_t intRepresentation;
@@ -38,44 +33,6 @@ unsigned long hashDouble(double value) {
 
 int main()
 {
-    char charKey1[7] = "Photo";
-    int x = 42;
-    int y = 42;
-    char charKey2[7] = "Photo";
-
-    // Вычисляем хэш по адресу указателя
-    unsigned long hash_key1 = hashString(charKey1);
-    unsigned long hash_key2 = hashString(charKey2);
-    unsigned long hash_x = hashInt(x);
-    unsigned long hash_y = hashInt(y);
-
-    printf("Hash x: %lu\n", hash_x);
-    printf("Hash y: %lu\n", hash_y);
-    printf("Hash hash_key1: %lu\n", hash_key1);
-    printf("Hash hash_key2: %lu\n", hash_key2);
-
-    double d1 = 42.42;
-    double d2 = 42.42;
-    double d3 = -0.0;   // Пример с отрицательным нулем
-    double d4 = 0.0;    // Пример с обычным нулем
-
-    unsigned long hash1 = hashDouble(d1);
-    unsigned long hash2 = hashDouble(d2);
-    unsigned long hash3 = hashDouble(d3);
-    unsigned long hash4 = hashDouble(d4);
-
-    printf("Hash for d1: %lu\n", hash1);
-    printf("Hash for d2: %lu\n", hash2);
-    printf("Hash for d3 (negative 0): %lu\n", hash3);
-    printf("Hash for d4 (positive 0): %lu\n", hash4);
-
-    // Проверка хэшей на одинаковость
-    if (hash1 == hash2) {
-        printf("d1 and d2 hashes are the same.\n");
-    }
-    if (hash3 == hash4) {
-        printf("d3 and d4 (negative 0 and positive 0) hashes are the same.\n");
-    }
 
     ///////////   int index = hashCode(key) % capacity;  индекс бакета
 
@@ -275,16 +232,7 @@ int main()
     string ll2 = stringOf("s2");
     string ll3 = stringOf("s3");
     string ll4 = stringOf("s4");
-    StrLinkedList strLL = newStrLinkedList(strLL);
-    StrLinkedList strLL2 = newStrLinkedList(strLL2);
-    addStrElemLL(strLL, ll1);
-    addStrElemLL(strLL, ll3);
-    addStrElemLL(strLL, ll4);
-    addStrElemLL(strLL, ll2);
-    addStrElemLL(strLL2, ll2);
-    addStrElemLL(strLL2, ll1);
-    setStrElemLL(strLL, 3, NULL);
-    printStrLL(strLL);
+
 
     puts("");
     /*add(stringOf("str1"), stringList);
@@ -374,32 +322,37 @@ int main()
     deleteList(strList2);*/
 
     puts("===========================================");
-    IntLinkedList linkedList = linkedListOfInt(linkedList, 5, 77, 4, 7, 56, 10);
-    //printf("linkedList[0] = %d\n", linkedList->get(linkedList, 0));
-    printIntLL(linkedList);
-    IntLinkedList linkedList2 = linkedListOfInt(linkedList2, 5, 77, 4, 7, 56, 10);
-    printIntLL(linkedList2);
 
-    Iterator iterator = linkedList->iterator(linkedList);
-    if (iterator->hasNext) {
-        puts("iterator has next");
-        printf("index 0 value: %d\n", linkedList->get(linkedList, 0));
-        int number = nextValue(iterator);
+    IntSet set = newIntSet(set);
+    set->add(set, 0);
+    set->add(set, 1);
+    set->add(set, 2);
+    set->add(set, 17);
+    printSet(set);
 
-        printf("num: %d\n", number);
-    }
+    set->add(set, 3);
+    set->add(set, 4);
+    set->add(set, 5);
+    set->add(set, 6);
+    set->add(set, 7);
+    set->add(set, 8);
+    printSet(set);
+    set->add(set, 9);
+    set->add(set, 10);
+    set->add(set, 11);
+    set->add(set, 12);
+    set->add(set, 13);
+    set->add(set, 14);
+    set->add(set, 15);
+    set->add(set, 96);
+    set->add(set, 64);
+    printSet(set);
 
-    removeAllIntLL(linkedList, linkedList2);
-    printIntLL(linkedList);
-    linkedList-> add(linkedList, 99);
-    printIntLL(linkedList);
-    removeIntLL(linkedList, 1);
-    if (linkedList->set(linkedList, 2, 5555)) {
-        puts("SET works correctly");
-    }
-    printIntLL(linkedList);
 
-    deleteIntLL(&linkedList);
+    deleteIntSet(&set);
+    printSet(set);
+
+    puts("");
 
     /*StrStrMap strStrMap = newStrStrMap(strStrMap);
     string s35 = stringOf("35");
