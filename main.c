@@ -228,10 +228,18 @@ int main()
     StringList stringList2 = newList(stringList2);*/
 
 
+    puts("========================= ////////               /////// ============================================");
     string ll1 = stringOf("s1");
     string ll2 = stringOf("s2");
     string ll3 = stringOf("s3");
     string ll4 = stringOf("s4");
+    StrLinkedList strLinkedList = newStrLinkedList(strLinkedList);
+    strLinkedList->add(strLinkedList, ll1);
+    strLinkedList->add(strLinkedList, ll2);
+    strLinkedList->add(strLinkedList, ll3);
+    strLinkedList->add(strLinkedList, ll4);
+    strLinkedList->reverse(strLinkedList);
+    printStrLL(strLinkedList);
 
 
     puts("");
@@ -324,10 +332,13 @@ int main()
     puts("===========================================");
 
     IntSet set = newIntSet(set);
+    IntSet set2 = newIntSet(set2);
     set->add(set, 0);
     set->add(set, 1);
     set->add(set, 2);
     set->add(set, 17);
+    //set2->add(set2, 99);
+    //set2->add(set2, 98);
     printSet(set);
 
     set->add(set, 3);
@@ -347,7 +358,16 @@ int main()
     set->add(set, 96);
     set->add(set, 64);
     printSet(set);
+    int number = 23;
+    if(containsIntSet(set, number))
+        printf("set contains %d\n", number);
+    else
+        printf("set NOT contains %d\n", number);
 
+    if (containsAnyIntSet(set, set2))
+        puts("set contains any set2");
+    else
+        puts("set NOT contains any set2");
 
     deleteIntSet(&set);
     printSet(set);

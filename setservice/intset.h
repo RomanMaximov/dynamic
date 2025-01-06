@@ -18,6 +18,9 @@ typedef Itr* Iterator;
 void addIntElemSet(IntSet, int);
 void addAllIntElemSet(IntSet, IntSet);
 void clearIntSet(IntSet);
+bool containsIntSet(IntSet, int);
+bool containsAllIntSet(IntSet, IntSet);
+bool containsAnyIntSet(IntSet, IntSet);
 
 void printSet(IntSet);
 void deleteIntSet(IntSet*);

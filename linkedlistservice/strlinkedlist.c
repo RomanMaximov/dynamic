@@ -430,6 +430,7 @@ void reverseStrLL(StrLinkedList list) {
     StrNode current = list->inner->begin;
     int index = 0;
     while (current != NULL) {
+        free(current->data);
         current->data = stringOf(tempList->str[index]->data);
         current = current->next;
         ++index;

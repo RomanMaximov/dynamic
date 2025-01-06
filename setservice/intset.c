@@ -32,9 +32,14 @@ static void insertNode(NodeInt** node, int num, int* counter);
 static void printInOrder(IntNode node, int* counter);
 static bool isCapacityFull(IntSet set);
 static void increaseCapacity(IntSet set);
-static void getValueInOrder(IntNode node, int* arr, int* index);
+static void copyValuesToArr(IntNode node, int* arr, int* index);
+static void setToArr(IntSet set, int* arr);
 static void deleteNodes(NodeInt** nodes, int capacity);
 static void deleteInOrder(IntNode node);
+static bool isContains(IntNode node, int num);
+static int compareqsort(const void* elem1, const void* elem2);
+static bool binarySearch(int elem, const int* arr, int high);
+static void toArrAndSort(IntSet set, int* arr);
 
 
 void addIntElemSet(IntSet set, int num) {
@@ -52,19 +57,14 @@ void addAllIntElemSet(IntSet set1, IntSet set2) {
         increaseCapacity(set1);
 
     int count = set2->inner->count;
-    int* arr = malloc(count * sizeof(int));
+    int arr[count];
 
-    int index = 0;
-    for (int i = 0; i < set2->inner->capacity; ++i) {
-        getValueInOrder(set2->inner->bucket[i], arr, &index);
-    }
+    setToArr(set2, arr);
 
     for (int i = 0; i < count; ++i) {
         int indexBucket = arr[i] % set1->inner->capacity;
         insertNode(&set1->inner->bucket[indexBucket], arr[i], &set1->inner->count);
     }
-
-    free(arr);
 }
 
 void clearIntSet(IntSet set) {
@@ -78,6 +78,57 @@ void clearIntSet(IntSet set) {
     set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeInt*));
     for (int i = 0; i < set->inner->capacity; ++i)
         set->inner->bucket[i] = NULL;
+}
+
+bool containsIntSet(IntSet set, int num) {
+    for (int i = 0; i < set->inner->capacity; ++i) {
+        if(isContains(set->inner->bucket[i], num))
+            return true;
+    }
+
+    return false;
+}
+
+bool containsAllIntSet(IntSet set1, IntSet set2) {
+    if (set1 == NULL || set2 == NULL || set2->inner->count > set1->inner->count) return false;
+    // TODO
+    //if (isEmptyIntSet(set2) return true;
+
+    int count2 = set2->inner->count;
+    int arr2[count2];
+    setToArr(set2, arr2);
+
+    int count1 = set1->inner->count;
+    int arr1[count1];
+    toArrAndSort(set1, arr1);
+
+    for (int i = 0; i < count2; ++i) {
+        if(!binarySearch(arr2[i], arr1, count1))
+            return false;
+    }
+
+    return  true;
+}
+
+bool containsAnyIntSet(IntSet set1, IntSet set2) {
+    if (set1 == NULL || set2 == NULL || set2->inner->count > set1->inner->count) return false;
+    // TODO
+    //if (isEmptyIntSet(set2) return false;
+
+    int count2 = set2->inner->count;
+    int arr2[count2];
+    setToArr(set2, arr2);
+
+    int count1 = set1->inner->count;
+    int arr1[count1];
+    toArrAndSort(set1, arr1);
+
+    for (int i = 0; i < count2; ++i) {
+        if(binarySearch(arr2[i], arr1, count1))
+            return true;
+    }
+
+    return  false;
 }
 
 void printSet(IntSet set) {
@@ -129,6 +180,26 @@ static int compareInt(int elem1, int elem2) {
         return -1;
 }
 
+static int compareqsort(const void* elem1, const void* elem2) {
+    return (*(int*)elem1 - *(int*)elem2);
+}
+
+static bool binarySearch(int elem, const int* arr, int high) {
+    int low, middle;
+    --high;
+    low = 0;
+    while (low <= high) {
+        middle = (low + high) / 2;
+        if (elem < arr[middle])
+            high = middle - 1;
+        else if (elem > arr[middle])
+            low = middle + 1;
+        else
+            return true;
+    }
+    return false;
+}
+
 static void insertNode(NodeInt** node, int num, int* counter) {
     if (*node == NULL) {
         *node = createNode(num);
@@ -169,34 +240,36 @@ static void increaseCapacity(IntSet set) {
     int count = set->inner->count;
     NodeInt** temp = set->inner->bucket;
 
+    int arr[count];
+    setToArr(set, arr);
+
     set->inner->capacity *= 2;
     set->inner->count = 0;
     set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeInt*));
     for (int i = 0; i < set->inner->capacity; ++i)
         set->inner->bucket[i] = NULL;
 
-    int* arr = malloc(count * sizeof(int));
-
-    int index = 0;
-    for (int i = 0; i < oldCapacity; ++i) {
-        getValueInOrder(temp[i], arr, &index);
-    }
-
     for (int i = 0; i < count; ++i) {
         int indexBucket = arr[i] % set->inner->capacity;
         insertNode(&set->inner->bucket[indexBucket], arr[i], &set->inner->count);
     }
 
-    free(arr);
     deleteNodes(temp, oldCapacity);
     free(temp);
 }
 
-static void getValueInOrder(IntNode node, int* arr, int* index) {
+static void copyValuesToArr(IntNode node, int* arr, int* index) {
     if (node != NULL) {
-        getValueInOrder(node->left, arr, index);
+        copyValuesToArr(node->left, arr, index);
         arr[(*index)++] = node->data;
-        getValueInOrder(node->right, arr, index);
+        copyValuesToArr(node->right, arr, index);
+    }
+}
+
+static void setToArr(IntSet set, int* arr) {
+    int index = 0;
+    for (int i = 0; i < set->inner->capacity; ++i) {
+        copyValuesToArr(set->inner->bucket[i], arr, &index);
     }
 }
 
@@ -215,4 +288,19 @@ static void deleteInOrder(IntNode node) {
     deleteInOrder(node->right);
 
     free(node);
+}
+
+static bool isContains(IntNode node, int num) {
+    if (node != NULL) {
+        isContains(node->left, num);
+        if (compareInt(node->data, num) == 0)
+            return true;
+        isContains(node->right, num);
+    }
+    return false;
+}
+
+static void toArrAndSort(IntSet set, int* arr) {
+    setToArr(set, arr);
+    qsort(arr, set->inner->count, sizeof(int), compareqsort);
 }
