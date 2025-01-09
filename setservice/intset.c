@@ -40,6 +40,7 @@ static bool isContains(IntNode node, int num);
 static int compareqsort(const void* elem1, const void* elem2);
 static bool binarySearch(int elem, const int* arr, int high);
 static void toArrAndSort(IntSet set, int* arr);
+static void removeNode(IntNode* node, IntNode* previous, int num, bool* found);
 
 
 void addIntElemSet(IntSet set, int num) {
@@ -129,6 +130,17 @@ bool containsAnyIntSet(IntSet set1, IntSet set2) {
     }
 
     return  false;
+}
+
+bool removeIntSet(IntSet set, int num) {
+    for (int i = 0; i < set->inner->capacity; ++i) {
+        IntNode previous = set->inner->bucket[i];
+        bool found = false;
+        removeNode(&set->inner->bucket[i], &previous, num, &found);
+    }
+    set->inner->count--;
+
+    return true;
 }
 
 void printSet(IntSet set) {
@@ -264,6 +276,93 @@ static void copyValuesToArr(IntNode node, int* arr, int* index) {
         arr[(*index)++] = node->data;
         copyValuesToArr(node->right, arr, index);
     }
+}
+
+static IntNode findNode(IntNode* node, IntNode* previous) {
+    if ((*node)->right == NULL) {
+        IntNode temp = *node;
+        (*previous)->right = NULL;
+        return temp;
+    } else {
+        findNode(&(*node)->right, &(*node));
+    }
+}
+
+static void removeNode(IntNode* node, IntNode* previous, int num, bool* found) {
+    if (*found) return;
+
+    if (*node != NULL && *previous != NULL) {
+        if (compareInt(num, (*node)->data) == 0) {
+            if ((*node)->right == NULL && (*node)->left == NULL) {
+                if (compareInt((*node)->data, (*previous)->data) == -1)
+                    (*previous)->left = NULL;
+                else
+                    (*previous)->right = NULL;
+
+                free(node);
+                *found = true;
+                return;
+            }
+
+            if (((*node)->left != NULL && (*node)->right == NULL) || ((*node)->left == NULL && (*node)->right != NULL)) {
+                IntNode temp = *node;
+                if (compareInt((*node)->data, (*previous)->data) == -1) {
+                    (*previous)->left = (*node)->left != NULL ? (*node)->left : (*node)->right;
+                } else {
+                    (*previous)->right = (*node)->left != NULL ? (*node)->left : (*node)->right;
+                }
+
+                free(temp);
+                *found = true;
+                return;
+            }
+
+            if ((*node)->right != NULL && (*node)->left != NULL) {
+                IntNode temp = *node;
+                IntNode left = (*node)->left;
+                IntNode right = (*node)->right;
+
+
+                *node = findNode(&temp->left, &temp);
+                (*node)->right = right;
+                temp->left = NULL;
+                temp->right = NULL;
+
+                // if remove root node
+                if (temp->data == (*previous)->data) {
+                    if ((*node)->left == NULL)
+                        (*node)->left = left;
+                    else
+                        (*node)->left->left = left;
+                }
+
+                free(temp);
+                *found = true;
+                return;
+            }
+        } else {
+            removeNode(&(*node)->left, &(*node), num, found);
+            removeNode(&(*node)->right, &(*node), num, found);
+        }
+    }
+}
+
+void outputTree(IntNode node, int* counter) {
+    if (node != NULL) {
+        ++(*counter);
+        outputTree(node->right, counter);
+        for (int i = 0; i < *counter * 3; ++i)
+            printf("  ");
+        printf("%d\n", node->data);
+        //--(*counter);
+        outputTree(node->left, counter);
+        --(*counter);
+    }
+}
+
+void printTree(IntSet set) {
+    int counter = 0;
+    outputTree(set->inner->bucket[0], &counter);
 }
 
 static void setToArr(IntSet set, int* arr) {

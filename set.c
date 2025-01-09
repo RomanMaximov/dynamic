@@ -56,7 +56,7 @@ IntSet newIntSet(IntSet temp) {
     IntSet set = malloc(sizeof(SetInt));
     set->inner = malloc(sizeof(InnerIntSet));
     set->inner->count = 0;
-    set->inner->capacity = 16;
+    set->inner->capacity = 10;
     set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeInt*));
     for (int i = 0; i < set->inner->capacity; ++i)
         set->inner->bucket[i] = NULL;

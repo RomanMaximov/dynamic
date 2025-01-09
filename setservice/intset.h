@@ -21,8 +21,11 @@ void clearIntSet(IntSet);
 bool containsIntSet(IntSet, int);
 bool containsAllIntSet(IntSet, IntSet);
 bool containsAnyIntSet(IntSet, IntSet);
+bool removeIntSet(IntSet, int);
 
 void printSet(IntSet);
 void deleteIntSet(IntSet*);
+
+void printTree(IntSet set);
 
 #endif

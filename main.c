@@ -332,42 +332,27 @@ int main()
     puts("===========================================");
 
     IntSet set = newIntSet(set);
-    IntSet set2 = newIntSet(set2);
-    set->add(set, 0);
-    set->add(set, 1);
-    set->add(set, 2);
-    set->add(set, 17);
+    set->add(set, 200);
+    set->add(set, 120);
+    set->add(set, 300);
+    set->add(set, 100);
     //set2->add(set2, 99);
     //set2->add(set2, 98);
-    printSet(set);
+    //printSet(set);
 
-    set->add(set, 3);
-    set->add(set, 4);
-    set->add(set, 5);
-    set->add(set, 6);
-    set->add(set, 7);
-    set->add(set, 8);
-    printSet(set);
-    set->add(set, 9);
-    set->add(set, 10);
-    set->add(set, 11);
-    set->add(set, 12);
-    set->add(set, 13);
-    set->add(set, 14);
-    set->add(set, 15);
-    set->add(set, 96);
-    set->add(set, 64);
-    printSet(set);
-    int number = 23;
-    if(containsIntSet(set, number))
-        printf("set contains %d\n", number);
-    else
-        printf("set NOT contains %d\n", number);
-
-    if (containsAnyIntSet(set, set2))
-        puts("set contains any set2");
-    else
-        puts("set NOT contains any set2");
+    set->add(set, 160);
+    set->add(set, 250);
+    set->add(set, 330);
+    set->add(set, 80);
+    set->add(set, 150);
+    //printSet(set);
+    set->add(set, 190);
+    set->add(set, 130);
+    set->add(set, 180);
+    set->add(set, 140);
+    //printSet(set);
+    removeIntSet(set, 150);
+    printTree(set);
 
     deleteIntSet(&set);
     printSet(set);
