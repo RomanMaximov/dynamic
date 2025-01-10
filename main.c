@@ -336,23 +336,9 @@ int main()
     set->add(set, 120);
     set->add(set, 300);
     set->add(set, 100);
-    //set2->add(set2, 99);
-    //set2->add(set2, 98);
-    //printSet(set);
 
-    set->add(set, 160);
-    set->add(set, 250);
-    set->add(set, 330);
-    set->add(set, 80);
-    set->add(set, 150);
-    //printSet(set);
-    set->add(set, 190);
-    set->add(set, 130);
-    set->add(set, 180);
-    set->add(set, 140);
-    //printSet(set);
-    removeIntSet(set, 150);
-    printTree(set);
+    printSet(set);
+
 
     deleteIntSet(&set);
     printSet(set);

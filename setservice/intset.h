@@ -22,6 +22,7 @@ bool containsIntSet(IntSet, int);
 bool containsAllIntSet(IntSet, IntSet);
 bool containsAnyIntSet(IntSet, IntSet);
 bool removeIntSet(IntSet, int);
+bool removeAllIntSet(IntSet, IntSet);
 
 void printSet(IntSet);
 void deleteIntSet(IntSet*);

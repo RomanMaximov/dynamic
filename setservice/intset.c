@@ -41,6 +41,7 @@ static int compareqsort(const void* elem1, const void* elem2);
 static bool binarySearch(int elem, const int* arr, int high);
 static void toArrAndSort(IntSet set, int* arr);
 static void removeNode(IntNode* node, IntNode* previous, int num, bool* found);
+static bool isRoot(IntNode* node, IntNode* previous);
 
 
 void addIntElemSet(IntSet set, int num) {
@@ -137,8 +138,20 @@ bool removeIntSet(IntSet set, int num) {
         IntNode previous = set->inner->bucket[i];
         bool found = false;
         removeNode(&set->inner->bucket[i], &previous, num, &found);
+        if (found)
+            set->inner->count--;
     }
-    set->inner->count--;
+
+    return true;
+}
+
+bool removeAllIntSet(IntSet set1, IntSet set2) {
+    int arr[set2->inner->count];
+    setToArr(set2, arr);
+
+    for (int i = 0; i < set2->inner->count; ++i) {
+        removeIntSet(set1, arr[i]);
+    }
 
     return true;
 }
@@ -294,17 +307,34 @@ static void removeNode(IntNode* node, IntNode* previous, int num, bool* found) {
     if (*node != NULL && *previous != NULL) {
         if (compareInt(num, (*node)->data) == 0) {
             if ((*node)->right == NULL && (*node)->left == NULL) {
+                if (isRoot(node, previous)) {
+                    IntNode temp = *node;
+                    *node = NULL;
+                    free(temp);
+                    *found = true;
+                    return;
+                }
+
+                IntNode temp = *node;
                 if (compareInt((*node)->data, (*previous)->data) == -1)
                     (*previous)->left = NULL;
                 else
                     (*previous)->right = NULL;
 
-                free(node);
+                free(temp);
                 *found = true;
                 return;
             }
 
             if (((*node)->left != NULL && (*node)->right == NULL) || ((*node)->left == NULL && (*node)->right != NULL)) {
+                if (isRoot(node, previous)) {
+                    IntNode temp = *node;
+                    *node = (*node)->left != NULL ? (*node)->left : (*node)->right;
+                    free(temp);
+                    *found = true;
+                    return;
+                }
+
                 IntNode temp = *node;
                 if (compareInt((*node)->data, (*previous)->data) == -1) {
                     (*previous)->left = (*node)->left != NULL ? (*node)->left : (*node)->right;
@@ -329,7 +359,7 @@ static void removeNode(IntNode* node, IntNode* previous, int num, bool* found) {
                 temp->right = NULL;
 
                 // if remove root node
-                if (temp->data == (*previous)->data) {
+                if (isRoot(&temp, previous)) {
                     if ((*node)->left == NULL)
                         (*node)->left = left;
                     else
@@ -344,6 +374,8 @@ static void removeNode(IntNode* node, IntNode* previous, int num, bool* found) {
             removeNode(&(*node)->left, &(*node), num, found);
             removeNode(&(*node)->right, &(*node), num, found);
         }
+
+        return;
     }
 }
 
@@ -402,4 +434,8 @@ static bool isContains(IntNode node, int num) {
 static void toArrAndSort(IntSet set, int* arr) {
     setToArr(set, arr);
     qsort(arr, set->inner->count, sizeof(int), compareqsort);
+}
+
+static bool isRoot(IntNode* node, IntNode* previous) {
+    return (*node)->data == (*previous)->data;
 }
