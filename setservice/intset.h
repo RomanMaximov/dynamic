@@ -23,8 +23,13 @@ bool containsAllIntSet(IntSet, IntSet);
 bool containsAnyIntSet(IntSet, IntSet);
 bool removeIntSet(IntSet, int);
 bool removeAllIntSet(IntSet, IntSet);
+bool isEmptyIntSet(IntSet);
+bool isEqualListsIntSet(IntSet, IntSet);
+IntSet emptyIfNullIntSet(IntSet);
+int sizeIntSet(IntSet);
+Iterator iteratorIntSet(IntSet);
 
-void printSet(IntSet);
+void printIntSet(IntSet);
 void deleteIntSet(IntSet*);
 
 void printTree(IntSet set);

@@ -242,7 +242,6 @@ int main()
     printStrLL(strLinkedList);
 
 
-    puts("");
     /*add(stringOf("str1"), stringList);
     add(stringOf("str2"), stringList);
     add(stringOf("str3"), stringList);
@@ -331,13 +330,22 @@ int main()
 
     puts("===========================================");
 
-    IntSet set = newIntSet(set);
+    IntSet set = NULL;
+    IntSet set2 = NULL;
+    set = emptyIfNullIntSet(set);
     set->add(set, 200);
     set->add(set, 120);
     set->add(set, 300);
     set->add(set, 100);
 
-    printSet(set);
+    printIntSet(set);
+    printIntSet(set2);
+
+    if (isEqualListsIntSet(set, set2)) {
+        puts("set and set2 are equals");
+    } else {
+        puts("set and set2 are NOT equals");
+    }
 
 
     deleteIntSet(&set);

@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "string.h"
+#include "iterator.h"
 #include "setservice/intset.h"
 
 // structures
@@ -80,6 +81,7 @@ typedef SetInt* IntSet;
 typedef SetDouble* DoubleSet;
 typedef SetStr* StrSet;
 typedef String* string;
+typedef Itr* Iterator;
 
 
 IntSet newIntSet(IntSet);

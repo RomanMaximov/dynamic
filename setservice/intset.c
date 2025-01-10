@@ -42,6 +42,7 @@ static bool binarySearch(int elem, const int* arr, int high);
 static void toArrAndSort(IntSet set, int* arr);
 static void removeNode(IntNode* node, IntNode* previous, int num, bool* found);
 static bool isRoot(IntNode* node, IntNode* previous);
+static bool hasNext(Iterator iter);
 
 
 void addIntElemSet(IntSet set, int num) {
@@ -156,9 +157,57 @@ bool removeAllIntSet(IntSet set1, IntSet set2) {
     return true;
 }
 
-void printSet(IntSet set) {
+bool isEmptyIntSet(IntSet set) {
+    return set == NULL || set->inner->count == 0;
+}
+
+bool isEqualListsIntSet(IntSet set1, IntSet set2) {
+    if (set1 == NULL || set2 == NULL || set1->inner->count != set2->inner->count) return false;
+
+    int arr1[set1->inner->count];
+    int arr2[set2->inner->count];
+
+    toArrAndSort(set1, arr1);
+    toArrAndSort(set2, arr2);
+
+    for (int i = 0; i < set1->inner->count; ++i) {
+        if (compareInt(arr1[i], arr2[i]) != 0)
+            return false;
+    }
+
+    return true;
+}
+
+IntSet emptyIfNullIntSet(IntSet set) {
+    if (set == NULL) {
+        IntSet temp = newIntSet(temp);
+        return temp;
+    }
+
+    return set;
+}
+
+Iterator iteratorIntSet(IntSet list){
+    Iterator iter = malloc(sizeof(Itr));
+    iter->count = 0;
+    iter->data = list;
+    iter->collectionSize = list->inner->count;
+    iter->hasNext = (void*) hasNext(iter);
+    iter->type = INT_SET;
+    return iter;
+}
+
+static bool hasNext(Iterator iter) {
+    return iter->count < iter->collectionSize;
+}
+
+int sizeIntSet(IntSet set) {
+    return set->inner->count;
+}
+
+void printIntSet(IntSet set) {
     if (set == NULL || set->inner == NULL) {
-        printf("%s", "[]");
+        printf("%s", "[]\n");
         return;
     }
 
@@ -379,6 +428,7 @@ static void removeNode(IntNode* node, IntNode* previous, int num, bool* found) {
     }
 }
 
+// служебная функция для вывода дерева
 void outputTree(IntNode node, int* counter) {
     if (node != NULL) {
         ++(*counter);
