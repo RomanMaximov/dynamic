@@ -19,4 +19,4 @@ add_executable(DynamicCollection main.c
         set.h
         set.c
         setservice/intset.h
-        setservice/intset.c setservice/doubleset.h setservice/doubleset.c)
+        setservice/intset.c setservice/doubleset.h setservice/doubleset.c setservice/strset.h setservice/strset.c)

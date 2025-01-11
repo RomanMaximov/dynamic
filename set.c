@@ -5,7 +5,6 @@
 //
 
 #include "set.h"
-#include "setservice/intset.h"
 #include "collectiontypes.h"
 
 
@@ -42,10 +41,26 @@ typedef struct InnerDoubleSet {
     NodeInt** bucket;
 } InnerDoubleSet;
 
+typedef struct NodeStr {
+    string data;
+    struct NodeStr* left;
+    struct NodeStr* right;
+} NodeStr;
+
+// Set data encapsulation
+typedef struct InnerStrSet {
+    int count;
+    int capacity;
+    NodeStr** bucket;
+} InnerStrSet;
+
 typedef SetInt* IntSet;
 typedef NodeInt* IntNode;
 typedef SetDouble* DoubleSet;
 typedef NodeDouble* DoubleNode;
+typedef SetStr* StrSet;
+typedef NodeStr* StrNode;
+typedef String* string;
 
 // prototypes common funcs
 static void initFuncs(Type type, void* data);
@@ -92,6 +107,20 @@ DoubleSet newDoubleSet(DoubleSet temp) {
         set->inner->bucket[i] = NULL;
 
     initFuncs(DOUBLE_SET, (void*)set);
+
+    return set;
+}
+
+StrSet newStrSet(StrSet temp) {
+    StrSet set = malloc(sizeof(SetStr));
+    set->inner = malloc(sizeof(InnerStrSet));
+    set->inner->count = 0;
+    set->inner->capacity = 16;
+    set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeStr*));
+    for (int i = 0; i < set->inner->capacity; ++i)
+        set->inner->bucket[i] = NULL;
+
+    initFuncs(STR_SET, (void*)set);
 
     return set;
 }

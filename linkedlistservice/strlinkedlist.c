@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "strlinkedlist.h"
-#include "../dynamicarray.h"
 
 // structures
 typedef struct NodeStr {

@@ -51,73 +51,73 @@ build cmake_object_order_depends_target_DynamicCollection: phony || CMakeFiles/D
 
 build CMakeFiles/DynamicCollection.dir/main.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/main.c || cmake_object_order_depends_target_DynamicCollection
   DEP_FILE = CMakeFiles\DynamicCollection.dir\main.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
   OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir
 
 build CMakeFiles/DynamicCollection.dir/dynamicarray.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/dynamicarray.c || cmake_object_order_depends_target_DynamicCollection
   DEP_FILE = CMakeFiles\DynamicCollection.dir\dynamicarray.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
-  OBJECT_DIR = CMakeFiles\DynamicCollection.dir
-  OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir
-
-build CMakeFiles/DynamicCollection.dir/map.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/map.c || cmake_object_order_depends_target_DynamicCollection
-  DEP_FILE = CMakeFiles\DynamicCollection.dir\map.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
   OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir
 
 build CMakeFiles/DynamicCollection.dir/string.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/string.c || cmake_object_order_depends_target_DynamicCollection
   DEP_FILE = CMakeFiles\DynamicCollection.dir\string.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
   OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir
 
 build CMakeFiles/DynamicCollection.dir/linkedlist.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/linkedlist.c || cmake_object_order_depends_target_DynamicCollection
   DEP_FILE = CMakeFiles\DynamicCollection.dir\linkedlist.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
   OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir
 
 build CMakeFiles/DynamicCollection.dir/testarray.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/testarray.c || cmake_object_order_depends_target_DynamicCollection
   DEP_FILE = CMakeFiles\DynamicCollection.dir\testarray.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
   OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir
 
 build CMakeFiles/DynamicCollection.dir/linkedlistservice/intlinkedlist.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/linkedlistservice/intlinkedlist.c || cmake_object_order_depends_target_DynamicCollection
   DEP_FILE = CMakeFiles\DynamicCollection.dir\linkedlistservice\intlinkedlist.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
   OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir\linkedlistservice
 
 build CMakeFiles/DynamicCollection.dir/linkedlistservice/doublelinkedlist.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/linkedlistservice/doublelinkedlist.c || cmake_object_order_depends_target_DynamicCollection
   DEP_FILE = CMakeFiles\DynamicCollection.dir\linkedlistservice\doublelinkedlist.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
   OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir\linkedlistservice
 
 build CMakeFiles/DynamicCollection.dir/linkedlistservice/strlinkedlist.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/linkedlistservice/strlinkedlist.c || cmake_object_order_depends_target_DynamicCollection
   DEP_FILE = CMakeFiles\DynamicCollection.dir\linkedlistservice\strlinkedlist.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
   OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir\linkedlistservice
 
 build CMakeFiles/DynamicCollection.dir/set.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/set.c || cmake_object_order_depends_target_DynamicCollection
   DEP_FILE = CMakeFiles\DynamicCollection.dir\set.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
   OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir
 
 build CMakeFiles/DynamicCollection.dir/setservice/intset.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/setservice/intset.c || cmake_object_order_depends_target_DynamicCollection
   DEP_FILE = CMakeFiles\DynamicCollection.dir\setservice\intset.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
   OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir\setservice
 
 build CMakeFiles/DynamicCollection.dir/setservice/doubleset.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/setservice/doubleset.c || cmake_object_order_depends_target_DynamicCollection
   DEP_FILE = CMakeFiles\DynamicCollection.dir\setservice\doubleset.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\DynamicCollection.dir
+  OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir\setservice
+
+build CMakeFiles/DynamicCollection.dir/setservice/strset.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/setservice/strset.c || cmake_object_order_depends_target_DynamicCollection
+  DEP_FILE = CMakeFiles\DynamicCollection.dir\setservice\strset.c.obj.d
+  FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
   OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir\setservice
 
@@ -129,7 +129,7 @@ build CMakeFiles/DynamicCollection.dir/setservice/doubleset.c.obj: C_COMPILER__D
 #############################################
 # Link the executable DynamicCollection.exe
 
-build DynamicCollection.exe: C_EXECUTABLE_LINKER__DynamicCollection_Debug CMakeFiles/DynamicCollection.dir/main.c.obj CMakeFiles/DynamicCollection.dir/dynamicarray.c.obj CMakeFiles/DynamicCollection.dir/map.c.obj CMakeFiles/DynamicCollection.dir/string.c.obj CMakeFiles/DynamicCollection.dir/linkedlist.c.obj CMakeFiles/DynamicCollection.dir/testarray.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/intlinkedlist.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/doublelinkedlist.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/strlinkedlist.c.obj CMakeFiles/DynamicCollection.dir/set.c.obj CMakeFiles/DynamicCollection.dir/setservice/intset.c.obj CMakeFiles/DynamicCollection.dir/setservice/doubleset.c.obj
+build DynamicCollection.exe: C_EXECUTABLE_LINKER__DynamicCollection_Debug CMakeFiles/DynamicCollection.dir/main.c.obj CMakeFiles/DynamicCollection.dir/dynamicarray.c.obj CMakeFiles/DynamicCollection.dir/string.c.obj CMakeFiles/DynamicCollection.dir/linkedlist.c.obj CMakeFiles/DynamicCollection.dir/testarray.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/intlinkedlist.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/doublelinkedlist.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/strlinkedlist.c.obj CMakeFiles/DynamicCollection.dir/set.c.obj CMakeFiles/DynamicCollection.dir/setservice/intset.c.obj CMakeFiles/DynamicCollection.dir/setservice/doubleset.c.obj CMakeFiles/DynamicCollection.dir/setservice/strset.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir

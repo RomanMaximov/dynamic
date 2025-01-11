@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include "doubleset.h"
-#include "../collectiontypes.h"
 
 #define ACCURACY 0.000000001
 

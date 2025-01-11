@@ -6,9 +6,6 @@
 
 
 #include "linkedlist.h"
-//#include "linkedlistservice/intlinkedlist.h"
-//#include "linkedlistservice/doublelinkedlist.h"
-//#include "linkedlistservice/strlinkedlist.h"
 
 // structures
 typedef struct String {

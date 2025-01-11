@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "intset.h"
-#include "../collectiontypes.h"
 
 typedef struct NodeInt {
     int data;
