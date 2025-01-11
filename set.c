@@ -29,8 +29,23 @@ typedef struct InnerIntSet {
     NodeInt** bucket;
 } InnerIntSet;
 
+typedef struct NodeDouble {
+    double data;
+    struct NodeInt* left;
+    struct NodeInt* right;
+} NodeDouble;
+
+// Set data encapsulation
+typedef struct InnerDoubleSet {
+    int count;
+    int capacity;
+    NodeInt** bucket;
+} InnerDoubleSet;
+
 typedef SetInt* IntSet;
 typedef NodeInt* IntNode;
+typedef SetDouble* DoubleSet;
+typedef NodeDouble* DoubleNode;
 
 // prototypes common funcs
 static void initFuncs(Type type, void* data);
@@ -52,6 +67,7 @@ static void* deleteList(Type type);
 static void* iterator(Type type);
 
 // funcs
+// TODO добавить другие способы инициализации сетов как у массивов
 IntSet newIntSet(IntSet temp) {
     IntSet set = malloc(sizeof(SetInt));
     set->inner = malloc(sizeof(InnerIntSet));
@@ -62,6 +78,20 @@ IntSet newIntSet(IntSet temp) {
         set->inner->bucket[i] = NULL;
     
     initFuncs(INT_SET, (void*)set);
+
+    return set;
+}
+
+DoubleSet newDoubleSet(DoubleSet temp) {
+    DoubleSet set = malloc(sizeof(SetDouble));
+    set->inner = malloc(sizeof(InnerDoubleSet));
+    set->inner->count = 0;
+    set->inner->capacity = 16;
+    set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeDouble*));
+    for (int i = 0; i < set->inner->capacity; ++i)
+        set->inner->bucket[i] = NULL;
+
+    initFuncs(DOUBLE_SET, (void*)set);
 
     return set;
 }

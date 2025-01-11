@@ -41,6 +41,7 @@ static int compareqsort(const void* elem1, const void* elem2);
 static bool binarySearch(int elem, const int* arr, int high);
 static void toArrAndSort(IntSet set, int* arr);
 static void removeNode(IntNode* node, IntNode* previous, int num, bool* found);
+static IntNode findNode(IntNode* node, IntNode* previous);
 static bool isRoot(IntNode* node, IntNode* previous);
 static bool hasNext(Iterator iter);
 
@@ -94,8 +95,7 @@ bool containsIntSet(IntSet set, int num) {
 
 bool containsAllIntSet(IntSet set1, IntSet set2) {
     if (set1 == NULL || set2 == NULL || set2->inner->count > set1->inner->count) return false;
-    // TODO
-    //if (isEmptyIntSet(set2) return true;
+    if (isEmptyIntSet(set2)) return true;
 
     int count2 = set2->inner->count;
     int arr2[count2];
@@ -115,8 +115,6 @@ bool containsAllIntSet(IntSet set1, IntSet set2) {
 
 bool containsAnyIntSet(IntSet set1, IntSet set2) {
     if (set1 == NULL || set2 == NULL || set2->inner->count > set1->inner->count) return false;
-    // TODO
-    //if (isEmptyIntSet(set2) return false;
 
     int count2 = set2->inner->count;
     int arr2[count2];
