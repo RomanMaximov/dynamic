@@ -9,7 +9,7 @@
 
 
 // Простая хэш-функция для строк (алгоритм djb2)
-unsigned long hashString(const char* str) {
+int hashString(const char* str) {
     unsigned long hash = 5381;
     int c;
 

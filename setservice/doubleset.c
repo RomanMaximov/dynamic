@@ -37,7 +37,7 @@ static bool isCapacityFull(DoubleSet set);
 static void increaseCapacity(DoubleSet set);
 static void copyValuesToArr(DoubleNode node, double* arr, int* index);
 static void setToArr(DoubleSet set, double* arr);
-static void deleteNodes(NodeDouble** nodes, int capacity);
+static void deleteNodes(NodeDouble** buckets, int capacity);
 static void deleteInOrder(DoubleNode node);
 static bool isContains(DoubleNode node, double num);
 static int compareqsort(const void* elem1, const void* elem2);
@@ -314,10 +314,10 @@ static int compareDouble(double elem1, double elem2) {
         return -1;
 }
 
-static void deleteNodes(NodeDouble** nodes, int capacity) {
+static void deleteNodes(NodeDouble** buckets, int capacity) {
     for (int i = 0; i < capacity; ++i) {
-        if (nodes[i] != NULL)
-            deleteInOrder(nodes[i]);
+        if (buckets[i] != NULL)
+            deleteInOrder(buckets[i]);
     }
 }
 

@@ -16,7 +16,10 @@ typedef enum Type {
     STR_LL,
     INT_SET,
     DOUBLE_SET,
-    STR_SET
+    STR_SET,
+    INT,
+    DOUBLE,
+    CHAR_
 } Type;
 
 #endif
