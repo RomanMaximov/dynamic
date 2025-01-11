@@ -8,6 +8,8 @@
 #include <assert.h>
 #include "dynamicarray.h"
 
+#define ACCURACY 0.000000001
+
 // structures
 typedef struct IntArray {
     int count;
@@ -900,7 +902,7 @@ void sortDouble(DoubleList list) {
 }
 
 static int compareDouble(const void* elem1, const void* elem2) {
-    return fabs((*(double*)elem1 - *(double*)elem2)) < 0.000000001
+    return fabs((*(double*)elem1 - *(double*)elem2)) < ACCURACY
     ? 0
     : (*(double*)elem1 - *(double*)elem2) < 0 ? -1 : 1;
 }

@@ -349,7 +349,7 @@ int main()
 
 
     deleteIntSet(&set);
-    printSet(set);
+    printIntSet(set);
 
     puts("");
 

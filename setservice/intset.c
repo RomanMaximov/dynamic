@@ -233,6 +233,8 @@ void deleteIntSet(IntSet* set) {
     *set = NULL;
 }
 
+// ===================== private funcs =======================
+
 static  void printInOrder(IntNode node, int* counter) {
     if (node != NULL) {
         printInOrder(node->left, counter);
