@@ -93,6 +93,28 @@ void addAllStrElemSet(StrSet set1, StrSet set2) {
     }
 }
 
+void clearStrSet(StrSet set) {
+    if (set->inner->bucket != NULL) {
+        deleteNodes(set->inner->bucket, set->inner->capacity);
+        free(set->inner->bucket);
+    }
+
+    set->inner->count = 0;
+    set->inner->capacity = 16;
+    set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeStr*));
+    for (int i = 0; i < set->inner->capacity; ++i)
+        set->inner->bucket[i] = NULL;
+}
+
+bool containsStrSet(StrSet set, string s) {
+    for (int i = 0; i < set->inner->capacity; ++i) {
+        if(isContains(set->inner->bucket[i], s))
+            return true;
+    }
+
+    return false;
+}
+
 // ===================== private funcs =======================
 
 static int hashString(const char* str) {
@@ -200,4 +222,14 @@ static void deleteInOrder(StrNode node) {
 
 int compareStr(char* s1, char* s2) {
     return strcmp(s1, s2);
+}
+
+static bool isContains(StrNode node, string s) {
+    if (node != NULL) {
+        isContains(node->left, s);
+        if (compareStr(node->str->data, s->data) == 0)
+            return true;
+        isContains(node->right, s);
+    }
+    return false;
 }

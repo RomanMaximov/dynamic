@@ -15,6 +15,11 @@ typedef struct String {
     int capacity;
 } String;
 
+typedef struct Collection {
+    void* data;
+    Type type;
+} Collection;
+
 typedef struct NodeInt {
     int data;
     struct NodeInt* left;
@@ -25,7 +30,8 @@ typedef struct NodeInt {
 typedef struct InnerIntSet {
     int count;
     int capacity;
-    NodeInt** bucket;
+    struct NodeInt** bucket;
+    struct Collection* collection;
 } InnerIntSet;
 
 typedef struct NodeDouble {
@@ -38,7 +44,7 @@ typedef struct NodeDouble {
 typedef struct InnerDoubleSet {
     int count;
     int capacity;
-    NodeInt** bucket;
+    struct NodeInt** bucket;
 } InnerDoubleSet;
 
 typedef struct NodeStr {
@@ -51,7 +57,7 @@ typedef struct NodeStr {
 typedef struct InnerStrSet {
     int count;
     int capacity;
-    NodeStr** bucket;
+    struct NodeStr** bucket;
 } InnerStrSet;
 
 typedef SetInt* IntSet;
@@ -85,7 +91,11 @@ static void* iterator(Type type);
 // TODO добавить другие способы инициализации сетов как у массивов
 IntSet newIntSet(IntSet temp) {
     IntSet set = malloc(sizeof(SetInt));
+    set->values = (void*) set->inner->collection;
     set->inner = malloc(sizeof(InnerIntSet));
+    set->inner->collection = malloc(sizeof(Collection));
+    set->inner->collection->data = (void*) set;
+    set->inner->collection->type = INT_SET;
     set->inner->count = 0;
     set->inner->capacity = 16;
     set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeInt*));
@@ -131,10 +141,10 @@ static void* add(Type type) {
     switch (type) {
         case INT_SET:
             return addIntElemSet;
-        /*case DOUBLE_SET:
+        case DOUBLE_SET:
             return addDoubleElemSet;
         case STR_SET:
-            return addStrElemSet;*/
+            return addStrElemSet;
         default:
             return NULL;
     }

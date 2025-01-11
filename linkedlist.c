@@ -24,9 +24,9 @@ typedef struct NodeInt {
 typedef struct InnerIntLL {
     int count;
     int index;
-    NodeInt* nodes;
-    NodeInt* begin;
-    NodeInt* end;
+    struct NodeInt* nodes;
+    struct NodeInt* begin;
+    struct NodeInt* end;
 } InnerIntLL;
 
 typedef struct NodeDouble {
@@ -39,9 +39,9 @@ typedef struct NodeDouble {
 typedef struct InnerDoubleLL {
     int count;
     int index;
-    NodeDouble* nodes;
-    NodeDouble* begin;
-    NodeDouble* end;
+    struct NodeDouble* nodes;
+    struct NodeDouble* begin;
+    struct NodeDouble* end;
 } InnerDoubleLL;
 
 typedef struct NodeStr {
@@ -54,9 +54,9 @@ typedef struct NodeStr {
 typedef struct InnerStrLL {
     int count;
     int index;
-    NodeStr* nodes;
-    NodeStr* begin;
-    NodeStr* end;
+    struct NodeStr* nodes;
+    struct NodeStr* begin;
+    struct NodeStr* end;
 } InnerStrLL;
 
 

@@ -18,9 +18,11 @@
 
 // structures
 typedef struct String String;
+typedef struct Collection Collection;
 
 typedef struct SetInt {
     struct InnerIntSet* inner;   // private field
+    void* values;
     // funcs pointers
     void (*add)(struct SetInt* set, int number);
     void (*addAll)(struct SetInt* set1, struct SetInt* set2);
