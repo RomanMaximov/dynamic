@@ -1,0 +1,448 @@
+//
+// Created by Roman Maximov on 12.01.2025.
+// License: MIT License.
+// Copyright (c) 2024 Roman Maximov.
+//
+
+
+#include "arraylist.h"
+
+// structures
+typedef struct String {
+    int count;
+    char* data;
+    int capacity;
+} String;
+
+// ArrayList data encapsulation
+typedef struct InnerIntList {
+    int count;
+    int* data;
+    int capacity;
+} InnerIntList;
+
+// ArrayList data encapsulation
+typedef struct InnerDoubleList {
+    int count;
+    double* data;
+    int capacity;
+} InnerDoubleList;
+
+// ArrayList data encapsulation
+typedef struct InnerStrList {
+    int count;
+    String** str;
+    int capacity;
+} InnerStrList;
+
+
+typedef ArrayListInt* IntList;
+typedef ArrayListDouble* DoubleList;
+typedef ArrayListStr* StrList;
+typedef String* string;
+typedef Itr* Iterator;
+
+
+// prototypes common funcs
+static void initFuncs(Type type, void* data);
+static void* add(Type type);
+static void* addAll(Type type);
+static void* get(Type type);
+static void* set(Type type);
+static void* indexOf(Type type);
+static void* sort(Type type);
+static void* sortReverse(Type type);
+static void* clear(Type type);
+static void* contains(Type type);
+static void* containsAll(Type type);
+static void* containsAny(Type type);
+static void* removeElem(Type type);
+static void* removeAll(Type type);
+static void* subtract(Type type);
+static void* isEmpty(Type type);
+static void* reverse(Type type);
+static void* isEquals(Type type);
+static void* emptyIfNull(Type type);
+
+static void* size(Type type);
+static void* printList(Type type);
+static void* deleteList(Type type);
+static void* iterator(Type type);
+
+
+// funcs
+IntList newIntList(IntList temp) {
+    IntList list = malloc(sizeof(ArrayListInt));
+    list->inner = malloc(sizeof(InnerIntList));
+    list->inner->count = 0;
+    list->inner->capacity = 20;
+    list->inner->data = malloc(list->inner->capacity * sizeof(int));
+    initFuncs(INT_LIST, (void*)list);
+
+    return list;
+}
+
+IntList listOfInt(IntList temp, int paramCount, ...) {
+    IntList list = malloc(sizeof(ArrayListInt));
+    /*list->inner = malloc(sizeof(InnerIntList));
+    list->inner->count = 0;
+    list->inner->capacity = 20;
+    list->inner->data = malloc(list->inner->capacity * sizeof(int));
+    initFuncs(INT_LIST, (void*)list);
+
+    va_list param;
+    va_start(param, paramCount);
+    for (int i = 0; i < paramCount; ++i) {
+        addIntElemList(list, va_arg(param, int));
+    }
+    va_end(param);*/
+    return list;
+}
+
+DoubleList newDoubleList(DoubleList temp) {
+    DoubleList list = malloc(sizeof(ArrayListDouble));
+    list->inner = malloc(sizeof(InnerDoubleList));
+    list->inner->count = 0;
+    list->inner->capacity = 20;
+    list->inner->data = malloc(list->inner->capacity * sizeof(double));
+    initFuncs(DOUBLE_LIST, (void*)list);
+
+    return list;
+}
+
+DoubleList listOfDouble(DoubleList temp, int paramCount, ...) {
+    DoubleList list = malloc(sizeof(ArrayListDouble));
+    /*list->inner = malloc(sizeof(InnerDoubleList));
+    list->inner->count = 0;
+    list->inner->capacity = 20;
+    list->inner->data = malloc(list->inner->capacity * sizeof(double));
+    initFuncs(DOUBLE_LIST, (void*)list);
+
+    va_list param;
+    va_start(param, paramCount);
+    for (int i = 0; i < paramCount; ++i) {
+        addDoubleElemList(list, va_arg(param, double));
+    }
+    va_end(param);*/
+    return list;
+}
+
+StrList newStrList(StrList temp) {
+    StrList list = malloc(sizeof(ArrayListStr));
+    list->inner = malloc(sizeof(InnerStrList));
+    list->inner->count = 0;
+    list->inner->capacity = 20;
+    list->inner->str = malloc(list->inner->capacity * sizeof(String*));
+    for (int i = 0; i < list->inner->capacity; ++i)
+        list->inner->str[i] = NULL;
+
+    initFuncs(STR_LIST, (void*)list);
+
+    return list;
+}
+
+StrList listOfStr(StrList temp, int paramCount, ...) {
+    StrList list = malloc(sizeof(ArrayListStr));
+    /*list->inner = malloc(sizeof(InnerStrList));
+    list->inner->count = 0;
+    list->inner->capacity = 20;
+    list->inner->str = malloc(list->inner->capacity * sizeof(String*));
+    for (int i = 0; i < list->inner->capacity; ++i)
+        list->inner->str[i] = NULL;
+
+    initFuncs(STR_LIST, (void*)list);
+
+    va_list param;
+    va_start(param, paramCount);
+    for (int i = 0; i < paramCount; ++i) {
+        addStrElemList(list, va_arg(param, string));
+    }
+    va_end(param);*/
+    return list;
+}
+
+// common init functions
+static void* add(Type type) {
+    switch (type) {
+        case INT_LIST:
+            return addIntElemList;
+        /*case DOUBLE_LIST:
+            return addDoubleElemList;
+        case STR_LIST:
+            return addStrElemList;
+        default:
+            return NULL;*/
+    }
+}
+
+static void* addAll(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return addAllIntElemList;
+        case DOUBLE_LIST:
+            return addAllDoubleElemList;
+        case STR_LIST:
+            return addAllStrElemList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* get(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return getIntElemList;
+        case DOUBLE_LIST:
+            return getDoubleElemList;
+        case STR_LIST:
+            return getStrElemList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* set(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return setIntElemList;
+        case DOUBLE_LIST:
+            return setDoubleElemList;
+        case STR_LIST:
+            return setStrElemList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* indexOf(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return indexOfIntList;
+        case DOUBLE_LIST:
+            return indexOfDoubleList;
+        case STR_LIST:
+            return indexOfStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* sort(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return sortIntList;
+        case DOUBLE_LIST:
+            return sortDoubleList;
+        case STR_LIST:
+            return sortStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* sortReverse(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return sortIntListReverse;
+        case DOUBLE_LIST:
+            return sortDoubleListReverse;
+        case STR_LIST:
+            return sortStrListReverse;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* clear(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return clearIntList;
+        case DOUBLE_LIST:
+            return clearDoubleList;
+        case STR_LIST:
+            return clearStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* contains(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return containsIntList;
+        case DOUBLE_LIST:
+            return containsDoubleList;
+        case STR_LIST:
+            return containsStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* containsAll(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return containsAllIntList;
+        case DOUBLE_LIST:
+            return containsAllDoubleList;
+        case STR_LIST:
+            return containsAllStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* containsAny(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return containsAnyIntList;
+        case DOUBLE_LIST:
+            return containsAnyDoubleList;
+        case STR_LIST:
+            return containsAnyStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* removeElem(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return removeIntList;
+        case DOUBLE_LIST:
+            return removeDoubleList;
+        case STR_LIST:
+            return removeStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* removeAll(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return removeAllIntList;
+        case DOUBLE_LIST:
+            return removeAllDoubleList;
+        case STR_LIST:
+            return removeAllStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* subtract(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return subtractIntList;
+        case DOUBLE_LIST:
+            return subtractDoubleList;
+        case STR_LIST:
+            return subtractStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* isEmpty(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return isEmptyIntList;
+        case DOUBLE_LIST:
+            return isEmptyDoubleList;
+        case STR_LIST:
+            return isEmptyStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* reverse(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return reverseIntList;
+        case DOUBLE_LIST:
+            return reverseDoubleList;
+        case STR_LIST:
+            return reverseStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* isEquals(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return isEqualsIntList;
+        case DOUBLE_LIST:
+            return isEqualsDoubleList;
+        case STR_LIST:
+            return isEqualsStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* emptyIfNull(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return emptyIfNullIntList;
+        case DOUBLE_LIST:
+            return emptyIfNullDoubleList;
+        case STR_LIST:
+            return emptyIfNullStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* size(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return sizeIntList;
+        case DOUBLE_LIST:
+            return sizeDoubleList;
+        case STR_LIST:
+            return sizeStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void* iterator(Type type) {
+    /*switch (type) {
+        case INT_LIST:
+            return iteratorIntList;
+        case DOUBLE_LIST:
+            //return iteratorDoubleList;
+        case STR_LIST:
+            //return iteratorStrList;
+        default:
+            return NULL;
+    }*/
+}
+
+static void initFuncs(Type type, void* data) {
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->add = add(type) : type == DOUBLE_LIST ? ((DoubleList) data)->add = add(type) : (((StrList) data)->add = add(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->addAll = addAll(type) : type == DOUBLE_LIST ? ((DoubleList) data)->addAll = addAll(type) : (((StrList) data)->addAll = addAll(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->get = get(type) : type == DOUBLE_LIST ? ((DoubleList) data)->get = get(type) : (((StrList) data)->get = get(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->set = set(type) : type == DOUBLE_LIST ? ((DoubleList) data)->set = set(type) : (((StrList) data)->set = set(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->indexOf = indexOf(type) : type == DOUBLE_LIST ? ((DoubleList) data)->indexOf = indexOf(type) : (((StrList) data)->indexOf = indexOf(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->sort = sort(type) : type == DOUBLE_LIST ? ((DoubleList) data)->sort = sort(type) : (((StrList) data)->sort = sort(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->sortReverse = sortReverse(type) : type == DOUBLE_LIST ? ((DoubleList) data)->sortReverse = sortReverse(type) : (((StrList) data)->sortReverse = sortReverse(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->clear = clear(type) : type == DOUBLE_LIST ? ((DoubleList) data)->clear = clear(type) : (((StrList) data)->clear = clear(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->contains = contains(type) : type == DOUBLE_LIST ? ((DoubleList) data)->contains = contains(type) : (((StrList) data)->contains = contains(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->containsAll = containsAll(type) : type == DOUBLE_LIST ? ((DoubleList) data)->containsAll = containsAll(type) : (((StrList) data)->containsAll = containsAll(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->containsAny = containsAny(type) : type == DOUBLE_LIST ? ((DoubleList) data)->containsAny = containsAny(type) : (((StrList) data)->containsAny = containsAny(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->removeElem = removeElem(type) : type == DOUBLE_LIST ? ((DoubleList) data)->removeElem = removeElem(type) : (((StrList) data)->removeElem = removeElem(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->removeAll = removeAll(type) : type == DOUBLE_LIST ? ((DoubleList) data)->removeAll = removeAll(type) : (((StrList) data)->removeAll = removeAll(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->subtract = subtract(type) : type == DOUBLE_LIST ? ((DoubleList) data)->subtract = subtract(type) : (((StrList) data)->subtract = subtract(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->isEmpty = isEmpty(type) : type == DOUBLE_LIST ? ((DoubleList) data)->isEmpty = isEmpty(type) : (((StrList) data)->isEmpty = isEmpty(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->reverse = reverse(type) : type == DOUBLE_LIST ? ((DoubleList) data)->reverse = reverse(type) : (((StrList) data)->reverse = reverse(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->isEquals = isEquals(type) : type == DOUBLE_LIST ? ((DoubleList) data)->isEquals = isEquals(type) : (((StrList) data)->isEquals = isEquals(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->emptyIfNull = emptyIfNull(type) : type == DOUBLE_LIST ? ((DoubleList) data)->emptyIfNull = emptyIfNull(type) : (((StrList) data)->emptyIfNull = emptyIfNull(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->size = size(type) : type == DOUBLE_LIST ? ((DoubleList) data)->size = size(type) : (((StrList) data)->size = size(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->iterator = iterator(type) : type == DOUBLE_LIST ? ((DoubleList) data)->iterator = iterator(type) : (((StrList) data)->iterator = iterator(type));
+    //type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->printList = printList(type) : type == DOUBLE_LIST ? ((DoubleList) data)->printList = printList(type) : (((StrList) data)->printList = printList(type));
+    //type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->deleteList = deleteList(type) : type == DOUBLE_LIST ? ((DoubleList) data)->deleteList = deleteList(type) : (((StrList) data)->deleteList = deleteList(type));
+}

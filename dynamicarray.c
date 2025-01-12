@@ -6,28 +6,11 @@
 #include <string.h>
 #include <stdbool.h>
 #include <assert.h>
-#include "dynamicarray.h"
+#include "string.h"
+#include "arraylist.h"
 
 #define ACCURACY 0.000000001
 
-// structures
-typedef struct IntArray {
-    int count;
-    int* data;
-    int capacity;
-} IntArray;
-
-typedef struct DoubleArray {
-    int count;
-    double* data;
-    int capacity;
-} DoubleArray;
-
-typedef struct StringArray {
-    int count;
-    String** str;
-    int capacity;
-} StringArray;
 
 typedef struct String {
     int count;
@@ -35,9 +18,10 @@ typedef struct String {
     int capacity;
 } String;
 
-typedef IntArray* IntList;
-typedef DoubleArray* DoubleList;
-typedef StringArray* StringList;
+
+typedef IntArrayList* IntList;
+typedef DoubleArrayList* DoubleList;
+typedef StringArrayList* StringList;
 typedef String* string;
 
 
@@ -56,6 +40,9 @@ static int compareInt(const void* elem1, const void* elem2);
 static int compareReverse(const void* elem1, const void* elem2);
 static int compareDouble(const void* elem1, const void* elem2);
 static int compareStr(const void* elem1, const void* elem2);
+int indexOfInt(IntList list, int elem);
+int indexOfDouble(DoubleList list, double elem);
+int indexOfStrList(StrList list, string s);
 
 // funcs
 IntList newIntArray(IntList temp) {

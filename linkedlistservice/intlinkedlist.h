@@ -15,50 +15,31 @@ typedef LinkedListInt* IntLinkedList;
 typedef Itr* Iterator;
 
 
-
 void addIntElemLL(IntLinkedList, int);
-
 void addAllIntElemLL(IntLinkedList, IntLinkedList);
-
 int getIntElemLL(IntLinkedList, int);
-
 bool setIntElemLL(IntLinkedList, int, int);
-
 int indexOfIntLL(IntLinkedList, int);
 
 // toString
 
 void sortIntLL(IntLinkedList);
 void sortIntLLReverse(IntLinkedList);
-
 void clearIntLL(IntLinkedList);
-
 bool containsIntLL(IntLinkedList, int);
-
 bool containsAllIntLL(IntLinkedList, IntLinkedList);
-
 bool containsAnyIntLL(IntLinkedList, IntLinkedList);
-
 bool removeIntLL(IntLinkedList, int);
-
 bool removeAllIntLL(IntLinkedList, IntLinkedList);
-
 IntLinkedList subtractIntLL(IntLinkedList, IntLinkedList);
-
 bool isEmptyIntLL(IntLinkedList);
-
 void reverseIntLL(IntLinkedList);
-
 bool isEqualListsIntLL(IntLinkedList, IntLinkedList);
-
 IntLinkedList emptyIfNullIntLL(IntLinkedList);
-
 int sizeIntLL(IntLinkedList);
-
 Iterator iteratorIntLL(IntLinkedList);
 
 void printIntLL(IntLinkedList);
-
 void deleteIntLL(IntLinkedList*);
 
 

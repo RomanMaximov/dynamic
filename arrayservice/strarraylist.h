@@ -1,0 +1,48 @@
+//
+// Created by Roman Maximov on 12.01.2025.
+// License: MIT License.
+// Copyright (c) 2024 Roman Maximov.
+//
+
+#ifndef STRARRAYLIST_H
+#define STRARRAYLIST_H
+
+#include "../arraylist.h"
+
+typedef struct ArrayListStr ArrayListStr;
+typedef struct String String;
+typedef struct Itr Itr;
+
+typedef ArrayListStr* StrList;
+typedef String* string;
+typedef Itr* Iterator;
+
+
+void addStrElemList(StrList, string);
+void addAllStrElemList(StrList, StrList);
+int getStrElemList(StrList, int);
+bool setStrElemList(StrList, int, string);
+int indexOfStrList(StrList, string);
+
+// toString
+
+void sortStrList(StrList);
+void sortStrListReverse(StrList);
+void clearStrList(StrList);
+bool containsStrList(StrList, string);
+bool containsAllStrList(StrList, StrList);
+bool containsAnyStrList(StrList, StrList);
+bool removeStrList(StrList, string);
+bool removeAllStrList(StrList, StrList);
+StrList subtractStrList(StrList, StrList);
+bool isEmptyStrList(StrList);
+void reverseStrList(StrList);
+bool isEqualListsStrList(StrList, StrList);
+StrList emptyIfNullStrList(StrList);
+int sizeStrList(StrList);
+Iterator iteratorStrList(StrList);
+
+void printStrList(StrList);
+void deleteStrList(StrList*);
+
+#endif 

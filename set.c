@@ -151,7 +151,7 @@ static void* add(Type type) {
 }
 
 static void* addAll(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_SET:
             return addAllIntElemSet;
         case DOUBLE_SET:
@@ -160,11 +160,11 @@ static void* addAll(Type type) {
             return addAllStrElemSet;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* clear(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_SET:
             return clearIntSet;
         case DOUBLE_SET:
@@ -173,11 +173,11 @@ static void* clear(Type type) {
             return clearStrSet;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* contains(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_SET:
             return containsIntSet;
         case DOUBLE_SET:
@@ -186,11 +186,11 @@ static void* contains(Type type) {
             return containsStrSet;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* containsAll(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_SET:
             return containsAllIntSet;
         case DOUBLE_SET:
@@ -199,11 +199,11 @@ static void* containsAll(Type type) {
             return containsAllStrSet;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* containsAny(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_SET:
             return containsAnyIntSet;
         case DOUBLE_SET:
@@ -212,11 +212,11 @@ static void* containsAny(Type type) {
             return containsAnyStrSet;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* removeElem(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_SET:
             return removeIntSet;
         case DOUBLE_SET:
@@ -225,11 +225,11 @@ static void* removeElem(Type type) {
             return removeStrSet;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* removeAll(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_SET:
             return removeAllIntSet;
         case DOUBLE_SET:
@@ -238,11 +238,11 @@ static void* removeAll(Type type) {
             return removeAllStrSet;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* isEmpty(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_SET:
             return isEmptyIntSet;
         case DOUBLE_SET:
@@ -251,11 +251,11 @@ static void* isEmpty(Type type) {
             return isEmptyStrSet;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* isEquals(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_SET:
             return isEqualsIntSet;
         case DOUBLE_SET:
@@ -264,11 +264,11 @@ static void* isEquals(Type type) {
             return isEqualsStrSet;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* emptyIfNull(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_SET:
             return emptyIfNullIntSet;
         case DOUBLE_SET:
@@ -277,11 +277,11 @@ static void* emptyIfNull(Type type) {
             return emptyIfNullStrSet;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* size(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_SET:
             return sizeIntSet;
         case DOUBLE_SET:
@@ -290,11 +290,11 @@ static void* size(Type type) {
             return sizeStrSet;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* iterator(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_SET:
             return iteratorIntSet;
         case DOUBLE_SET:
@@ -303,7 +303,7 @@ static void* iterator(Type type) {
             //return iteratorStrSet;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void initFuncs(Type type, void* data) {

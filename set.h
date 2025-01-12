@@ -87,9 +87,13 @@ typedef SetStr* StrSet;
 typedef String* string;
 typedef Itr* Iterator;
 
-
+// func prototypes
 IntSet newIntSet(IntSet);
 DoubleSet newDoubleSet(DoubleSet);
 StrSet newStrSet(StrSet);
+
+IntSet setOfInt(IntSet, int, ...);
+DoubleSet setOfDouble(DoubleSet, int, ...);
+StrSet setOfStr(StrSet, int, ...);
 
 #endif

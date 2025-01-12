@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "strset.h"
-#include "../dynamicarray.h"
 
 typedef struct NodeStr {
     string str;
