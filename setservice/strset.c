@@ -53,7 +53,7 @@ static void deleteNodes(NodeStr** buckets, int capacity);
 static void deleteInOrder(StrNode node);
 static bool isContains(StrNode node, string s);
 static void quickSortStr(String** strList, int low, int high);
-static bool binarySearchStr(string s, String** strList, int high);
+static bool binarySearch(string s, String** strList, int high);
 static void toListAndSort(StrSet set, StringList list);
 static void removeNode(StrNode* node, StrNode* previous, string s, bool* found);
 static StrNode findNode(StrNode* node, StrNode* previous);
@@ -113,6 +113,156 @@ bool containsStrSet(StrSet set, string s) {
     }
 
     return false;
+}
+
+bool containsAllStrSet(StrSet set1, StrSet set2) {
+    if (set1 == NULL || set2 == NULL || set2->inner->count > set1->inner->count) return false;
+    if (isEmptyStrSet(set2)) return true;
+
+    int count2 = set2->inner->count;
+    StringList list2 = newStrArray(list2);
+    setToArr(set2, list2);
+
+    int count1 = set1->inner->count;
+    StringList list1 = newStrArray(list1);
+    toListAndSort(set1, list1);
+
+    for (int i = 0; i < count2; ++i) {
+        if(!binarySearch(list2->str[i], list1->str, count1))
+            return false;
+    }
+
+    deleteStrList(list1);
+    deleteStrList(list2);
+
+    return  true;
+}
+
+bool containsAnyStrSet(StrSet set1, StrSet set2) {
+    if (set1 == NULL || set2 == NULL || set2->inner->count > set1->inner->count) return false;
+
+    int count2 = set2->inner->count;
+    StringList list2 = newStrArray(list2);
+    setToArr(set2, list2);
+
+    int count1 = set1->inner->count;
+    StringList list1 = newStrArray(list1);
+    toListAndSort(set1, list1);
+
+    for (int i = 0; i < count2; ++i) {
+        if(binarySearch(list2->str[i], list1->str, count1))
+            return true;
+    }
+
+    deleteStrList(list1);
+    deleteStrList(list2);
+
+    return  false;
+}
+
+bool removeStrSet(StrSet set, string s) {
+    for (int i = 0; i < set->inner->capacity; ++i) {
+        StrNode previous = set->inner->bucket[i];
+        bool found = false;
+        removeNode(&set->inner->bucket[i], &previous, s, &found);
+        if (found)
+            set->inner->count--;
+    }
+
+    return true;
+}
+
+bool removeAllStrSet(StrSet set1, StrSet set2) {
+    StringList list2 = newStrArray(list2);
+    setToArr(set2, list2);
+
+    for (int i = 0; i < set2->inner->count; ++i) {
+        removeStrSet(set1, list2->str[i]);
+    }
+
+    deleteStrList(list2);
+
+    return true;
+}
+
+bool isEmptyStrSet(StrSet set) {
+    return set == NULL || set->inner->count == 0;
+}
+
+bool isEqualsStrSet(StrSet set1, StrSet set2) {
+    if (set1 == NULL || set2 == NULL || set1->inner->count != set2->inner->count) return false;
+
+    StringList list1 = newStrArray(list1);
+    StringList list2 = newStrArray(list2);
+
+    toListAndSort(set1, list1);
+    toListAndSort(set2, list2);
+
+    for (int i = 0; i < set1->inner->count; ++i) {
+        if (compareStr(list1->str[i]->data, list2->str[i]->data) != 0)
+            return false;
+    }
+
+    deleteStrList(list1);
+    deleteStrList(list2);
+
+    return true;
+}
+
+StrSet emptyIfNullStrSet(StrSet set) {
+    if (set == NULL) {
+        IntSet temp = newIntSet(temp);
+        return temp;
+    }
+
+    return set;
+}
+
+Iterator iteratorStrSet(StrSet list) { // TODO принимать void* и преобразовывать к Collection
+    Iterator iter = malloc(sizeof(Itr));
+    iter->count = 0;
+    iter->data = list;
+    iter->collectionSize = list->inner->count;
+    iter->hasNext = (void*) hasNext(iter);
+    iter->type = STR_SET;
+    return iter;
+}
+
+static bool hasNext(Iterator iter) {
+    return iter->count < iter->collectionSize;
+}
+
+int sizeStrSet(StrSet set) {
+    return set->inner->count;
+}
+
+void printStrSet(StrSet set) {
+    if (set == NULL || set->inner == NULL) {
+        printf("%s", "[]\n");
+        return;
+    }
+
+    printf("%s", "[");
+
+    int counter = set->inner->count;
+    for (int i = 0; i < set->inner->capacity; ++i) {
+        printInOrder(set->inner->bucket[i], &counter);
+    }
+
+    printf("%s", "]");
+    puts("");
+}
+
+void deleteStrSet(StrSet* set) {
+    if (set == NULL || *set == NULL || (*set)->inner == NULL) return;
+
+    if ((*set)->inner->bucket != NULL) {
+        deleteNodes((*set)->inner->bucket, (*set)->inner->capacity);
+        free((*set)->inner->bucket);
+    }
+    free((*set)->inner);
+    free(*set);
+    *set = NULL;
 }
 
 // ===================== private funcs =======================
@@ -232,4 +382,167 @@ static bool isContains(StrNode node, string s) {
         isContains(node->right, s);
     }
     return false;
+}
+
+static void toListAndSort(StrSet set, StringList list) {
+    setToArr(set, list);
+    quickSortStr(list->str, 0, list->count);
+}
+
+static void quickSortStr(String** strList, int low, int high) {
+    int i = low;
+    int j = high - 1;
+    String* temp;
+    do {
+        while (j > i) {
+            if (compareTo(strList[i], strList[j]) > 0) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
+                ++i;
+                break;
+            }
+            --j;
+        }
+        while (i < j) {
+            if (compareTo(strList[i], strList[j]) > 0) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
+                --j;
+                break;
+            }
+            ++i;
+        }
+    } while (i < j);
+
+    if (i < high - 1)
+        quickSortStr(strList, i + 1, high);
+    if (low < j - 1)
+        quickSortStr(strList, low, j);
+}
+
+static bool binarySearch(string s, String** strList, int high) {
+    int low, middle;
+    --high;
+    low = 0;
+    while (low <= high) {
+        middle = (low + high) / 2;
+        if (compareTo(s, strList[middle]) < 0)
+            high = middle - 1;
+        else if (compareTo(s, strList[middle]) > 0)
+            low = middle + 1;
+        else
+            return true;
+    }
+    return false;
+}
+
+static void removeNode(StrNode* node, StrNode* previous, string s, bool* found) {
+    if (*found) return;
+
+    if (*node != NULL && *previous != NULL) {
+        if (compareStr(s->data, (*node)->str->data) == 0) {
+            if ((*node)->right == NULL && (*node)->left == NULL) {
+                if (isRoot(node, previous)) {
+                    StrNode temp = *node;
+                    *node = NULL;
+                    deleteString(&temp->str);
+                    free(temp);
+                    *found = true;
+                    return;
+                }
+
+                StrNode temp = *node;
+                if (compareStr((*node)->str->data, (*previous)->str->data) == -1)
+                    (*previous)->left = NULL;
+                else
+                    (*previous)->right = NULL;
+
+                deleteString(&temp->str);
+                free(temp);
+                *found = true;
+                return;
+            }
+
+            if (((*node)->left != NULL && (*node)->right == NULL) || ((*node)->left == NULL && (*node)->right != NULL)) {
+                if (isRoot(node, previous)) {
+                    StrNode temp = *node;
+                    *node = (*node)->left != NULL ? (*node)->left : (*node)->right;
+                    deleteString(&temp->str);
+                    free(temp);
+                    *found = true;
+                    return;
+                }
+
+                StrNode temp = *node;
+                if (compareStr((*node)->str->data, (*previous)->str->data) == -1) {
+                    (*previous)->left = (*node)->left != NULL ? (*node)->left : (*node)->right;
+                } else {
+                    (*previous)->right = (*node)->left != NULL ? (*node)->left : (*node)->right;
+                }
+
+                deleteString(&temp->str);
+                free(temp);
+                *found = true;
+                return;
+            }
+
+            if ((*node)->right != NULL && (*node)->left != NULL) {
+                StrNode temp = *node;
+                StrNode left = (*node)->left;
+                StrNode right = (*node)->right;
+
+
+                *node = findNode(&temp->left, &temp);
+                (*node)->right = right;
+                temp->left = NULL;
+                temp->right = NULL;
+
+                // if remove root node
+                if (isRoot(&temp, previous)) {
+                    if ((*node)->left == NULL)
+                        (*node)->left = left;
+                    else
+                        (*node)->left->left = left;
+                }
+
+                deleteString(&temp->str);
+                free(temp);
+                *found = true;
+                return;
+            }
+        } else {
+            removeNode(&(*node)->left, &(*node), s, found);
+            removeNode(&(*node)->right, &(*node), s, found);
+        }
+
+        return;
+    }
+}
+
+static StrNode findNode(StrNode* node, StrNode* previous) {
+    if ((*node)->right == NULL) {
+        StrNode temp = *node;
+        (*previous)->right = NULL;
+        return temp;
+    }
+
+    return findNode(&(*node)->right, &(*node));
+}
+
+static bool isRoot(StrNode* node, StrNode* previous) {
+    return compareStr((*node)->str->data, (*previous)->str->data) == 0;
+}
+
+static  void printInOrder(StrNode node, int* counter) {
+    if (node != NULL) {
+        printInOrder(node->left, counter);
+        printf("%s", node->str->data);
+        if (*counter - 1 != 0) {
+            printf("%s", ", ");
+            --(*counter);
+        }
+        printInOrder(node->right, counter);
+    }
 }

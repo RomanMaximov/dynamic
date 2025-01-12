@@ -337,11 +337,16 @@ int main()
     set->add(set, 120);
     set->add(set, 300);
     set->add(set, 100);
+    set->add(set, 150);
+    set->add(set, 130);
 
+    printTree(set);
+    removeIntSet(set, 200);
+    printTree(set);
     printIntSet(set);
     printIntSet(set2);
 
-    if (isEqualListsIntSet(set, set2)) {
+    if (isEqualsIntSet(set, set2)) {
         puts("set and set2 are equals");
     } else {
         puts("set and set2 are NOT equals");

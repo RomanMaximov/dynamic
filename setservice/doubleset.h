@@ -24,7 +24,7 @@ bool containsAnyDoubleSet(DoubleSet, DoubleSet);
 bool removeDoubleSet(DoubleSet, double);
 bool removeAllDoubleSet(DoubleSet, DoubleSet);
 bool isEmptyDoubleSet(DoubleSet);
-bool isEqualListsDoubleSet(DoubleSet, DoubleSet);
+bool isEqualsDoubleSet(DoubleSet, DoubleSet);
 DoubleSet emptyIfNullDoubleSet(DoubleSet);
 int sizeDoubleSet(DoubleSet);
 Iterator iteratorDoubleSet(DoubleSet);

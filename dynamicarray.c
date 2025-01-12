@@ -783,6 +783,7 @@ void deleteArrayDouble(DoubleList list) {
     }
 }
 
+// TODO доработать удаление, чтобы внешний указатель был NULL
 void deleteStrList(StringList list) {
     if (list == NULL) {
         printf("%s\n", "List is NULL.");

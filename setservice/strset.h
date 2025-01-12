@@ -25,7 +25,7 @@ bool containsAnyStrSet(StrSet, StrSet);
 bool removeStrSet(StrSet, string);
 bool removeAllStrSet(StrSet, StrSet);
 bool isEmptyStrSet(StrSet);
-bool isEqualListsStrSet(StrSet, StrSet);
+bool isEqualsStrSet(StrSet, StrSet);
 StrSet emptyIfNullStrSet(StrSet);
 int sizeStrSet(StrSet);
 Iterator iteratorStrSet(StrSet);

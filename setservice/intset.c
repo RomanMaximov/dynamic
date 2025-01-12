@@ -158,7 +158,7 @@ bool isEmptyIntSet(IntSet set) {
     return set == NULL || set->inner->count == 0;
 }
 
-bool isEqualListsIntSet(IntSet set1, IntSet set2) {
+bool isEqualsIntSet(IntSet set1, IntSet set2) {
     if (set1 == NULL || set2 == NULL || set1->inner->count != set2->inner->count) return false;
 
     int arr1[set1->inner->count];
@@ -226,6 +226,7 @@ void deleteIntSet(IntSet* set) {
         deleteNodes((*set)->inner->bucket, (*set)->inner->capacity);
         free((*set)->inner->bucket);
     }
+    free((*set)->inner);
     free(*set);
     *set = NULL;
 }
@@ -344,9 +345,9 @@ static IntNode findNode(IntNode* node, IntNode* previous) {
         IntNode temp = *node;
         (*previous)->right = NULL;
         return temp;
-    } else {
-        findNode(&(*node)->right, &(*node));
     }
+
+    return findNode(&(*node)->right, &(*node));
 }
 
 static void removeNode(IntNode* node, IntNode* previous, int num, bool* found) {

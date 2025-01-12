@@ -91,7 +91,6 @@ static void* iterator(Type type);
 // TODO добавить другие способы инициализации сетов как у массивов
 IntSet newIntSet(IntSet temp) {
     IntSet set = malloc(sizeof(SetInt));
-    set->values = (void*) set->inner->collection;
     set->inner = malloc(sizeof(InnerIntSet));
     set->inner->collection = malloc(sizeof(Collection));
     set->inner->collection->data = (void*) set;
@@ -101,7 +100,8 @@ IntSet newIntSet(IntSet temp) {
     set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeInt*));
     for (int i = 0; i < set->inner->capacity; ++i)
         set->inner->bucket[i] = NULL;
-    
+
+    set->values = (void*) set->inner->collection;
     initFuncs(INT_SET, (void*)set);
 
     return set;
@@ -257,11 +257,11 @@ static void* isEmpty(Type type) {
 static void* isEquals(Type type) {
     /*switch (type) {
         case INT_SET:
-            return isEqualListsIntSet;
+            return isEqualsIntSet;
         case DOUBLE_SET:
-            return isEqualListsDoubleSet;
+            return isEqualsDoubleSet;
         case STR_SET:
-            return isEqualListsStrSet;
+            return isEqualsStrSet;
         default:
             return NULL;
     }*/

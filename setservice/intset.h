@@ -24,7 +24,7 @@ bool containsAnyIntSet(IntSet, IntSet);
 bool removeIntSet(IntSet, int);
 bool removeAllIntSet(IntSet, IntSet);
 bool isEmptyIntSet(IntSet);
-bool isEqualListsIntSet(IntSet, IntSet);
+bool isEqualsIntSet(IntSet, IntSet);
 IntSet emptyIfNullIntSet(IntSet);
 int sizeIntSet(IntSet);
 Iterator iteratorIntSet(IntSet);

@@ -164,7 +164,7 @@ bool isEmptyDoubleSet(DoubleSet set) {
     return set == NULL || set->inner->count == 0;
 }
 
-bool isEqualListsDoubleSet(DoubleSet set1, DoubleSet set2) {
+bool isEqualsDoubleSet(DoubleSet set1, DoubleSet set2) {
     if (set1 == NULL || set2 == NULL || set1->inner->count != set2->inner->count) return false;
 
     double arr1[set1->inner->count];
@@ -232,6 +232,7 @@ void deleteDoubleSet(DoubleSet* set) {
         deleteNodes((*set)->inner->bucket, (*set)->inner->capacity);
         free((*set)->inner->bucket);
     }
+    free((*set)->inner);
     free(*set);
     *set = NULL;
 }
@@ -473,9 +474,9 @@ static DoubleNode findNode(DoubleNode* node, DoubleNode* previous) {
         DoubleNode temp = *node;
         (*previous)->right = NULL;
         return temp;
-    } else {
-        findNode(&(*node)->right, &(*node));
     }
+
+    return findNode(&(*node)->right, &(*node));
 }
 
 static  void printInOrder(DoubleNode node, int* counter) {
