@@ -496,6 +496,8 @@ static bool hasNext(Iterator iter) {
     return iter->count < iter->collectionSize;
 }
 
+// ===================== private funcs =======================
+
 static void deleteFirstNodeInt(IntLinkedList list, IntNode current) {
     IntNode temp = NULL;
 

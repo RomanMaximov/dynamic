@@ -448,6 +448,8 @@ DoubleLinkedList emptyIfNullDoubleLL(DoubleLinkedList list) {
     return list == NULL ? newDoubleLinkedList(list) : list;
 }
 
+// ===================== private funcs =======================
+
 static void deleteFirstNodeDouble(DoubleLinkedList list, DoubleNode current) {
     DoubleNode temp = NULL;
 

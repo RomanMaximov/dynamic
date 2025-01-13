@@ -99,6 +99,22 @@ IntList listOfInt(IntList temp, int paramCount, ...) {
     return list;
 }
 
+/*IntList listOfArrInt(IntList list, int* temp, int size) {
+    list = malloc(sizeof(IntArray));
+    list->count = 0;
+    list->capacity = size < 20 ? 20 : size;
+    list->data = malloc(list->capacity * sizeof(int));
+    for (int i = 0; i < size; ++i) {
+        if (list->count == list->capacity) {
+            list->data = increaseCapacityInt(list);
+        }
+
+        memcpy(&list->data[list->count], &temp[i], sizeof(int));
+        list->count++;
+    }
+    return list;
+}*/
+
 DoubleList newDoubleList(DoubleList temp) {
     DoubleList list = malloc(sizeof(ArrayListDouble));
     list->inner = malloc(sizeof(InnerDoubleList));
@@ -126,6 +142,22 @@ DoubleList listOfDouble(DoubleList temp, int paramCount, ...) {
     va_end(param);*/
     return list;
 }
+
+/*DoubleList listOfArrDouble(DoubleList list, double* temp, int size) {
+    list = malloc(sizeof(DoubleArray));
+    list->count = 0;
+    list->capacity = size < 20 ? 20 : size;
+    list->data = malloc(list->capacity * sizeof(double));
+    for (int i = 0; i < size; ++i) {
+        if (list->count == list->capacity) {
+            list->data = increaseCapacityDouble(list);
+        }
+
+        memcpy(&list->data[list->count], &temp[i], sizeof(double));
+        list->count++;
+    }
+    return list;
+}*/
 
 StrList newStrList(StrList temp) {
     StrList list = malloc(sizeof(ArrayListStr));
@@ -160,6 +192,56 @@ StrList listOfStr(StrList temp, int paramCount, ...) {
     va_end(param);*/
     return list;
 }
+
+/*StringList listOfStrLiteral(StringList temp, char* arr, int size, ...) {
+    StringList list = newStrArray(list);
+
+    va_list counter;
+    va_start(counter, size);
+
+    unsigned long long int dataSize;
+
+    for (int i = 0; i < size; ++i) {
+        if (list->count == list->capacity) {
+            list->str = increaseCapacityStr(list);
+        }
+
+        char* arg = va_arg(counter, char*);
+        dataSize = strlen(arg);
+        list->str[i] = malloc(sizeof(String));
+        list->str[i]->data = malloc((dataSize + 1) * sizeof(char));
+        list->str[i]->count = dataSize;
+        list->str[i]->capacity = dataSize;
+        strcpy(list->str[i]->data, arg);
+        list->count++;
+    }
+    va_end(counter);
+
+    return list;
+}*/
+
+/*StringList listOfArrChar(StringList temp, char* arr[], int size) {
+    StringList list = newStrArray(list);
+
+    unsigned long long int dataSize;
+    for (int i = 0; i < size; ++i) {
+        if (list->count == list->capacity) {
+            list->str = increaseCapacityStr(list);
+        }
+
+        char* data = arr[i];
+        dataSize = strlen(data);
+        list->str[i] = malloc(sizeof(String));
+        list->str[i]->data = malloc((dataSize + 1) * sizeof(char));
+        list->str[i]->count = dataSize;
+        list->str[i]->capacity = dataSize;
+        strcpy(list->str[i]->data, data);
+        list->count++;
+    }
+
+    return list;
+}*/
+
 
 // common init functions
 static void* add(Type type) {

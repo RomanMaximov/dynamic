@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <limits.h>
@@ -42,10 +42,10 @@ static int compareDouble(const void* elem1, const void* elem2);
 static int compareStr(const void* elem1, const void* elem2);
 int indexOfInt(IntList list, int elem);
 int indexOfDouble(DoubleList list, double elem);
-int indexOfStrList(StrList list, string s);
+int indexOfStrList(StrList list, string s);*/
 
 // funcs
-IntList newIntArray(IntList temp) {
+/*IntList newIntArray(IntList temp) {
     IntList list = malloc(sizeof(IntArray));
     list->count = 0;
     list->capacity = 20;
@@ -70,21 +70,21 @@ StringList newStrArray(StringList temp) {
         list->str[i] = NULL;
     }
     return list;
-}
+}*/
 
-int sizeIntList(IntList list) {
+/*int sizeIntList(IntList list) {
     return list->count;
-}
+}*/
 
-int sizeDoubleList(DoubleList list) {
+/*int sizeDoubleList(DoubleList list) {
     return list->count;
-}
+}*/
 
-int sizeStrList(StringList list) {
+/*int sizeStrList(StringList list) {
     return list->count;
-}
+}*/
 
-void addIntElem(IntList list, int num) {
+/*void addIntElem(IntList list, int num) {
     void* elem = &num;
     if (list->count == list->capacity) {
         list->data = increaseCapacityInt(list);
@@ -96,9 +96,9 @@ void addIntElem(IntList list, int num) {
         memcpy(&list->data[list->count], elem, sizeof(int));
         list->count++;
     }
-}
+}*/
 
-void addDoubleElem(DoubleList list, double num) {
+/*void addDoubleElem(DoubleList list, double num) {
     void* elem = &num;
     if (list->count == list->capacity) {
         list->data = increaseCapacityDouble(list);
@@ -110,9 +110,9 @@ void addDoubleElem(DoubleList list, double num) {
         memcpy(&list->data[list->count], elem, sizeof(double));
         list->count++;
     }
-}
+}*/
 
-void addStrElem(StringList list, string str) {
+/*void addStrElem(StringList list, string str) {
     if (list == NULL) return;
 
     if (str == NULL) {
@@ -132,9 +132,9 @@ void addStrElem(StringList list, string str) {
             list->count++;
         }
     }
-}
+}*/
 
-void addCharArrElem(StringList list, char* str) {
+/*void addCharArrElem(StringList list, char* str) {
     if (str == NULL || list == NULL) return;
 
     string elem = stringOf(str);
@@ -147,9 +147,9 @@ void addCharArrElem(StringList list, char* str) {
         memcpy(&list->str[list->count], &elem, sizeof(String));
         list->count++;
     }
-}
+}*/
 
-IntList listOfInt(IntList temp, int num, ...) {
+/*IntList listOfInt(IntList temp, int num, ...) {
     IntList list = newIntArray(list);
 
     va_list counter;
@@ -167,9 +167,9 @@ IntList listOfInt(IntList temp, int num, ...) {
     va_end(counter);
 
     return list;
-}
+}*/
 
-DoubleList listOfDouble(DoubleList temp, int num, ...) {
+/*DoubleList listOfDouble(DoubleList temp, int num, ...) {
     DoubleList list = newDoubleArray(list);
 
     va_list counter;
@@ -187,9 +187,9 @@ DoubleList listOfDouble(DoubleList temp, int num, ...) {
     va_end(counter);
 
     return list;
-}
+}*/
 
-StringList listOfStrLiteral(StringList temp, char* arr, int size, ...) {
+/*StringList listOfStrLiteral(StringList temp, char* arr, int size, ...) {
     StringList list = newStrArray(list);
 
     va_list counter;
@@ -214,9 +214,9 @@ StringList listOfStrLiteral(StringList temp, char* arr, int size, ...) {
     va_end(counter);
 
     return list;
-}
+}*/
 
-StringList listOfStr(StringList temp, int size, ...) {
+/*StringList listOfStr(StringList temp, int size, ...) {
     StringList list = newStrArray(list);
 
     va_list counter;
@@ -235,9 +235,9 @@ StringList listOfStr(StringList temp, int size, ...) {
     va_end(counter);
 
     return list;
-}
+}*/
 
-IntList listOfArrInt(IntList list, int* temp, int size) {
+/*IntList listOfArrInt(IntList list, int* temp, int size) {
     list = malloc(sizeof(IntArray));
     list->count = 0;
     list->capacity = size < 20 ? 20 : size;
@@ -251,9 +251,9 @@ IntList listOfArrInt(IntList list, int* temp, int size) {
         list->count++;
     }
     return list;
-}
+}*/
 
-DoubleList listOfArrDouble(DoubleList list, double* temp, int size) {
+/*DoubleList listOfArrDouble(DoubleList list, double* temp, int size) {
     list = malloc(sizeof(DoubleArray));
     list->count = 0;
     list->capacity = size < 20 ? 20 : size;
@@ -267,9 +267,9 @@ DoubleList listOfArrDouble(DoubleList list, double* temp, int size) {
         list->count++;
     }
     return list;
-}
+}*/
 
-StringList listOfArrChar(StringList temp, char* arr[], int size) {
+/*StringList listOfArrChar(StringList temp, char* arr[], int size) {
     StringList list = newStrArray(list);
 
     unsigned long long int dataSize;
@@ -289,9 +289,9 @@ StringList listOfArrChar(StringList temp, char* arr[], int size) {
     }
 
     return list;
-}
+}*/
 
-void addAllInt(IntList dest, IntList from) {
+/*void addAllInt(IntList dest, IntList from) {
     int sizeFrom = sizeIntList(from);
     int sizeDest = sizeIntList(dest);
     if ((sizeDest + sizeFrom) > dest->capacity) {
@@ -303,9 +303,9 @@ void addAllInt(IntList dest, IntList from) {
         memcpy(&dest->data[dest->count], from->data, sizeFrom * sizeof(int));
         dest->count += sizeFrom;
     }
-}
+}*/
 
-void addAllDouble(DoubleList dest, DoubleList from) {
+/*void addAllDouble(DoubleList dest, DoubleList from) {
     int sizeFrom = sizeDoubleList(from);
     int sizeDest = sizeDoubleList(dest);
     if ((sizeDest + sizeFrom) > dest->capacity) {
@@ -317,9 +317,9 @@ void addAllDouble(DoubleList dest, DoubleList from) {
         memcpy(&dest->data[dest->count], from->data, sizeFrom * sizeof(double));
         dest->count += sizeFrom;
     }
-}
+}*/
 
-void addAllStr(StringList dest, StringList from) {
+/*void addAllStr(StringList dest, StringList from) {
     int sizeFrom = sizeStrList(from);
     int sizeDest = sizeStrList(dest);
     if ((sizeDest + sizeFrom) > dest->capacity) {
@@ -336,9 +336,9 @@ void addAllStr(StringList dest, StringList from) {
         }
         dest->count += sizeFrom;
     }
-}
+}*/
 
-int getElemInt(IntList list, int index) {
+/*int getElemInt(IntList list, int index) {
     if (list == NULL) {
         puts("ERROR: List is null.");
         return EXIT_FAILURE;
@@ -350,9 +350,9 @@ int getElemInt(IntList list, int index) {
     }
 
     return list->data[index];
-}
+}*/
 
-double getElemDouble(DoubleList list, int index) {
+/*double getElemDouble(DoubleList list, int index) {
     if (list == NULL) {
         puts("ERROR: List is null.");
         return EXIT_FAILURE;
@@ -364,9 +364,9 @@ double getElemDouble(DoubleList list, int index) {
     }
 
     return list->data[index];
-}
+}*/
 
-string getElemStr(StringList list, int index) {
+/*string getElemStr(StringList list, int index) {
     if (list == NULL) {
         puts("ERROR: List is null.");
         return NULL;
@@ -378,9 +378,9 @@ string getElemStr(StringList list, int index) {
     }
 
     return stringOf(list->str[index]->data);
-}
+}*/
 
-bool setElemInt(IntList list, int index, int num) {
+/*bool setElemInt(IntList list, int index, int num) {
     if (list == NULL)
         return false;
 
@@ -391,9 +391,9 @@ bool setElemInt(IntList list, int index, int num) {
 
     list->data[index] = num;
     return true;
-}
+}*/
 
-bool  setElemDouble(DoubleList list, int index, double num) {
+/*bool  setElemDouble(DoubleList list, int index, double num) {
     if (list == NULL)
         return false;
 
@@ -404,9 +404,9 @@ bool  setElemDouble(DoubleList list, int index, double num) {
 
     list->data[index] = num;
     return true;
-}
+}*/
 
-bool setElemStr(string str, StringList list, int index) {
+/*bool setElemStr(string str, StringList list, int index) {
     if (list == NULL)
         return false;
 
@@ -417,9 +417,9 @@ bool setElemStr(string str, StringList list, int index) {
 
     list->str[index] = stringOf(str->data);
     return true;
-}
+}*/
 
-bool setElemCharArr(char* str, StringList list, int index) {
+/*bool setElemCharArr(char* str, StringList list, int index) {
     if (list == NULL)
         return false;
 
@@ -430,9 +430,9 @@ bool setElemCharArr(char* str, StringList list, int index) {
 
     list->str[index] = stringOf(str);
     return true;
-}
+}*/
 
-bool removeElemInt(IntList list, int index) {
+/*bool removeElemInt(IntList list, int index) {
     if (list == NULL) return false;
 
     if (index >= list->count) {
@@ -459,9 +459,9 @@ bool removeElemInt(IntList list, int index) {
     free(temp);
 
     return true;
-}
+}*/
 
-bool removeElemDouble(DoubleList list, int index) {
+/*bool removeElemDouble(DoubleList list, int index) {
     if (list == NULL) return false;
 
     if (index >= list->count) {
@@ -489,9 +489,9 @@ bool removeElemDouble(DoubleList list, int index) {
     free(temp);
 
     return true;
-}
+}*/
 
-bool removeElemStr(StringList list, int index) {
+/*bool removeElemStr(StringList list, int index) {
     if (list == NULL) return false;
 
     if (index >= list->count) {
@@ -518,9 +518,9 @@ bool removeElemStr(StringList list, int index) {
     free(temp);
 
     return true;
-}
+}*/
 
-bool removeAllInt(IntList list1, IntList list2) {
+/*bool removeAllInt(IntList list1, IntList list2) {
     if (list1 == NULL || list2 == NULL)
         return false;
 
@@ -553,9 +553,9 @@ bool removeAllInt(IntList list1, IntList list2) {
     free(temp);
 
     return true;
-}
+}*/
 
-bool removeAllDouble(DoubleList list1, DoubleList list2) {
+/*bool removeAllDouble(DoubleList list1, DoubleList list2) {
     if (list1 == NULL || list2 == NULL)
         return false;
 
@@ -588,9 +588,9 @@ bool removeAllDouble(DoubleList list1, DoubleList list2) {
     free(temp);
 
     return true;
-}
+}*/
 
-bool removeAllStr(StringList list1, StringList list2) {
+/*bool removeAllStr(StringList list1, StringList list2) {
     if (list1 == NULL || list2 == NULL)
         return false;
 
@@ -623,9 +623,9 @@ bool removeAllStr(StringList list1, StringList list2) {
     free(temp);
 
     return true;
-}
+}*/
 
-char* toStringInt(IntList list) {
+/*char* toStringInt(IntList list) {
     char* text = NULL;
     if (list->count == 0) {
         text = (char*)malloc(3 * sizeof(char));
@@ -649,9 +649,9 @@ char* toStringInt(IntList list) {
     sprintf(&text[strlen(text)], "%d", list->data[list->count - 1]);
     strcat(text, "]");
     return text;
-}
+}*/
 
-char* toStringDouble(DoubleList list) {
+/*char* toStringDouble(DoubleList list) {
     char* text = NULL;
     if (list->count == 0) {
         text = (char*)malloc(3 * sizeof(char));
@@ -675,9 +675,9 @@ char* toStringDouble(DoubleList list) {
     sprintf(&text[strlen(text)], "%f", list->data[list->count - 1]);
     strcat(text, "]");
     return text;
-}
+}*/
 
-void printArrayInt(IntList list) {
+/*void printArrayInt(IntList list) {
     if (list == NULL) return;
 
     printf("%s", "[");
@@ -689,9 +689,9 @@ void printArrayInt(IntList list) {
             printf("%d, ", list->data[i]);
     }
     printf("%s\n", "]");
-}
+}*/
 
-void printArrayDouble(DoubleList list) {
+/*void printArrayDouble(DoubleList list) {
     if (list == NULL) return;
 
     printf("%s", "[");
@@ -703,9 +703,9 @@ void printArrayDouble(DoubleList list) {
             printf("%.9f, ", list->data[i]);
     }
     printf("%s\n", "]");
-}
+}*/
 
-void printArrayString(StringList list) {
+/*void printArrayString(StringList list) {
     if (list == NULL) return;
 
     int counter = list->count;
@@ -724,53 +724,53 @@ void printArrayString(StringList list) {
         }
     }
     printf("%s\n", "]");
-}
+}*/
 
-void clearInt(IntList list) {
+/*void clearInt(IntList list) {
     if (list == NULL) return;
 
     free(list->data);
     list->count = 0;
     list->capacity = 20;
     list->data = malloc(list->capacity * sizeof(int));
-}
+}*/
 
-void clearDouble(DoubleList list) {
+/*void clearDouble(DoubleList list) {
     if (list == NULL) return;
 
     free(list->data);
     list->count = 0;
     list->capacity = 20;
     list->data = malloc(list->capacity * sizeof(double));
-}
+}*/
 
-void clearStrList(StringList list) {
+/*void clearStrList(StringList list) {
     if (list == NULL) return;
 
     free(list->str);
     list->count = 0;
     list->capacity = 20;
     list->str = malloc(list->capacity * sizeof(String*));
-}
+}*/
 
-void deleteArrayInt(IntList list) {
+/*void deleteArrayInt(IntList list) {
     if (list != NULL) {
         if (list->data != NULL)
             free(list->data);
         free(list);
     }
-}
+}*/
 
-// TODO доработать логику удаления, чтобы указатель после удаления был равен NULL. Чтобы повторное случайное удаление не вызывало ошибку.
+/*// TODO доработать логику удаления, чтобы указатель после удаления был равен NULL. Чтобы повторное случайное удаление не вызывало ошибку.
 void deleteArrayDouble(DoubleList list) {
     if (list != NULL) {
         if (list->data != NULL)
             free(list->data);
         free(list);
     }
-}
+}*/
 
-// TODO доработать удаление, чтобы внешний указатель был NULL
+/*// TODO доработать удаление, чтобы внешний указатель был NULL
 void deleteStrList(StringList list) {
     if (list == NULL) {
         printf("%s\n", "List is NULL.");
@@ -786,9 +786,9 @@ void deleteStrList(StringList list) {
         free(list->str);
     }
     free(list);
-}
+}*/
 
-void quickSortStr(String** strList, int low, int high)
+/*void quickSortStr(String** strList, int low, int high)
 {
     int i = low;
     int j = high - 1;
@@ -853,18 +853,18 @@ void quickSortReverseStr(String** strList, int low, int high) {
         quickSortReverseStr(strList, i + 1, high);
     if (low < j - 1)
         quickSortReverseStr(strList, low, j);
-}
+}*/
 
-void sortInt(IntList list) {
+/*void sortInt(IntList list) {
     if (list == NULL)
         return;
 
     int high = sizeIntList(list);
     //quickSortInt(list->data, 0, high);
     qsort(list->data, high, sizeof(int), compareInt);
-}
+}*/
 
-static int compareInt(const void* elem1, const void* elem2) {
+/*static int compareInt(const void* elem1, const void* elem2) {
     return (*(int*)elem1 - *(int*)elem2);
 }
 
@@ -879,9 +879,9 @@ void sortIntReverse(IntList list) {
 
 static int compareReverse(const void* elem1, const void* elem2) {
     return (*(int*)elem2 - *(int*)elem1);
-}
+}*/
 
-void sortDouble(DoubleList list) {
+/*void sortDouble(DoubleList list) {
     if (list == NULL)
         return;
 
@@ -893,9 +893,9 @@ static int compareDouble(const void* elem1, const void* elem2) {
     return fabs((*(double*)elem1 - *(double*)elem2)) < ACCURACY
     ? 0
     : (*(double*)elem1 - *(double*)elem2) < 0 ? -1 : 1;
-}
+}*/
 
-void sortStrList(StringList list) {
+/*void sortStrList(StringList list) {
     if (list == NULL)
         return;
 
@@ -909,25 +909,25 @@ void sortReverseStrList(StringList list) {
 
     int high = sizeStrList(list);
     quickSortReverseStr(list->str, 0, high);
-}
+}*/
 
-bool containsInt(IntList list, int num) {
+/*bool containsInt(IntList list, int num) {
     for (int i = 0; i < sizeIntList(list); ++i) {
         if (list->data[i] == num)
             return true;
     }
     return false;
-}
+}*/
 
-bool containsDouble(DoubleList list, double num) {
+/*bool containsDouble(DoubleList list, double num) {
     for (int i = 0; i < sizeDoubleList(list); ++i) {
         if (fabs(list->data[i] - num) < 0.000001)
             return true;
     }
     return false;
-}
+}*/
 
-bool containsStr(StringList list, string str) {
+/*bool containsStr(StringList list, string str) {
     if (list == NULL)
         return false;
 
@@ -936,9 +936,9 @@ bool containsStr(StringList list, string str) {
             return true;
     }
     return false;
-}
+}*/
 
-bool containsAllInt(IntList list1, IntList list2) {
+/*bool containsAllInt(IntList list1, IntList list2) {
     if (list1 == NULL || list2 == NULL || list2->count > list1->count)
         return false;
 
@@ -948,9 +948,9 @@ bool containsAllInt(IntList list1, IntList list2) {
     }
 
     return true;
-}
+}*/
 
-bool containsAllDouble(DoubleList list1, DoubleList list2) {
+/*bool containsAllDouble(DoubleList list1, DoubleList list2) {
     if (list1 == NULL || list2 == NULL || list2->count > list1->count)
         return false;
 
@@ -962,9 +962,9 @@ bool containsAllDouble(DoubleList list1, DoubleList list2) {
     }
 
     return true;
-}
+}*/
 
-bool containsAllStr(StringList list1, StringList list2) {
+/*bool containsAllStr(StringList list1, StringList list2) {
     if (list1 == NULL || list2 == NULL || list2->count > list1->count)
         return false;
 
@@ -974,21 +974,21 @@ bool containsAllStr(StringList list1, StringList list2) {
     }
 
     return true;
-}
+}*/
 
-bool isEmptyInt(IntList list) {
+/*bool isEmptyInt(IntList list) {
     return list == NULL || list->count == 0;
-}
+}*/
 
-bool isEmptyDouble(DoubleList list) {
+/*bool isEmptyDouble(DoubleList list) {
     return list == NULL || list->count == 0;
-}
+}*/
 
-bool isEmptyStrList(StringList list) {
+/*bool isEmptyStrList(StringList list) {
     return list == NULL || list->count == 0;
-}
+}*/
 
-void reverseListInt(IntList list) {
+/*void reverseListInt(IntList list) {
     int* start = list->data;
     int* end = list->data + (list->count - 1);
     int temp;
@@ -999,9 +999,9 @@ void reverseListInt(IntList list) {
         ++start;
         --end;
     }
-}
+}*/
 
-void reverseListDouble(DoubleList list) {
+/*void reverseListDouble(DoubleList list) {
     double* start = list->data;
     double* end = list->data + (list->count - 1);
     double temp;
@@ -1012,9 +1012,9 @@ void reverseListDouble(DoubleList list) {
         ++start;
         --end;
     }
-}
+}*/
 
-void reverseListStr(StringList list) {
+/*void reverseListStr(StringList list) {
     String** start = list->str;
     String** end = list->str + (list->count - 1);
     String* temp;
@@ -1025,9 +1025,9 @@ void reverseListStr(StringList list) {
         ++start;
         --end;
     }
-}
+}*/
 
-bool isEqualStrLists(StringList list1, StringList list2) {
+/*bool isEqualStrLists(StringList list1, StringList list2) {
     if (list1 == NULL || list2 == NULL)
         return false;
 
@@ -1043,9 +1043,9 @@ bool isEqualStrLists(StringList list1, StringList list2) {
             return false;
     }
     return true;
-}
+}*/
 
-bool isEqualIntLists(IntList list1, IntList list2) {
+/*bool isEqualIntLists(IntList list1, IntList list2) {
     if (list1 == NULL || list2 == NULL)
         return false;
 
@@ -1058,9 +1058,9 @@ bool isEqualIntLists(IntList list1, IntList list2) {
     }
 
     return true;
-}
+}*/
 
-bool isEqualDoubleLists(DoubleList list1, DoubleList list2) {
+/*bool isEqualDoubleLists(DoubleList list1, DoubleList list2) {
     if (list1 == NULL || list2 == NULL)
         return false;
 
@@ -1073,9 +1073,9 @@ bool isEqualDoubleLists(DoubleList list1, DoubleList list2) {
     }
 
     return true;
-}
+}*/
 
-int indexOfInt(IntList list, int elem) {
+/*int indexOfInt(IntList list, int elem) {
     if (list == NULL)
         return -1;
 
@@ -1084,9 +1084,9 @@ int indexOfInt(IntList list, int elem) {
             return i;
     }
     return -1;
-}
+}*/
 
-int indexOfDouble(DoubleList list, double elem) {
+/*int indexOfDouble(DoubleList list, double elem) {
     if (list == NULL)
         return -1;
 
@@ -1095,9 +1095,9 @@ int indexOfDouble(DoubleList list, double elem) {
             return i;
     }
     return -1;
-}
+}*/
 
-int indexOfStrList(StringList list, string str) {
+/*int indexOfStrList(StringList list, string str) {
     if (list == NULL)
         return -1;
 
@@ -1109,21 +1109,21 @@ int indexOfStrList(StringList list, string str) {
             return i;
     }
     return -1;
-}
+}*/
 
-IntList emptyIfNullInt(IntList list) {
+/*IntList emptyIfNullInt(IntList list) {
     return list == NULL ? newIntArray(list) : list;
-}
+}*/
 
-DoubleList emptyIfNullDouble(DoubleList list) {
+/*DoubleList emptyIfNullDouble(DoubleList list) {
     return list == NULL ? newDoubleArray(list) : list;
-}
+}*/
 
-StringList emptyIfNullStr(StringList list) {
+/*StringList emptyIfNullStr(StringList list) {
     return list == NULL ? newStrArray(list) : list;
-}
+}*/
 
-bool containsAnyInt(IntList list1, IntList list2) {
+/*bool containsAnyInt(IntList list1, IntList list2) {
     if (isEmptyInt(list1) || isEmptyInt(list2 ))
         return false;
 
@@ -1133,9 +1133,9 @@ bool containsAnyInt(IntList list1, IntList list2) {
     }
 
     return false;
-}
+}*/
 
-bool containsAnyDouble(DoubleList list1, DoubleList list2) {
+/*bool containsAnyDouble(DoubleList list1, DoubleList list2) {
     if (isEmptyDouble(list1) || isEmptyDouble(list2))
         return false;
 
@@ -1145,9 +1145,9 @@ bool containsAnyDouble(DoubleList list1, DoubleList list2) {
     }
 
     return false;
-}
+}*/
 
-bool containsAnyStr(StringList list1, StringList list2) {
+/*bool containsAnyStr(StringList list1, StringList list2) {
     if (isEmptyStrList(list1) || isEmptyStrList(list2))
         return false;
 
@@ -1157,9 +1157,9 @@ bool containsAnyStr(StringList list1, StringList list2) {
     }
 
     return false;
-}
+}*/
 
-IntList subtractInt(IntList list1, IntList list2) {
+/*IntList subtractInt(IntList list1, IntList list2) {
     if (isEmptyInt(list1)) {
         IntList temp = NULL;
         return newIntArray(temp);
@@ -1189,9 +1189,9 @@ IntList subtractInt(IntList list1, IntList list2) {
     }
     deleteArrayInt(copyList);
     return temp;
-}
+}*/
 
-DoubleList subtractDouble(DoubleList list1, DoubleList list2) {
+/*DoubleList subtractDouble(DoubleList list1, DoubleList list2) {
     if (isEmptyDouble(list1)) {
         DoubleList temp = NULL;
         return newDoubleArray(temp);
@@ -1221,9 +1221,9 @@ DoubleList subtractDouble(DoubleList list1, DoubleList list2) {
     }
     deleteArrayDouble(copyList);
     return temp;
-}
+}*/
 
-StringList subtractStr(StringList list1, StringList list2) {
+/*StringList subtractStr(StringList list1, StringList list2) {
     if (isEmptyStrList(list1)) {
         StringList temp = NULL;
         return newStrArray(temp);
@@ -1254,9 +1254,9 @@ StringList subtractStr(StringList list1, StringList list2) {
     }
     deleteStrList(copyList);
     return temp;
-}
+}*/
 
-bool binarySearchInt(int elem, const int* arr, int high) {
+/*bool binarySearchInt(int elem, const int* arr, int high) {
     int low, middle;
     --high;
     low = 0;
@@ -1270,25 +1270,25 @@ bool binarySearchInt(int elem, const int* arr, int high) {
             return true;
     }
     return false;
-}
+}*/
 
-double* increaseCapacityDouble(DoubleList list) {
+/*double* increaseCapacityDouble(DoubleList list) {
     list->capacity *= 2;
     list->data = realloc(list->data, list->capacity * sizeof(double));
     assert(list->data != NULL);
 
     return list->data;
-}
+}*/
 
-int* increaseCapacityInt(IntList list) {
+/*int* increaseCapacityInt(IntList list) {
     list->capacity *= 2;;
     list->data = realloc(list->data, list->capacity * sizeof(int));
     assert(list->data != NULL);
 
     return list->data;
-}
+}*/
 
-IntList copyIntList(IntList dest, IntList from) {
+/*IntList copyIntList(IntList dest, IntList from) {
     dest = newIntArray(dest);
     for (int i = 0; i < from->count; ++i) {
         if (dest->count == dest->capacity) {
@@ -1298,9 +1298,9 @@ IntList copyIntList(IntList dest, IntList from) {
         dest->count++;
     }
     return dest;
-}
+}*/
 
-DoubleList copyDoubleList(DoubleList dest, DoubleList from) {
+/*DoubleList copyDoubleList(DoubleList dest, DoubleList from) {
     dest = newDoubleArray(dest);
     for (int i = 0; i < from->count; ++i) {
         if (dest->count == dest->capacity) {
@@ -1310,9 +1310,9 @@ DoubleList copyDoubleList(DoubleList dest, DoubleList from) {
         dest->count++;
     }
     return dest;
-}
+}*/
 
-StringList copyStrList(StringList dest, StringList from) {
+/*StringList copyStrList(StringList dest, StringList from) {
     dest = newStrArray(dest);
     for (int i = 0; i < from->count; ++i) {
         if (dest->count == dest->capacity) {
@@ -1322,8 +1322,9 @@ StringList copyStrList(StringList dest, StringList from) {
         dest->count++;
     }
     return dest;
-}
+}*/
 
+/*
 static String** increaseCapacityStr(StringList list) {
     int oldSize = list->count;
     list->capacity *= 2;
@@ -1338,4 +1339,4 @@ static String** increaseCapacityStr(StringList list) {
     memset(list->str + oldSize, 0xAB, (list->capacity - oldSize) * sizeof(String*));
 
     return list->str;
-}
+}*/

@@ -6,7 +6,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "strset.h"
+#include "../arrayList.h"
 
 typedef struct NodeStr {
     string str;
@@ -27,16 +29,16 @@ typedef struct String {
     int capacity;
 } String;
 
-typedef struct StringArray {
+typedef struct InnerStrList {
     int count;
     String** str;
     int capacity;
-} StringArray;
+} InnerStrList;
 
 typedef SetStr* StrSet;
 typedef NodeStr* StrNode;
 typedef String* string;
-typedef StringArray* StringList;
+typedef ArrayListStr* StrList;
 
 // prototypes private funcs
 static StrNode createNode(char* s);
@@ -46,14 +48,14 @@ static void insertNode(NodeStr** node, char* s, int* counter);
 static void printInOrder(StrNode node, int* counter);
 static bool isCapacityFull(StrSet set);
 static void increaseCapacity(StrSet set);
-static void copyValuesToList(StrNode node, StringList list);
-static void setToArr(StrSet set, StringList list);
+static void copyValuesToList(StrNode node, StrList list);
+static void setToArr(StrSet set, StrList list);
 static void deleteNodes(NodeStr** buckets, int capacity);
 static void deleteInOrder(StrNode node);
 static bool isContains(StrNode node, string s);
 static void quickSortStr(String** strList, int low, int high);
 static bool binarySearch(string s, String** strList, int high);
-static void toListAndSort(StrSet set, StringList list);
+static void toListAndSort(StrSet set, StrList list);
 static void removeNode(StrNode* node, StrNode* previous, string s, bool* found);
 static StrNode findNode(StrNode* node, StrNode* previous);
 static bool isRoot(StrNode* node, StrNode* previous);
@@ -61,11 +63,13 @@ static bool hasNext(Iterator iter);
 
 
 void addStrElemSet(StrSet set, string s) {
+    if (s == NULL || s->data == NULL) return;
+
     if (isCapacityFull(set))
         increaseCapacity(set);
 
     int indexBucket = (hashString(s->data) & 0x7FFFFFFF) % set->inner->capacity;
-    insertNode(&set->inner->bucket[indexBucket], s, &set->inner->count);
+    insertNode(&set->inner->bucket[indexBucket], s->data, &set->inner->count);
 }
 
 void addCharElemSet(StrSet set, char* s) {
@@ -83,13 +87,15 @@ void addAllStrElemSet(StrSet set1, StrSet set2) {
         increaseCapacity(set1);
 
     int count = set2->inner->count;
-    StringList list = newStrArray(list);
+    StrList list = newStrList(list);
     setToArr(set2, list);
 
     for (int i = 0; i < count; ++i) {
-        int indexBucket = (hashString(list->str[i]->data) & 0x7FFFFFFF) % set1->inner->capacity;
-        insertNode(&set1->inner->bucket[indexBucket], list->str[i]->data, &set1->inner->count);
+        int indexBucket = (hashString(list->inner->str[i]->data) & 0x7FFFFFFF) % set1->inner->capacity;
+        insertNode(&set1->inner->bucket[indexBucket], list->inner->str[i]->data, &set1->inner->count);
     }
+
+    deleteStrList(&list);
 }
 
 void clearStrSet(StrSet set) {
@@ -119,20 +125,20 @@ bool containsAllStrSet(StrSet set1, StrSet set2) {
     if (isEmptyStrSet(set2)) return true;
 
     int count2 = set2->inner->count;
-    StringList list2 = newStrArray(list2);
+    StrList list2 = newStrList(list2);
     setToArr(set2, list2);
 
     int count1 = set1->inner->count;
-    StringList list1 = newStrArray(list1);
+    StrList list1 = newStrList(list1);
     toListAndSort(set1, list1);
 
     for (int i = 0; i < count2; ++i) {
-        if(!binarySearch(list2->str[i], list1->str, count1))
+        if(!binarySearch(list2->inner->str[i], list1->inner->str, count1))
             return false;
     }
 
-    deleteStrList(list1);
-    deleteStrList(list2);
+    deleteStrList(&list1);
+    deleteStrList(&list2);
 
     return  true;
 }
@@ -141,20 +147,23 @@ bool containsAnyStrSet(StrSet set1, StrSet set2) {
     if (set1 == NULL || set2 == NULL || set2->inner->count > set1->inner->count) return false;
 
     int count2 = set2->inner->count;
-    StringList list2 = newStrArray(list2);
+    StrList list2 = newStrList(list2);
     setToArr(set2, list2);
 
     int count1 = set1->inner->count;
-    StringList list1 = newStrArray(list1);
+    StrList list1 = newStrList(list1);
     toListAndSort(set1, list1);
 
     for (int i = 0; i < count2; ++i) {
-        if(binarySearch(list2->str[i], list1->str, count1))
+        if(binarySearch(list2->inner->str[i], list1->inner->str, count1)) {
+            deleteStrList(&list1);
+            deleteStrList(&list2);
             return true;
+        }
     }
 
-    deleteStrList(list1);
-    deleteStrList(list2);
+    deleteStrList(&list1);
+    deleteStrList(&list2);
 
     return  false;
 }
@@ -172,14 +181,14 @@ bool removeStrSet(StrSet set, string s) {
 }
 
 bool removeAllStrSet(StrSet set1, StrSet set2) {
-    StringList list2 = newStrArray(list2);
+    StrList list2 = newStrList(list2);
     setToArr(set2, list2);
 
     for (int i = 0; i < set2->inner->count; ++i) {
-        removeStrSet(set1, list2->str[i]);
+        removeStrSet(set1, list2->inner->str[i]);
     }
 
-    deleteStrList(list2);
+    deleteStrList(&list2);
 
     return true;
 }
@@ -191,26 +200,26 @@ bool isEmptyStrSet(StrSet set) {
 bool isEqualsStrSet(StrSet set1, StrSet set2) {
     if (set1 == NULL || set2 == NULL || set1->inner->count != set2->inner->count) return false;
 
-    StringList list1 = newStrArray(list1);
-    StringList list2 = newStrArray(list2);
+    StrList list1 = newStrList(list1);
+    StrList list2 = newStrList(list2);
 
     toListAndSort(set1, list1);
     toListAndSort(set2, list2);
 
     for (int i = 0; i < set1->inner->count; ++i) {
-        if (compareStr(list1->str[i]->data, list2->str[i]->data) != 0)
+        if (compareStr(list1->inner->str[i]->data, list2->inner->str[i]->data) != 0)
             return false;
     }
 
-    deleteStrList(list1);
-    deleteStrList(list2);
+    deleteStrList(&list1);
+    deleteStrList(&list2);
 
     return true;
 }
 
 StrSet emptyIfNullStrSet(StrSet set) {
     if (set == NULL) {
-        IntSet temp = newIntSet(temp);
+        StrSet temp = newStrSet(temp);
         return temp;
     }
 
@@ -292,7 +301,7 @@ static void increaseCapacity(StrSet set) {
     int count = set->inner->count;
     NodeStr** temp = set->inner->bucket;
 
-    StringList list = newStrArray(list);
+    StrList list = newStrList(list);
     setToArr(set, list);
 
     set->inner->capacity *= 2;
@@ -302,26 +311,26 @@ static void increaseCapacity(StrSet set) {
         set->inner->bucket[i] = NULL;
 
     for (int i = 0; i < count; ++i) {
-        int indexBucket = (hashString(list->str[i]->data) & 0x7FFFFFFF) % set->inner->capacity;
-        insertNode(&set->inner->bucket[indexBucket], list->str[i]->data, &set->inner->count);
+        int indexBucket = (hashString(list->inner->str[i]->data) & 0x7FFFFFFF) % set->inner->capacity;
+        insertNode(&set->inner->bucket[indexBucket], list->inner->str[i]->data, &set->inner->count);
     }
 
-    deleteStrList(list);
+    deleteStrList(&list);
     deleteNodes(temp, oldCapacity);
     free(temp);
 }
 
-static void setToArr(StrSet set, StringList list) {
+static void setToArr(StrSet set, StrList list) {
     int index = 0;
     for (int i = 0; i < set->inner->capacity; ++i) {
         copyValuesToList(set->inner->bucket[i], list);
     }
 }
 
-static void copyValuesToList(StrNode node, StringList list) {
+static void copyValuesToList(StrNode node, StrList list) {
     if (node != NULL) {
         copyValuesToList(node->left, list);
-        addCharArrElem(list, node->str->data);
+        addCharArrElemList(list, node->str->data);
         copyValuesToList(node->right, list);
     }
 }
@@ -383,9 +392,9 @@ static bool isContains(StrNode node, string s) {
     return false;
 }
 
-static void toListAndSort(StrSet set, StringList list) {
+static void toListAndSort(StrSet set, StrList list) {
     setToArr(set, list);
-    quickSortStr(list->str, 0, list->count);
+    quickSortStr(list->inner->str, 0, list->inner->count);
 }
 
 static void quickSortStr(String** strList, int low, int high) {

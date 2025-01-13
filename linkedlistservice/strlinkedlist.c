@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "strlinkedlist.h"
+#include "../arraylist.h"
 
 // structures
 typedef struct NodeStr {
@@ -29,16 +30,16 @@ typedef struct String {
     int capacity;
 } String;
 
-typedef struct StringArray {
+typedef struct InnerStrList {
     int count;
     String** str;
     int capacity;
-} StringArray;
+} InnerStrList;
 
 typedef struct NodeStr NodeStr;
 typedef NodeStr* StrNode;
 typedef String* string;
-typedef StringArray* StringList;
+typedef ArrayListStr* StrList;
 
 
 // prototypes
@@ -49,7 +50,7 @@ static bool binarySearchStr(string s, String** strList, int high);
 static bool removeNodeStr(StrLinkedList list, StrNode current, StrNode previous, int index);
 static void deleteFirstNodeStr(StrLinkedList list, StrNode current);
 static void deleteNodeStr(StrLinkedList list, StrNode current, StrNode previous);
-static void copyLLToStrList(StrLinkedList strLL, StringList strList);
+static void copyLLToStrList(StrLinkedList strLL, StrList strList);
 static StrLinkedList copyStrLL(StrLinkedList list);
 
 
@@ -167,43 +168,43 @@ string getStrElemLL(StrLinkedList list, int index) {
 }
 
 void sortStrLL(StrLinkedList list) {
-    StringList strList = newStrArray(strList);
+    StrList strList = newStrList(strList);
     StrNode current = list->inner->begin;
     StrNode temp = list->inner->begin;
     int index = 0;
     while (current != NULL) {
-        addStrElem(strList, current->data);
+        addStrElemList(strList, current->data);
         current = current->next;
     }
 
-    quickSortStr(strList->str, 0, strList->count);
+    quickSortStr(strList->inner->str, 0, strList->inner->count);
 
     index = 0;
     while (temp != NULL) {
-        temp->data = stringOf(strList->str[index++]->data);
+        temp->data = stringOf(strList->inner->str[index++]->data);
         temp = temp->next;
     }
-    deleteStrList(strList);
+    deleteStrList(&strList);
 }
 
 void sortStrLLReverse(StrLinkedList list) {
-    StringList strList = newStrArray(strList);
+    StrList strList = newStrList(strList);
     StrNode current = list->inner->begin;
     StrNode temp = list->inner->begin;
     int index = 0;
     while (current != NULL) {
-        addStrElem(strList, current->data);
+        addStrElemList(strList, current->data);
         current = current->next;
     }
 
-    quickSortStrReverse(strList->str, 0, strList->count);
+    quickSortStrReverse(strList->inner->str, 0, strList->inner->count);
 
     index = 0;
     while (temp != NULL) {
-        temp->data = stringOf(strList->str[index++]->data);
+        temp->data = stringOf(strList->inner->str[index++]->data);
         temp = temp->next;
     }
-    deleteStrList(strList);
+    deleteStrList(&strList);
 }
 
 int indexOfStrLL(StrLinkedList list, string s) {
@@ -260,54 +261,54 @@ bool containsStrLL(StrLinkedList list, string s) {
 bool containsAllStrLL(StrLinkedList list1, StrLinkedList list2) {
     if (list1 == NULL || list2 == NULL || list2->inner->count > list1->inner->count) return false;
 
-    StringList tempList = newStrArray(tempList);
+    StrList tempList = newStrList(tempList);
     StrNode current = list1->inner->begin;
     StrNode current2 = list2->inner->begin;
 
     while (current != NULL) {
-        addStrElem(tempList, current->data);
+        addStrElemList(tempList, current->data);
         current = current->next;
     }
 
-    quickSortStr(tempList->str, 0, tempList->count);
+    quickSortStr(tempList->inner->str, 0, tempList->inner->count);
 
     while (current2 != NULL) {
-        if (!binarySearchStr(current2->data, tempList->str, list1->inner->count)) {
-            deleteStrList(tempList);
+        if (!binarySearchStr(current2->data, tempList->inner->str, list1->inner->count)) {
+            deleteStrList(&tempList);
             return false;
         }
 
         current2 = current2->next;
     }
 
-    deleteStrList(tempList);
+    deleteStrList(&tempList);
     return true;
 }
 
 bool containsAnyStrLL(StrLinkedList list1, StrLinkedList list2) {
     if (list1 == NULL || list2 == NULL) return false;
 
-    StringList tempList = newStrArray(tempList);
+    StrList tempList = newStrList(tempList);
     StrNode current = list1->inner->begin;
     StrNode current2 = list2->inner->begin;
 
     while (current != NULL) {
-        addStrElem(tempList, current->data);
+        addStrElemList(tempList, current->data);
         current = current->next;
     }
 
-    quickSortStr(tempList->str, 0, tempList->count);
+    quickSortStr(tempList->inner->str, 0, tempList->inner->count);
 
     while (current2 != NULL) {
-        if (binarySearchStr(current2->data, tempList->str, list1->inner->count)) {
-            deleteStrList(tempList);
+        if (binarySearchStr(current2->data, tempList->inner->str, list1->inner->count)) {
+            deleteStrList(&tempList);
             return true;
         }
 
         current2 = current2->next;
     }
 
-    deleteStrList(tempList);
+    deleteStrList(&tempList);
     return false;
 }
 
@@ -341,36 +342,36 @@ bool removeAllStrLL(StrLinkedList list1, StrLinkedList list2) {
     if (list1 == NULL || list2 ==NULL) return false;
 
     int listSize = list1->inner->count;
-    StringList tempList = newStrArray(tempList);
-    StringList filtered = newStrArray(filtered);
-    StringList tempForBS = newStrArray(tempForBS);
+    StrList tempList = newStrList(tempList);
+    StrList filtered = newStrList(filtered);
+    StrList tempForBS = newStrList(tempForBS);
 
     copyLLToStrList(list1, tempList);
     copyLLToStrList(list1, tempForBS);
-    quickSortStr(tempForBS->str, 0, listSize);
+    quickSortStr(tempForBS->inner->str, 0, listSize);
 
     StrNode current2 = list2->inner->begin;
     while (current2 != NULL) {
-        bool isExist = binarySearchStr(current2->data, tempForBS->str, listSize);
+        bool isExist = binarySearchStr(current2->data, tempForBS->inner->str, listSize);
         if (isExist)
-            addStrElem(filtered, current2->data);
+            addStrElemList(filtered, current2->data);
 
         current2 = current2->next;
     }
 
     clearStrLL(list1);
 
-    quickSortStr(filtered->str, 0, filtered->count);
+    quickSortStr(filtered->inner->str, 0, filtered->inner->count);
     for (int i = 0; i < listSize; ++i) {
-        if (binarySearchStr(tempList->str[i], filtered->str, filtered->count))
+        if (binarySearchStr(tempList->inner->str[i], filtered->inner->str, filtered->inner->count))
             continue;
 
-        addStrElemLL(list1, tempList->str[i]);
+        addStrElemLL(list1, tempList->inner->str[i]);
     }
 
-    deleteStrList(tempForBS);
-    deleteStrList(filtered);
-    deleteStrList(tempList);
+    deleteStrList(&tempForBS);
+    deleteStrList(&filtered);
+    deleteStrList(&tempList);
 
     return true;
 }
@@ -386,56 +387,56 @@ StrLinkedList subtractStrLL(StrLinkedList list1, StrLinkedList list2) {
     }
 
     int listSize = list1->inner->count;
-    StringList tempList = newStrArray(tempList);
-    StringList filtered = newStrArray(filtered);
-    StringList tempForBS = newStrArray(tempForBS);
+    StrList tempList = newStrList(tempList);
+    StrList filtered = newStrList(filtered);
+    StrList tempForBS = newStrList(tempForBS);
 
     copyLLToStrList(list1, tempList);
     copyLLToStrList(list1, tempForBS);
-    quickSortStr(tempForBS->str, 0, listSize);
+    quickSortStr(tempForBS->inner->str, 0, listSize);
 
     StrNode current2 = list2->inner->begin;
     while (current2 != NULL) {
-        bool isExist = binarySearchStr(current2->data, tempForBS->str, listSize);
+        bool isExist = binarySearchStr(current2->data, tempForBS->inner->str, listSize);
         if (isExist)
-            addStrElem(filtered, current2->data);
+            addStrElemList(filtered, current2->data);
 
         current2 = current2->next;
     }
 
     StrLinkedList newLL = newStrLinkedList(newLL);
 
-    quickSortStr(filtered->str, 0, filtered->count);
+    quickSortStr(filtered->inner->str, 0, filtered->inner->count);
     for (int i = 0; i < listSize; ++i) {
-        if (binarySearchStr(tempList->str[i], filtered->str, filtered->count))
+        if (binarySearchStr(tempList->inner->str[i], filtered->inner->str, filtered->inner->count))
             continue;
 
-        addStrElemLL(list1, tempList->str[i]);
+        addStrElemLL(list1, tempList->inner->str[i]);
     }
 
-    deleteStrList(tempForBS);
-    deleteStrList(filtered);
-    deleteStrList(tempList);
+    deleteStrList(&tempForBS);
+    deleteStrList(&filtered);
+    deleteStrList(&tempList);
 
     return newLL;
 }
 
 void reverseStrLL(StrLinkedList list) {
-    StringList tempList = newStrArray(tempList);
+    StrList tempList = newStrList(tempList);
 
     copyLLToStrList(list, tempList);
-    reverseListStr(tempList);
+    reverseStrList(tempList);
 
     StrNode current = list->inner->begin;
     int index = 0;
     while (current != NULL) {
         free(current->data);
-        current->data = stringOf(tempList->str[index]->data);
+        current->data = stringOf(tempList->inner->str[index]->data);
         current = current->next;
         ++index;
     }
 
-    deleteStrList(tempList);
+    deleteStrList(&tempList);
 }
 
 int sizeStrLL(StrLinkedList list) {
@@ -520,6 +521,8 @@ void deleteStrLL(StrLinkedList* list) {
     free(*list);
     *list = NULL;
 }
+
+// ===================== private funcs =======================
 
 static bool removeNodeStr(StrLinkedList list, StrNode current, StrNode previous, int index) {
     if (index == 0) {
@@ -668,10 +671,10 @@ static void fillNodeStr(StrNode node, char* s, int* index) {
     ++(*index);
 }
 
-static void copyLLToStrList(StrLinkedList strLL, StringList strList) {
+static void copyLLToStrList(StrLinkedList strLL, StrList strList) {
     StrNode current = strLL->inner->begin;
     while (current != NULL) {
-        addStrElem(strList, current->data);
+        addStrElemList(strList, current->data);
         current = current->next;
     }
 }
