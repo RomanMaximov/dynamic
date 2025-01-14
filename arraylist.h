@@ -73,6 +73,7 @@ typedef struct ArrayListDouble {
     bool (*isEquals)(struct ArrayListDouble* list1, struct ArrayListDouble* list2);
     struct ArrayListDouble* (*emptyIfNull)(struct ArrayListDouble* list);
     int (*size)(struct ArrayListDouble* list);
+    string (*toString)(struct ArrayListDouble* list);
     struct Itr* (*iterator)(struct ArrayListDouble* list);
     //void (*printList)(struct ArrayListInt* list);
     //void (*deleteList)(struct ArrayListInt* list);

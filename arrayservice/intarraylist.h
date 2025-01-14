@@ -15,10 +15,10 @@ typedef ArrayListInt* IntList;
 typedef Itr* Iterator;
 
 
-void addIntElemList(IntList, int);
-void addAllIntElemList(IntList, IntList);
-int getIntElemList(IntList, int);
-bool setIntElemList(IntList, int, int);
+void addIntList(IntList, int);
+void addAllIntList(IntList, IntList);
+int getIntList(IntList, int);
+bool setIntList(IntList, int, int);
 int indexOfIntList(IntList, int);
 void sortIntList(IntList);
 void sortIntListReverse(IntList);

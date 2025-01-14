@@ -19,18 +19,18 @@ typedef struct InnerIntList {
 
 
 // private funcs prototypes
-static int* increaseCapacityInt(IntList list);
+static int* increaseCapacity(IntList list);
 static int compareInt(const void* elem1, const void* elem2);
 static int compareReverse(const void* elem1, const void* elem2);
 static bool binarySearch(int elem, const int* arr, int high);
-static void copyIntList(IntList dest, IntList from);
+static void copyList(IntList dest, IntList from);
 static bool hasNext(Iterator iter);
 
 
-void addIntElemList(IntList list, int num) {
+void addIntList(IntList list, int num) {
     void* elem = &num;
     if (list->inner->count == list->inner->capacity) {
-        list->inner->data = increaseCapacityInt(list);
+        list->inner->data = increaseCapacity(list);
 
         //memcpy(&list->data[list->count], elem, sizeof(int));
         //list->count++;
@@ -44,8 +44,11 @@ void addIntElemList(IntList list, int num) {
 }
 
 void addAllIntList(IntList dest, IntList from) {
+    if (dest == NULL || from == NULL || from->inner->data == NULL) return;
+
     int sizeFrom = sizeIntList(from);
     int sizeDest = sizeIntList(dest);
+
     if ((sizeDest + sizeFrom) > dest->inner->capacity) {
         dest->inner->capacity += sizeFrom;
         dest->inner->data = realloc(dest->inner->data, dest->inner->capacity * sizeof(int));
@@ -57,9 +60,9 @@ void addAllIntList(IntList dest, IntList from) {
     }
 }
 
-int getElemIntList(IntList list, int index) {
+int getIntList(IntList list, int index) {
     if (list == NULL) {
-        puts("ERROR: List is null.");
+        puts("Error: List is null.");
         return EXIT_FAILURE;
     }
 
@@ -71,7 +74,7 @@ int getElemIntList(IntList list, int index) {
     return list->inner->data[index];
 }
 
-bool setElemIntList(IntList list, int index, int num) {
+bool setIntList(IntList list, int index, int num) {
     if (list == NULL)
         return false;
 
@@ -85,7 +88,7 @@ bool setElemIntList(IntList list, int index, int num) {
 }
 
 int indexOfIntList(IntList list, int elem) {
-    if (list == NULL)
+    if (isEmptyIntList(list))
         return -1;
 
     for (int i = 0; i < list->inner->count; ++i) {
@@ -96,14 +99,14 @@ int indexOfIntList(IntList list, int elem) {
 }
 
 void sortIntList(IntList list) {
-    if (list == NULL)
+    if (isEmptyIntList(list))
         return;
 
     qsort(list->inner->data, list->inner->count, sizeof(int), compareInt);
 }
 
 void sortIntListReverse(IntList list) {
-    if (list == NULL)
+    if (isEmptyIntList(list))
         return;
 
     qsort(list->inner->data, list->inner->count, sizeof(int), compareReverse);
@@ -114,7 +117,6 @@ void clearIntList(IntList list) {
 
     free(list->inner->data);
     list->inner->count = 0;
-    list->inner->capacity = 20;
     list->inner->data = malloc(list->inner->capacity * sizeof(int));
 }
 
@@ -160,7 +162,8 @@ bool removeIntList(IntList list, int index) {
 
     if (list->inner->count == 1) {
         list->inner->count = 0;
-        list->inner->data = NULL;
+        free(list->inner->data);
+        list->inner->data = malloc(list->inner->count * sizeof(int));
         return true;
     }
 
@@ -226,31 +229,31 @@ IntList subtractInt(IntList list1, IntList list2) {
 
     if (isEmptyIntList(list2)) {
         IntList temp = newIntList(temp);
-        copyIntList(temp, list1);
+        copyList(temp, list1);
         return temp;
     }
 
-    IntList copyList = newIntList(copyList);
-    copyIntList(copyList, list1);
+    IntList copyValues = newIntList(copyValues);
+    copyList(copyValues, list1);
 
     for (int i = 0; i < list2->inner->count; ++i) {
-        int index = indexOfIntList(copyList, list2->inner->data[i]);
+        int index = indexOfIntList(copyValues, list2->inner->data[i]);
         if (index != -1)
-            copyList->inner->data[index] = INT_MIN;
+            copyValues->inner->data[index] = INT_MIN;
     }
 
     IntList temp = newIntList(temp);
     int index = 0;
-    for (int i = 0; i < copyList->inner->count; ++i) {
-        if (copyList->inner->data[i] != INT_MIN) {
+    for (int i = 0; i < copyValues->inner->count; ++i) {
+        if (copyValues->inner->data[i] != INT_MIN) {
             if (temp->inner->count == temp->inner->capacity) {
-                temp->inner->data = increaseCapacityInt(temp);
+                temp->inner->data = increaseCapacity(temp);
             }
-            temp->inner->data[index++] = copyList->inner->data[i];
+            temp->inner->data[index++] = copyValues->inner->data[i];
         }
     }
 
-    deleteIntList(&copyList);
+    deleteIntList(&copyValues);
     return temp;
 }
 
@@ -370,7 +373,7 @@ static bool hasNext(Iterator iter) {
 
 // ===================== private funcs =======================
 
-static int* increaseCapacityInt(IntList list) {
+static int* increaseCapacity(IntList list) {
     list->inner->capacity *= 2;;
     list->inner->data = realloc(list->inner->data, list->inner->capacity * sizeof(int));
     assert(list->inner->data != NULL);
@@ -402,10 +405,10 @@ static bool binarySearch(int elem, const int* arr, int high) {
     return false;
 }
 
-static void copyIntList(IntList dest, IntList from) {
+static void copyList(IntList dest, IntList from) {
     for (int i = 0; i < from->inner->count; ++i) {
         if (dest->inner->count == dest->inner->capacity) {
-            dest->inner->data = increaseCapacityInt(dest);
+            dest->inner->data = increaseCapacity(dest);
         }
         dest->inner->data[i] = from->inner->data[i];
         dest->inner->count++;

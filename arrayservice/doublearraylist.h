@@ -15,21 +15,18 @@ typedef ArrayListDouble* DoubleList;
 typedef Itr* Iterator;
 
 
-void addDoubleElemList(DoubleList, double);
-void addAllDoubleElemList(DoubleList, DoubleList);
-int getDoubleElemList(DoubleList, int);
-bool setDoubleElemList(DoubleList, int, double);
+void addDoubleList(DoubleList, double);
+void addAllDoubleList(DoubleList, DoubleList);
+int getDoubleList(DoubleList, int);
+bool setDoubleList(DoubleList, int, double);
 int indexOfDoubleList(DoubleList, double);
-
-// toString
-
 void sortDoubleList(DoubleList);
 void sortDoubleListReverse(DoubleList);
 void clearDoubleList(DoubleList);
-bool containsDoubleList(DoubleList, double );
+bool containsDoubleList(DoubleList, double);
 bool containsAllDoubleList(DoubleList, DoubleList);
 bool containsAnyDoubleList(DoubleList, DoubleList);
-bool removeDoubleList(DoubleList, double );
+bool removeDoubleList(DoubleList, int);
 bool removeAllDoubleList(DoubleList, DoubleList);
 DoubleList subtractDoubleList(DoubleList, DoubleList);
 bool isEmptyDoubleList(DoubleList);
@@ -37,6 +34,7 @@ void reverseDoubleList(DoubleList);
 bool isEqualListsDoubleList(DoubleList, DoubleList);
 DoubleList emptyIfNullDoubleList(DoubleList);
 int sizeDoubleList(DoubleList);
+string toStringDoubleList(DoubleList);
 Iterator iteratorDoubleList(DoubleList);
 
 void printDoubleList(DoubleList);
