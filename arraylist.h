@@ -45,6 +45,7 @@ typedef struct ArrayListInt {
     bool (*isEquals)(struct ArrayListInt* list1, struct ArrayListInt* list2);
     struct ArrayListInt* (*emptyIfNull)(struct ArrayListInt* list);
     int (*size)(struct ArrayListInt* list);
+    string (*toString)(struct ArrayListInt* list);
     struct Itr* (*iterator)(struct ArrayListInt* list);
     //void (*printList)(struct ArrayListInt* list);
     //void (*deleteList)(struct ArrayListInt* list);

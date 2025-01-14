@@ -20,9 +20,6 @@ void addAllIntElemList(IntList, IntList);
 int getIntElemList(IntList, int);
 bool setIntElemList(IntList, int, int);
 int indexOfIntList(IntList, int);
-
-// toString
-
 void sortIntList(IntList);
 void sortIntListReverse(IntList);
 void clearIntList(IntList);
@@ -34,9 +31,10 @@ bool removeAllIntList(IntList, IntList);
 IntList subtractIntList(IntList, IntList);
 bool isEmptyIntList(IntList);
 void reverseIntList(IntList);
-bool isEqualListsIntList(IntList, IntList);
+bool isEqualsIntList(IntList, IntList);
 IntList emptyIfNullIntList(IntList);
 int sizeIntList(IntList);
+string toStringIntList(IntList);
 Iterator iteratorIntList(IntList);
 
 void printIntList(IntList);
