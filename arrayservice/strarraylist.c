@@ -5,93 +5,121 @@
 //
 
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+#include "strarraylist.h"
+
+
+typedef struct String {
+    int count;
+    char* data;
+    int capacity;
+} String;
+
+typedef struct InnerStrList {
+    int count;
+    String** data;
+    int capacity;
+} InnerStrList;
+
+typedef String* string;
+
+
+// private funcs prototypes
+static String** increaseCapacity(StrList list);
 
 
 
-void addStrElem(StringList list, string str) {
+void addStrList(StrList list, string str) {
     if (list == NULL) return;
 
     if (str == NULL) {
-        if (list->count == list->capacity)
-            list->str = increaseCapacityStr(list);
+        if (list->inner->count == list->inner->capacity)
+            list->inner->data = increaseCapacity(list);
 
-        list->str[list->count] = NULL;
-        list->count++;
+        list->inner->data[list->inner->count] = NULL;
+        list->inner->count++;
     } else {
         string temp = stringOf(str->data);
-        if (list->count == list->capacity) {
-            list->str = increaseCapacityStr(list);
-            memcpy(&list->str[list->count], &temp, sizeof(String));
-            list->count++;
+        if (list->inner->count == list->inner->capacity) {
+            list->inner->data = increaseCapacity(list);
+            memcpy(&list->inner->data[list->inner->count], &temp, sizeof(String));
+            list->inner->count++;
         } else {
-            memcpy(&list->str[list->count], &temp, sizeof(String));
-            list->count++;
+            memcpy(&list->inner->data[list->inner->count], &temp, sizeof(String));
+            list->inner->count++;
         }
     }
 }
 
-void addCharArrElem(StringList list, char* str) {
+void addCharArrList(StrList list, char* str) {
     if (str == NULL || list == NULL) return;
 
     string elem = stringOf(str);
 
-    if (list->count == list->capacity) {
-        list->str = increaseCapacityStr(list);
-        memcpy(&list->str[list->count], &elem, sizeof(String));
-        list->count++;
+    if (list->inner->count == list->inner->capacity) {
+        list->inner->data = increaseCapacity(list);
+        memcpy(&list->inner->data[list->inner->count], &elem, sizeof(String));
+        list->inner->count++;
     } else {
-        memcpy(&list->str[list->count], &elem, sizeof(String));
-        list->count++;
+        memcpy(&list->inner->data[list->inner->count], &elem, sizeof(String));
+        list->inner->count++;
     }
 }
 
-void addAllStr(StringList dest, StringList from) {
+void addAllStrList(StrList dest, StrList from) {
+    if (dest == NULL || from == NULL || from->inner->data == NULL) return;
+
     int sizeFrom = sizeStrList(from);
     int sizeDest = sizeStrList(dest);
-    if ((sizeDest + sizeFrom) > dest->capacity) {
-        dest->capacity += sizeFrom;
-        dest->str = realloc(dest->str, dest->capacity * sizeof(String*));
+    if ((sizeDest + sizeFrom) > dest->inner->capacity) {
+        dest->inner->capacity += sizeFrom;
+        dest->inner->data = realloc(dest->inner->data, dest->inner->capacity * sizeof(String*));
         for (int i = sizeFrom; i < sizeFrom + sizeDest; ++i) {
-            dest->str[i] = stringOf(from->str[i]->data);
+            dest->inner->data[i] = stringOf(from->inner->data[i]->data);
         }
-        dest->count += sizeFrom;
+        dest->inner->count += sizeFrom;
     } else {
         int indexFrom = 0;
         for (int i = sizeDest; i < sizeFrom + sizeDest; ++i) {
-            dest->str[i] = stringOf(from->str[indexFrom++]->data);
+            dest->inner->data[i] = stringOf(from->inner->data[indexFrom++]->data);
         }
-        dest->count += sizeFrom;
+        dest->inner->count += sizeFrom;
     }
 }
 
-string getElemStr(StringList list, int index) {
+string getStrList(StrList list, int index) {
     if (list == NULL) {
         puts("ERROR: List is null.");
         return NULL;
     }
 
-    if (index < 0 || index >= list->count) {
-        printf("Index %d out of bounds for length %d\n", index, list->count);
+    if (index < 0 || index >= list->inner->count) {
+        printf("Index %d out of bounds for length %d\n", index, list->inner->count);
         return NULL;
     }
 
-    return stringOf(list->str[index]->data);
+    return stringOf(list->inner->data[index]->data);
 }
 
-bool setElemStr(string str, StringList list, int index) {
+bool setStrList(StrList list, int index, string str) {
     if (list == NULL)
         return false;
 
-    if (index >= list->count) {
-        printf("Index %d out of bounds for length %d\n", index, list->count);
+    if (index >= list->inner->count) {
+        printf("Index %d out of bounds for length %d\n", index, list->inner->count);
         return false;
     }
 
-    list->str[index] = stringOf(str->data);
+    list->inner->data[index] = stringOf(str->data);
     return true;
 }
 
-bool setElemCharArr(char* str, StringList list, int index) {
+
+
+bool setElemCharArr(char* str, StrList list, int index) {
     if (list == NULL)
         return false;
 
@@ -104,7 +132,7 @@ bool setElemCharArr(char* str, StringList list, int index) {
     return true;
 }
 
-bool removeElemStr(StringList list, int index) {
+bool removeElemStr(StrList list, int index) {
     if (list == NULL) return false;
 
     if (index >= list->count) {
@@ -133,7 +161,7 @@ bool removeElemStr(StringList list, int index) {
     return true;
 }
 
-bool removeAllStr(StringList list1, StringList list2) {
+bool removeAllStr(StrList list1, StrList list2) {
     if (list1 == NULL || list2 == NULL)
         return false;
 
@@ -168,7 +196,7 @@ bool removeAllStr(StringList list1, StringList list2) {
     return true;
 }
 
-void printArrayString(StringList list) {
+void printArrayString(StrList list) {
     if (list == NULL) return;
 
     int counter = list->count;
@@ -189,7 +217,7 @@ void printArrayString(StringList list) {
     printf("%s\n", "]");
 }
 
-void clearStrList(StringList list) {
+void clearStrList(StrList list) {
     if (list == NULL) return;
 
     free(list->str);
@@ -199,7 +227,7 @@ void clearStrList(StringList list) {
 }
 
 // TODO доработать удаление, чтобы внешний указатель был NULL
-void deleteStrList(StringList list) {
+void deleteStrList(StrList list) {
     if (list == NULL) {
         printf("%s\n", "List is NULL.");
         return;
@@ -283,7 +311,7 @@ void quickSortReverseStr(String** strList, int low, int high) {
         quickSortReverseStr(strList, low, j);
 }
 
-void sortStrList(StringList list) {
+void sortStrList(StrList list) {
     if (list == NULL)
         return;
 
@@ -291,7 +319,7 @@ void sortStrList(StringList list) {
     quickSortStr(list->str, 0, high);
 }
 
-void sortReverseStrList(StringList list) {
+void sortReverseStrList(StrList list) {
     if (list == NULL)
         return;
 
@@ -299,7 +327,7 @@ void sortReverseStrList(StringList list) {
     quickSortReverseStr(list->str, 0, high);
 }
 
-bool containsStr(StringList list, string str) {
+bool containsStr(StrList list, string str) {
     if (list == NULL)
         return false;
 
@@ -310,7 +338,7 @@ bool containsStr(StringList list, string str) {
     return false;
 }
 
-bool containsAllStr(StringList list1, StringList list2) {
+bool containsAllStr(StrList list1, StrList list2) {
     if (list1 == NULL || list2 == NULL || list2->count > list1->count)
         return false;
 
@@ -322,15 +350,15 @@ bool containsAllStr(StringList list1, StringList list2) {
     return true;
 }
 
-bool isEmptyStrList(StringList list) {
+bool isEmptyStrList(StrList list) {
     return list == NULL || list->count == 0;
 }
 
-int sizeStrList(StringList list) {
+int sizeStrList(StrList list) {
     return list->count;
 }
 
-void reverseListStr(StringList list) {
+void reverseListStr(StrList list) {
     String** start = list->str;
     String** end = list->str + (list->count - 1);
     String* temp;
@@ -343,7 +371,7 @@ void reverseListStr(StringList list) {
     }
 }
 
-bool isEqualStrLists(StringList list1, StringList list2) {
+bool isEqualStrLists(StrList list1, StrList list2) {
     if (list1 == NULL || list2 == NULL)
         return false;
 
@@ -361,7 +389,7 @@ bool isEqualStrLists(StringList list1, StringList list2) {
     return true;
 }
 
-int indexOfStrList(StringList list, string str) {
+int indexOfStrList(StrList list, string str) {
     if (list == NULL)
         return -1;
 
@@ -375,11 +403,11 @@ int indexOfStrList(StringList list, string str) {
     return -1;
 }
 
-StringList emptyIfNullStr(StringList list) {
+StrList emptyIfNullStr(StrList list) {
     return list == NULL ? newStrArray(list) : list;
 }
 
-bool containsAnyStr(StringList list1, StringList list2) {
+bool containsAnyStr(StrList list1, StrList list2) {
     if (isEmptyStrList(list1) || isEmptyStrList(list2))
         return false;
 
@@ -391,25 +419,25 @@ bool containsAnyStr(StringList list1, StringList list2) {
     return false;
 }
 
-StringList subtractStr(StringList list1, StringList list2) {
+StrList subtractStr(StrList list1, StrList list2) {
     if (isEmptyStrList(list1)) {
-        StringList temp = NULL;
+        StrList temp = NULL;
         return newStrArray(temp);
     }
 
     if (isEmptyStrList(list2)) {
-        StringList temp = copyStrList(temp, list1);
+        StrList temp = copyStrList(temp, list1);
         return temp;
     }
 
-    StringList copyList = copyStrList(copyList, list1);
+    StrList copyList = copyStrList(copyList, list1);
     for (int i = 0; i < list2->count; ++i) {
         int index = indexOfStrList(copyList, list2->str[i]);
         if (index != -1)
             copyList->str[index] = NULL;
     }
 
-    StringList temp = newStrArray(temp);
+    StrList temp = newStrArray(temp);
     int index = 0;
     for (int i = 0; i < copyList->count; ++i) {
         if (copyList->str[i] != NULL) {
@@ -424,7 +452,7 @@ StringList subtractStr(StringList list1, StringList list2) {
     return temp;
 }
 
-StringList copyStrList(StringList dest, StringList from) {
+StrList copyStrList(StrList dest, StrList from) {
     dest = newStrArray(dest);
     for (int i = 0; i < from->count; ++i) {
         if (dest->count == dest->capacity) {
@@ -436,7 +464,7 @@ StringList copyStrList(StringList dest, StringList from) {
     return dest;
 }
 
-static String** increaseCapacityStr(StringList list) {
+static String** increaseCapacity(StrList list) {
     int oldSize = list->count;
     list->capacity *= 2;
     String** temp = list->str;

@@ -347,12 +347,13 @@ void printIntList(IntList list) {
 }
 
 void deleteIntList(IntList* list) {
-    if (list != NULL) {
-        if ((*list)->inner->data != NULL)
-            free((*list)->inner->data);
-        free((*list)->inner);
-    }
+    if (list == NULL || *list == NULL)
+        return;
 
+    if ((*list)->inner->data != NULL)
+        free((*list)->inner->data);
+
+    free((*list)->inner);
     free(*list);
     *list = NULL;
 }

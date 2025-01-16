@@ -28,6 +28,7 @@ static int compareReverse(const void* elem1, const void* elem2);
 static bool binarySearch(double elem, const int* arr, int high);
 static void copyList(DoubleList dest, DoubleList from);
 static bool hasNext(Iterator iter);
+static bool binarySearchInt(int elem, const int* arr, int high);
 
 
 void addDoubleList(DoubleList list, double num) {
@@ -122,6 +123,40 @@ void clearDoubleList(DoubleList list) {
     list->inner->data = malloc(list->inner->count * sizeof(double));
 }
 
+bool containsDoubleList(DoubleList list, double num) {
+    for (int i = 0; i < sizeDoubleList(list); ++i) {
+        if (fabs(list->inner->data[i] - num) < ACCURACY)
+            return true;
+    }
+    return false;
+}
+
+bool containsAllDoubleList(DoubleList list1, DoubleList list2) {
+    if (list1 == NULL || list2 == NULL || list2->inner->count > list1->inner->count)
+        return false;
+
+    for (int i = 0; i < list1->inner->count; ++i) {
+        for (int j = 0; j < list2->inner->count; ++j) {
+            if (fabs(list1->inner->data[i] - list2->inner->data[j]) > 0.000001)
+                return false;
+        }
+    }
+
+    return true;
+}
+
+bool containsAnyDoubleList(DoubleList list1, DoubleList list2) {
+    if (isEmptyDoubleList(list1) || isEmptyDoubleList(list2))
+        return false;
+
+    for (int i = 0; i < list2->inner->count; ++i) {
+        if (containsDoubleList(list1, list2->inner->data[i]))
+            return true;
+    }
+
+    return false;
+}
+
 bool removeDoubleList(DoubleList list, int index) {
     if (list == NULL) return false;
 
@@ -152,127 +187,82 @@ bool removeDoubleList(DoubleList list, int index) {
     return true;
 }
 
-bool removeAllDouble(DoubleList list1, DoubleList list2) {
+bool removeAllDoubleList(DoubleList list1, DoubleList list2) {
     if (list1 == NULL || list2 == NULL)
         return false;
 
-    double* temp = malloc(list1->count * sizeof(double));
-    int* indexList = malloc(list2->count * sizeof(int));
-    memcpy(&temp[0], list1->data, list1->count * sizeof(double));
+    double* temp = malloc(list1->inner->count * sizeof(double));
+    int* indexList = malloc(list2->inner->count * sizeof(int));
+    memcpy(&temp[0], list1->inner->data, list1->inner->count * sizeof(double));
 
     int j = 0;
-    for (int i = 0; i < list2->count; ++i) {
-        int index = indexOfDouble(list1, list2->data[i]);
+    for (int i = 0; i < list2->inner->count; ++i) {
+        int index = indexOfDoubleList(list1, list2->inner->data[i]);
         if (index != -1)
             indexList[j++] = index;
     }
 
-    qsort(indexList, j - 1, sizeof(int), compareInt);
-    free(list1->data);
-    list1->data = malloc(list1->capacity * sizeof(double));
+    qsort(indexList, j - 1, sizeof(int), compareDouble);
+    free(list1->inner->data);
+    list1->inner->data = malloc(list1->inner->capacity * sizeof(double));
 
     int index = 0;
-    for (int i = 0; i < list1->count; ++i) {
+    for (int i = 0; i < list1->inner->count; ++i) {
         if (binarySearchInt(i, indexList, j)) // 1
             continue;
 
-        list1->data[index] = temp[i];
+        list1->inner->data[index] = temp[i];
         ++index;
     }
-    list1->count -= j;
-    if (list1->count == 0) list1->data = NULL;
+    list1->inner->count -= j;
+    if (list1->inner->count == 0) list1->inner->data = NULL;
     free(indexList);
     free(temp);
 
     return true;
 }
 
-char* toStringDouble(DoubleList list) {
-    char* text = NULL;
-    if (list->count == 0) {
-        text = (char*)malloc(3 * sizeof(char));
-        text[0] = '[';
-        text[1] = ']';
-        text[2] = '\0';
-        return text;
+DoubleList subtractDoubleList(DoubleList list1, DoubleList list2) {
+    if (isEmptyDoubleList(list1)) {
+        DoubleList temp = NULL;
+        return newDoubleList(temp);
     }
 
-    int count = 256;
-    text = (char*)malloc(count * sizeof(char));
-    strcpy(text, "[");
-    for (int i = 0; i < list->count - 1; ++i) {
-        sprintf(&text[strlen(text)], "%f,", list->data[i]);
-        if (strlen(text) > (unsigned long long int)(count * 0.8)) {
-            count *= 2;
-            text = (char*)realloc(text, count * sizeof(char));
+    if (isEmptyDoubleList(list2)) {
+        DoubleList temp = newDoubleList(temp);
+        copyList(temp, list1);
+        return temp;
+    }
+
+    DoubleList copyValues = newDoubleList(copyValues);
+    copyList(copyValues, list1);
+    for (int i = 0; i < list2->inner->count; ++i) {
+        int index = indexOfDoubleList(copyValues, list2->inner->data[i]);
+        if (index != -1)
+            copyValues->inner->data[index] = INT_MIN;
+    }
+
+    DoubleList temp = newDoubleList(temp);
+    int index = 0;
+    for (int i = 0; i < copyValues->inner->count; ++i) {
+        if (copyValues->inner->data[i] != INT_MIN) {
+            if (temp->inner->count == temp->inner->capacity) {
+                temp->inner->data = increaseCapacity(temp);
+            }
+            temp->inner->data[index++] = copyValues->inner->data[i];
         }
     }
-
-    sprintf(&text[strlen(text)], "%f", list->data[list->count - 1]);
-    strcat(text, "]");
-    return text;
-}
-
-void printArrayDouble(DoubleList list) {
-    if (list == NULL) return;
-
-    printf("%s", "[");
-    int counter = list->count;
-    for (int i = 0; i < counter; ++i) {
-        if (i == counter - 1)
-            printf("%.9f", list->data[i]);
-        else
-            printf("%.9f, ", list->data[i]);
-    }
-    printf("%s\n", "]");
-}
-
-
-
-// TODO доработать логику удаления, чтобы указатель после удаления был равен NULL. Чтобы повторное случайное удаление не вызывало ошибку.
-void deleteArrayDouble(DoubleList list) {
-    if (list != NULL) {
-        if (list->data != NULL)
-            free(list->data);
-        free(list);
-    }
-}
-
-
-
-bool containsDouble(DoubleList list, double num) {
-    for (int i = 0; i < sizeDoubleList(list); ++i) {
-        if (fabs(list->data[i] - num) < 0.000001)
-            return true;
-    }
-    return false;
-}
-
-bool containsAllDouble(DoubleList list1, DoubleList list2) {
-    if (list1 == NULL || list2 == NULL || list2->count > list1->count)
-        return false;
-
-    for (int i = 0; i < list1->count; ++i) {
-        for (int j = 0; j < list2->count; ++j) {
-            if (fabs(list1->data[i] - list2->data[j]) > 0.000001)
-                return false;
-        }
-    }
-
-    return true;
+    deleteDoubleList(&copyValues);
+    return temp;
 }
 
 bool isEmptyDoubleList(DoubleList list) {
     return list == NULL || list->inner->count == 0;
 }
 
-int sizeDoubleList(DoubleList list) {
-    return list->count;
-}
-
-void reverseListDouble(DoubleList list) {
-    double* start = list->data;
-    double* end = list->data + (list->count - 1);
+void reverseDoubleList(DoubleList list) {
+    double* start = list->inner->data;
+    double* end = list->inner->data + (list->inner->count - 1);
     double temp;
     while (start <= end) {
         temp = *start;
@@ -283,71 +273,97 @@ void reverseListDouble(DoubleList list) {
     }
 }
 
-bool isEqualDoubleLists(DoubleList list1, DoubleList list2) {
-    if (list1 == NULL || list2 == NULL)
+bool isEqualsDoubleList(DoubleList list1, DoubleList list2) {
+    if (list1 == NULL || list2 == NULL || list1->inner->count != list2->inner->count)
         return false;
 
-    if (list1->count != list2->count)
-        return false;
-
-    for (int i = 0; i < list1->count; ++i) {
-        if (fabs(list1->data[i] - list2->data[i]) > 0.000001)
+    for (int i = 0; i < list1->inner->count; ++i) {
+        if (fabs(list1->inner->data[i] - list2->inner->data[i]) > ACCURACY)
             return false;
     }
 
     return true;
 }
 
-
-
-DoubleList emptyIfNullDouble(DoubleList list) {
-    return list == NULL ? newDoubleArray(list) : list;
+DoubleList emptyIfNullDoubleList(DoubleList list) {
+    return list == NULL ? newDoubleList(list) : list;
 }
 
-bool containsAnyDouble(DoubleList list1, DoubleList list2) {
-    if (isEmptyDouble(list1) || isEmptyDouble(list2))
-        return false;
-
-    for (int i = 0; i < list2->count; ++i) {
-        if (containsDouble(list1, list2->data[i]))
-            return true;
-    }
-
-    return false;
+int sizeDoubleList(DoubleList list) {
+    return list->inner->count;
 }
 
-DoubleList subtractDouble(DoubleList list1, DoubleList list2) {
-    if (isEmptyDouble(list1)) {
-        DoubleList temp = NULL;
-        return newDoubleArray(temp);
+string toStringDoubleList(DoubleList list) {
+    char* text = NULL;
+    if (list->inner->count == 0) {
+        text = (char*)malloc(3 * sizeof(char));
+        text[0] = '[';
+        text[1] = ']';
+        text[2] = '\0';
+        return text;
     }
 
-    if (isEmptyDouble(list2)) {
-        DoubleList temp = copyDoubleList(temp, list1);
-        return temp;
-    }
-
-    DoubleList copyList = copyDoubleList(copyList, list1);
-    for (int i = 0; i < list2->count; ++i) {
-        int index = indexOfDouble(copyList, list2->data[i]);
-        if (index != -1)
-            copyList->data[index] = INT_MIN;
-    }
-
-    DoubleList temp = newDoubleArray(temp);
-    int index = 0;
-    for (int i = 0; i < copyList->count; ++i) {
-        if (copyList->data[i] != INT_MIN) {
-            if (temp->count == temp->capacity) {
-                temp->data = increaseCapacityDouble(temp);
-            }
-            temp->data[index++] = copyList->data[i];
+    int count = 256;
+    text = (char*)malloc(count * sizeof(char));
+    strcpy(text, "[");
+    for (int i = 0; i < list->inner->count - 1; ++i) {
+        sprintf(&text[strlen(text)], "%f,", list->inner->data[i]);
+        if (strlen(text) > (unsigned long long int)(count * 0.8)) {
+            count *= 2;
+            text = realloc(text, count * sizeof(char));
         }
     }
-    deleteArrayDouble(copyList);
-    return temp;
+
+    sprintf(&text[strlen(text)], "%f", list->inner->data[list->inner->count - 1]);
+    strcat(text, "]");
+    string s = stringOf(text);
+    free(text);
+
+    return s;
 }
 
+void printDoubleList(DoubleList list) {
+    if (list == NULL || list->inner->data == NULL) {
+        puts("[]");
+        return;
+    }
+
+    printf("%s", "[");
+    int counter = list->inner->count;
+    for (int i = 0; i < counter; ++i) {
+        if (i == counter - 1)
+            printf("%.9f", list->inner->data[i]);
+        else
+            printf("%.9f, ", list->inner->data[i]);
+    }
+    printf("%s\n", "]");
+}
+
+void deleteDoubleList(DoubleList* list) {
+    if (list == NULL || *list == NULL)
+        return;
+
+    if ((*list)->inner->data != NULL)
+        free((*list)->inner->data);
+
+    free((*list)->inner);
+    free(*list);
+    *list = NULL;
+}
+
+Iterator iteratorDoubleList(DoubleList list){
+    Iterator iter = malloc(sizeof(Itr));
+    iter->count = 0;
+    iter->data = list;
+    iter->collectionSize = list->inner->count;
+    iter->hasNext = (void*) hasNext(iter);
+    iter->type = DOUBLE_LIST;
+    return iter;
+}
+
+static bool hasNext(Iterator iter) {
+    return iter->count < iter->collectionSize;
+}
 
 // ===================== private funcs =======================
 
@@ -364,23 +380,37 @@ static int compareReverse(const void* elem1, const void* elem2) {
 }
 
 static double* increaseCapacity(DoubleList list) {
-    list->capacity *= 2;
-    list->data = realloc(list->data, list->capacity * sizeof(double));
-    assert(list->data != NULL);
+    list->inner->capacity *= 2;
+    list->inner->data = realloc(list->inner->data, list->inner->capacity * sizeof(double));
+    assert(list->inner->data != NULL);
 
-    return list->data;
+    return list->inner->data;
 }
 
-DoubleList copyList(DoubleList dest, DoubleList from) {
-    dest = newDoubleArray(dest);
-    for (int i = 0; i < from->count; ++i) {
-        if (dest->count == dest->capacity) {
-            dest->data = increaseCapacityDouble(dest);
+static void copyList(DoubleList dest, DoubleList from) {
+    for (int i = 0; i < from->inner->count; ++i) {
+        if (dest->inner->count == dest->inner->capacity) {
+            dest->inner->data = increaseCapacity(dest);
         }
-        dest->data[i] = from->data[i];
-        dest->count++;
+        dest->inner->data[i] = from->inner->data[i];
+        dest->inner->count++;
     }
-    return dest;
+}
+
+static bool binarySearchInt(int elem, const int* arr, int high) {
+    int low, middle;
+    --high;
+    low = 0;
+    while (low <= high) {
+        middle = (low + high) / 2;
+        if (elem < arr[middle])
+            high = middle - 1;
+        else if (elem > arr[middle])
+            low = middle + 1;
+        else
+            return true;
+    }
+    return false;
 }
 
 

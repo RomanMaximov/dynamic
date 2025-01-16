@@ -31,7 +31,7 @@ bool removeAllDoubleList(DoubleList, DoubleList);
 DoubleList subtractDoubleList(DoubleList, DoubleList);
 bool isEmptyDoubleList(DoubleList);
 void reverseDoubleList(DoubleList);
-bool isEqualListsDoubleList(DoubleList, DoubleList);
+bool isEqualsDoubleList(DoubleList, DoubleList);
 DoubleList emptyIfNullDoubleList(DoubleList);
 int sizeDoubleList(DoubleList);
 string toStringDoubleList(DoubleList);

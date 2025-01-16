@@ -18,10 +18,10 @@ typedef String* string;
 typedef Itr* Iterator;
 
 
-void addStrElemList(StrList, string);
-void addAllStrElemList(StrList, StrList);
-int getStrElemList(StrList, int);
-bool setStrElemList(StrList, int, string);
+void addStrList(StrList, string);
+void addAllStrList(StrList, StrList);
+string getStrList(StrList, int);
+bool setStrList(StrList, int, string);
 int indexOfStrList(StrList, string);
 
 // toString
