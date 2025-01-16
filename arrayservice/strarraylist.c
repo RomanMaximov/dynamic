@@ -29,6 +29,11 @@ typedef String* string;
 
 // private funcs prototypes
 static String** increaseCapacity(StrList list);
+static int compare(string s1, string s2);
+static void copyList(StrList dest, StrList from);
+static void quickSort(String** strList, int low, int high);
+static void quickSortReverse(String** strList, int low, int high);
+static bool isFull(StrList list);
 
 
 
@@ -36,14 +41,14 @@ void addStrList(StrList list, string str) {
     if (list == NULL) return;
 
     if (str == NULL) {
-        if (list->inner->count == list->inner->capacity)
+        if (isFull(list))
             list->inner->data = increaseCapacity(list);
 
         list->inner->data[list->inner->count] = NULL;
         list->inner->count++;
     } else {
         string temp = stringOf(str->data);
-        if (list->inner->count == list->inner->capacity) {
+        if (isFull(list)) {
             list->inner->data = increaseCapacity(list);
             memcpy(&list->inner->data[list->inner->count], &temp, sizeof(String));
             list->inner->count++;
@@ -59,7 +64,7 @@ void addCharArrList(StrList list, char* str) {
 
     string elem = stringOf(str);
 
-    if (list->inner->count == list->inner->capacity) {
+    if (isFull(list)) {
         list->inner->data = increaseCapacity(list);
         memcpy(&list->inner->data[list->inner->count], &elem, sizeof(String));
         list->inner->count++;
@@ -75,8 +80,12 @@ void addAllStrList(StrList dest, StrList from) {
     int sizeFrom = sizeStrList(from);
     int sizeDest = sizeStrList(dest);
     if ((sizeDest + sizeFrom) > dest->inner->capacity) {
-        dest->inner->capacity += sizeFrom;
-        dest->inner->data = realloc(dest->inner->data, dest->inner->capacity * sizeof(String*));
+        int newCapacity = (sizeDest + sizeFrom) * 2;
+        dest->inner->capacity = newCapacity;
+        dest->inner->data = realloc(dest->inner->data, newCapacity * sizeof(String*));
+        for (int i = 0; i < dest->inner->capacity; ++i)
+            dest->inner->data[i] = NULL;
+
         for (int i = sizeFrom; i < sizeFrom + sizeDest; ++i) {
             dest->inner->data[i] = stringOf(from->inner->data[i]->data);
         }
@@ -117,20 +126,42 @@ bool setStrList(StrList list, int index, string str) {
     return true;
 }
 
-
-
-bool setElemCharArr(char* str, StrList list, int index) {
+bool setCharArrList(StrList list, int index, char* str) {
     if (list == NULL)
         return false;
 
-    if (index >= list->count) {
-        printf("Index %d out of bounds for length %d\n", index, list->count);
+    if (index >= list->inner->count) {
+        printf("Index %d out of bounds for length %d\n", index, list->inner->count);
         return false;
     }
 
-    list->str[index] = stringOf(str);
+    list->inner->data[index] = stringOf(str);
     return true;
 }
+
+int indexOfStrList(StrList list, string str) {
+    if (list == NULL || str == NULL)
+        return -1;
+
+    for (int i = 0; i < list->inner->count; ++i) {
+        if (list->inner->data[i] == NULL)
+            continue;
+
+        if (compare(list->inner->data[i], str) == 0)
+            return i;
+    }
+    return -1;
+}
+
+void sortStrList(StrList list) {
+    if (list == NULL || list->inner->data == NULL)
+        return;
+
+    int high = list->inner->count;
+    quickSort(list->inner->data, 0, high);
+}
+
+
 
 bool removeElemStr(StrList list, int index) {
     if (list == NULL) return false;
@@ -244,80 +275,9 @@ void deleteStrList(StrList list) {
     free(list);
 }
 
-void quickSortStr(String** strList, int low, int high)
-{
-    int i = low;
-    int j = high - 1;
-    String* temp;
-    do {
-        while (j > i) {
-            if (compareTo(strList[i], strList[j]) == 1) {
-                temp = strList[i];
-                strList[i] = strList[j];
-                strList[j] = temp;
-                ++i;
-                break;
-            }
-            --j;
-        }
-        while (i < j) {
-            if (compareTo(strList[i], strList[j]) == 1) {
-                temp = strList[i];
-                strList[i] = strList[j];
-                strList[j] = temp;
-                --j;
-                break;
-            }
-            ++i;
-        }
-    } while (i < j);
 
-    if (i < high - 1)
-        quickSortStr(strList, i + 1, high);
-    if (low < j - 1)
-        quickSortStr(strList, low, j);
-}
 
-void quickSortReverseStr(String** strList, int low, int high) {
-    int i = low;
-    int j = high - 1;
-    String* temp;
-    do {
-        while (j > i) {
-            if (compareTo(strList[i], strList[j]) == -1) {
-                temp = strList[i];
-                strList[i] = strList[j];
-                strList[j] = temp;
-                ++i;
-                break;
-            }
-            --j;
-        }
-        while (i < j) {
-            if (compareTo(strList[i], strList[j]) == -1) {
-                temp = strList[i];
-                strList[i] = strList[j];
-                strList[j] = temp;
-                --j;
-                break;
-            }
-            ++i;
-        }
-    } while (i < j);
 
-    if (i < high - 1)
-        quickSortReverseStr(strList, i + 1, high);
-    if (low < j - 1)
-        quickSortReverseStr(strList, low, j);
-}
-
-void sortStrList(StrList list) {
-    if (list == NULL)
-        return;
-
-    int high = list->count;
-    quickSortStr(list->str, 0, high);
-}
 
 void sortReverseStrList(StrList list) {
     if (list == NULL)
@@ -389,19 +349,7 @@ bool isEqualStrLists(StrList list1, StrList list2) {
     return true;
 }
 
-int indexOfStrList(StrList list, string str) {
-    if (list == NULL)
-        return -1;
 
-    for (int i = 0; i < list->count; ++i) {
-        if (list->str[i] == NULL)
-            continue;
-
-        if (compareTo(list->str[i], str) == 0)
-            return i;
-    }
-    return -1;
-}
 
 StrList emptyIfNullStr(StrList list) {
     return list == NULL ? newStrArray(list) : list;
@@ -442,7 +390,7 @@ StrList subtractStr(StrList list1, StrList list2) {
     for (int i = 0; i < copyList->count; ++i) {
         if (copyList->str[i] != NULL) {
             if (temp->count == temp->capacity) {
-                temp->str = increaseCapacityStr(temp);
+                temp->str = increaseCapacity(temp);
             }
             temp->str[index++] = stringOf(copyList->str[i]->data);
             temp->count++;
@@ -452,30 +400,109 @@ StrList subtractStr(StrList list1, StrList list2) {
     return temp;
 }
 
-StrList copyStrList(StrList dest, StrList from) {
-    dest = newStrArray(dest);
-    for (int i = 0; i < from->count; ++i) {
-        if (dest->count == dest->capacity) {
-            //dest->str = increaseCapacityStr(dest);
-        }
-        dest->str[i] = stringOf(from->str[i]->data);
-        dest->count++;
-    }
-    return dest;
-}
+// ===================== private funcs =======================
 
 static String** increaseCapacity(StrList list) {
-    int oldSize = list->count;
-    list->capacity *= 2;
-    String** temp = list->str;
-    list->str = malloc(list->capacity * sizeof(String*));
-    assert(list->str != NULL);
+    int oldSize = list->inner->count;
+    list->inner->capacity *= 2;
 
-    for (int i = 0; i < list->count; ++i) {
-        memcpy(&list->str[i], &temp[i], sizeof(String));
+    String** temp = list->inner->data;
+    list->inner->data = malloc(list->inner->capacity * sizeof(String*));
+    assert(list->inner->data != NULL);
+
+    for (int i = 0; i < list->inner->capacity; ++i)
+        list->inner->data[i] = NULL;
+
+    for (int i = 0; i < list->inner->count; ++i) {
+        memcpy(&list->inner->data[i], &temp[i], sizeof(String));
     }
 
-    memset(list->str + oldSize, 0xAB, (list->capacity - oldSize) * sizeof(String*));
+    return list->inner->data;
+}
 
-    return list->str;
+static int compare(string s1, string s2) {
+    int result = strcmp(s1->data, s2->data);
+    return result;
+}
+
+static void copyList(StrList dest, StrList from) {
+    for (int i = 0; i < from->inner->count; ++i) {
+        if (isFull(dest)) {
+            dest->inner->data = increaseCapacity(dest);
+        }
+
+        dest->inner->data[i] = stringOf(from->inner->data[i]->data);
+        dest->inner->count++;
+    }
+}
+
+static void quickSort(String** strList, int low, int high)
+{
+    int i = low;
+    int j = high - 1;
+    String* temp;
+    do {
+        while (j > i) {
+            if (compare(strList[i], strList[j]) == 1) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
+                ++i;
+                break;
+            }
+            --j;
+        }
+        while (i < j) {
+            if (compare(strList[i], strList[j]) == 1) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
+                --j;
+                break;
+            }
+            ++i;
+        }
+    } while (i < j);
+
+    if (i < high - 1)
+        quickSort(strList, i + 1, high);
+    if (low < j - 1)
+        quickSort(strList, low, j);
+}
+
+static void quickSortReverse(String** strList, int low, int high) {
+    int i = low;
+    int j = high - 1;
+    String* temp;
+    do {
+        while (j > i) {
+            if (compare(strList[i], strList[j]) == -1) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
+                ++i;
+                break;
+            }
+            --j;
+        }
+        while (i < j) {
+            if (compare(strList[i], strList[j]) == -1) {
+                temp = strList[i];
+                strList[i] = strList[j];
+                strList[j] = temp;
+                --j;
+                break;
+            }
+            ++i;
+        }
+    } while (i < j);
+
+    if (i < high - 1)
+        quickSortReverse(strList, i + 1, high);
+    if (low < j - 1)
+        quickSortReverse(strList, low, j);
+}
+
+static bool isFull(StrList list) {
+    return list->inner->count > list->inner->capacity / 5 * 4;
 }

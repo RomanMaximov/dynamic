@@ -50,8 +50,10 @@ void addAllIntList(IntList dest, IntList from) {
     int sizeDest = sizeIntList(dest);
 
     if ((sizeDest + sizeFrom) > dest->inner->capacity) {
-        dest->inner->capacity += sizeFrom;
-        dest->inner->data = realloc(dest->inner->data, dest->inner->capacity * sizeof(int));
+        int newCapacity = (sizeDest + sizeFrom) * 2;
+        dest->inner->capacity = newCapacity;
+        dest->inner->data = realloc(dest->inner->data, newCapacity * sizeof(int));
+
         memcpy(&dest->inner->data[dest->inner->count], from->inner->data, sizeFrom * sizeof(int));
         dest->inner->count += sizeFrom;
     } else {
@@ -375,7 +377,7 @@ static bool hasNext(Iterator iter) {
 // ===================== private funcs =======================
 
 static int* increaseCapacity(IntList list) {
-    list->inner->capacity *= 2;;
+    list->inner->capacity *= 2;
     list->inner->data = realloc(list->inner->data, list->inner->capacity * sizeof(int));
     assert(list->inner->data != NULL);
 

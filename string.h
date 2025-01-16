@@ -8,7 +8,6 @@
 #define STRING_H
 
 #include <stdbool.h>
-#include "dynamicarray.h"
 //#include "dynamic.h"
 
 

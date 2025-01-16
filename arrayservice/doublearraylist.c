@@ -52,8 +52,10 @@ void addAllDoubleList(DoubleList dest, DoubleList from) {
     int sizeDest = sizeDoubleList(dest);
 
     if ((sizeDest + sizeFrom) > dest->inner->capacity) {
-        dest->inner->capacity += sizeFrom;
-        dest->inner->data = realloc(dest->inner->data, dest->inner->capacity * sizeof(double));
+        int newCapacity = (sizeDest + sizeFrom) * 2;
+        dest->inner->capacity = newCapacity;
+        dest->inner->data = realloc(dest->inner->data, newCapacity * sizeof(double));
+
         memcpy(&dest->inner->data[dest->inner->count], from->inner->data, sizeFrom * sizeof(double));
         dest->inner->count += sizeFrom;
     } else {

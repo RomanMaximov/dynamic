@@ -26,7 +26,7 @@ typedef struct StringArray {
 
 // prototypes
 static String** increaseCapacity(StringList list);
-
+static int compareTo(string s1, string s2);
 
 // funcs
 string stringOf(char* s) {
@@ -67,7 +67,7 @@ int length(string s) {
     return s->count;
 }
 
-int compareTo(string s1, string s2) {
+static int compareTo(string s1, string s2) {
     int result = strcmp(s1->data, s2->data);
     return result;
 }

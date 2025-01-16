@@ -247,7 +247,7 @@ StrList listOfStr(StrList temp, int paramCount, ...) {
 static void* add(Type type) {
     switch (type) {
         case INT_LIST:
-            return addIntElemList;
+            return addIntList;
         /*case DOUBLE_LIST:
             return addDoubleElemList;
         case STR_LIST:
