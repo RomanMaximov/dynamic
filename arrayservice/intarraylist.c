@@ -115,10 +115,12 @@ void sortIntListReverse(IntList list) {
 }
 
 void clearIntList(IntList list) {
-    if (list == NULL) return;
+    if (isEmptyIntList(list))
+        return;
 
     free(list->inner->data);
     list->inner->count = 0;
+    list->inner->capacity = 20;
     list->inner->data = malloc(list->inner->capacity * sizeof(int));
 }
 

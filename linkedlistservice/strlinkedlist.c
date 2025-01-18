@@ -173,7 +173,7 @@ void sortStrLL(StrLinkedList list) {
     StrNode temp = list->inner->begin;
     int index = 0;
     while (current != NULL) {
-        addStrElemList(strList, current->data);
+        addStrList(strList, current->data);
         current = current->next;
     }
 
@@ -246,7 +246,7 @@ void clearStrLL(StrLinkedList list) {
 }
 
 bool containsStrLL(StrLinkedList list, string s) {
-    if (list == NULL) return false;
+    if (list == NULL || isEmptyStr(s)) return false;
 
     StrNode current = list->inner->begin;
     while (current != NULL) {

@@ -32,7 +32,7 @@ void clearStrList(StrList);
 bool containsStrList(StrList, string);
 bool containsAllStrList(StrList, StrList);
 bool containsAnyStrList(StrList, StrList);
-bool removeStrList(StrList, string);
+bool removeStrList(StrList, int);
 bool removeAllStrList(StrList, StrList);
 StrList subtractStrList(StrList, StrList);
 bool isEmptyStrList(StrList);

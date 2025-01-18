@@ -15,6 +15,7 @@ typedef struct String {
     int count;
     char* data;
     int capacity;
+    void (*add)(struct String* list, int number);
 } String;
 
 typedef struct StringArray {

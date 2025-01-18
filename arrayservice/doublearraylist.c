@@ -121,6 +121,7 @@ void clearDoubleList(DoubleList list) {
         return;
 
     list->inner->count = 0;
+    list->inner->capacity = 20;
     free(list->inner->data);
     list->inner->data = malloc(list->inner->count * sizeof(double));
 }
