@@ -1,7 +1,6 @@
 #ifndef TESTARRAY_H
 #define TESTARRAY_H
 
-#include"dynamicarray.h"
 
 #define true 1
 #define false 0
@@ -20,10 +19,10 @@
     unsigned int : assertInt(T, V) \
 )
 
-void assertInt(unsigned int result, unsigned int nominal);
+/*void assertInt(unsigned int result, unsigned int nominal);
 void assertDouble(double , double);
 void assertNotNullInt(IntList);
-void assertNotNullDouble(DoubleList);
+void assertNotNullDouble(DoubleList);*/
 void test();
 
 

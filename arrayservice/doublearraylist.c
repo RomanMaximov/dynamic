@@ -64,7 +64,7 @@ void addAllDoubleList(DoubleList dest, DoubleList from) {
     }
 }
 
-double getElemDoubleList(DoubleList list, int index) {
+double getDoubleList(DoubleList list, int index) {
     if (list == NULL) {
         puts("Error: List is null.");
         return EXIT_FAILURE;
@@ -78,7 +78,7 @@ double getElemDoubleList(DoubleList list, int index) {
     return list->inner->data[index];
 }
 
-bool  setElemDoubleList(DoubleList list, int index, double num) {
+bool  setDoubleList(DoubleList list, int index, double num) {
     if (list == NULL)
         return false;
 

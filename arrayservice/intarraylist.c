@@ -225,7 +225,7 @@ bool removeAllIntList(IntList list1, IntList list2) {
     return true;
 }
 
-IntList subtractInt(IntList list1, IntList list2) {
+IntList subtractIntList(IntList list1, IntList list2) {
     if (isEmptyIntList(list1)) {
         IntList temp = NULL;
         return newIntList(temp);

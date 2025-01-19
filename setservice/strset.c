@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "string.h"
 #include "strset.h"
-#include "../arrayList.h"
 
 typedef struct NodeStr {
     string str;
@@ -43,7 +43,8 @@ typedef ArrayListStr* StrList;
 // prototypes private funcs
 static StrNode createNode(char* s);
 static int hashString(const char* str);
-static int compareStr(char* s1, char* s2);
+static int compareCharStr(char* s1, char* s2);
+static int compareStr(string s1, string s2);
 static void insertNode(NodeStr** node, char* s, int* counter);
 static void printInOrder(StrNode node, int* counter);
 static bool isCapacityFull(StrSet set);
@@ -207,7 +208,7 @@ bool isEqualsStrSet(StrSet set1, StrSet set2) {
     toListAndSort(set2, list2);
 
     for (int i = 0; i < set1->inner->count; ++i) {
-        if (compareStr(list1->inner->str[i]->data, list2->inner->str[i]->data) != 0)
+        if (compareCharStr(list1->inner->str[i]->data, list2->inner->str[i]->data) != 0)
             return false;
     }
 
@@ -330,7 +331,7 @@ static void setToArr(StrSet set, StrList list) {
 static void copyValuesToList(StrNode node, StrList list) {
     if (node != NULL) {
         copyValuesToList(node->left, list);
-        addCharArrElemList(list, node->str->data);
+        addCharArrList(list, node->str->data);
         copyValuesToList(node->right, list);
     }
 }
@@ -340,7 +341,7 @@ static void insertNode(NodeStr** node, char* s, int* counter) {
         *node = createNode(s);
         (*counter)++;
     } else {
-        int cmp = compareStr(s, (*node)->str->data);
+        int cmp = compareCharStr(s, (*node)->str->data);
         if (cmp == 0) {
             return;
         } else if (cmp < 0) {
@@ -378,14 +379,18 @@ static void deleteInOrder(StrNode node) {
     free(node);
 }
 
-int compareStr(char* s1, char* s2) {
+int compareCharStr(char* s1, char* s2) {
     return strcmp(s1, s2);
+}
+
+int compareStr(string s1, string s2) {
+    return strcmp(s1->data, s2->data);
 }
 
 static bool isContains(StrNode node, string s) {
     if (node != NULL) {
         isContains(node->left, s);
-        if (compareStr(node->str->data, s->data) == 0)
+        if (compareCharStr(node->str->data, s->data) == 0)
             return true;
         isContains(node->right, s);
     }
@@ -403,7 +408,7 @@ static void quickSortStr(String** strList, int low, int high) {
     String* temp;
     do {
         while (j > i) {
-            if (compareTo(strList[i], strList[j]) > 0) {
+            if (compareStr(strList[i], strList[j]) > 0) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;
@@ -413,7 +418,7 @@ static void quickSortStr(String** strList, int low, int high) {
             --j;
         }
         while (i < j) {
-            if (compareTo(strList[i], strList[j]) > 0) {
+            if (compareStr(strList[i], strList[j]) > 0) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;
@@ -436,9 +441,9 @@ static bool binarySearch(string s, String** strList, int high) {
     low = 0;
     while (low <= high) {
         middle = (low + high) / 2;
-        if (compareTo(s, strList[middle]) < 0)
+        if (compareStr(s, strList[middle]) < 0)
             high = middle - 1;
-        else if (compareTo(s, strList[middle]) > 0)
+        else if (compareStr(s, strList[middle]) > 0)
             low = middle + 1;
         else
             return true;
@@ -450,7 +455,7 @@ static void removeNode(StrNode* node, StrNode* previous, string s, bool* found) 
     if (*found) return;
 
     if (*node != NULL && *previous != NULL) {
-        if (compareStr(s->data, (*node)->str->data) == 0) {
+        if (compareCharStr(s->data, (*node)->str->data) == 0) {
             if ((*node)->right == NULL && (*node)->left == NULL) {
                 if (isRoot(node, previous)) {
                     StrNode temp = *node;
@@ -540,7 +545,7 @@ static StrNode findNode(StrNode* node, StrNode* previous) {
 }
 
 static bool isRoot(StrNode* node, StrNode* previous) {
-    return compareStr((*node)->str->data, (*previous)->str->data) == 0;
+    return compareCharStr((*node)->str->data, (*previous)->str->data) == 0;
 }
 
 static  void printInOrder(StrNode node, int* counter) {

@@ -19,13 +19,11 @@ typedef Itr* Iterator;
 
 
 void addStrList(StrList, string);
+void addCharArrList(StrList list, char* str);
 void addAllStrList(StrList, StrList);
 string getStrList(StrList, int);
 bool setStrList(StrList, int, string);
 int indexOfStrList(StrList, string);
-
-// toString
-
 void sortStrList(StrList);
 void sortStrListReverse(StrList);
 void clearStrList(StrList);
@@ -37,9 +35,10 @@ bool removeAllStrList(StrList, StrList);
 StrList subtractStrList(StrList, StrList);
 bool isEmptyStrList(StrList);
 void reverseStrList(StrList);
-bool isEqualListsStrList(StrList, StrList);
+bool isEqualsStrList(StrList, StrList);
 StrList emptyIfNullStrList(StrList);
 int sizeStrList(StrList);
+string toStringStrList(StrList list);
 Iterator iteratorStrList(StrList);
 
 void printStrList(StrList);

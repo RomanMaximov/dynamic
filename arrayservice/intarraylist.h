@@ -8,11 +8,13 @@
 #define INTARRAYLIST_H
 
 #include "../arraylist.h"
+#include "../string.h"
 
 typedef struct ArrayListInt ArrayListInt;
 typedef struct Itr Itr;
 typedef ArrayListInt* IntList;
 typedef Itr* Iterator;
+typedef struct String* string;
 
 
 void addIntList(IntList, int);

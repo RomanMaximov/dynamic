@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include"testarray.h"
+#include"arraylist.h"
 
 
 void test() {
@@ -54,7 +55,7 @@ void assertInt(unsigned int result, unsigned int nominal) {
         printf("test: \t%sFAILURE%s\n", RED, RESET);
 }
 
-void assertNotNullInt(IntArray* arr) {
+void assertNotNullInt(IntList arr) {
     if (arr != NULL)
         printf("test: \t%sOK%s\n", GREEN, RESET);
     else

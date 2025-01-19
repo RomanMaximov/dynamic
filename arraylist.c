@@ -31,7 +31,7 @@ typedef struct InnerDoubleList {
 // ArrayList data encapsulation
 typedef struct InnerStrList {
     int count;
-    String** str;
+    String** data;
     int capacity;
 } InnerStrList;
 
@@ -164,9 +164,9 @@ StrList newStrList(StrList temp) {
     list->inner = malloc(sizeof(InnerStrList));
     list->inner->count = 0;
     list->inner->capacity = 20;
-    list->inner->str = malloc(list->inner->capacity * sizeof(String*));
+    list->inner->data = malloc(list->inner->capacity * sizeof(String*));
     for (int i = 0; i < list->inner->capacity; ++i)
-        list->inner->str[i] = NULL;
+        list->inner->data[i] = NULL;
 
     initFuncs(STR_LIST, (void*)list);
 
@@ -248,56 +248,56 @@ static void* add(Type type) {
     switch (type) {
         case INT_LIST:
             return addIntList;
-        /*case DOUBLE_LIST:
-            return addDoubleElemList;
+        case DOUBLE_LIST:
+            return addDoubleList;
         case STR_LIST:
-            return addStrElemList;
+            return addStrList;
         default:
-            return NULL;*/
+            return NULL;
     }
 }
 
 static void* addAll(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
-            return addAllIntElemList;
+            return addAllIntList;
         case DOUBLE_LIST:
-            return addAllDoubleElemList;
+            return addAllDoubleList;
         case STR_LIST:
-            return addAllStrElemList;
+            return addAllStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* get(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
-            return getIntElemList;
+            return getIntList;
         case DOUBLE_LIST:
-            return getDoubleElemList;
+            return getDoubleList;
         case STR_LIST:
-            return getStrElemList;
+            return getStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* set(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
-            return setIntElemList;
+            return setIntList;
         case DOUBLE_LIST:
-            return setDoubleElemList;
+            return setDoubleList;
         case STR_LIST:
-            return setStrElemList;
+            return setStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* indexOf(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return indexOfIntList;
         case DOUBLE_LIST:
@@ -306,11 +306,11 @@ static void* indexOf(Type type) {
             return indexOfStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* sort(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return sortIntList;
         case DOUBLE_LIST:
@@ -319,11 +319,11 @@ static void* sort(Type type) {
             return sortStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* sortReverse(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return sortIntListReverse;
         case DOUBLE_LIST:
@@ -332,11 +332,11 @@ static void* sortReverse(Type type) {
             return sortStrListReverse;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* clear(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return clearIntList;
         case DOUBLE_LIST:
@@ -345,11 +345,11 @@ static void* clear(Type type) {
             return clearStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* contains(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return containsIntList;
         case DOUBLE_LIST:
@@ -358,11 +358,11 @@ static void* contains(Type type) {
             return containsStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* containsAll(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return containsAllIntList;
         case DOUBLE_LIST:
@@ -371,11 +371,11 @@ static void* containsAll(Type type) {
             return containsAllStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* containsAny(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return containsAnyIntList;
         case DOUBLE_LIST:
@@ -384,11 +384,11 @@ static void* containsAny(Type type) {
             return containsAnyStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* removeElem(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return removeIntList;
         case DOUBLE_LIST:
@@ -397,11 +397,11 @@ static void* removeElem(Type type) {
             return removeStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* removeAll(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return removeAllIntList;
         case DOUBLE_LIST:
@@ -410,11 +410,11 @@ static void* removeAll(Type type) {
             return removeAllStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* subtract(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return subtractIntList;
         case DOUBLE_LIST:
@@ -423,11 +423,11 @@ static void* subtract(Type type) {
             return subtractStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* isEmpty(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return isEmptyIntList;
         case DOUBLE_LIST:
@@ -436,11 +436,11 @@ static void* isEmpty(Type type) {
             return isEmptyStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* reverse(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return reverseIntList;
         case DOUBLE_LIST:
@@ -449,11 +449,11 @@ static void* reverse(Type type) {
             return reverseStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* isEquals(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return isEqualsIntList;
         case DOUBLE_LIST:
@@ -462,11 +462,11 @@ static void* isEquals(Type type) {
             return isEqualsStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* emptyIfNull(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return emptyIfNullIntList;
         case DOUBLE_LIST:
@@ -475,11 +475,11 @@ static void* emptyIfNull(Type type) {
             return emptyIfNullStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* size(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return sizeIntList;
         case DOUBLE_LIST:
@@ -488,20 +488,20 @@ static void* size(Type type) {
             return sizeStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void* iterator(Type type) {
-    /*switch (type) {
+    switch (type) {
         case INT_LIST:
             return iteratorIntList;
         case DOUBLE_LIST:
-            //return iteratorDoubleList;
+            return iteratorDoubleList;
         case STR_LIST:
-            //return iteratorStrList;
+            return iteratorStrList;
         default:
             return NULL;
-    }*/
+    }
 }
 
 static void initFuncs(Type type, void* data) {

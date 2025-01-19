@@ -29,20 +29,18 @@
 #define DYNAMIC_H
 
 #include <stdbool.h>
-#include "dynamicarray.h"
 #include "string.h"
 #include "linkedlist.h"
+#include "arraylist.h"
 #include "set.h"
 
 
 typedef struct LinkedListInt LinkedListInt;
 typedef struct NodeInt NodeInt;
-typedef struct IntArray IntArray;
-typedef struct DoubleArray DoubleArray;
+typedef struct ArrayListInt ArrayListInt;
+typedef struct ArrayListDouble ArrayListDouble;
 typedef struct String String;
-typedef struct StringArray StringArray;
-typedef struct StrStrTree StrStrTree;
-typedef struct StrStrTreeMap StrStrTreeMap;
+typedef struct ArrayListStr ArrayListStr;
 
 
 /**
@@ -122,9 +120,9 @@ typedef struct StrStrTreeMap StrStrTreeMap;
 )(T)
 
 #define indexOf(T, V) _Generic((T), \
-    DoubleList : indexOfDouble,\
-    IntList : indexOfInt, \
-    StringList : indexOfStrList,    \
+    DoubleList : indexOfDoubleList,\
+    IntList : indexOfIntList, \
+    StrList : indexOfStrList,    \
     string : indexOfStr  \
 )(T, V)
 

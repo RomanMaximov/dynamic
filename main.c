@@ -8,29 +8,6 @@
 //#include "map.h"
 
 
-// Простая хэш-функция для строк (алгоритм djb2)
-int hashString(const char* str) {
-    unsigned long hash = 5381;
-    int c;
-
-    while ((c = *str++)) {
-        hash = ((hash << 5) + hash) + c;  // hash * 33 + c
-    }
-
-    return hash;
-}
-
-unsigned long hashDouble(double value) {
-    // Для хранения битового представления double используем 64-битный целочисленный тип
-    uint64_t intRepresentation;
-
-    // Копируем биты double в 64-битное целое число
-    memcpy(&intRepresentation, &value, sizeof(double));
-
-    // Используем это 64-битное число как хэш
-    return (unsigned long)(intRepresentation ^ (intRepresentation >> 32));
-}
-
 int main()
 {
 
@@ -188,11 +165,6 @@ int main()
     string s4 = join("-", 3, s2, s3, s2);
     printString(s4);
 
-    char temp[1];
-    StringList stringList = listOfStrLiteral(stringList, temp, 9, "web", "cam", "bob", "g7", "acr", "web", "cat", "a1", "cat");
-    printArrayString(stringList);
-    sortStrList(stringList);
-    printArrayString(stringList);
 
     //printf("ch = %c\n", charAt(s2, 4));
     string sub = stringOf("See");

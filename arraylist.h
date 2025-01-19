@@ -45,7 +45,7 @@ typedef struct ArrayListInt {
     bool (*isEquals)(struct ArrayListInt* list1, struct ArrayListInt* list2);
     struct ArrayListInt* (*emptyIfNull)(struct ArrayListInt* list);
     int (*size)(struct ArrayListInt* list);
-    string (*toString)(struct ArrayListInt* list);
+    struct String* (*toString)(struct ArrayListInt* list);
     struct Itr* (*iterator)(struct ArrayListInt* list);
     //void (*printList)(struct ArrayListInt* list);
     //void (*deleteList)(struct ArrayListInt* list);
@@ -73,7 +73,7 @@ typedef struct ArrayListDouble {
     bool (*isEquals)(struct ArrayListDouble* list1, struct ArrayListDouble* list2);
     struct ArrayListDouble* (*emptyIfNull)(struct ArrayListDouble* list);
     int (*size)(struct ArrayListDouble* list);
-    string (*toString)(struct ArrayListDouble* list);
+    struct String* (*toString)(struct ArrayListDouble* list);
     struct Itr* (*iterator)(struct ArrayListDouble* list);
     //void (*printList)(struct ArrayListInt* list);
     //void (*deleteList)(struct ArrayListInt* list);
@@ -82,28 +82,29 @@ typedef struct ArrayListDouble {
 typedef struct ArrayListStr {
     struct InnerStrList* inner;   // private field
     // funcs pointers
-    void (*add)(struct ArrayListStr* list, string s);
-    void (*addAll)(struct ArrayListInt* list1, struct ArrayListInt* list2);
-    int (*get)(struct ArrayListInt* list, int index);
-    bool (*set)(struct ArrayListInt* list, int index, int number);
-    int (*indexOf)(struct ArrayListInt* list, int number);
-    void (*sort)(struct ArrayListInt* list);
-    void (*sortReverse)(struct ArrayListInt* list);
-    void (*clear)(struct ArrayListInt* list);
-    bool (*contains)(struct ArrayListInt* list, int number);
-    bool (*containsAll)(struct ArrayListInt* list1, struct ArrayListInt* list2);
-    bool (*containsAny)(struct ArrayListInt* list1, struct ArrayListInt* list2);
-    bool (*removeElem)(struct ArrayListInt* list, int number);
-    bool (*removeAll)(struct ArrayListInt* list1, struct ArrayListInt* list2);
-    struct ArrayListInt* (*subtract)(struct ArrayListInt* list1, struct ArrayListInt* list2);
-    bool (*isEmpty)(struct ArrayListInt* list);
-    void (*reverse)(struct ArrayListInt* list);
-    bool (*isEquals)(struct ArrayListInt* list1, struct ArrayListInt* list2);
-    struct ArrayListInt* (*emptyIfNull)(struct ArrayListInt* list);
-    int (*size)(struct ArrayListInt* list);
-    struct Itr* (*iterator)(struct ArrayListInt* list);
-    //void (*printList)(struct ArrayListInt* list);
-    //void (*deleteList)(struct ArrayListInt* list);
+    void (*add)(struct ArrayListStr* list, struct String* s);
+    void (*addAll)(struct ArrayListStr* list1, struct ArrayListStr* list2);
+    struct String* (*get)(struct ArrayListStr* list, int index);
+    bool (*set)(struct ArrayListStr* list, int index, struct String* s);
+    int (*indexOf)(struct ArrayListStr* list, struct String* s);
+    void (*sort)(struct ArrayListStr* list);
+    void (*sortReverse)(struct ArrayListStr* list);
+    void (*clear)(struct ArrayListStr* list);
+    bool (*contains)(struct ArrayListStr* list, struct String* s);
+    bool (*containsAll)(struct ArrayListStr* list1, struct ArrayListStr* list2);
+    bool (*containsAny)(struct ArrayListStr* list1, struct ArrayListStr* list2);
+    bool (*removeElem)(struct ArrayListStr* list, int number);
+    bool (*removeAll)(struct ArrayListStr* list1, struct ArrayListStr* list2);
+    struct ArrayListStr* (*subtract)(struct ArrayListStr* list1, struct ArrayListStr* list2);
+    bool (*isEmpty)(struct ArrayListStr* list);
+    void (*reverse)(struct ArrayListStr* list);
+    bool (*isEquals)(struct ArrayListStr* list1, struct ArrayListStr* list2);
+    struct ArrayListStr* (*emptyIfNull)(struct ArrayListStr* list);
+    int (*size)(struct ArrayListStr* list);
+    struct String* (*toString)(struct ArrayListStr* list);
+    struct Itr* (*iterator)(struct ArrayListStr* list);
+    //void (*printList)(struct ArrayListStr* list);
+    //void (*deleteList)(struct ArrayListStr* list);
 } ArrayListStr;
 
 

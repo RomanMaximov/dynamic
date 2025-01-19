@@ -6,8 +6,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "strlinkedlist.h"
-#include "../arraylist.h"
 
 // structures
 typedef struct NodeStr {
@@ -52,6 +52,7 @@ static void deleteFirstNodeStr(StrLinkedList list, StrNode current);
 static void deleteNodeStr(StrLinkedList list, StrNode current, StrNode previous);
 static void copyLLToStrList(StrLinkedList strLL, StrList strList);
 static StrLinkedList copyStrLL(StrLinkedList list);
+static int compareStr(string s1, string s2);
 
 
 // funcs
@@ -193,7 +194,7 @@ void sortStrLLReverse(StrLinkedList list) {
     StrNode temp = list->inner->begin;
     int index = 0;
     while (current != NULL) {
-        addStrElemList(strList, current->data);
+        addStrList(strList, current->data);
         current = current->next;
     }
 
@@ -214,7 +215,7 @@ int indexOfStrLL(StrLinkedList list, string s) {
     StrNode current = list->inner->begin;
     int index = 0;
     while (current != NULL) {
-        if (compareTo(s, current->data) == 1)
+        if (compareStr(s, current->data) == 1)
             return index;
 
         current = current->next;
@@ -250,7 +251,7 @@ bool containsStrLL(StrLinkedList list, string s) {
 
     StrNode current = list->inner->begin;
     while (current != NULL) {
-        if (compareTo(s, current->data) == 1)
+        if (compareStr(s, current->data) == 1)
             return true;
 
         current = current->next;
@@ -266,7 +267,7 @@ bool containsAllStrLL(StrLinkedList list1, StrLinkedList list2) {
     StrNode current2 = list2->inner->begin;
 
     while (current != NULL) {
-        addStrElemList(tempList, current->data);
+        addStrList(tempList, current->data);
         current = current->next;
     }
 
@@ -293,7 +294,7 @@ bool containsAnyStrLL(StrLinkedList list1, StrLinkedList list2) {
     StrNode current2 = list2->inner->begin;
 
     while (current != NULL) {
-        addStrElemList(tempList, current->data);
+        addStrList(tempList, current->data);
         current = current->next;
     }
 
@@ -354,7 +355,7 @@ bool removeAllStrLL(StrLinkedList list1, StrLinkedList list2) {
     while (current2 != NULL) {
         bool isExist = binarySearchStr(current2->data, tempForBS->inner->str, listSize);
         if (isExist)
-            addStrElemList(filtered, current2->data);
+            addStrList(filtered, current2->data);
 
         current2 = current2->next;
     }
@@ -399,7 +400,7 @@ StrLinkedList subtractStrLL(StrLinkedList list1, StrLinkedList list2) {
     while (current2 != NULL) {
         bool isExist = binarySearchStr(current2->data, tempForBS->inner->str, listSize);
         if (isExist)
-            addStrElemList(filtered, current2->data);
+            addStrList(filtered, current2->data);
 
         current2 = current2->next;
     }
@@ -458,7 +459,7 @@ bool isEqualListsStrLL(StrLinkedList list1, StrLinkedList list2) {
     StrNode current2 = list2->inner->begin;
 
     while (current1 != NULL) {
-        if (compareTo(current1->data, current2->data) != 0)
+        if (compareStr(current1->data, current2->data) != 0)
             return false;
 
         current1 = current1->next;
@@ -587,7 +588,7 @@ static void quickSortStr(String** strList, int low, int high) {
     String* temp;
     do {
         while (j > i) {
-            if (compareTo(strList[i], strList[j]) > 0) {
+            if (compareStr(strList[i], strList[j]) > 0) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;
@@ -597,7 +598,7 @@ static void quickSortStr(String** strList, int low, int high) {
             --j;
         }
         while (i < j) {
-            if (compareTo(strList[i], strList[j]) > 0) {
+            if (compareStr(strList[i], strList[j]) > 0) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;
@@ -620,7 +621,7 @@ static void quickSortStr(String** strList, int low, int high) {
     String* temp;
     do {
         while (j > i) {
-            if (compareTo(strList[i], strList[j]) == -1) {
+            if (compareStr(strList[i], strList[j]) == -1) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;
@@ -630,7 +631,7 @@ static void quickSortStr(String** strList, int low, int high) {
             --j;
         }
         while (i < j) {
-            if (compareTo(strList[i], strList[j]) == -1) {
+            if (compareStr(strList[i], strList[j]) == -1) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;
@@ -653,9 +654,9 @@ static bool binarySearchStr(string s, String** strList, int high) {
     low = 0;
     while (low <= high) {
         middle = (low + high) / 2;
-        if (compareTo(s, strList[middle]) < 0)
+        if (compareStr(s, strList[middle]) < 0)
             high = middle - 1;
-        else if (compareTo(s, strList[middle]) > 0)
+        else if (compareStr(s, strList[middle]) > 0)
             low = middle + 1;
         else
             return true;
@@ -674,7 +675,7 @@ static void fillNodeStr(StrNode node, char* s, int* index) {
 static void copyLLToStrList(StrLinkedList strLL, StrList strList) {
     StrNode current = strLL->inner->begin;
     while (current != NULL) {
-        addStrElemList(strList, current->data);
+        addStrList(strList, current->data);
         current = current->next;
     }
 }
@@ -688,4 +689,9 @@ static StrLinkedList copyStrLL(StrLinkedList list) {
         current = current->next;
     }
     return temp;
+}
+
+static int compareStr(string s1, string s2) {
+    int result = strcmp(s1->data, s2->data);
+    return result;
 }

@@ -4,7 +4,6 @@ project(DynamicCollection C)
 set(CMAKE_C_STANDARD 17)
 
 add_executable(DynamicCollection main.c
-        dynamicarray.c
         string.c
         linkedlist.c
         testarray.c

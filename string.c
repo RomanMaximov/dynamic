@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "string.h"
+#include "arraylist.h"
 
 // structures
 typedef struct String {
@@ -18,15 +19,18 @@ typedef struct String {
     void (*add)(struct String* list, int number);
 } String;
 
-typedef struct StringArray {
+// ArrayList data encapsulation
+typedef struct InnerStrList {
     int count;
-    String** str;
+    String** data;
     int capacity;
-} StringArray;
+} InnerStrList;
+
+//typedef ArrayListStr* StrList;
 
 
 // prototypes
-static String** increaseCapacity(StringList list);
+static String** increaseCapacity(StrList list);
 static int compareTo(string s1, string s2);
 
 // funcs
@@ -385,8 +389,8 @@ int indexOfSubStr(string str, string sub) {
     return -1;
 }
 
-StringList split(string s, char delimeter) {
-    StringList list = newStrArray(list);
+StrList split(string s, char delimeter) {
+    StrList list = newStrList(list);
 
     char* text = s->data;
     char* current = text;
@@ -419,27 +423,27 @@ StringList split(string s, char delimeter) {
     int tempIndex = 0;
 
     char ch[maxStringSize];
-    unsigned long long int dataSize;
+    int dataSize;
 
     while(*text != '\0') {
         if (*text != delimeter) {
             ch[tempIndex] = *text;
             ++tempIndex;
         } else {
-            if (list->count == list->capacity) {
-                list->str = increaseCapacity(list);
+            if (list->inner->count == list->inner->capacity) {
+                list->inner->data = increaseCapacity(list);
             }
 
             ch[tempIndex] = '\0';
             dataSize = strlen(ch);
             // данные строки
-            list->str[index] = malloc(sizeof(String));
-            list->str[index]->data = malloc((dataSize + 1) * sizeof(char));
-            list->str[index]->count = dataSize;
-            list->str[index]->capacity = dataSize;
+            list->inner->data[index] = malloc(sizeof(String));
+            list->inner->data[index]->data = malloc((dataSize + 1) * sizeof(char));
+            list->inner->data[index]->count = dataSize;
+            list->inner->data[index]->capacity = dataSize;
 
-            strcpy(list->str[index]->data, ch);
-            list->count++;
+            strcpy(list->inner->data[index]->data, ch);
+            list->inner->count++;
             tempIndex = 0;
             ++index;
         }
@@ -447,29 +451,29 @@ StringList split(string s, char delimeter) {
         ++text;
     }
 
-    if (list->count == list->capacity) {
-        list->str = increaseCapacity(list);
+    if (list->inner->count == list->inner->capacity) {
+        list->inner->data = increaseCapacity(list);
     }
 
     ch[tempIndex] = '\0';
     dataSize = strlen(ch);
-    list->str[index] = malloc(sizeof(String));
-    list->str[index]->data = malloc((dataSize + 1) * sizeof(char));
-    list->str[index]->count = dataSize;
-    list->str[index]->capacity = dataSize;
+    list->inner->data[index] = malloc(sizeof(String));
+    list->inner->data[index]->data = malloc((dataSize + 1) * sizeof(char));
+    list->inner->data[index]->count = dataSize;
+    list->inner->data[index]->capacity = dataSize;
 
-    strcpy(list->str[index]->data, ch);
-    list->count++;
+    strcpy(list->inner->data[index]->data, ch);
+    list->inner->count++;
 
     return list;
 }
 
-string joinStrList(char* delimeter, StringList list) {
+string joinStrList(char* delimeter, StrList list) {
     int count = 0;
     int letterCounter = 0;
 
-    for (int i = 0; i < list->count; ++i) {
-        char* tempStr = list->str[i]->data;
+    for (int i = 0; i < list->inner->count; ++i) {
+        char* tempStr = list->inner->data[i]->data;
         if (i > 0)
             count += strlen(delimeter);
 
@@ -482,15 +486,15 @@ string joinStrList(char* delimeter, StringList list) {
 
     char* temp = malloc(++count * sizeof(char));
 
-    for (int i = 0; i < list->count; ++i) {
+    for (int i = 0; i < list->inner->count; ++i) {
         if (i == 0) {
-            strcpy(temp, list->str[i]->data);
+            strcpy(temp, list->inner->data[i]->data);
             continue;
         }
         if (i > 0) {
             strcat(temp, delimeter);
         }
-        strcat(temp, list->str[i]->data);
+        strcat(temp, list->inner->data[i]->data);
     }
     temp[count - 1] = '\0';
 
@@ -535,17 +539,17 @@ string defaultIfNull(string s1, string s2) {
     return s1 == NULL ? s2 : s1;
 }
 
-static String** increaseCapacity(StringList list) {
-    list->capacity *= 2;
-    String** temp = list->str;
-    list->str = malloc(list->capacity * sizeof(String*));
-    for (int i = 0; i < list->capacity; ++i) {
-        list->str[i] = NULL;
+static String** increaseCapacity(StrList list) {
+    list->inner->capacity *= 2;
+    String** temp = list->inner->data;
+    list->inner->data = malloc(list->inner->capacity * sizeof(String*));
+    for (int i = 0; i < list->inner->capacity; ++i) {
+        list->inner->data[i] = NULL;
     }
-    for (int i = 0; i < list->count; ++i) {
-        memcpy(&list->str[i], &temp[i], sizeof(String));
+    for (int i = 0; i < list->inner->count; ++i) {
+        memcpy(&list->inner->data[i], &temp[i], sizeof(String));
     }
 
-    return list->str;
+    return list->inner->data;
 }
 

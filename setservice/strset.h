@@ -8,6 +8,7 @@
 #define STRSET_H
 
 #include "../set.h"
+#include "../arraylist.h"
 
 typedef struct SetStr SetStr;
 typedef struct Itr Itr;

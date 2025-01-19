@@ -17,7 +17,7 @@ typedef Itr* Iterator;
 
 void addDoubleList(DoubleList, double);
 void addAllDoubleList(DoubleList, DoubleList);
-int getDoubleList(DoubleList, int);
+double getDoubleList(DoubleList, int);
 bool setDoubleList(DoubleList, int, double);
 int indexOfDoubleList(DoubleList, double);
 void sortDoubleList(DoubleList);

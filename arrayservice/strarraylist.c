@@ -35,6 +35,10 @@ static void quickSort(String** strList, int low, int high);
 static void quickSortReverse(String** strList, int low, int high);
 static bool isFull(StrList list);
 static bool binarySearchStr(string s, String** strList, int high);
+static int compareInt(const void* elem1, const void* elem2);
+static bool binarySearch(int elem, const int* arr, int high);
+static void checkCapacity(char* text, int* count, int strLength);
+static bool hasNext(Iterator iter);
 
 
 
@@ -162,7 +166,7 @@ void sortStrList(StrList list) {
     quickSort(list->inner->data, 0, high);
 }
 
-void sortReverseList(StrList list) {
+void sortStrListReverse(StrList list) {
     if (isEmptyStrList(list))
         return;
 
@@ -256,108 +260,102 @@ bool removeStrList(StrList list, int index) {
     for (int i = 0; i < sizeTemp; ++i) {
         deleteString(&temp[i]);
     }
+
     free(temp);
 
     return true;
 }
 
-bool removeAllStr(StrList list1, StrList list2) {
+bool removeAllStrList(StrList list1, StrList list2) {
     if (list1 == NULL || list2 == NULL)
         return false;
 
-    String** temp = malloc(list1->count * sizeof(string));
-    int* indexList = malloc(list2->count * sizeof(int));
-    memcpy(&temp[0], list1->str, list1->count * sizeof(string));
+    StrList temp = newStrList(temp);//malloc(list1->count * sizeof(string));
+    copyList(temp, list1);
+
+    int* indexList = malloc(list2->inner->count * sizeof(int));
 
     int j = 0;
-    for (int i = 0; i < list2->count; ++i) {
-        int index = indexOfStrList(list1, list2->str[i]);
+    for (int i = 0; i < list2->inner->count; ++i) {
+        int index = indexOfStrList(list1, list2->inner->data[i]);
         if (index != -1)
             indexList[j++] = index;
     }
 
     qsort(indexList, j - 1, sizeof(int), compareInt);
-    free(list1->str);
-    list1->str = malloc(list1->capacity * sizeof(string));
+    for (int i = 0; i < list1->inner->count; ++i) {
+        deleteString(&list1->inner->data[i]);
+    }
+
+    free(list1->inner->data);
+    list1->inner->data = malloc(list1->inner->capacity * sizeof(string));
+    for (int i = 0; i < list1->inner->capacity; ++i) {
+        list1->inner->data[i] = NULL;
+    }
 
     int index = 0;
-    for (int i = 0; i < list1->count; ++i) {
-        if (binarySearchInt(i, indexList, j)) // 1
+    for (int i = 0; i < list1->inner->count; ++i) {
+        if (binarySearch(i, indexList, j)) // 1
             continue;
 
-        list1->str[index] = temp[i];
+        list1->inner->data[index] = temp->inner->data[i];
         ++index;
     }
-    list1->count -= j;
-    if (list1->count == 0) list1->str = NULL;
+
+    list1->inner->count -= j;
+
     free(indexList);
-    free(temp);
+    deleteStrList(&temp);
 
     return true;
 }
 
-void printArrayString(StrList list) {
-    if (list == NULL) return;
+StrList subtractStrList(StrList list1, StrList list2) {
+    if (isEmptyStrList(list1)) {
+        StrList temp = NULL;
+        return newStrList(temp);
+    }
 
-    int counter = list->count;
-    printf("%s", "[");
-    for (int i = 0; i < counter; ++i) {
-        if (i == counter - 1) {
-            if (list->str[i] == NULL || list->str[i]->data == NULL)
-                printf("%s", "null");
-            else
-                printf("%s", list->str[i]->data);
-        } else {
-            if (list->str[i] == NULL || list->str[i]->data == NULL)
-                printf("%s, ", "null");
-            else
-                printf("%s, ", list->str[i]->data);
+    if (isEmptyStrList(list2)) {
+        StrList temp = newStrList(temp);
+        copyList(temp, list1);
+        return temp;
+    }
+
+    StrList copyValues = newStrList(copyValues);
+    copyList(copyValues, list1);
+
+    for (int i = 0; i < list2->inner->count; ++i) {
+        int index = indexOfStrList(copyValues, list2->inner->data[i]);
+        if (index != -1) {
+            deleteString(&copyValues->inner->data[index]);
         }
     }
-    printf("%s\n", "]");
-}
 
-
-
-// TODO доработать удаление, чтобы внешний указатель был NULL
-void deleteStrList(StrList list) {
-    if (list == NULL) {
-        printf("%s\n", "List is NULL.");
-        return;
-    }
-
-    if (list->str != NULL) {
-        for (int i = 0; i < list->count; ++i) {
-            if (list->str[i] != NULL) {
-                deleteString(&(list->str[i]));
+    StrList temp = newStrList(temp);
+    int index = 0;
+    for (int i = 0; i < copyValues->inner->count; ++i) {
+        if (copyValues->inner->data[i] != NULL) {
+            if (isFull(temp)) {
+                temp->inner->data = increaseCapacity(temp);
             }
+
+            temp->inner->data[index++] = stringOf(copyValues->inner->data[i]->data);
+            temp->inner->count++;
         }
-        free(list->str);
     }
-    free(list);
+
+    deleteStrList(&copyValues);
+    return temp;
 }
-
-
-
-
-
-
-
-
-
-
 
 bool isEmptyStrList(StrList list) {
-    return list == NULL || list->count == 0;
+    return list == NULL || list->inner->count == 0;
 }
 
-int sizeStrList(StrList list) {
-    return list->count;
-}
-
-void reverseListStr(StrList list) {
-    String** start = list->str;
-    String** end = list->str + (list->count - 1);
+void reverseStrList(StrList list) {
+    String** start = list->inner->data;
+    String** end = list->inner->data + (list->inner->count - 1);
     String* temp;
     while (start <= end) {
         temp = *start;
@@ -368,63 +366,112 @@ void reverseListStr(StrList list) {
     }
 }
 
-bool isEqualStrLists(StrList list1, StrList list2) {
-    if (list1 == NULL || list2 == NULL)
+bool isEqualsStrList(StrList list1, StrList list2) {
+    if (list1 == NULL || list2 == NULL || list1->inner->count != list2->inner->count)
         return false;
 
-    if (list1->count != list2->count)
-        return false;
-
-    int counter = list1->count;
+    int counter = list1->inner->count;
     for (int i = 0; i < counter; ++i) {
-        char* temp1 = list1->str[i]->data;
-        char* temp2 = list2->str[i]->data;
+        char* temp1 = list1->inner->data[i]->data;
+        char* temp2 = list2->inner->data[i]->data;
 
         if (strcmp(temp1, temp2) != 0)
             return false;
     }
+
     return true;
 }
 
-
-
-StrList emptyIfNullStr(StrList list) {
-    return list == NULL ? newStrArray(list) : list;
+StrList emptyIfNullStrList(StrList list) {
+    return list == NULL ? newStrList(list) : list;
 }
 
+int sizeStrList(StrList list) {
+    return list->inner->count;
+}
 
-
-StrList subtractStr(StrList list1, StrList list2) {
-    if (isEmptyStrList(list1)) {
-        StrList temp = NULL;
-        return newStrArray(temp);
+string toStringStrList(StrList list) {
+    char* text = NULL;
+    if (list->inner->count == 0) {
+        text = (char*)malloc(3 * sizeof(char));
+        text[0] = '[';
+        text[1] = ']';
+        text[2] = '\0';
+        return stringOf(text);
     }
 
-    if (isEmptyStrList(list2)) {
-        StrList temp = copyStrList(temp, list1);
-        return temp;
+    int count = 256;
+    text = malloc(count * sizeof(char));
+    strcpy(text, "[");
+
+    for (int i = 0; i < list->inner->count - 1; ++i) {
+        checkCapacity(text, &count, list->inner->data[i]->count);
+        sprintf(&text[strlen(text)], "%s,", list->inner->data[i]->data);
     }
 
-    StrList copyList = copyStrList(copyList, list1);
-    for (int i = 0; i < list2->count; ++i) {
-        int index = indexOfStrList(copyList, list2->str[i]);
-        if (index != -1)
-            copyList->str[index] = NULL;
-    }
+    checkCapacity(text, &count, list->inner->data[list->inner->count - 1]->count);
+    sprintf(&text[strlen(text)], "%s", list->inner->data[list->inner->count - 1]->data);
+    strcat(text, "]");
 
-    StrList temp = newStrArray(temp);
-    int index = 0;
-    for (int i = 0; i < copyList->count; ++i) {
-        if (copyList->str[i] != NULL) {
-            if (temp->count == temp->capacity) {
-                temp->str = increaseCapacity(temp);
-            }
-            temp->str[index++] = stringOf(copyList->str[i]->data);
-            temp->count++;
+    string s = stringOf(text);
+    free(text);
+
+    return s;
+}
+
+void printStrList(StrList list) {
+    if (list == NULL) return;
+
+    int counter = list->inner->count;
+    printf("%s", "[");
+    for (int i = 0; i < counter; ++i) {
+        if (i == counter - 1) {
+            if (list->inner->data[i] == NULL || list->inner->data[i]->data == NULL)
+                printf("%s", "null");
+            else
+                printf("%s", list->inner->data[i]->data);
+        } else {
+            if (list->inner->data[i] == NULL || list->inner->data[i]->data == NULL)
+                printf("%s, ", "null");
+            else
+                printf("%s, ", list->inner->data[i]->data);
         }
     }
-    deleteStrList(copyList);
-    return temp;
+    printf("%s\n", "]");
+}
+
+void deleteStrList(StrList* list) {
+    if (list == NULL || *list == NULL) {
+        printf("%s\n", "List is NULL.");
+        return;
+    }
+
+    if ((*list)->inner->data != NULL) {
+        for (int i = 0; i < (*list)->inner->count; ++i) {
+            if ((*list)->inner->data[i] != NULL) {
+                deleteString(&(*list)->inner->data[i]);
+            }
+        }
+        free((*list)->inner->data);
+    }
+
+    free((*list)->inner);
+    free(*list);
+    *list = NULL;
+}
+
+Iterator iteratorStrList(StrList list){
+    Iterator iter = malloc(sizeof(Itr));
+    iter->count = 0;
+    iter->data = list;
+    iter->collectionSize = list->inner->count;
+    iter->hasNext = (void*) hasNext(iter);
+    iter->type = STR_LIST;
+    return iter;
+}
+
+static bool hasNext(Iterator iter) {
+    return iter->count < iter->collectionSize;
 }
 
 // ===================== private funcs =======================
@@ -443,6 +490,12 @@ static String** increaseCapacity(StrList list) {
     for (int i = 0; i < list->inner->count; ++i) {
         memcpy(&list->inner->data[i], &temp[i], sizeof(String));
     }
+
+    for (int i = 0; i < oldSize; ++i) {
+        deleteString(&temp[i]);
+    }
+
+    free(temp);
 
     return list->inner->data;
 }
@@ -470,7 +523,7 @@ static void quickSort(String** strList, int low, int high)
     String* temp;
     do {
         while (j > i) {
-            if (compare(strList[i], strList[j]) == 1) {
+            if (compareStr(strList[i], strList[j]) == 1) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;
@@ -480,7 +533,7 @@ static void quickSort(String** strList, int low, int high)
             --j;
         }
         while (i < j) {
-            if (compare(strList[i], strList[j]) == 1) {
+            if (compareStr(strList[i], strList[j]) == 1) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;
@@ -503,7 +556,7 @@ static void quickSortReverse(String** strList, int low, int high) {
     String* temp;
     do {
         while (j > i) {
-            if (compare(strList[i], strList[j]) == -1) {
+            if (compareStr(strList[i], strList[j]) == -1) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;
@@ -513,7 +566,7 @@ static void quickSortReverse(String** strList, int low, int high) {
             --j;
         }
         while (i < j) {
-            if (compare(strList[i], strList[j]) == -1) {
+            if (compareStr(strList[i], strList[j]) == -1) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;
@@ -540,12 +593,39 @@ static bool binarySearchStr(string s, String** strList, int high) {
     low = 0;
     while (low <= high) {
         middle = (low + high) / 2;
-        if (compareTo(s, strList[middle]) < 0)
+        if (compareStr(s, strList[middle]) < 0)
             high = middle - 1;
-        else if (compareTo(s, strList[middle]) > 0)
+        else if (compareStr(s, strList[middle]) > 0)
             low = middle + 1;
         else
             return true;
     }
     return false;
+}
+
+static int compareInt(const void* elem1, const void* elem2) {
+    return (*(int*)elem1 - *(int*)elem2);
+}
+
+static bool binarySearch(int elem, const int* arr, int high) {
+    int low, middle;
+    --high;
+    low = 0;
+    while (low <= high) {
+        middle = (low + high) / 2;
+        if (elem < arr[middle])
+            high = middle - 1;
+        else if (elem > arr[middle])
+            low = middle + 1;
+        else
+            return true;
+    }
+    return false;
+}
+
+static void checkCapacity(char* text, int* count, int strLength) {
+    if (strLength >= *count - strlen(text)) {
+        *count = (*count + strLength) * 2;
+        realloc(text, *count * sizeof(char));
+    }
 }
