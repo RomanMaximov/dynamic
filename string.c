@@ -474,7 +474,7 @@ string trim(string s) {
     return s;
 }
 
-string joinStrList(char* delimeter, StrList list) {
+string joinStrList(StrList list, char* delimeter) {
     int count = 0;
     int letterCounter = 0;
 
