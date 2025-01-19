@@ -12,11 +12,11 @@
 #include "strarraylist.h"
 
 
-/*typedef struct String {
+typedef struct InnerStr {
     int count;
     char* data;
     int capacity;
-} String;*/
+} InnerStr;
 
 typedef struct InnerStrList {
     int count;
@@ -52,7 +52,7 @@ void addStrList(StrList list, string str) {
         list->pf->data[list->pf->count] = NULL;
         list->pf->count++;
     } else {
-        string temp = stringOf(str->data);
+        string temp = stringOf(str->pf->data);
         if (isFull(list)) {
             list->pf->data = increaseCapacity(list);
             memcpy(&list->pf->data[list->pf->count], &temp, sizeof(String));
@@ -92,13 +92,13 @@ void addAllStrList(StrList dest, StrList from) {
             dest->pf->data[i] = NULL;
 
         for (int i = sizeFrom; i < sizeFrom + sizeDest; ++i) {
-            dest->pf->data[i] = stringOf(from->pf->data[i]->data);
+            dest->pf->data[i] = stringOf(from->pf->data[i]->pf->data);
         }
         dest->pf->count += sizeFrom;
     } else {
         int indexFrom = 0;
         for (int i = sizeDest; i < sizeFrom + sizeDest; ++i) {
-            dest->pf->data[i] = stringOf(from->pf->data[indexFrom++]->data);
+            dest->pf->data[i] = stringOf(from->pf->data[indexFrom++]->pf->data);
         }
         dest->pf->count += sizeFrom;
     }
@@ -115,7 +115,7 @@ string getStrList(StrList list, int index) {
         return NULL;
     }
 
-    return stringOf(list->pf->data[index]->data);
+    return stringOf(list->pf->data[index]->pf->data);
 }
 
 bool setStrList(StrList list, int index, string str) {
@@ -127,7 +127,7 @@ bool setStrList(StrList list, int index, string str) {
         return false;
     }
 
-    list->pf->data[index] = stringOf(str->data);
+    list->pf->data[index] = stringOf(str->pf->data);
     return true;
 }
 
@@ -340,7 +340,7 @@ StrList subtractStrList(StrList list1, StrList list2) {
                 temp->pf->data = increaseCapacity(temp);
             }
 
-            temp->pf->data[index++] = stringOf(copyValues->pf->data[i]->data);
+            temp->pf->data[index++] = stringOf(copyValues->pf->data[i]->pf->data);
             temp->pf->count++;
         }
     }
@@ -372,8 +372,8 @@ bool isEqualsStrList(StrList list1, StrList list2) {
 
     int counter = list1->pf->count;
     for (int i = 0; i < counter; ++i) {
-        char* temp1 = list1->pf->data[i]->data;
-        char* temp2 = list2->pf->data[i]->data;
+        char* temp1 = list1->pf->data[i]->pf->data;
+        char* temp2 = list2->pf->data[i]->pf->data;
 
         if (strcmp(temp1, temp2) != 0)
             return false;
@@ -405,12 +405,12 @@ string toStringStrList(StrList list) {
     strcpy(text, "[");
 
     for (int i = 0; i < list->pf->count - 1; ++i) {
-        checkCapacity(text, &count, list->pf->data[i]->count);
-        sprintf(&text[strlen(text)], "%s,", list->pf->data[i]->data);
+        checkCapacity(text, &count, list->pf->data[i]->pf->count);
+        sprintf(&text[strlen(text)], "%s,", list->pf->data[i]->pf->data);
     }
 
-    checkCapacity(text, &count, list->pf->data[list->pf->count - 1]->count);
-    sprintf(&text[strlen(text)], "%s", list->pf->data[list->pf->count - 1]->data);
+    checkCapacity(text, &count, list->pf->data[list->pf->count - 1]->pf->count);
+    sprintf(&text[strlen(text)], "%s", list->pf->data[list->pf->count - 1]->pf->data);
     strcat(text, "]");
 
     string s = stringOf(text);
@@ -426,15 +426,15 @@ void printStrList(StrList list) {
     printf("%s", "[");
     for (int i = 0; i < counter; ++i) {
         if (i == counter - 1) {
-            if (list->pf->data[i] == NULL || list->pf->data[i]->data == NULL)
+            if (list->pf->data[i] == NULL || list->pf->data[i]->pf->data == NULL)
                 printf("%s", "null");
             else
-                printf("%s", list->pf->data[i]->data);
+                printf("%s", list->pf->data[i]->pf->data);
         } else {
-            if (list->pf->data[i] == NULL || list->pf->data[i]->data == NULL)
+            if (list->pf->data[i] == NULL || list->pf->data[i]->pf->data == NULL)
                 printf("%s, ", "null");
             else
-                printf("%s, ", list->pf->data[i]->data);
+                printf("%s, ", list->pf->data[i]->pf->data);
         }
     }
     printf("%s\n", "]");
@@ -501,7 +501,7 @@ static String** increaseCapacity(StrList list) {
 }
 
 static int compareStr(string s1, string s2) {
-    int result = strcmp(s1->data, s2->data);
+    int result = strcmp(s1->pf->data, s2->pf->data);
     return result;
 }
 
@@ -511,7 +511,7 @@ static void copyList(StrList dest, StrList from) {
             dest->pf->data = increaseCapacity(dest);
         }
 
-        dest->pf->data[i] = stringOf(from->pf->data[i]->data);
+        dest->pf->data[i] = stringOf(from->pf->data[i]->pf->data);
         dest->pf->count++;
     }
 }

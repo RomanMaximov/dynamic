@@ -24,11 +24,11 @@ typedef struct InnerStrLL {
     NodeStr* end;
 } InnerStrLL;
 
-/*typedef struct String {
+typedef struct InnerStr {
     int count;
     char* data;
     int capacity;
-} String;*/
+} InnerStr;
 
 typedef struct InnerStrList {
     int count;
@@ -65,7 +65,7 @@ void addStrElemLL(StrLinkedList list, string s) {
     if (list->pf->count == 0) {
         newNode = malloc(sizeof(NodeStr));
         if (newNode != NULL) {
-            fillNodeStr(newNode, s->data, index);
+            fillNodeStr(newNode, s->pf->data, index);
         }
 
         newNode->next = list->pf->nodes;
@@ -76,7 +76,7 @@ void addStrElemLL(StrLinkedList list, string s) {
     } else {
         newNodeEnd = malloc(sizeof(NodeStr));
         if (newNodeEnd != NULL) {
-            fillNodeStr(newNodeEnd, s->data, index);
+            fillNodeStr(newNodeEnd, s->pf->data, index);
         }
 
         current->next = newNodeEnd;
@@ -182,7 +182,7 @@ void sortStrLL(StrLinkedList list) {
 
     index = 0;
     while (temp != NULL) {
-        temp->data = stringOf(strList->pf->str[index++]->data);
+        temp->data = stringOf(strList->pf->str[index++]->pf->data);
         temp = temp->next;
     }
     deleteStrList(&strList);
@@ -202,7 +202,7 @@ void sortStrLLReverse(StrLinkedList list) {
 
     index = 0;
     while (temp != NULL) {
-        temp->data = stringOf(strList->pf->str[index++]->data);
+        temp->data = stringOf(strList->pf->str[index++]->pf->data);
         temp = temp->next;
     }
     deleteStrList(&strList);
@@ -432,7 +432,7 @@ void reverseStrLL(StrLinkedList list) {
     int index = 0;
     while (current != NULL) {
         free(current->data);
-        current->data = stringOf(tempList->pf->str[index]->data);
+        current->data = stringOf(tempList->pf->str[index]->pf->data);
         current = current->next;
         ++index;
     }
@@ -479,7 +479,7 @@ void printStrLL(StrLinkedList list) {
     StrNode current = list->pf->begin;
     printf("%s", "[");
     while (current != NULL) {
-        if (current->data == NULL || current->data->data == NULL) {
+        if (current->data == NULL || current->data->pf->data == NULL) {
             if (current->next == NULL)
                 printf("%s", "null");
             else
@@ -490,9 +490,9 @@ void printStrLL(StrLinkedList list) {
         }
 
         if (current->next == NULL)
-            printf("%s", current->data->data);
+            printf("%s", current->data->pf->data);
         else
-            printf("%s, ", current->data->data);
+            printf("%s, ", current->data->pf->data);
         current = current->next;
     }
     printf("%s\n", "]");
@@ -692,6 +692,6 @@ static StrLinkedList copyStrLL(StrLinkedList list) {
 }
 
 static int compareStr(string s1, string s2) {
-    int result = strcmp(s1->data, s2->data);
+    int result = strcmp(s1->pf->data, s2->pf->data);
     return result;
 }

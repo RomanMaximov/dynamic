@@ -23,11 +23,11 @@ typedef struct InnerStrSet {
     NodeStr** bucket;
 } InnerStrSet;
 
-/*typedef struct String {
+typedef struct InnerStr {
     int count;
     char* data;
     int capacity;
-} String;*/
+} InnerStr;
 
 typedef struct InnerStrList {
     int count;
@@ -64,13 +64,13 @@ static bool hasNext(Iterator iter);
 
 
 void addStrElemSet(StrSet set, string s) {
-    if (s == NULL || s->data == NULL) return;
+    if (s == NULL || s->pf->data == NULL) return;
 
     if (isCapacityFull(set))
         increaseCapacity(set);
 
-    int indexBucket = (hashString(s->data) & 0x7FFFFFFF) % set->pf->capacity;
-    insertNode(&set->pf->bucket[indexBucket], s->data, &set->pf->count);
+    int indexBucket = (hashString(s->pf->data) & 0x7FFFFFFF) % set->pf->capacity;
+    insertNode(&set->pf->bucket[indexBucket], s->pf->data, &set->pf->count);
 }
 
 void addCharElemSet(StrSet set, char* s) {
@@ -92,8 +92,8 @@ void addAllStrElemSet(StrSet set1, StrSet set2) {
     setToArr(set2, list);
 
     for (int i = 0; i < count; ++i) {
-        int indexBucket = (hashString(list->pf->str[i]->data) & 0x7FFFFFFF) % set1->pf->capacity;
-        insertNode(&set1->pf->bucket[indexBucket], list->pf->str[i]->data, &set1->pf->count);
+        int indexBucket = (hashString(list->pf->str[i]->pf->data) & 0x7FFFFFFF) % set1->pf->capacity;
+        insertNode(&set1->pf->bucket[indexBucket], list->pf->str[i]->pf->data, &set1->pf->count);
     }
 
     deleteStrList(&list);
@@ -208,7 +208,7 @@ bool isEqualsStrSet(StrSet set1, StrSet set2) {
     toListAndSort(set2, list2);
 
     for (int i = 0; i < set1->pf->count; ++i) {
-        if (compareCharStr(list1->pf->str[i]->data, list2->pf->str[i]->data) != 0)
+        if (compareCharStr(list1->pf->str[i]->pf->data, list2->pf->str[i]->pf->data) != 0)
             return false;
     }
 
@@ -312,8 +312,8 @@ static void increaseCapacity(StrSet set) {
         set->pf->bucket[i] = NULL;
 
     for (int i = 0; i < count; ++i) {
-        int indexBucket = (hashString(list->pf->str[i]->data) & 0x7FFFFFFF) % set->pf->capacity;
-        insertNode(&set->pf->bucket[indexBucket], list->pf->str[i]->data, &set->pf->count);
+        int indexBucket = (hashString(list->pf->str[i]->pf->data) & 0x7FFFFFFF) % set->pf->capacity;
+        insertNode(&set->pf->bucket[indexBucket], list->pf->str[i]->pf->data, &set->pf->count);
     }
 
     deleteStrList(&list);
@@ -331,7 +331,7 @@ static void setToArr(StrSet set, StrList list) {
 static void copyValuesToList(StrNode node, StrList list) {
     if (node != NULL) {
         copyValuesToList(node->left, list);
-        addCharArrList(list, node->str->data);
+        addCharArrList(list, node->str->pf->data);
         copyValuesToList(node->right, list);
     }
 }
@@ -341,7 +341,7 @@ static void insertNode(NodeStr** node, char* s, int* counter) {
         *node = createNode(s);
         (*counter)++;
     } else {
-        int cmp = compareCharStr(s, (*node)->str->data);
+        int cmp = compareCharStr(s, (*node)->str->pf->data);
         if (cmp == 0) {
             return;
         } else if (cmp < 0) {
@@ -384,13 +384,13 @@ int compareCharStr(char* s1, char* s2) {
 }
 
 int compareStr(string s1, string s2) {
-    return strcmp(s1->data, s2->data);
+    return strcmp(s1->pf->data, s2->pf->data);
 }
 
 static bool isContains(StrNode node, string s) {
     if (node != NULL) {
         isContains(node->left, s);
-        if (compareCharStr(node->str->data, s->data) == 0)
+        if (compareCharStr(node->str->pf->data, s->pf->data) == 0)
             return true;
         isContains(node->right, s);
     }
@@ -455,7 +455,7 @@ static void removeNode(StrNode* node, StrNode* previous, string s, bool* found) 
     if (*found) return;
 
     if (*node != NULL && *previous != NULL) {
-        if (compareCharStr(s->data, (*node)->str->data) == 0) {
+        if (compareCharStr(s->pf->data, (*node)->str->pf->data) == 0) {
             if ((*node)->right == NULL && (*node)->left == NULL) {
                 if (isRoot(node, previous)) {
                     StrNode temp = *node;
@@ -467,7 +467,7 @@ static void removeNode(StrNode* node, StrNode* previous, string s, bool* found) 
                 }
 
                 StrNode temp = *node;
-                if (compareStr((*node)->str->data, (*previous)->str->data) == -1)
+                if (compareStr((*node)->str, (*previous)->str) == -1)
                     (*previous)->left = NULL;
                 else
                     (*previous)->right = NULL;
@@ -489,7 +489,7 @@ static void removeNode(StrNode* node, StrNode* previous, string s, bool* found) 
                 }
 
                 StrNode temp = *node;
-                if (compareStr((*node)->str->data, (*previous)->str->data) == -1) {
+                if (compareStr((*node)->str, (*previous)->str) == -1) {
                     (*previous)->left = (*node)->left != NULL ? (*node)->left : (*node)->right;
                 } else {
                     (*previous)->right = (*node)->left != NULL ? (*node)->left : (*node)->right;
@@ -545,13 +545,13 @@ static StrNode findNode(StrNode* node, StrNode* previous) {
 }
 
 static bool isRoot(StrNode* node, StrNode* previous) {
-    return compareCharStr((*node)->str->data, (*previous)->str->data) == 0;
+    return compareCharStr((*node)->str->pf->data, (*previous)->str->pf->data) == 0;
 }
 
 static  void printInOrder(StrNode node, int* counter) {
     if (node != NULL) {
         printInOrder(node->left, counter);
-        printf("%s", node->str->data);
+        printf("%s", node->str->pf->data);
         if (*counter - 1 != 0) {
             printf("%s", ", ");
             --(*counter);
