@@ -49,8 +49,8 @@ void addIntElemSet(IntSet set, int num) {
     if (isCapacityFull(set))
         increaseCapacity(set);
 
-    int indexBucket = num % set->inner->capacity;
-    insertNode(&set->inner->bucket[indexBucket], num, &set->inner->count);
+    int indexBucket = num % set->pf->capacity;
+    insertNode(&set->pf->bucket[indexBucket], num, &set->pf->count);
 }
 
 void addAllIntElemSet(IntSet set1, IntSet set2) {
@@ -59,33 +59,33 @@ void addAllIntElemSet(IntSet set1, IntSet set2) {
     if (isCapacityFull(set1))
         increaseCapacity(set1);
 
-    int count = set2->inner->count;
+    int count = set2->pf->count;
     int arr[count];
 
     setToArr(set2, arr);
 
     for (int i = 0; i < count; ++i) {
-        int indexBucket = arr[i] % set1->inner->capacity;
-        insertNode(&set1->inner->bucket[indexBucket], arr[i], &set1->inner->count);
+        int indexBucket = arr[i] % set1->pf->capacity;
+        insertNode(&set1->pf->bucket[indexBucket], arr[i], &set1->pf->count);
     }
 }
 
 void clearIntSet(IntSet set) {
-    if (set->inner->bucket != NULL) {
-        deleteNodes(set->inner->bucket, set->inner->capacity);
-        free(set->inner->bucket);
+    if (set->pf->bucket != NULL) {
+        deleteNodes(set->pf->bucket, set->pf->capacity);
+        free(set->pf->bucket);
     }
 
-    set->inner->count = 0;
-    set->inner->capacity = 16;
-    set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeInt*));
-    for (int i = 0; i < set->inner->capacity; ++i)
-        set->inner->bucket[i] = NULL;
+    set->pf->count = 0;
+    set->pf->capacity = 16;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeInt*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
 }
 
 bool containsIntSet(IntSet set, int num) {
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        if(isContains(set->inner->bucket[i], num))
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        if(isContains(set->pf->bucket[i], num))
             return true;
     }
 
@@ -93,14 +93,14 @@ bool containsIntSet(IntSet set, int num) {
 }
 
 bool containsAllIntSet(IntSet set1, IntSet set2) {
-    if (set1 == NULL || set2 == NULL || set2->inner->count > set1->inner->count) return false;
+    if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
     if (isEmptyIntSet(set2)) return true;
 
-    int count2 = set2->inner->count;
+    int count2 = set2->pf->count;
     int arr2[count2];
     setToArr(set2, arr2);
 
-    int count1 = set1->inner->count;
+    int count1 = set1->pf->count;
     int arr1[count1];
     toArrAndSort(set1, arr1);
 
@@ -113,13 +113,13 @@ bool containsAllIntSet(IntSet set1, IntSet set2) {
 }
 
 bool containsAnyIntSet(IntSet set1, IntSet set2) {
-    if (set1 == NULL || set2 == NULL || set2->inner->count > set1->inner->count) return false;
+    if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
 
-    int count2 = set2->inner->count;
+    int count2 = set2->pf->count;
     int arr2[count2];
     setToArr(set2, arr2);
 
-    int count1 = set1->inner->count;
+    int count1 = set1->pf->count;
     int arr1[count1];
     toArrAndSort(set1, arr1);
 
@@ -132,22 +132,22 @@ bool containsAnyIntSet(IntSet set1, IntSet set2) {
 }
 
 bool removeIntSet(IntSet set, int num) {
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        IntNode previous = set->inner->bucket[i];
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        IntNode previous = set->pf->bucket[i];
         bool found = false;
-        removeNode(&set->inner->bucket[i], &previous, num, &found);
+        removeNode(&set->pf->bucket[i], &previous, num, &found);
         if (found)
-            set->inner->count--;
+            set->pf->count--;
     }
 
     return true;
 }
 
 bool removeAllIntSet(IntSet set1, IntSet set2) {
-    int arr[set2->inner->count];
+    int arr[set2->pf->count];
     setToArr(set2, arr);
 
-    for (int i = 0; i < set2->inner->count; ++i) {
+    for (int i = 0; i < set2->pf->count; ++i) {
         removeIntSet(set1, arr[i]);
     }
 
@@ -155,19 +155,19 @@ bool removeAllIntSet(IntSet set1, IntSet set2) {
 }
 
 bool isEmptyIntSet(IntSet set) {
-    return set == NULL || set->inner->count == 0;
+    return set == NULL || set->pf->count == 0;
 }
 
 bool isEqualsIntSet(IntSet set1, IntSet set2) {
-    if (set1 == NULL || set2 == NULL || set1->inner->count != set2->inner->count) return false;
+    if (set1 == NULL || set2 == NULL || set1->pf->count != set2->pf->count) return false;
 
-    int arr1[set1->inner->count];
-    int arr2[set2->inner->count];
+    int arr1[set1->pf->count];
+    int arr2[set2->pf->count];
 
     toArrAndSort(set1, arr1);
     toArrAndSort(set2, arr2);
 
-    for (int i = 0; i < set1->inner->count; ++i) {
+    for (int i = 0; i < set1->pf->count; ++i) {
         if (compareInt(arr1[i], arr2[i]) != 0)
             return false;
     }
@@ -188,7 +188,7 @@ Iterator iteratorIntSet(IntSet list){
     Iterator iter = malloc(sizeof(Itr));
     iter->count = 0;
     iter->data = list;
-    iter->collectionSize = list->inner->count;
+    iter->collectionSize = list->pf->count;
     iter->hasNext = (void*) hasNext(iter);
     iter->type = INT_SET;
     return iter;
@@ -199,20 +199,20 @@ static bool hasNext(Iterator iter) {
 }
 
 int sizeIntSet(IntSet set) {
-    return set->inner->count;
+    return set->pf->count;
 }
 
 void printIntSet(IntSet set) {
-    if (set == NULL || set->inner == NULL) {
+    if (set == NULL || set->pf == NULL) {
         printf("%s", "[]\n");
         return;
     }
 
     printf("%s", "[");
 
-    int counter = set->inner->count;
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        printInOrder(set->inner->bucket[i], &counter);
+    int counter = set->pf->count;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        printInOrder(set->pf->bucket[i], &counter);
     }
 
     printf("%s", "]");
@@ -220,13 +220,13 @@ void printIntSet(IntSet set) {
 }
 
 void deleteIntSet(IntSet* set) {
-    if (set == NULL || *set == NULL || (*set)->inner == NULL) return;
+    if (set == NULL || *set == NULL || (*set)->pf == NULL) return;
 
-    if ((*set)->inner->bucket != NULL) {
-        deleteNodes((*set)->inner->bucket, (*set)->inner->capacity);
-        free((*set)->inner->bucket);
+    if ((*set)->pf->bucket != NULL) {
+        deleteNodes((*set)->pf->bucket, (*set)->pf->capacity);
+        free((*set)->pf->bucket);
     }
-    free((*set)->inner);
+    free((*set)->pf);
     free(*set);
     *set = NULL;
 }
@@ -301,31 +301,31 @@ static IntNode createNode(int num) {
 
 static bool isCapacityFull(IntSet set) {
     int counter = 0;
-    int fullCapacity = set->inner->capacity / 8 * 6;
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        if (set->inner->bucket[i] != NULL) ++counter;
+    int fullCapacity = set->pf->capacity / 8 * 6;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        if (set->pf->bucket[i] != NULL) ++counter;
     }
 
     return counter >= fullCapacity;
 }
 
 static void increaseCapacity(IntSet set) {
-    int oldCapacity = set->inner->capacity;
-    int count = set->inner->count;
-    NodeInt** temp = set->inner->bucket;
+    int oldCapacity = set->pf->capacity;
+    int count = set->pf->count;
+    NodeInt** temp = set->pf->bucket;
 
     int arr[count];
     setToArr(set, arr);
 
-    set->inner->capacity *= 2;
-    set->inner->count = 0;
-    set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeInt*));
-    for (int i = 0; i < set->inner->capacity; ++i)
-        set->inner->bucket[i] = NULL;
+    set->pf->capacity *= 2;
+    set->pf->count = 0;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeInt*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
 
     for (int i = 0; i < count; ++i) {
-        int indexBucket = arr[i] % set->inner->capacity;
-        insertNode(&set->inner->bucket[indexBucket], arr[i], &set->inner->count);
+        int indexBucket = arr[i] % set->pf->capacity;
+        insertNode(&set->pf->bucket[indexBucket], arr[i], &set->pf->count);
     }
 
     deleteNodes(temp, oldCapacity);
@@ -444,13 +444,13 @@ void outputTree(IntNode node, int* counter) {
 
 void printTree(IntSet set) {
     int counter = 0;
-    outputTree(set->inner->bucket[0], &counter);
+    outputTree(set->pf->bucket[0], &counter);
 }
 
 static void setToArr(IntSet set, int* arr) {
     int index = 0;
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        copyValuesToArr(set->inner->bucket[i], arr, &index);
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        copyValuesToArr(set->pf->bucket[i], arr, &index);
     }
 }
 
@@ -483,7 +483,7 @@ static bool isContains(IntNode node, int num) {
 
 static void toArrAndSort(IntSet set, int* arr) {
     setToArr(set, arr);
-    qsort(arr, set->inner->count, sizeof(int), compareqsort);
+    qsort(arr, set->pf->count, sizeof(int), compareqsort);
 }
 
 static bool isRoot(IntNode* node, IntNode* previous) {

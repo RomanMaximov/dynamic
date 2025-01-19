@@ -10,12 +10,15 @@
 #include <stdbool.h>
 #include "arraylist.h"
 
-
-typedef struct String String;
-typedef struct ArrayListStr ArrayListStr;
+// structures
+typedef struct String {
+    struct InnerStr* pf;   // private field
+} String;
 
 typedef String* string;
+typedef struct ArrayListStr ArrayListStr;
 typedef ArrayListStr* StrList;
+
 
 string stringOf(char* s);
 string emptyStr();

@@ -8,11 +8,11 @@
 #include "linkedlist.h"
 
 // structures
-typedef struct String {
+/*typedef struct String {
     int count;
     char* data;
     int capacity;
-} String;
+} String;*/
 
 typedef struct NodeInt {
     int data;
@@ -99,12 +99,12 @@ static void* iterator(Type type);
 // funcs
 IntLinkedList newIntLinkedList(IntLinkedList temp) {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
-    list->inner = malloc(sizeof(InnerIntLL));
-    list->inner->count = 0;
-    list->inner->index = 0;
-    list->inner->nodes = NULL;
-    list->inner->begin = NULL;
-    list->inner->end = NULL;
+    list->pf = malloc(sizeof(InnerIntLL));
+    list->pf->count = 0;
+    list->pf->index = 0;
+    list->pf->nodes = NULL;
+    list->pf->begin = NULL;
+    list->pf->end = NULL;
     initFuncs(INT_LL, (void*)list);
 
     return list;
@@ -112,12 +112,12 @@ IntLinkedList newIntLinkedList(IntLinkedList temp) {
 
 IntLinkedList linkedListOfInt(IntLinkedList temp, int paramCount, ...) {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
-    list->inner = malloc(sizeof(InnerIntLL));
-    list->inner->count = 0;
-    list->inner->index = 0;
-    list->inner->nodes = NULL;
-    list->inner->begin = NULL;
-    list->inner->end = NULL;
+    list->pf = malloc(sizeof(InnerIntLL));
+    list->pf->count = 0;
+    list->pf->index = 0;
+    list->pf->nodes = NULL;
+    list->pf->begin = NULL;
+    list->pf->end = NULL;
     initFuncs(INT_LL, (void*)list);
 
     va_list param;
@@ -131,12 +131,12 @@ IntLinkedList linkedListOfInt(IntLinkedList temp, int paramCount, ...) {
 
 DoubleLinkedList newDoubleLinkedList(DoubleLinkedList temp) {
     DoubleLinkedList list = malloc(sizeof(LinkedListDouble));
-    list->inner = malloc(sizeof(InnerDoubleLL));
-    list->inner->count = 0;
-    list->inner->index = 0;
-    list->inner->nodes = NULL;
-    list->inner->begin = NULL;
-    list->inner->end = NULL;
+    list->pf = malloc(sizeof(InnerDoubleLL));
+    list->pf->count = 0;
+    list->pf->index = 0;
+    list->pf->nodes = NULL;
+    list->pf->begin = NULL;
+    list->pf->end = NULL;
     initFuncs(DOUBLE_LL, (void*)list);
 
     return list;
@@ -144,12 +144,12 @@ DoubleLinkedList newDoubleLinkedList(DoubleLinkedList temp) {
 
 DoubleLinkedList linkedListOfDouble(DoubleLinkedList temp, int paramCount, ...) {
     DoubleLinkedList list = malloc(sizeof(LinkedListDouble));
-    list->inner = malloc(sizeof(InnerDoubleLL));
-    list->inner->count = 0;
-    list->inner->index = 0;
-    list->inner->nodes = NULL;
-    list->inner->begin = NULL;
-    list->inner->end = NULL;
+    list->pf = malloc(sizeof(InnerDoubleLL));
+    list->pf->count = 0;
+    list->pf->index = 0;
+    list->pf->nodes = NULL;
+    list->pf->begin = NULL;
+    list->pf->end = NULL;
     initFuncs(DOUBLE_LL, (void*)list);
 
     va_list param;
@@ -163,12 +163,12 @@ DoubleLinkedList linkedListOfDouble(DoubleLinkedList temp, int paramCount, ...) 
 
 StrLinkedList newStrLinkedList(StrLinkedList temp) {
     StrLinkedList list = malloc(sizeof(LinkedListStr));
-    list->inner = malloc(sizeof(InnerStrLL));
-    list->inner->count = 0;
-    list->inner->index = 0;
-    list->inner->nodes = NULL;
-    list->inner->begin = NULL;
-    list->inner->end = NULL;
+    list->pf = malloc(sizeof(InnerStrLL));
+    list->pf->count = 0;
+    list->pf->index = 0;
+    list->pf->nodes = NULL;
+    list->pf->begin = NULL;
+    list->pf->end = NULL;
     initFuncs(STR_LL, (void*)list);
 
     return list;
@@ -176,12 +176,12 @@ StrLinkedList newStrLinkedList(StrLinkedList temp) {
 
 StrLinkedList linkedListOfStr(StrLinkedList temp, int paramCount, ...) {
     StrLinkedList list = malloc(sizeof(LinkedListStr));
-    list->inner = malloc(sizeof(InnerStrLL));
-    list->inner->count = 0;
-    list->inner->index = 0;
-    list->inner->nodes = NULL;
-    list->inner->begin = NULL;
-    list->inner->end = NULL;
+    list->pf = malloc(sizeof(InnerStrLL));
+    list->pf->count = 0;
+    list->pf->index = 0;
+    list->pf->nodes = NULL;
+    list->pf->begin = NULL;
+    list->pf->end = NULL;
     initFuncs(STR_LL, (void*)list);
 
     va_list param;

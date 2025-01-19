@@ -55,8 +55,8 @@ void addDoubleElemSet(DoubleSet set, double num) {
     if (isCapacityFull(set))
         increaseCapacity(set);
 
-    int indexBucket = hashDouble(num) % set->inner->capacity;
-    insertNode(&set->inner->bucket[indexBucket], num, &set->inner->count);
+    int indexBucket = hashDouble(num) % set->pf->capacity;
+    insertNode(&set->pf->bucket[indexBucket], num, &set->pf->count);
 }
 
 void addAllDoubleElemSet(DoubleSet set1, DoubleSet set2) {
@@ -65,33 +65,33 @@ void addAllDoubleElemSet(DoubleSet set1, DoubleSet set2) {
     if (isCapacityFull(set1))
         increaseCapacity(set1);
 
-    int count = set2->inner->count;
+    int count = set2->pf->count;
     double arr[count];
 
     setToArr(set2, arr);
 
     for (int i = 0; i < count; ++i) {
-        int indexBucket = hashDouble(arr[i]) % set1->inner->capacity;
-        insertNode(&set1->inner->bucket[indexBucket], arr[i], &set1->inner->count);
+        int indexBucket = hashDouble(arr[i]) % set1->pf->capacity;
+        insertNode(&set1->pf->bucket[indexBucket], arr[i], &set1->pf->count);
     }
 }
 
 void clearDoubleSet(DoubleSet set) {
-    if (set->inner->bucket != NULL) {
-        deleteNodes(set->inner->bucket, set->inner->capacity);
-        free(set->inner->bucket);
+    if (set->pf->bucket != NULL) {
+        deleteNodes(set->pf->bucket, set->pf->capacity);
+        free(set->pf->bucket);
     }
 
-    set->inner->count = 0;
-    set->inner->capacity = 16;
-    set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeDouble*));
-    for (int i = 0; i < set->inner->capacity; ++i)
-        set->inner->bucket[i] = NULL;
+    set->pf->count = 0;
+    set->pf->capacity = 16;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeDouble*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
 }
 
 bool containsDoubleSet(DoubleSet set, double num) {
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        if(isContains(set->inner->bucket[i], num))
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        if(isContains(set->pf->bucket[i], num))
             return true;
     }
 
@@ -99,14 +99,14 @@ bool containsDoubleSet(DoubleSet set, double num) {
 }
 
 bool containsAllDoubleSet(DoubleSet set1, DoubleSet set2) {
-    if (set1 == NULL || set2 == NULL || set2->inner->count > set1->inner->count) return false;
+    if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
     if (isEmptyDoubleSet(set2)) return true;
 
-    int count2 = set2->inner->count;
+    int count2 = set2->pf->count;
     double arr2[count2];
     setToArr(set2, arr2);
 
-    int count1 = set1->inner->count;
+    int count1 = set1->pf->count;
     double arr1[count1];
     toArrAndSort(set1, arr1);
 
@@ -119,13 +119,13 @@ bool containsAllDoubleSet(DoubleSet set1, DoubleSet set2) {
 }
 
 bool containsAnyDoubleSet(DoubleSet set1, DoubleSet set2) {
-    if (set1 == NULL || set2 == NULL || set2->inner->count > set1->inner->count) return false;
+    if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
 
-    int count2 = set2->inner->count;
+    int count2 = set2->pf->count;
     double arr2[count2];
     setToArr(set2, arr2);
 
-    int count1 = set1->inner->count;
+    int count1 = set1->pf->count;
     double arr1[count1];
     toArrAndSort(set1, arr1);
 
@@ -138,22 +138,22 @@ bool containsAnyDoubleSet(DoubleSet set1, DoubleSet set2) {
 }
 
 bool removeDoubleSet(DoubleSet set, double num) {
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        DoubleNode previous = set->inner->bucket[i];
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        DoubleNode previous = set->pf->bucket[i];
         bool found = false;
-        removeNode(&set->inner->bucket[i], &previous, num, &found);
+        removeNode(&set->pf->bucket[i], &previous, num, &found);
         if (found)
-            set->inner->count--;
+            set->pf->count--;
     }
 
     return true;
 }
 
 bool removeAllDoubleSet(DoubleSet set1, DoubleSet set2) {
-    double arr[set2->inner->count];
+    double arr[set2->pf->count];
     setToArr(set2, arr);
 
-    for (int i = 0; i < set2->inner->count; ++i) {
+    for (int i = 0; i < set2->pf->count; ++i) {
         removeDoubleSet(set1, arr[i]);
     }
 
@@ -161,19 +161,19 @@ bool removeAllDoubleSet(DoubleSet set1, DoubleSet set2) {
 }
 
 bool isEmptyDoubleSet(DoubleSet set) {
-    return set == NULL || set->inner->count == 0;
+    return set == NULL || set->pf->count == 0;
 }
 
 bool isEqualsDoubleSet(DoubleSet set1, DoubleSet set2) {
-    if (set1 == NULL || set2 == NULL || set1->inner->count != set2->inner->count) return false;
+    if (set1 == NULL || set2 == NULL || set1->pf->count != set2->pf->count) return false;
 
-    double arr1[set1->inner->count];
-    double arr2[set2->inner->count];
+    double arr1[set1->pf->count];
+    double arr2[set2->pf->count];
 
     toArrAndSort(set1, arr1);
     toArrAndSort(set2, arr2);
 
-    for (int i = 0; i < set1->inner->count; ++i) {
+    for (int i = 0; i < set1->pf->count; ++i) {
         if (compareDouble(arr1[i], arr2[i]) != 0)
             return false;
     }
@@ -194,7 +194,7 @@ Iterator iteratorDoubleSet(DoubleSet list){
     Iterator iter = malloc(sizeof(Itr));
     iter->count = 0;
     iter->data = list;
-    iter->collectionSize = list->inner->count;
+    iter->collectionSize = list->pf->count;
     iter->hasNext = (void*) hasNext(iter);
     iter->type = DOUBLE_SET;
     return iter;
@@ -205,20 +205,20 @@ static bool hasNext(Iterator iter) {
 }
 
 int sizeDoubleSet(DoubleSet set) {
-    return set->inner->count;
+    return set->pf->count;
 }
 
 void printDoubleSet(DoubleSet set) {
-    if (set == NULL || set->inner == NULL) {
+    if (set == NULL || set->pf == NULL) {
         printf("%s", "[]\n");
         return;
     }
 
     printf("%s", "[");
 
-    int counter = set->inner->count;
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        printInOrder(set->inner->bucket[i], &counter);
+    int counter = set->pf->count;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        printInOrder(set->pf->bucket[i], &counter);
     }
 
     printf("%s", "]");
@@ -226,13 +226,13 @@ void printDoubleSet(DoubleSet set) {
 }
 
 void deleteDoubleSet(DoubleSet* set) {
-    if (set == NULL || *set == NULL || (*set)->inner == NULL) return;
+    if (set == NULL || *set == NULL || (*set)->pf == NULL) return;
 
-    if ((*set)->inner->bucket != NULL) {
-        deleteNodes((*set)->inner->bucket, (*set)->inner->capacity);
-        free((*set)->inner->bucket);
+    if ((*set)->pf->bucket != NULL) {
+        deleteNodes((*set)->pf->bucket, (*set)->pf->capacity);
+        free((*set)->pf->bucket);
     }
-    free((*set)->inner);
+    free((*set)->pf);
     free(*set);
     *set = NULL;
 }
@@ -250,31 +250,31 @@ static int hashDouble(double value) {
 
 static bool isCapacityFull(DoubleSet set) {
     int counter = 0;
-    int fullCapacity = set->inner->capacity / 8 * 6;
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        if (set->inner->bucket[i] != NULL) ++counter;
+    int fullCapacity = set->pf->capacity / 8 * 6;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        if (set->pf->bucket[i] != NULL) ++counter;
     }
 
     return counter >= fullCapacity;
 }
 
 static void increaseCapacity(DoubleSet set) {
-    int oldCapacity = set->inner->capacity;
-    int count = set->inner->count;
-    NodeDouble** temp = set->inner->bucket;
+    int oldCapacity = set->pf->capacity;
+    int count = set->pf->count;
+    NodeDouble** temp = set->pf->bucket;
 
     double arr[count];
     setToArr(set, arr);
 
-    set->inner->capacity *= 2;
-    set->inner->count = 0;
-    set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeDouble*));
-    for (int i = 0; i < set->inner->capacity; ++i)
-        set->inner->bucket[i] = NULL;
+    set->pf->capacity *= 2;
+    set->pf->count = 0;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeDouble*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
 
     for (int i = 0; i < count; ++i) {
-        int indexBucket = hashDouble(arr[i]) % set->inner->capacity;
-        insertNode(&set->inner->bucket[indexBucket], arr[i], &set->inner->count);
+        int indexBucket = hashDouble(arr[i]) % set->pf->capacity;
+        insertNode(&set->pf->bucket[indexBucket], arr[i], &set->pf->count);
     }
 
     deleteNodes(temp, oldCapacity);
@@ -334,8 +334,8 @@ static void deleteInOrder(DoubleNode node) {
 
 static void setToArr(DoubleSet set, double* arr) {
     int index = 0;
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        copyValuesToArr(set->inner->bucket[i], arr, &index);
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        copyValuesToArr(set->pf->bucket[i], arr, &index);
     }
 }
 
@@ -359,7 +359,7 @@ static bool isContains(DoubleNode node, double num) {
 
 static void toArrAndSort(DoubleSet set, double* arr) {
     setToArr(set, arr);
-    qsort(arr, set->inner->count, sizeof(int), compareqsort);
+    qsort(arr, set->pf->count, sizeof(int), compareqsort);
 }
 
 static int compareqsort(const void* elem1, const void* elem2) {

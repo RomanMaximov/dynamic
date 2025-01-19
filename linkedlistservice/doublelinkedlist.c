@@ -46,20 +46,20 @@ static int compareDoubleReverse(const void* elem1, const void* elem2);
 void addDoubleElemLL(DoubleLinkedList list, double num) {
     DoubleNode newNodeEnd = NULL;
     DoubleNode newNode = NULL;
-    DoubleNode current = list->inner->end;
-    int* index = &list->inner->index;
+    DoubleNode current = list->pf->end;
+    int* index = &list->pf->index;
 
-    if (list->inner->count == 0) {
+    if (list->pf->count == 0) {
         newNode = malloc(sizeof(NodeDouble));
         if (newNode != NULL) {
             fillNodeDouble(newNode, num, index);
         }
 
-        newNode->next = list->inner->nodes;
-        list->inner->nodes = newNode;
-        list->inner->begin = list->inner->nodes;
-        list->inner->end = newNode;
-        list->inner->begin = newNode;
+        newNode->next = list->pf->nodes;
+        list->pf->nodes = newNode;
+        list->pf->begin = list->pf->nodes;
+        list->pf->end = newNode;
+        list->pf->begin = newNode;
     } else {
         newNodeEnd = malloc(sizeof(NodeDouble));
         if (newNodeEnd != NULL) {
@@ -68,23 +68,23 @@ void addDoubleElemLL(DoubleLinkedList list, double num) {
 
         current->next = newNodeEnd;
         newNodeEnd->prev = current;
-        list->inner->end = newNodeEnd;
+        list->pf->end = newNodeEnd;
     }
 
-    list->inner->count++;
+    list->pf->count++;
 }
 
 bool setDoubleElemLL(DoubleLinkedList list, int index, double num) {
     if (list == NULL)
         return false;
 
-    if (index >= list->inner->count) {
-        printf("Index %d out of bounds for length %d\n", index, list->inner->count);
+    if (index >= list->pf->count) {
+        printf("Index %d out of bounds for length %d\n", index, list->pf->count);
         return false;
     }
 
     int tempIndex = 0;
-    DoubleNode current = list->inner->begin;
+    DoubleNode current = list->pf->begin;
     while (current != NULL) {
         if (index == tempIndex) {
             current->data = num;
@@ -99,7 +99,7 @@ bool setDoubleElemLL(DoubleLinkedList list, int index, double num) {
 void addAllDoubleElemLL(DoubleLinkedList list1, DoubleLinkedList list2) {
     if (list1 == NULL || list2 == NULL) return;
 
-    DoubleNode current = list2->inner->nodes;
+    DoubleNode current = list2->pf->nodes;
     while (current != NULL) {
         addDoubleElemLL(list1, current->data);
         current = current->next;
@@ -107,13 +107,13 @@ void addAllDoubleElemLL(DoubleLinkedList list1, DoubleLinkedList list2) {
 }
 
 double getDoubleElemLL(DoubleLinkedList list, int index) {
-    if (index >= list->inner->count) {
-        printf("Index %d out of bounds for length %d\n", index, list->inner->count);
+    if (index >= list->pf->count) {
+        printf("Index %d out of bounds for length %d\n", index, list->pf->count);
         return INT_MAX;
     }
 
     int tempIndex = 0;
-    DoubleNode current = list->inner->nodes;
+    DoubleNode current = list->pf->nodes;
     while (current != NULL) {
         if (tempIndex == index)
             return current->data;
@@ -125,16 +125,16 @@ double getDoubleElemLL(DoubleLinkedList list, int index) {
 }
 
 void sortDoubleLL(DoubleLinkedList list) {
-    double arr[list->inner->count];
-    DoubleNode current = list->inner->begin;
-    DoubleNode temp = list->inner->begin;
+    double arr[list->pf->count];
+    DoubleNode current = list->pf->begin;
+    DoubleNode temp = list->pf->begin;
     int index = 0;
     while (current != NULL) {
         arr[index++] = current->data;
         current = current->next;
     }
 
-    qsort(arr, list->inner->count, sizeof(double), compareDouble);
+    qsort(arr, list->pf->count, sizeof(double), compareDouble);
 
     index = 0;
     while (temp != NULL) {
@@ -144,16 +144,16 @@ void sortDoubleLL(DoubleLinkedList list) {
 }
 
 void sortDoubleLLReverse(DoubleLinkedList list) {
-    double arr[list->inner->count];
-    DoubleNode current = list->inner->begin;
-    DoubleNode temp = list->inner->begin;
+    double arr[list->pf->count];
+    DoubleNode current = list->pf->begin;
+    DoubleNode temp = list->pf->begin;
     int index = 0;
     while (current != NULL) {
         arr[index++] = current->data;
         current = current->next;
     }
 
-    qsort(arr, list->inner->count, sizeof(double), compareDoubleReverse);
+    qsort(arr, list->pf->count, sizeof(double), compareDoubleReverse);
 
     index = 0;
     while (temp != NULL) {
@@ -166,7 +166,7 @@ int indexOfDoubleLL(DoubleLinkedList list, double num) {
     if (list == NULL)
         return -1;
 
-    DoubleNode current = list->inner->begin;
+    DoubleNode current = list->pf->begin;
     int index = 0;
     while (current != NULL) {
         if (num == current->data)
@@ -182,7 +182,7 @@ void clearDoubleLL(DoubleLinkedList list) {
     if (list == NULL)
         return;
 
-    DoubleNode current = list->inner->begin;
+    DoubleNode current = list->pf->begin;
     DoubleNode temp = NULL;
 
     while (current != NULL) {
@@ -191,17 +191,17 @@ void clearDoubleLL(DoubleLinkedList list) {
         free(temp);
     }
 
-    list->inner->count = 0;
-    list->inner->index = 0;
-    list->inner->begin = NULL;
-    list->inner->end = NULL;
-    list->inner->nodes = NULL;
+    list->pf->count = 0;
+    list->pf->index = 0;
+    list->pf->begin = NULL;
+    list->pf->end = NULL;
+    list->pf->nodes = NULL;
 }
 
 bool containsDoubleLL(DoubleLinkedList list, double num) {
     if (list == NULL) return false;
 
-    DoubleNode current = list->inner->begin;
+    DoubleNode current = list->pf->begin;
     while (current != NULL) {
         if (num == current->data)
             return true;
@@ -212,15 +212,15 @@ bool containsDoubleLL(DoubleLinkedList list, double num) {
 }
 
 bool containsAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
-    if (list1 == NULL || list2 == NULL || list2->inner->count > list1->inner->count) return false;
+    if (list1 == NULL || list2 == NULL || list2->pf->count > list1->pf->count) return false;
 
-    double arr[list1->inner->count];
-    DoubleNode temp = list2->inner->begin;
+    double arr[list1->pf->count];
+    DoubleNode temp = list2->pf->begin;
 
     toArrAndSort(list1, arr);
 
     while (temp != NULL) {
-        if (!binarySearch(temp->data, arr, list1->inner->count))
+        if (!binarySearch(temp->data, arr, list1->pf->count))
             return false;
 
         temp = temp->next;
@@ -232,13 +232,13 @@ bool containsAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
 bool containsAnyDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
     if (list1 == NULL || list2 == NULL) return false;
 
-    double arr[list1->inner->count];
-    DoubleNode temp = list2->inner->begin;
+    double arr[list1->pf->count];
+    DoubleNode temp = list2->pf->begin;
 
     toArrAndSort(list1, arr);
 
     while (temp != NULL) {
-        if (binarySearch(temp->data, arr, list1->inner->count))
+        if (binarySearch(temp->data, arr, list1->pf->count))
             return true;
 
         temp = temp->next;
@@ -250,22 +250,22 @@ bool containsAnyDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
 bool removeDoubleLL(DoubleLinkedList list, int index) {
     if (list == NULL) return false;
 
-    if (index >= list->inner->count) {
-        printf("Index %d out of bounds for length %d\n", index, list->inner->count);
+    if (index >= list->pf->count) {
+        printf("Index %d out of bounds for length %d\n", index, list->pf->count);
         return false;
     }
 
-    DoubleNode current = list->inner->begin;
+    DoubleNode current = list->pf->begin;
     DoubleNode previous = NULL;
     DoubleNode temp = NULL;
 
-    if (list->inner->count == 1) {
-        temp = list->inner->begin;
-        list->inner->nodes = NULL;
-        list->inner->begin = NULL;
-        list->inner->end = NULL;
-        list->inner->count = 0;
-        list->inner->index = 0;
+    if (list->pf->count == 1) {
+        temp = list->pf->begin;
+        list->pf->nodes = NULL;
+        list->pf->begin = NULL;
+        list->pf->end = NULL;
+        list->pf->count = 0;
+        list->pf->index = 0;
         free(temp);
         return true;
     }
@@ -276,7 +276,7 @@ bool removeDoubleLL(DoubleLinkedList list, int index) {
 bool removeAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
     if (list1 == NULL || list2 ==NULL) return false;
 
-    int listSize = list1->inner->count;
+    int listSize = list1->pf->count;
     double* temp = malloc(listSize * sizeof(int));
     double* filtered = malloc(listSize * sizeof(int));
     double* tempForBS = malloc(listSize * sizeof(int));
@@ -286,7 +286,7 @@ bool removeAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
     qsort(tempForBS, listSize, sizeof(double), compareDouble);
 
     int j = 0;
-    DoubleNode current2 = list2->inner->begin;
+    DoubleNode current2 = list2->pf->begin;
     while (current2 != NULL) {
         bool isExist = binarySearch(current2->data, tempForBS, listSize);
         if (isExist) {
@@ -324,7 +324,7 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2
         return copyDoubleLL(list1);
     }
 
-    int listSize = list1->inner->count;
+    int listSize = list1->pf->count;
     double* temp = malloc(listSize * sizeof(int));
     double* filtered = malloc(listSize * sizeof(int));
     double* tempForBS = malloc(listSize * sizeof(int));
@@ -334,7 +334,7 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2
     qsort(tempForBS, listSize, sizeof(double), compareDouble);
 
     int j = 0;
-    DoubleNode current2 = list2->inner->begin;
+    DoubleNode current2 = list2->pf->begin;
     while (current2 != NULL) {
         bool isExist = binarySearch(current2->data, tempForBS, listSize);
         if (isExist) {
@@ -363,9 +363,9 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2
 }
 
 void printDoubleLL(DoubleLinkedList list) {
-    if (list == NULL || list->inner == NULL) return;
+    if (list == NULL || list->pf == NULL) return;
 
-    DoubleNode current = list->inner->begin;
+    DoubleNode current = list->pf->begin;
     printf("%s", "[");
     while (current != NULL) {
         if (current->next == NULL)
@@ -381,8 +381,8 @@ void printDoubleLL(DoubleLinkedList list) {
 void deleteDoubleLL(DoubleLinkedList* list) {
     if (list == NULL || *list == NULL) return;
 
-    if ((*list)->inner != NULL) {
-        DoubleNode current = (*list)->inner->begin;
+    if ((*list)->pf != NULL) {
+        DoubleNode current = (*list)->pf->begin;
         DoubleNode temp = NULL;
 
         while (current != NULL) {
@@ -391,7 +391,7 @@ void deleteDoubleLL(DoubleLinkedList* list) {
             free(temp);
         }
 
-        free((*list)->inner);
+        free((*list)->pf);
     }
 
     free(*list);
@@ -399,20 +399,20 @@ void deleteDoubleLL(DoubleLinkedList* list) {
 }
 
 int sizeDoubleLL(DoubleLinkedList list) {
-    return list->inner->count;
+    return list->pf->count;
 }
 
 bool isEmptyDoubleLL(DoubleLinkedList list) {
-    return list == NULL || list->inner->count == 0;
+    return list == NULL || list->pf->count == 0;
 }
 
 void reverseDoubleLL(DoubleLinkedList list) {
-    double* arr = malloc(list->inner->count * sizeof(int));
+    double* arr = malloc(list->pf->count * sizeof(int));
     copyLLToArray(list, arr);
 
-    reverseArr(arr, list->inner->count);
+    reverseArr(arr, list->pf->count);
 
-    DoubleNode current = list->inner->begin;
+    DoubleNode current = list->pf->begin;
     int index = 0;
     while (current != NULL) {
         current->data = arr[index];
@@ -427,11 +427,11 @@ bool isEqualListsDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
     if (list1 == NULL || list2 == NULL)
         return false;
 
-    if (list1->inner->count != list2->inner->count)
+    if (list1->pf->count != list2->pf->count)
         return false;
 
-    DoubleNode current1 = list1->inner->begin;
-    DoubleNode current2 = list2->inner->begin;
+    DoubleNode current1 = list1->pf->begin;
+    DoubleNode current2 = list2->pf->begin;
 
     while (current1 != NULL) {
         if (current1->data != current2->data)
@@ -456,10 +456,10 @@ static void deleteFirstNodeDouble(DoubleLinkedList list, DoubleNode current) {
     temp = current;
     current = current->next;
     current->prev = NULL;
-    list->inner->nodes = current;
-    list->inner->begin = current;
-    list->inner->count--;
-    list->inner->index--;
+    list->pf->nodes = current;
+    list->pf->begin = current;
+    list->pf->count--;
+    list->pf->index--;
     free(temp);
 }
 
@@ -471,11 +471,11 @@ static void deleteNodeInt(DoubleLinkedList list, DoubleNode current, DoubleNode 
     if (current != NULL)
         current->prev = previous;
     else
-        list->inner->end = previous;
+        list->pf->end = previous;
 
     previous->next = current;
-    list->inner->count--;
-    list->inner->index--;
+    list->pf->count--;
+    list->pf->index--;
     free(temp);
 }
 
@@ -484,7 +484,7 @@ static bool removeNodeDouble(DoubleLinkedList list, DoubleNode current, DoubleNo
         deleteFirstNodeDouble(list, current);
         return true;
     } else {
-        previous = list->inner->begin;
+        previous = list->pf->begin;
         previous->prev = NULL;
         current = current->next;
         current->prev = previous;
@@ -522,14 +522,14 @@ static bool binarySearch(double elem, const double* arr, int high) {
 }
 
 static void toArrAndSort(DoubleLinkedList list, double * arr) {
-    DoubleNode current = list->inner->begin;
+    DoubleNode current = list->pf->begin;
     int index = 0;
     while (current != NULL) {
         arr[index++] = current->data;
         current = current->next;
     }
 
-    qsort(arr, list->inner->count, sizeof(double), compareDouble);
+    qsort(arr, list->pf->count, sizeof(double), compareDouble);
 }
 
 static int indexOf(const double* arr, int size, double num) {
@@ -543,7 +543,7 @@ static int indexOf(const double* arr, int size, double num) {
 }
 
 static void copyLLToArray(DoubleLinkedList list, double* arr) {
-    DoubleNode current = list->inner->begin;
+    DoubleNode current = list->pf->begin;
     int index = 0;
     while (current != NULL) {
         arr[index++] = current->data;
@@ -553,7 +553,7 @@ static void copyLLToArray(DoubleLinkedList list, double* arr) {
 
 static DoubleLinkedList copyDoubleLL(DoubleLinkedList list) {
     DoubleLinkedList temp = newDoubleLinkedList(temp);
-    DoubleNode current = list->inner->begin;
+    DoubleNode current = list->pf->begin;
 
     while (current != NULL) {
         addDoubleElemLL(temp, current->data);

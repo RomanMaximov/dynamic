@@ -9,11 +9,11 @@
 
 
 // structures
-typedef struct String {
+/*typedef struct String {
     int count;
     char* data;
     int capacity;
-} String;
+} String;*/
 
 typedef struct Collection {
     void* data;
@@ -91,17 +91,17 @@ static void* iterator(Type type);
 // TODO добавить другие способы инициализации сетов как у массивов
 IntSet newIntSet(IntSet temp) {
     IntSet set = malloc(sizeof(SetInt));
-    set->inner = malloc(sizeof(InnerIntSet));
-    set->inner->collection = malloc(sizeof(Collection));
-    set->inner->collection->data = (void*) set;
-    set->inner->collection->type = INT_SET;
-    set->inner->count = 0;
-    set->inner->capacity = 16;
-    set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeInt*));
-    for (int i = 0; i < set->inner->capacity; ++i)
-        set->inner->bucket[i] = NULL;
+    set->pf = malloc(sizeof(InnerIntSet));
+    set->pf->collection = malloc(sizeof(Collection));
+    set->pf->collection->data = (void*) set;
+    set->pf->collection->type = INT_SET;
+    set->pf->count = 0;
+    set->pf->capacity = 16;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeInt*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
 
-    set->values = (void*) set->inner->collection;
+    set->values = (void*) set->pf->collection;
     initFuncs(INT_SET, (void*)set);
 
     return set;
@@ -109,12 +109,12 @@ IntSet newIntSet(IntSet temp) {
 
 DoubleSet newDoubleSet(DoubleSet temp) {
     DoubleSet set = malloc(sizeof(SetDouble));
-    set->inner = malloc(sizeof(InnerDoubleSet));
-    set->inner->count = 0;
-    set->inner->capacity = 16;
-    set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeDouble*));
-    for (int i = 0; i < set->inner->capacity; ++i)
-        set->inner->bucket[i] = NULL;
+    set->pf = malloc(sizeof(InnerDoubleSet));
+    set->pf->count = 0;
+    set->pf->capacity = 16;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeDouble*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
 
     initFuncs(DOUBLE_SET, (void*)set);
 
@@ -123,12 +123,12 @@ DoubleSet newDoubleSet(DoubleSet temp) {
 
 StrSet newStrSet(StrSet temp) {
     StrSet set = malloc(sizeof(SetStr));
-    set->inner = malloc(sizeof(InnerStrSet));
-    set->inner->count = 0;
-    set->inner->capacity = 16;
-    set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeStr*));
-    for (int i = 0; i < set->inner->capacity; ++i)
-        set->inner->bucket[i] = NULL;
+    set->pf = malloc(sizeof(InnerStrSet));
+    set->pf->count = 0;
+    set->pf->capacity = 16;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeStr*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
 
     initFuncs(STR_SET, (void*)set);
 

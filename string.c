@@ -468,6 +468,12 @@ StrList split(string s, char delimeter) {
     return list;
 }
 
+string trim(string s) {
+    char* temp = s->data;
+    // TODO
+    return s;
+}
+
 string joinStrList(char* delimeter, StrList list) {
     int count = 0;
     int letterCounter = 0;

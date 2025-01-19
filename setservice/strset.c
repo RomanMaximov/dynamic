@@ -23,11 +23,11 @@ typedef struct InnerStrSet {
     NodeStr** bucket;
 } InnerStrSet;
 
-typedef struct String {
+/*typedef struct String {
     int count;
     char* data;
     int capacity;
-} String;
+} String;*/
 
 typedef struct InnerStrList {
     int count;
@@ -69,16 +69,16 @@ void addStrElemSet(StrSet set, string s) {
     if (isCapacityFull(set))
         increaseCapacity(set);
 
-    int indexBucket = (hashString(s->data) & 0x7FFFFFFF) % set->inner->capacity;
-    insertNode(&set->inner->bucket[indexBucket], s->data, &set->inner->count);
+    int indexBucket = (hashString(s->data) & 0x7FFFFFFF) % set->pf->capacity;
+    insertNode(&set->pf->bucket[indexBucket], s->data, &set->pf->count);
 }
 
 void addCharElemSet(StrSet set, char* s) {
     if (isCapacityFull(set))
         increaseCapacity(set);
 
-    int indexBucket = (hashString(s) & 0x7FFFFFFF) % set->inner->capacity;
-    insertNode(&set->inner->bucket[indexBucket], s, &set->inner->count);
+    int indexBucket = (hashString(s) & 0x7FFFFFFF) % set->pf->capacity;
+    insertNode(&set->pf->bucket[indexBucket], s, &set->pf->count);
 }
 
 void addAllStrElemSet(StrSet set1, StrSet set2) {
@@ -87,34 +87,34 @@ void addAllStrElemSet(StrSet set1, StrSet set2) {
     if (isCapacityFull(set1))
         increaseCapacity(set1);
 
-    int count = set2->inner->count;
+    int count = set2->pf->count;
     StrList list = newStrList(list);
     setToArr(set2, list);
 
     for (int i = 0; i < count; ++i) {
-        int indexBucket = (hashString(list->inner->str[i]->data) & 0x7FFFFFFF) % set1->inner->capacity;
-        insertNode(&set1->inner->bucket[indexBucket], list->inner->str[i]->data, &set1->inner->count);
+        int indexBucket = (hashString(list->pf->str[i]->data) & 0x7FFFFFFF) % set1->pf->capacity;
+        insertNode(&set1->pf->bucket[indexBucket], list->pf->str[i]->data, &set1->pf->count);
     }
 
     deleteStrList(&list);
 }
 
 void clearStrSet(StrSet set) {
-    if (set->inner->bucket != NULL) {
-        deleteNodes(set->inner->bucket, set->inner->capacity);
-        free(set->inner->bucket);
+    if (set->pf->bucket != NULL) {
+        deleteNodes(set->pf->bucket, set->pf->capacity);
+        free(set->pf->bucket);
     }
 
-    set->inner->count = 0;
-    set->inner->capacity = 16;
-    set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeStr*));
-    for (int i = 0; i < set->inner->capacity; ++i)
-        set->inner->bucket[i] = NULL;
+    set->pf->count = 0;
+    set->pf->capacity = 16;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeStr*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
 }
 
 bool containsStrSet(StrSet set, string s) {
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        if(isContains(set->inner->bucket[i], s))
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        if(isContains(set->pf->bucket[i], s))
             return true;
     }
 
@@ -122,19 +122,19 @@ bool containsStrSet(StrSet set, string s) {
 }
 
 bool containsAllStrSet(StrSet set1, StrSet set2) {
-    if (set1 == NULL || set2 == NULL || set2->inner->count > set1->inner->count) return false;
+    if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
     if (isEmptyStrSet(set2)) return true;
 
-    int count2 = set2->inner->count;
+    int count2 = set2->pf->count;
     StrList list2 = newStrList(list2);
     setToArr(set2, list2);
 
-    int count1 = set1->inner->count;
+    int count1 = set1->pf->count;
     StrList list1 = newStrList(list1);
     toListAndSort(set1, list1);
 
     for (int i = 0; i < count2; ++i) {
-        if(!binarySearch(list2->inner->str[i], list1->inner->str, count1))
+        if(!binarySearch(list2->pf->str[i], list1->pf->str, count1))
             return false;
     }
 
@@ -145,18 +145,18 @@ bool containsAllStrSet(StrSet set1, StrSet set2) {
 }
 
 bool containsAnyStrSet(StrSet set1, StrSet set2) {
-    if (set1 == NULL || set2 == NULL || set2->inner->count > set1->inner->count) return false;
+    if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
 
-    int count2 = set2->inner->count;
+    int count2 = set2->pf->count;
     StrList list2 = newStrList(list2);
     setToArr(set2, list2);
 
-    int count1 = set1->inner->count;
+    int count1 = set1->pf->count;
     StrList list1 = newStrList(list1);
     toListAndSort(set1, list1);
 
     for (int i = 0; i < count2; ++i) {
-        if(binarySearch(list2->inner->str[i], list1->inner->str, count1)) {
+        if(binarySearch(list2->pf->str[i], list1->pf->str, count1)) {
             deleteStrList(&list1);
             deleteStrList(&list2);
             return true;
@@ -170,12 +170,12 @@ bool containsAnyStrSet(StrSet set1, StrSet set2) {
 }
 
 bool removeStrSet(StrSet set, string s) {
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        StrNode previous = set->inner->bucket[i];
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        StrNode previous = set->pf->bucket[i];
         bool found = false;
-        removeNode(&set->inner->bucket[i], &previous, s, &found);
+        removeNode(&set->pf->bucket[i], &previous, s, &found);
         if (found)
-            set->inner->count--;
+            set->pf->count--;
     }
 
     return true;
@@ -185,8 +185,8 @@ bool removeAllStrSet(StrSet set1, StrSet set2) {
     StrList list2 = newStrList(list2);
     setToArr(set2, list2);
 
-    for (int i = 0; i < set2->inner->count; ++i) {
-        removeStrSet(set1, list2->inner->str[i]);
+    for (int i = 0; i < set2->pf->count; ++i) {
+        removeStrSet(set1, list2->pf->str[i]);
     }
 
     deleteStrList(&list2);
@@ -195,11 +195,11 @@ bool removeAllStrSet(StrSet set1, StrSet set2) {
 }
 
 bool isEmptyStrSet(StrSet set) {
-    return set == NULL || set->inner->count == 0;
+    return set == NULL || set->pf->count == 0;
 }
 
 bool isEqualsStrSet(StrSet set1, StrSet set2) {
-    if (set1 == NULL || set2 == NULL || set1->inner->count != set2->inner->count) return false;
+    if (set1 == NULL || set2 == NULL || set1->pf->count != set2->pf->count) return false;
 
     StrList list1 = newStrList(list1);
     StrList list2 = newStrList(list2);
@@ -207,8 +207,8 @@ bool isEqualsStrSet(StrSet set1, StrSet set2) {
     toListAndSort(set1, list1);
     toListAndSort(set2, list2);
 
-    for (int i = 0; i < set1->inner->count; ++i) {
-        if (compareCharStr(list1->inner->str[i]->data, list2->inner->str[i]->data) != 0)
+    for (int i = 0; i < set1->pf->count; ++i) {
+        if (compareCharStr(list1->pf->str[i]->data, list2->pf->str[i]->data) != 0)
             return false;
     }
 
@@ -231,7 +231,7 @@ Iterator iteratorStrSet(StrSet list) { // TODO принимать void* и пр�
     Iterator iter = malloc(sizeof(Itr));
     iter->count = 0;
     iter->data = list;
-    iter->collectionSize = list->inner->count;
+    iter->collectionSize = list->pf->count;
     iter->hasNext = (void*) hasNext(iter);
     iter->type = STR_SET;
     return iter;
@@ -242,20 +242,20 @@ static bool hasNext(Iterator iter) {
 }
 
 int sizeStrSet(StrSet set) {
-    return set->inner->count;
+    return set->pf->count;
 }
 
 void printStrSet(StrSet set) {
-    if (set == NULL || set->inner == NULL) {
+    if (set == NULL || set->pf == NULL) {
         printf("%s", "[]\n");
         return;
     }
 
     printf("%s", "[");
 
-    int counter = set->inner->count;
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        printInOrder(set->inner->bucket[i], &counter);
+    int counter = set->pf->count;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        printInOrder(set->pf->bucket[i], &counter);
     }
 
     printf("%s", "]");
@@ -263,13 +263,13 @@ void printStrSet(StrSet set) {
 }
 
 void deleteStrSet(StrSet* set) {
-    if (set == NULL || *set == NULL || (*set)->inner == NULL) return;
+    if (set == NULL || *set == NULL || (*set)->pf == NULL) return;
 
-    if ((*set)->inner->bucket != NULL) {
-        deleteNodes((*set)->inner->bucket, (*set)->inner->capacity);
-        free((*set)->inner->bucket);
+    if ((*set)->pf->bucket != NULL) {
+        deleteNodes((*set)->pf->bucket, (*set)->pf->capacity);
+        free((*set)->pf->bucket);
     }
-    free((*set)->inner);
+    free((*set)->pf);
     free(*set);
     *set = NULL;
 }
@@ -289,31 +289,31 @@ static int hashString(const char* str) {
 
 static bool isCapacityFull(StrSet set) {
     int counter = 0;
-    int fullCapacity = set->inner->capacity / 8 * 6;
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        if (set->inner->bucket[i] != NULL) ++counter;
+    int fullCapacity = set->pf->capacity / 8 * 6;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        if (set->pf->bucket[i] != NULL) ++counter;
     }
 
     return counter >= fullCapacity;
 }
 
 static void increaseCapacity(StrSet set) {
-    int oldCapacity = set->inner->capacity;
-    int count = set->inner->count;
-    NodeStr** temp = set->inner->bucket;
+    int oldCapacity = set->pf->capacity;
+    int count = set->pf->count;
+    NodeStr** temp = set->pf->bucket;
 
     StrList list = newStrList(list);
     setToArr(set, list);
 
-    set->inner->capacity *= 2;
-    set->inner->count = 0;
-    set->inner->bucket = malloc(set->inner->capacity * sizeof(NodeStr*));
-    for (int i = 0; i < set->inner->capacity; ++i)
-        set->inner->bucket[i] = NULL;
+    set->pf->capacity *= 2;
+    set->pf->count = 0;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeStr*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
 
     for (int i = 0; i < count; ++i) {
-        int indexBucket = (hashString(list->inner->str[i]->data) & 0x7FFFFFFF) % set->inner->capacity;
-        insertNode(&set->inner->bucket[indexBucket], list->inner->str[i]->data, &set->inner->count);
+        int indexBucket = (hashString(list->pf->str[i]->data) & 0x7FFFFFFF) % set->pf->capacity;
+        insertNode(&set->pf->bucket[indexBucket], list->pf->str[i]->data, &set->pf->count);
     }
 
     deleteStrList(&list);
@@ -323,8 +323,8 @@ static void increaseCapacity(StrSet set) {
 
 static void setToArr(StrSet set, StrList list) {
     int index = 0;
-    for (int i = 0; i < set->inner->capacity; ++i) {
-        copyValuesToList(set->inner->bucket[i], list);
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        copyValuesToList(set->pf->bucket[i], list);
     }
 }
 
@@ -399,7 +399,7 @@ static bool isContains(StrNode node, string s) {
 
 static void toListAndSort(StrSet set, StrList list) {
     setToArr(set, list);
-    quickSortStr(list->inner->str, 0, list->inner->count);
+    quickSortStr(list->pf->str, 0, list->pf->count);
 }
 
 static void quickSortStr(String** strList, int low, int high) {

@@ -24,7 +24,7 @@
 typedef struct String String;
 
 typedef struct LinkedListInt {
-    struct InnerIntLL* inner;   // private field
+    struct InnerIntLL* pf;   // private field
     // funcs pointers
     void (*add)(struct LinkedListInt* list, int number);
     void (*addAll)(struct LinkedListInt* list1, struct LinkedListInt* list2);
@@ -51,7 +51,7 @@ typedef struct LinkedListInt {
 } LinkedListInt;
 
 typedef struct LinkedListDouble {
-    struct InnerDoubleLL* inner;   // private field
+    struct InnerDoubleLL* pf;   // private field
     // funcs pointers
     void (*add)(struct LinkedListDouble* list, double number);
     void (*addAll)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
@@ -78,7 +78,7 @@ typedef struct LinkedListDouble {
 } LinkedListDouble;
 
 typedef struct LinkedListStr {
-    struct InnerStrLL* inner;   // private field
+    struct InnerStrLL* pf;   // private field
     // funcs pointers
     void (*add)(struct LinkedListStr* list, string s);
     void (*addAll)(struct LinkedListStr* list1, struct LinkedListStr* list2);

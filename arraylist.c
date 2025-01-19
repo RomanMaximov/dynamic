@@ -8,11 +8,11 @@
 #include "arraylist.h"
 
 // structures
-typedef struct String {
+/*typedef struct String {
     int count;
     char* data;
     int capacity;
-} String;
+} String;*/
 
 // ArrayList data encapsulation
 typedef struct InnerIntList {
@@ -73,10 +73,10 @@ static void* iterator(Type type);
 // funcs
 IntList newIntList(IntList temp) {
     IntList list = malloc(sizeof(ArrayListInt));
-    list->inner = malloc(sizeof(InnerIntList));
-    list->inner->count = 0;
-    list->inner->capacity = 20;
-    list->inner->data = malloc(list->inner->capacity * sizeof(int));
+    list->pf = malloc(sizeof(InnerIntList));
+    list->pf->count = 0;
+    list->pf->capacity = 20;
+    list->pf->data = malloc(list->pf->capacity * sizeof(int));
     initFuncs(INT_LIST, (void*)list);
 
     return list;
@@ -84,10 +84,10 @@ IntList newIntList(IntList temp) {
 
 IntList listOfInt(IntList temp, int paramCount, ...) {
     IntList list = malloc(sizeof(ArrayListInt));
-    /*list->inner = malloc(sizeof(InnerIntList));
-    list->inner->count = 0;
-    list->inner->capacity = 20;
-    list->inner->data = malloc(list->inner->capacity * sizeof(int));
+    /*list->pf = malloc(sizeof(InnerIntList));
+    list->pf->count = 0;
+    list->pf->capacity = 20;
+    list->pf->data = malloc(list->pf->capacity * sizeof(int));
     initFuncs(INT_LIST, (void*)list);
 
     va_list param;
@@ -99,8 +99,9 @@ IntList listOfInt(IntList temp, int paramCount, ...) {
     return list;
 }
 
-/*IntList listOfArrInt(IntList list, int* temp, int size) {
-    list = malloc(sizeof(IntArray));
+/*IntList listOfArrInt(IntList temp, int* temp, int size) {
+    IntList list = malloc(sizeof(ArrayListInt));
+    list->pf = malloc(sizeof(InnerIntList));
     list->count = 0;
     list->capacity = size < 20 ? 20 : size;
     list->data = malloc(list->capacity * sizeof(int));
@@ -117,10 +118,10 @@ IntList listOfInt(IntList temp, int paramCount, ...) {
 
 DoubleList newDoubleList(DoubleList temp) {
     DoubleList list = malloc(sizeof(ArrayListDouble));
-    list->inner = malloc(sizeof(InnerDoubleList));
-    list->inner->count = 0;
-    list->inner->capacity = 20;
-    list->inner->data = malloc(list->inner->capacity * sizeof(double));
+    list->pf = malloc(sizeof(InnerDoubleList));
+    list->pf->count = 0;
+    list->pf->capacity = 20;
+    list->pf->data = malloc(list->pf->capacity * sizeof(double));
     initFuncs(DOUBLE_LIST, (void*)list);
 
     return list;
@@ -128,10 +129,10 @@ DoubleList newDoubleList(DoubleList temp) {
 
 DoubleList listOfDouble(DoubleList temp, int paramCount, ...) {
     DoubleList list = malloc(sizeof(ArrayListDouble));
-    /*list->inner = malloc(sizeof(InnerDoubleList));
-    list->inner->count = 0;
-    list->inner->capacity = 20;
-    list->inner->data = malloc(list->inner->capacity * sizeof(double));
+    /*list->pf = malloc(sizeof(InnerDoubleList));
+    list->pf->count = 0;
+    list->pf->capacity = 20;
+    list->pf->data = malloc(list->pf->capacity * sizeof(double));
     initFuncs(DOUBLE_LIST, (void*)list);
 
     va_list param;
@@ -143,8 +144,9 @@ DoubleList listOfDouble(DoubleList temp, int paramCount, ...) {
     return list;
 }
 
-/*DoubleList listOfArrDouble(DoubleList list, double* temp, int size) {
-    list = malloc(sizeof(DoubleArray));
+/*DoubleList listOfArrDouble(DoubleList temp, double* temp, int size) {
+    DoubleList list = malloc(sizeof(ArrayListDouble));
+    list->pf = malloc(sizeof(InnerDoubleList))
     list->count = 0;
     list->capacity = size < 20 ? 20 : size;
     list->data = malloc(list->capacity * sizeof(double));
@@ -161,12 +163,12 @@ DoubleList listOfDouble(DoubleList temp, int paramCount, ...) {
 
 StrList newStrList(StrList temp) {
     StrList list = malloc(sizeof(ArrayListStr));
-    list->inner = malloc(sizeof(InnerStrList));
-    list->inner->count = 0;
-    list->inner->capacity = 20;
-    list->inner->data = malloc(list->inner->capacity * sizeof(String*));
-    for (int i = 0; i < list->inner->capacity; ++i)
-        list->inner->data[i] = NULL;
+    list->pf = malloc(sizeof(InnerStrList));
+    list->pf->count = 0;
+    list->pf->capacity = 20;
+    list->pf->data = malloc(list->pf->capacity * sizeof(String*));
+    for (int i = 0; i < list->pf->capacity; ++i)
+        list->pf->data[i] = NULL;
 
     initFuncs(STR_LIST, (void*)list);
 
@@ -175,12 +177,12 @@ StrList newStrList(StrList temp) {
 
 StrList listOfStr(StrList temp, int paramCount, ...) {
     StrList list = malloc(sizeof(ArrayListStr));
-    /*list->inner = malloc(sizeof(InnerStrList));
-    list->inner->count = 0;
-    list->inner->capacity = 20;
-    list->inner->str = malloc(list->inner->capacity * sizeof(String*));
-    for (int i = 0; i < list->inner->capacity; ++i)
-        list->inner->str[i] = NULL;
+    /*list->pf = malloc(sizeof(InnerStrList));
+    list->pf->count = 0;
+    list->pf->capacity = 20;
+    list->pf->str = malloc(list->pf->capacity * sizeof(String*));
+    for (int i = 0; i < list->pf->capacity; ++i)
+        list->pf->str[i] = NULL;
 
     initFuncs(STR_LIST, (void*)list);
 

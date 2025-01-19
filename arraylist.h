@@ -24,7 +24,7 @@
 typedef struct String String;
 
 typedef struct ArrayListInt {
-    struct InnerIntList* inner;   // private field
+    struct InnerIntList* pf;   // private field
     // funcs pointers
     void (*add)(struct ArrayListInt* list, int number);
     void (*addAll)(struct ArrayListInt* list1, struct ArrayListInt* list2);
@@ -52,7 +52,7 @@ typedef struct ArrayListInt {
 } ArrayListInt;
 
 typedef struct ArrayListDouble {
-    struct InnerDoubleList* inner;   // private field
+    struct InnerDoubleList* pf;   // private field
     // funcs pointers
     void (*add)(struct ArrayListDouble* list, double number);
     void (*addAll)(struct ArrayListDouble* list1, struct ArrayListDouble* list2);
@@ -80,7 +80,7 @@ typedef struct ArrayListDouble {
 } ArrayListDouble;
 
 typedef struct ArrayListStr {
-    struct InnerStrList* inner;   // private field
+    struct InnerStrList* pf;   // private field
     // funcs pointers
     void (*add)(struct ArrayListStr* list, struct String* s);
     void (*addAll)(struct ArrayListStr* list1, struct ArrayListStr* list2);
