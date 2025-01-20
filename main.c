@@ -4,7 +4,7 @@
 #include "dynamic.h"
 //#include "dynamicarray.h"
 //#include "linkedlist.h"
-//#include "string.h"
+#include "string.h"
 //#include "map.h"
 
 
@@ -146,46 +146,49 @@ int main()
     //test();
 
     puts("============================================");
-    string s = stringOf("Moto");
+    string s = strOf("MotoCYclE");
     printString(s);
-    int len = length(s);
-    s = toLowerCase(s);
+    int len = s->length(s);
+    s->toLowerCase(s);
     printf("size: %d\n", len);
     printString(s);
 
-    s = toUpperCase(s);
+    s->toUpperCase(s);
     printString(s);
     //delStr(&s);
     deleteString(&s);
 
 
-    string s2 = stringOf("How it was?");
-    string s3 = stringOf("broken");
+    string s2 = strOf("How it was?");
+    string s3 = strOf("broken");
+    s2->concat(s2, s3);
+    puts("==========  concat  ========");
+    printString(s2);
 
-    string s4 = join("-", 3, s2, s3, s2);
+    string s4 = joinStr("-", 3, s2, s3, s2);
     printString(s4);
 
 
     //printf("ch = %c\n", charAt(s2, 4));
-    string sub = stringOf("See");
-    string sub2 = stringOf("r.");
-    string sub3 = stringOf("ts");
+    string sub = strOf("See");
+    string sub2 = strOf("r.");
+    string sub3 = strOf("ts");
 
-    if (startsWith(s2, sub)) {
+    if (s2->startsWith(s2, sub)) {
         puts("starts OK.");
     } else {
         puts("NOT starts.");
     }
 
-    if (endsWith(s2, sub2)) {
+    if (s2->endsWith(s2, sub2)) {
         puts("ends OK.");
     } else {
         puts("NOT ends.");
     }
 
-    s2 = reverseStr(s2);
+    s2->reverse(s2);
     printString(s2);
-    printf("char index: %d\n", indexOf(s2, '?'));
+    printf("char index: %d\n", s2->indexOf(s2, '?'));
     deleteString(&s2);
     deleteString(&s3);
     deleteString(&s4);
@@ -201,10 +204,10 @@ int main()
 
 
     puts("========================= ////////               /////// ============================================");
-    string ll1 = stringOf("s1");
-    string ll2 = stringOf("s2");
-    string ll3 = stringOf("s3");
-    string ll4 = stringOf("s4");
+    string ll1 = strOf("s1");
+    string ll2 = strOf("s2");
+    string ll3 = strOf("s3");
+    string ll4 = strOf("s4");
     StrLinkedList strLinkedList = newStrLinkedList(strLinkedList);
     strLinkedList->add(strLinkedList, ll1);
     strLinkedList->add(strLinkedList, ll2);

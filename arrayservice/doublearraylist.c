@@ -319,7 +319,7 @@ string toStringDoubleList(DoubleList list) {
 
     sprintf(&text[strlen(text)], "%f", list->pf->data[list->pf->count - 1]);
     strcat(text, "]");
-    string s = stringOf(text);
+    string s = strOf(text);
     free(text);
 
     return s;

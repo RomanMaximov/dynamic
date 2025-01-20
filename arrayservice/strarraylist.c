@@ -52,7 +52,7 @@ void addStrList(StrList list, string str) {
         list->pf->data[list->pf->count] = NULL;
         list->pf->count++;
     } else {
-        string temp = stringOf(str->pf->data);
+        string temp = strOf(str->pf->data);
         if (isFull(list)) {
             list->pf->data = increaseCapacity(list);
             memcpy(&list->pf->data[list->pf->count], &temp, sizeof(String));
@@ -67,7 +67,7 @@ void addStrList(StrList list, string str) {
 void addCharArrList(StrList list, char* str) {
     if (str == NULL || list == NULL) return;
 
-    string elem = stringOf(str);
+    string elem = strOf(str);
 
     if (isFull(list)) {
         list->pf->data = increaseCapacity(list);
@@ -92,13 +92,13 @@ void addAllStrList(StrList dest, StrList from) {
             dest->pf->data[i] = NULL;
 
         for (int i = sizeFrom; i < sizeFrom + sizeDest; ++i) {
-            dest->pf->data[i] = stringOf(from->pf->data[i]->pf->data);
+            dest->pf->data[i] = strOf(from->pf->data[i]->pf->data);
         }
         dest->pf->count += sizeFrom;
     } else {
         int indexFrom = 0;
         for (int i = sizeDest; i < sizeFrom + sizeDest; ++i) {
-            dest->pf->data[i] = stringOf(from->pf->data[indexFrom++]->pf->data);
+            dest->pf->data[i] = strOf(from->pf->data[indexFrom++]->pf->data);
         }
         dest->pf->count += sizeFrom;
     }
@@ -115,7 +115,7 @@ string getStrList(StrList list, int index) {
         return NULL;
     }
 
-    return stringOf(list->pf->data[index]->pf->data);
+    return strOf(list->pf->data[index]->pf->data);
 }
 
 bool setStrList(StrList list, int index, string str) {
@@ -127,7 +127,7 @@ bool setStrList(StrList list, int index, string str) {
         return false;
     }
 
-    list->pf->data[index] = stringOf(str->pf->data);
+    list->pf->data[index] = strOf(str->pf->data);
     return true;
 }
 
@@ -140,7 +140,7 @@ bool setCharArrList(StrList list, int index, char* str) {
         return false;
     }
 
-    list->pf->data[index] = stringOf(str);
+    list->pf->data[index] = strOf(str);
     return true;
 }
 
@@ -185,7 +185,7 @@ void clearStrList(StrList list) {
 }
 
 bool containsStrList(StrList list, string str) {
-    if (list == NULL || isEmptyStr(str))
+    if (list == NULL || str->isEmpty(str))
         return false;
 
     for (int i = 0; i < list->pf->count; ++i) {
@@ -340,7 +340,7 @@ StrList subtractStrList(StrList list1, StrList list2) {
                 temp->pf->data = increaseCapacity(temp);
             }
 
-            temp->pf->data[index++] = stringOf(copyValues->pf->data[i]->pf->data);
+            temp->pf->data[index++] = strOf(copyValues->pf->data[i]->pf->data);
             temp->pf->count++;
         }
     }
@@ -397,7 +397,7 @@ string toStringStrList(StrList list) {
         text[0] = '[';
         text[1] = ']';
         text[2] = '\0';
-        return stringOf(text);
+        return strOf(text);
     }
 
     int count = 256;
@@ -413,7 +413,7 @@ string toStringStrList(StrList list) {
     sprintf(&text[strlen(text)], "%s", list->pf->data[list->pf->count - 1]->pf->data);
     strcat(text, "]");
 
-    string s = stringOf(text);
+    string s = strOf(text);
     free(text);
 
     return s;
@@ -511,7 +511,7 @@ static void copyList(StrList dest, StrList from) {
             dest->pf->data = increaseCapacity(dest);
         }
 
-        dest->pf->data[i] = stringOf(from->pf->data[i]->pf->data);
+        dest->pf->data[i] = strOf(from->pf->data[i]->pf->data);
         dest->pf->count++;
     }
 }

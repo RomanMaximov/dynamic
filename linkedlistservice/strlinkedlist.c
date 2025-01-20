@@ -182,7 +182,7 @@ void sortStrLL(StrLinkedList list) {
 
     index = 0;
     while (temp != NULL) {
-        temp->data = stringOf(strList->pf->str[index++]->pf->data);
+        temp->data = strOf(strList->pf->str[index++]->pf->data);
         temp = temp->next;
     }
     deleteStrList(&strList);
@@ -202,7 +202,7 @@ void sortStrLLReverse(StrLinkedList list) {
 
     index = 0;
     while (temp != NULL) {
-        temp->data = stringOf(strList->pf->str[index++]->pf->data);
+        temp->data = strOf(strList->pf->str[index++]->pf->data);
         temp = temp->next;
     }
     deleteStrList(&strList);
@@ -247,7 +247,7 @@ void clearStrLL(StrLinkedList list) {
 }
 
 bool containsStrLL(StrLinkedList list, string s) {
-    if (list == NULL || isEmptyStr(s)) return false;
+    if (list == NULL || s->isEmpty(s)) return false;
 
     StrNode current = list->pf->begin;
     while (current != NULL) {
@@ -432,7 +432,7 @@ void reverseStrLL(StrLinkedList list) {
     int index = 0;
     while (current != NULL) {
         free(current->data);
-        current->data = stringOf(tempList->pf->str[index]->pf->data);
+        current->data = strOf(tempList->pf->str[index]->pf->data);
         current = current->next;
         ++index;
     }
@@ -665,7 +665,7 @@ static bool binarySearchStr(string s, String** strList, int high) {
 }
 
 static void fillNodeStr(StrNode node, char* s, int* index) {
-    string temp = stringOf(s);
+    string temp = strOf(s);
     node->data = temp;
     node->next = NULL;
     node->prev = NULL;

@@ -310,7 +310,7 @@ string toStringInt(IntList list) {
         text[0] = '[';
         text[1] = ']';
         text[2] = '\0';
-        return stringOf(text);
+        return strOf(text);
     }
 
     int count = 256;
@@ -326,7 +326,7 @@ string toStringInt(IntList list) {
 
     sprintf(&text[strlen(text)], "%d", list->pf->data[list->pf->count - 1]);
     strcat(text, "]");
-    string s = stringOf(text);
+    string s = strOf(text);
     free(text);
 
     return s;

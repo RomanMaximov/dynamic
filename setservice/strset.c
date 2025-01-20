@@ -354,7 +354,7 @@ static void insertNode(NodeStr** node, char* s, int* counter) {
 
 static StrNode createNode(char* s) {
     StrNode node = malloc(sizeof(NodeStr));
-    node->str = stringOf(s);
+    node->str = strOf(s);
     node->left = NULL;
     node->right = NULL;
 

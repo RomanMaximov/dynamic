@@ -119,12 +119,6 @@ typedef struct ArrayListStr ArrayListStr;
     IntList : toStringInt \
 )(T)
 
-#define indexOf(T, V) _Generic((T), \
-    DoubleList : indexOfDoubleList,\
-    IntList : indexOfIntList, \
-    StrList : indexOfStrList,    \
-    string : indexOfStr  \
-)(T, V)
 
 #define removeElem(T, V) _Generic((T), \
     DoubleList : removeElemDouble,\
