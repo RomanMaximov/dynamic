@@ -62,7 +62,6 @@ static void* subtract(Type type);
 static void* isEmpty(Type type);
 static void* reverse(Type type);
 static void* isEquals(Type type);
-static void* emptyIfNull(Type type);
 
 static void* size(Type type);
 static void* printList(Type type);
@@ -467,19 +466,6 @@ static void* isEquals(Type type) {
     }
 }
 
-static void* emptyIfNull(Type type) {
-    switch (type) {
-        case INT_LIST:
-            return emptyIfNullIntList;
-        case DOUBLE_LIST:
-            return emptyIfNullDoubleList;
-        case STR_LIST:
-            return emptyIfNullStrList;
-        default:
-            return NULL;
-    }
-}
-
 static void* size(Type type) {
     switch (type) {
         case INT_LIST:
@@ -524,7 +510,6 @@ static void initFuncs(Type type, void* data) {
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->isEmpty = isEmpty(type) : type == DOUBLE_LIST ? ((DoubleList) data)->isEmpty = isEmpty(type) : (((StrList) data)->isEmpty = isEmpty(type));
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->reverse = reverse(type) : type == DOUBLE_LIST ? ((DoubleList) data)->reverse = reverse(type) : (((StrList) data)->reverse = reverse(type));
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->isEquals = isEquals(type) : type == DOUBLE_LIST ? ((DoubleList) data)->isEquals = isEquals(type) : (((StrList) data)->isEquals = isEquals(type));
-    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->emptyIfNull = emptyIfNull(type) : type == DOUBLE_LIST ? ((DoubleList) data)->emptyIfNull = emptyIfNull(type) : (((StrList) data)->emptyIfNull = emptyIfNull(type));
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->size = size(type) : type == DOUBLE_LIST ? ((DoubleList) data)->size = size(type) : (((StrList) data)->size = size(type));
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->iterator = iterator(type) : type == DOUBLE_LIST ? ((DoubleList) data)->iterator = iterator(type) : (((StrList) data)->iterator = iterator(type));
     //type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->printList = printList(type) : type == DOUBLE_LIST ? ((DoubleList) data)->printList = printList(type) : (((StrList) data)->printList = printList(type));

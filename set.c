@@ -5,6 +5,7 @@
 //
 
 #include "set.h"
+#include "setservice/intset.h"
 #include "collectiontypes.h"
 
 
@@ -80,7 +81,6 @@ static void* removeElem(Type type);
 static void* removeAll(Type type);
 static void* isEmpty(Type type);
 static void* isEquals(Type type);
-static void* emptyIfNull(Type type);
 
 static void* size(Type type);
 static void* printList(Type type);
@@ -267,19 +267,6 @@ static void* isEquals(Type type) {
     }
 }
 
-static void* emptyIfNull(Type type) {
-    switch (type) {
-        case INT_SET:
-            return emptyIfNullIntSet;
-        case DOUBLE_SET:
-            return emptyIfNullDoubleSet;
-        case STR_SET:
-            return emptyIfNullStrSet;
-        default:
-            return NULL;
-    }
-}
-
 static void* size(Type type) {
     switch (type) {
         case INT_SET:
@@ -317,7 +304,6 @@ static void initFuncs(Type type, void* data) {
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->removeAll = removeAll(type) : type == DOUBLE_SET ? ((DoubleSet) data)->removeAll = removeAll(type) : (((StrSet) data)->removeAll = removeAll(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->isEmpty = isEmpty(type) : type == DOUBLE_SET ? ((DoubleSet) data)->isEmpty = isEmpty(type) : (((StrSet) data)->isEmpty = isEmpty(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->isEquals = isEquals(type) : type == DOUBLE_SET ? ((DoubleSet) data)->isEquals = isEquals(type) : (((StrSet) data)->isEquals = isEquals(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->emptyIfNull = emptyIfNull(type) : type == DOUBLE_SET ? ((DoubleSet) data)->emptyIfNull = emptyIfNull(type) : (((StrSet) data)->emptyIfNull = emptyIfNull(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->size = size(type) : type == DOUBLE_SET ? ((DoubleSet) data)->size = size(type) : (((StrSet) data)->size = size(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->iterator = iterator(type) : type == DOUBLE_SET ? ((DoubleSet) data)->iterator = iterator(type) : (((StrSet) data)->iterator = iterator(type));
     //type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->printList = printList(type) : type == DOUBLE_SET ? ((DoubleLinkedList) data)->printList = printList(type) : (((StrLinkedList) data)->printList = printList(type));

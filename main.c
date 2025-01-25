@@ -6,11 +6,11 @@
 //#include "linkedlist.h"
 #include "string.h"
 //#include "map.h"
-
+#include <crtdbg.h>
 
 int main()
 {
-
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     ///////////   int index = hashCode(key) % capacity;  индекс бакета
 
     /*IntArray* arrInt = null;
@@ -213,8 +213,14 @@ int main()
     strLinkedList->add(strLinkedList, ll2);
     strLinkedList->add(strLinkedList, ll3);
     strLinkedList->add(strLinkedList, ll4);
-    strLinkedList->reverse(strLinkedList);
+    strLinkedList->add(strLinkedList, ll4);
+    strLinkedList->add(strLinkedList, ll4);
+    puts("// === //");
     printStrLL(strLinkedList);
+    strLinkedList->reverse(strLinkedList);
+    puts("// === //");
+    printStrLL(strLinkedList);
+    deleteStrLL(&strLinkedList);
 
 
     /*add(stringOf("str1"), stringList);
@@ -305,9 +311,9 @@ int main()
 
     puts("===========================================");
 
-    IntSet set = NULL;
-    IntSet set2 = NULL;
-    set = emptyIfNullIntSet(set);
+    IntSet set = newIntSet(set);
+    IntSet set2 = newIntSet(set2);
+
     set->add(set, 200);
     set->add(set, 120);
     set->add(set, 300);
@@ -315,21 +321,21 @@ int main()
     set->add(set, 150);
     set->add(set, 130);
 
-    printTree(set);
-    removeIntSet(set, 200);
-    printTree(set);
-    printIntSet(set);
-    printIntSet(set2);
+    //printTree(set);
+    set->removeElem(set, 200);
+    //printTree(set);
+    //printIntSet(set);
+    //printIntSet(set2);
 
-    if (isEqualsIntSet(set, set2)) {
+    if (set->isEquals(set, set2)) {
         puts("set and set2 are equals");
     } else {
         puts("set and set2 are NOT equals");
     }
 
 
-    deleteIntSet(&set);
-    printIntSet(set);
+    //deleteIntSet(&set);
+    //printIntSet(set);
 
     puts("");
 

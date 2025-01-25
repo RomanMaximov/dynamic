@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include "string.h"
 #include "iterator.h"
-#include "setservice/intset.h"
+//#include "setservice/intset.h"
 #include "setservice/doubleset.h"
 #include "setservice/strset.h"
 
@@ -34,7 +34,6 @@ typedef struct SetInt {
     bool (*removeAll)(struct SetInt* set1, struct SetInt* set2);
     bool (*isEmpty)(struct SetInt* set);
     bool (*isEquals)(struct SetInt* set1, struct SetInt* set2);
-    struct SetInt* (*emptyIfNull)(struct SetInt* set);
     int (*size)(struct SetInt* set);
     struct Itr* (*iterator)(struct SetInt* set);
     //void (*printset)(struct LinkedsetInt* set);
@@ -54,7 +53,6 @@ typedef struct SetDouble {
     bool (*removeAll)(struct SetDouble* set1, struct SetDouble* set2);
     bool (*isEmpty)(struct SetDouble* set);
     bool (*isEquals)(struct SetDouble* set1, struct SetDouble* set2);
-    struct SetDouble* (*emptyIfNull)(struct SetDouble* set);
     int (*size)(struct SetDouble* set);
     struct Itr* (*iterator)(struct SetDouble* set);
     //void (*printset)(struct LinkedsetInt* set);
@@ -74,7 +72,6 @@ typedef struct SetStr {
     bool (*removeAll)(struct SetStr* set1, struct SetStr* set2);
     bool (*isEmpty)(struct SetStr* set);
     bool (*isEquals)(struct SetStr* set1, struct SetStr* set2);
-    struct SetStr* (*emptyIfNull)(struct SetStr* set);
     int (*size)(struct SetStr* set);
     struct Itr* (*iterator)(struct SetStr* set);
     //void (*printset)(struct LinkedsetInt* set);

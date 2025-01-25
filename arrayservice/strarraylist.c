@@ -354,15 +354,34 @@ bool isEmptyStrList(StrList list) {
 }
 
 void reverseStrList(StrList list) {
-    String** start = list->pf->data;
-    String** end = list->pf->data + (list->pf->count - 1);
-    String* temp;
-    while (start <= end) {
-        temp = *start;
-        *start = *end;
-        *end = temp;
-        ++start;
-        --end;
+    if (list == NULL || list->pf == NULL || list->pf->data == NULL) {
+        return;
+    }
+
+    int end = list->pf->count - 1;
+    string temp = NULL;
+    for (int i = 0; i < 7; ++i, --end) {
+        temp = list->pf->data[i];
+        list->pf->data[i] = list->pf->data[end];
+        list->pf->data[end] = temp;
+    }
+
+    for (int i = 0; i < list->pf->count; ++i) {
+        if (list->pf->data[i] == NULL) {
+            puts("data[i] = NULL");
+            return;
+        }
+        if (list->pf->data[i]->pf == NULL) {
+            puts("data[i]->pf = NULL");
+            return;
+        }
+        if (list->pf->data[i]->pf->data == NULL) {
+            puts("data[i]->pf->data = NULL");
+            return;
+        }
+
+        char* text = list->pf->data[i]->pf->data;
+        puts(text);
     }
 }
 
@@ -452,7 +471,6 @@ void deleteStrList(StrList* list) {
                 deleteString(&(*list)->pf->data[i]);
             }
         }
-        free((*list)->pf->data);
     }
 
     free((*list)->pf);

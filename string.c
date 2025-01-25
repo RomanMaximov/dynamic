@@ -26,11 +26,9 @@ typedef struct InnerStrList {
 } InnerStrList;
 
 
-
-
 // prototypes private funcs
 static String** increaseCapacity(StrList list);
-static int compareTo(string s1, string s2);
+static int compareTo(string s1, string s2 );
 
 
 // private prototypes funcs for pointers initialization
@@ -102,8 +100,8 @@ string concatStr(string s1, string s2) {
     char temp[s1->pf->count + 1];
     strcpy(temp, s1->pf->data);
     s1->pf->data = realloc(s1->pf->data, count * sizeof(char));
-    strcpy(s1->pf->data, temp);
 
+    strcpy(s1->pf->data, temp);
     strcat(s1->pf->data, s2->pf->data);
 
     return s1;

@@ -43,7 +43,6 @@ typedef struct ArrayListInt {
     bool (*isEmpty)(struct ArrayListInt* list);
     void (*reverse)(struct ArrayListInt* list);
     bool (*isEquals)(struct ArrayListInt* list1, struct ArrayListInt* list2);
-    struct ArrayListInt* (*emptyIfNull)(struct ArrayListInt* list);
     int (*size)(struct ArrayListInt* list);
     struct String* (*toString)(struct ArrayListInt* list);
     struct Itr* (*iterator)(struct ArrayListInt* list);
@@ -71,7 +70,6 @@ typedef struct ArrayListDouble {
     bool (*isEmpty)(struct ArrayListDouble* list);
     void (*reverse)(struct ArrayListDouble* list);
     bool (*isEquals)(struct ArrayListDouble* list1, struct ArrayListDouble* list2);
-    struct ArrayListDouble* (*emptyIfNull)(struct ArrayListDouble* list);
     int (*size)(struct ArrayListDouble* list);
     struct String* (*toString)(struct ArrayListDouble* list);
     struct Itr* (*iterator)(struct ArrayListDouble* list);
@@ -99,7 +97,6 @@ typedef struct ArrayListStr {
     bool (*isEmpty)(struct ArrayListStr* list);
     void (*reverse)(struct ArrayListStr* list);
     bool (*isEquals)(struct ArrayListStr* list1, struct ArrayListStr* list2);
-    struct ArrayListStr* (*emptyIfNull)(struct ArrayListStr* list);
     int (*size)(struct ArrayListStr* list);
     struct String* (*toString)(struct ArrayListStr* list);
     struct Itr* (*iterator)(struct ArrayListStr* list);

@@ -423,21 +423,20 @@ StrLinkedList subtractStrLL(StrLinkedList list1, StrLinkedList list2) {
 }
 
 void reverseStrLL(StrLinkedList list) {
-    StrList tempList = newStrList(tempList);
-
-    copyLLToStrList(list, tempList);
-    reverseStrList(tempList);
-
+    int counter = 0;
+    string temp = NULL;
     StrNode current = list->pf->begin;
-    int index = 0;
-    while (current != NULL) {
-        free(current->data);
-        current->data = strOf(tempList->pf->str[index]->pf->data);
-        current = current->next;
-        ++index;
-    }
+    StrNode end = list->pf->end;
 
-    deleteStrList(&tempList);
+    while (counter != list->pf->count / 2) {
+        temp = current->data;
+        current->data = end->data;
+        end->data = temp;
+
+        current = current->next;
+        end = end->prev;
+        ++counter;
+    }
 }
 
 int sizeStrLL(StrLinkedList list) {
@@ -665,8 +664,7 @@ static bool binarySearchStr(string s, String** strList, int high) {
 }
 
 static void fillNodeStr(StrNode node, char* s, int* index) {
-    string temp = strOf(s);
-    node->data = temp;
+    node->data = strOf(s);
     node->next = NULL;
     node->prev = NULL;
     ++(*index);
@@ -675,7 +673,7 @@ static void fillNodeStr(StrNode node, char* s, int* index) {
 static void copyLLToStrList(StrLinkedList strLL, StrList strList) {
     StrNode current = strLL->pf->begin;
     while (current != NULL) {
-        addStrList(strList, current->data);
+        strList->add(strList, current->data);
         current = current->next;
     }
 }

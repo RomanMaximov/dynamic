@@ -120,11 +120,6 @@ typedef struct ArrayListStr ArrayListStr;
 )(T)
 
 
-#define removeElem(T, V) _Generic((T), \
-    DoubleList : removeElemDouble,\
-    IntList : removeElemInt,  \
-    StringList : removeElemStr \
-)(T, V)
 
 #define clear(T) _Generic((T), \
     DoubleList : clearDouble,\
@@ -176,11 +171,6 @@ typedef struct ArrayListStr ArrayListStr;
     StringList : reverseListStr  \
 )(T)
 
-#define emptyIfNull(T) _Generic((T), \
-    DoubleList : emptyIfNullDouble, \
-    IntList : emptyIfNullInt, \
-    StringList : emptyIfNullStr \
-)(T)
 
 /*#define subtract(T, V) _Generic((T), \
     DoubleList : subtractDouble,\

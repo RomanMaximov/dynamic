@@ -88,7 +88,6 @@ static void* subtract(Type type);
 static void* isEmpty(Type type);
 static void* reverse(Type type);
 static void* isEquals(Type type);
-static void* emptyIfNull(Type type);
 
 static void* size(Type type);
 static void* printList(Type type);
@@ -415,19 +414,6 @@ static void* isEquals(Type type) {
     }
 }
 
-static void* emptyIfNull(Type type) {
-    switch (type) {
-        case INT_LL:
-            return emptyIfNullIntLL;
-        case DOUBLE_LL:
-            return emptyIfNullDoubleLL;
-        case STR_LL:
-            return emptyIfNullStrLL;
-        default:
-            return NULL;
-    }
-}
-
 static void* size(Type type) {
     switch (type) {
         case INT_LL:
@@ -472,7 +458,6 @@ static void* iterator(Type type) {
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->isEmpty = isEmpty(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->isEmpty = isEmpty(type) : (((StrLinkedList) data)->isEmpty = isEmpty(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->reverse = reverse(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->reverse = reverse(type) : (((StrLinkedList) data)->reverse = reverse(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->isEquals = isEquals(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->isEquals = isEquals(type) : (((StrLinkedList) data)->isEquals = isEquals(type));
-     type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->emptyIfNull = emptyIfNull(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->emptyIfNull = emptyIfNull(type) : (((StrLinkedList) data)->emptyIfNull = emptyIfNull(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->size = size(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->size = size(type) : (((StrLinkedList) data)->size = size(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->iterator = iterator(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->iterator = iterator(type) : (((StrLinkedList) data)->iterator = iterator(type));
      //type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->printList = printList(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->printList = printList(type) : (((StrLinkedList) data)->printList = printList(type));
