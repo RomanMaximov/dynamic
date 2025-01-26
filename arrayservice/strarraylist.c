@@ -417,30 +417,6 @@ string toStringStrList(StrList list) {
 void printStrList(StrList list) {
     if (list == NULL) return;
 
-    puts("checking for NULL started");
-    for (int i = 0; i < list->pf->count; ++i) {
-        if (list->pf == NULL) {
-            puts("list->pf = NULL");
-            return;
-        }
-        if (list->pf->data[i] == NULL) {
-            puts("list->pf->data[i] = NULL");
-            return;
-        }
-        if (list->pf->data[i]->pf == NULL) {
-            puts("list->pf->data[i]->pf = NULL");
-            return;
-        }
-        if (list->pf->data[i]->pf->data == NULL) {
-            puts("list->pf->data[i]->pf->data = NULL");
-            return;
-        }
-
-        char* text = list->pf->data[i]->pf->data;
-        puts(text);
-    }
-    puts("checking for NULL finished");
-
     int counter = list->pf->count;
     printf("%s", "[");
     for (int i = 0; i < counter; ++i) {

@@ -236,6 +236,12 @@ int main()
     strList->reverse(strList);
     printStrList(strList);
 
+    puts("");
+    puts("================ ////////   string   /////// ==================");
+    string strForSub = strOf("The great country in world.");
+    string subStr = strOf("great country");
+    printf("subStr index: %d\n", strForSub->indexOfSubStr(strForSub, subStr));
+
     /*add(stringOf("str1"), stringList);
     add(stringOf("str2"), stringList);
     add(stringOf("str3"), stringList);

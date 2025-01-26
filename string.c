@@ -290,39 +290,40 @@ int indexOfSubString(string str, string sub) {
         return -1;
 
     char* text = str->pf->data;
-    char* textCurrent = text;
-    char* substr = sub->pf->data;
-    char* subCurrent = substr;
-    int counter = 0;
+    char* textCurrent = str->pf->data;
+    char* subStr = sub->pf->data;
+    char* currentSubStr = sub->pf->data;
+    int subLength = (int) strlen(sub->pf->data);
+    int index = 0;
+    int foundIndex = -1;
+    int counter = subLength;
 
     while(*text != '\0') {
-        ++counter;
-        if (*text == *subCurrent) {
-            int isEqual = sub->pf->count - 2;
-            textCurrent = text;
+        if (*textCurrent == *currentSubStr) {
+            if (counter == subLength)
+                foundIndex = index;
+
+            --counter;
             ++textCurrent;
-            ++subCurrent;
-
-            for (int i = 0; i < sub->pf->count - 1; ++i) {
-                if (*textCurrent != *subCurrent)
-                    break;
-                --isEqual;
-                ++textCurrent;
-                ++subCurrent;
-            }
-
-            if (isEqual == 0) {
-                return counter - 1;
-            } else {
-                ++text;
-                subCurrent = substr;
-            }
+            ++currentSubStr;
+            ++text;
         } else {
             ++text;
+            textCurrent = text;
+            currentSubStr = subStr;
+            counter = subLength;
+            foundIndex = -1;
         }
+
+
+        if (counter == 0) {
+            return foundIndex;
+        }
+
+        ++index;
     }
 
-    return -1;
+    return foundIndex;
 }
 
 StrList splitStr(string s, char delimeter) {
