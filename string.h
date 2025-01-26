@@ -10,29 +10,30 @@
 #include <stdbool.h>
 #include "arraylist.h"
 
+typedef unsigned char byte;
+
 // structures
 typedef struct String {
     struct InnerStr* pf;   // private field
     int (*length)(struct String* str);
-    struct String* (*concat)(struct String* str1, struct String* str2);
-    struct String* (*replace)(struct String* str, char ch1, char ch2);
-    struct String* (*toLowerCase)(struct String* str);
-    struct String* (*toUpperCase)(struct String* str);
-    struct String* (*join)(char* delimeter, int countParams, ...); // TODO
+    void (*concat)(struct String* str1, struct String* str2);
+    void (*replace)(struct String* str, char ch1, char ch2);
+    void (*toLowerCase)(struct String* str);
+    void (*toUpperCase)(struct String* str);
     char (*charAt)(struct String* str, int index);
     bool (*containsSubStr)(struct String* str, struct String* subStr);
     bool (*startsWith)(struct String* str, struct String* subStr);
     bool (*endsWith)(struct String* str, struct String* subStr);
-    struct String* (*reverse)(struct String* str);
+    void (*reverse)(struct String* str);
     int (*indexOf)(struct String* str, char ch);
     int (*indexOfSubStr)(struct String* str, struct String* subStr);
-    struct ArrayListStr* (*split)(struct String* str, char delimeter);
-    struct String* (*trim)(struct String* str);
-    struct String* (*isEmpty)(struct String* str);
-    struct String* (*isBlank)(struct String* str);
-    struct String* (*isNotBlank)(struct String* str);
-    //struct String* (*joinStrList)(struct ArrayListStr* str, char delimeter);
+    struct ArrayListStr* (*split)(struct String* str, char* delimeter);
+    void (*trim)(struct String* str);
+    bool (*isEmpty)(struct String* str);
+    bool (*isBlank)(struct String* str);
+    bool (*isNotBlank)(struct String* str);
     struct String* (*defaultIfNull)(struct String* str1, struct String* str2);
+    byte* (*getBytes)(struct String* str);
     //void (*printString)(struct String* list);
     //void (*deleteString)(struct String* list);
 } String;

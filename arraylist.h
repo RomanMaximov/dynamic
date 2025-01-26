@@ -98,6 +98,7 @@ typedef struct ArrayListStr {
     void (*reverse)(struct ArrayListStr* list);
     bool (*isEquals)(struct ArrayListStr* list1, struct ArrayListStr* list2);
     int (*size)(struct ArrayListStr* list);
+    struct String* (*joinList)(struct ArrayListStr* str, char* delimeter);
     struct String* (*toString)(struct ArrayListStr* list);
     struct Itr* (*iterator)(struct ArrayListStr* list);
     //void (*printList)(struct ArrayListStr* list);

@@ -242,6 +242,18 @@ int main()
     string subStr = strOf("great country");
     printf("subStr index: %d\n", strForSub->indexOfSubStr(strForSub, subStr));
 
+    string splitStr = strOf("don,ton,sunGlassException,dog,string,milk,bob,ron,see,str11");
+    StrList afterSplit = splitStr->split(splitStr, ",");
+    puts("After split");
+    printStrList(afterSplit);
+
+    string joinStr = afterSplit->joinList(afterSplit, "-");
+    puts("After join");
+    printString(joinStr);
+    puts("After reverse");
+    joinStr->reverse(joinStr);
+    printString(joinStr);
+
     /*add(stringOf("str1"), stringList);
     add(stringOf("str2"), stringList);
     add(stringOf("str3"), stringList);

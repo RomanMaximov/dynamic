@@ -385,6 +385,42 @@ int sizeStrList(StrList list) {
     return list->pf->count;
 }
 
+string joinStrList(StrList list, char* delimeter) {
+    if (list == NULL || list->pf == NULL || list->pf->data == NULL) {
+        return NULL;
+    }
+
+    int indexList = 0;
+    int sizeNewStr = 0;
+    int delimeterSize = (int) strlen(delimeter);
+    int delimeterCount = list->pf->count - 1;
+    for (int i = 0; i < list->pf->count; ++i) {
+        sizeNewStr += list->pf->data[i]->pf->count;
+    }
+    sizeNewStr = sizeNewStr + 1 + (delimeterCount * (int) strlen(delimeter));
+
+    char* temp = malloc(++sizeNewStr * sizeof(char));
+
+    for (int i = 0; i < list->pf->count; ++i) {
+        char currentStr[list->pf->data[i]->pf->count + 1];
+        strcpy(currentStr, list->pf->data[i]->pf->data);
+        for (int j = 0; j < list->pf->data[i]->pf->count; ++j) {
+            temp[indexList++] = currentStr[j];
+        }
+
+        if (i == list->pf->count - 1)
+            continue;
+
+        strcpy(temp + indexList, delimeter);
+        indexList += delimeterSize;
+    }
+    temp[indexList] = '\0';
+
+    string s = strOf(temp);
+    free(temp);
+    return s;
+}
+
 string toStringStrList(StrList list) {
     char* text = NULL;
     if (list->pf->count == 0) {

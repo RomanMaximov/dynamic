@@ -38,7 +38,6 @@ static void* concat();
 static void* replace();
 static void* toLowerCase();
 static void* toUpperCase();
-static void* join();
 static void* charAt();
 static void* containsSubStr();
 static void* startsWith();
@@ -52,6 +51,7 @@ static void* isEmpty();
 static void* isBlank();
 static void* isNotBlank();
 static void* defaultIfNull();
+static void* getBytes();
 
 
 // funcs
@@ -91,9 +91,9 @@ int lengthStr(string s) {
     return s->pf->count;
 }
 
-string concatStr(string s1, string s2) {
+void concatStr(string s1, string s2) {
     if (s1 == NULL || s2 == NULL || s2->pf->data == NULL) {
-        return s1;
+        return;
     }
 
     int count = s1->pf->count + s2->pf->count + 1;
@@ -103,22 +103,18 @@ string concatStr(string s1, string s2) {
 
     strcpy(s1->pf->data, temp);
     strcat(s1->pf->data, s2->pf->data);
-
-    return s1;
 }
 
-string replaceStr(string s, char ch1, char ch2) {
+void replaceStr(string s, char ch1, char ch2) { // TODO через char*
     if (s == NULL || s->pf->data == NULL) {
-        printf("Error: first string is empty or null \n");
-        return NULL;
+        printf("Error: string is empty or null \n");
+        return;
     }
 
     for (int i = 0; i < s->pf->count; ++i) {
         if (s->pf->data[i] == ch1)
             s->pf->data[i] = ch2;
     }
-
-    return s;
 }
 
 void* toLowerCaseStr(String* s) {
@@ -248,7 +244,7 @@ bool endsWithStr(string str, string substr) {
     return true;
 }
 
-string reverseStr(string s) {
+void reverseStr(string s) {
     char* start = s->pf->data;
     char* end = s->pf->data;
 
@@ -264,8 +260,6 @@ string reverseStr(string s) {
         ++start;
         --end;
     }
-
-    return s;
 }
 
 int indexOfStr(string s, char ch) {
@@ -274,13 +268,13 @@ int indexOfStr(string s, char ch) {
 
     const char* text = s->pf->data;
 
-    int counter = 0;
+    int index = 0;
     while(*text != '\0') {
         if (*text == ch)
-            return counter;
+            return index;
 
         ++text;
-        ++counter;
+        ++index;
     }
     return -1;
 }
@@ -326,88 +320,47 @@ int indexOfSubString(string str, string sub) {
     return foundIndex;
 }
 
-StrList splitStr(string s, char delimeter) {
+StrList splitStr(string s, const char* delimeter) {
+    if (s == NULL || delimeter == NULL) {
+        StrList strList = newStrList(strList);
+        return strList;
+    }
+
     StrList list = newStrList(list);
 
     char* text = s->pf->data;
     char* current = text;
-
-    int letterNumber = 0;
-    int maxStringSize = 0;
-
-    while(*current != '\0') {
-        if (*current == delimeter) {
-
-            if (letterNumber > maxStringSize) {
-                maxStringSize = letterNumber;
-            }
-            letterNumber = 0;
-        }
-
-        if (letterNumber > maxStringSize) {
-            maxStringSize = letterNumber + 1;
-        }
-
-        ++current;
-        ++letterNumber;
-    }
-
-    if (letterNumber > maxStringSize) {
-        maxStringSize = letterNumber;
-    }
-
-    int index = 0;
-    int tempIndex = 0;
-
-    char ch[maxStringSize];
-    int dataSize;
+    char temp[s->pf->count];
+    int counter = 0;
+    bool lastStr = false;
 
     while(*text != '\0') {
-        if (*text != delimeter) {
-            ch[tempIndex] = *text;
-            ++tempIndex;
+        if (*text != *delimeter) {
+            temp[counter] = *text;
+            ++counter;
         } else {
-            if (list->pf->count == list->pf->capacity) {
-                list->pf->data = increaseCapacity(list);
-            }
-
-            ch[tempIndex] = '\0';
-            dataSize = (int) strlen(ch);
-
-            list->pf->data[index] = malloc(sizeof(String));
-            list->pf->data[index]->pf->data = malloc((dataSize + 1) * sizeof(char));
-            list->pf->data[index]->pf->count = dataSize;
-            list->pf->data[index]->pf->capacity = dataSize;
-
-            strcpy(list->pf->data[index]->pf->data, ch);
-            list->pf->count++;
-            tempIndex = 0;
-            ++index;
+            temp[counter] = '\0';
+            addCharArrList(list, temp);
+            counter = 0;
         }
 
         ++text;
+
+        if (*text == '\0')
+            lastStr = true;
+
+        if (lastStr) {
+            temp[counter] = '\0';
+            addCharArrList(list, temp);
+        }
     }
-
-    if (list->pf->count == list->pf->capacity) {
-        list->pf->data = increaseCapacity(list);
-    }
-
-    ch[tempIndex] = '\0';
-    dataSize = (int) strlen(ch);
-    list->pf->data[index] = malloc(sizeof(String));
-    list->pf->data[index]->pf->data = malloc((dataSize + 1) * sizeof(char));
-    list->pf->data[index]->pf->count = dataSize;
-    list->pf->data[index]->pf->capacity = dataSize;
-
-    strcpy(list->pf->data[index]->pf->data, ch);
-    list->pf->count++;
 
     return list;
 }
 
-string trimStr(string s) {
+void trimStr(string s) {
     if (s == NULL) {
-        return s;
+        return;
     }
 
     const char* start = s->pf->data;
@@ -424,8 +377,6 @@ string trimStr(string s) {
 
     strncpy(s->pf->data, start, length);
     s->pf->data[length] = '\0';
-
-    return s;
 }
 
 bool isEmptyStr(string s) {
@@ -460,43 +411,16 @@ bool isNotBlankStr(string s) {
     return false;
 }
 
-string joinStrList(StrList list, char* delimeter) {
-    int count = 0;
-    int letterCounter = 0;
-
-    for (int i = 0; i < list->pf->count; ++i) {
-        char* tempStr = list->pf->data[i]->pf->data;
-        if (i > 0)
-            count += (int) strlen(delimeter);
-
-        while (*tempStr++ != '\0') {
-            ++letterCounter;
-        }
-        count += letterCounter;
-        letterCounter = 0;
-    }
-
-    char* temp = malloc(++count * sizeof(char));
-
-    for (int i = 0; i < list->pf->count; ++i) {
-        if (i == 0) {
-            strcpy(temp, list->pf->data[i]->pf->data);
-            continue;
-        }
-        if (i > 0) {
-            strcat(temp, delimeter);
-        }
-        strcat(temp, list->pf->data[i]->pf->data);
-    }
-    temp[count - 1] = '\0';
-
-    string s = strOf(temp);
-    free(temp);
-    return s;
-}
-
 string defaultIfNullStr(string s1, string s2) {
     return s1 == NULL ? s2 : s1;
+}
+
+byte* getBytesStr(string s) {
+    byte* bytes = malloc(s->pf->count * sizeof(char));
+    for (int i = 0; i < s->pf->count; ++i) {
+        bytes[i] = s->pf->data[i];
+    }
+    return bytes;
 }
 
 void printString(string s) {
@@ -589,10 +513,6 @@ static void* toUpperCase() {
     return toUpperCaseStr;
 }
 
-static void* join() {
-    return joinStr;
-}
-
 static void* charAt() {
     return charAtStr;
 }
@@ -645,6 +565,10 @@ static void* defaultIfNull() {
     return defaultIfNullStr;
 }
 
+static void* getBytes() {
+    return getBytesStr;
+}
+
 // funcs pointers initialization
 static void initFuncs(string str) {
     str->length = length();
@@ -652,7 +576,6 @@ static void initFuncs(string str) {
     str->replace = replace();
     str->toLowerCase = toLowerCase();
     str->toUpperCase = toUpperCase();
-    str->join = join();
     str->charAt = charAt();
     str->containsSubStr = containsSubStr();
     str->startsWith = startsWith();
@@ -666,4 +589,5 @@ static void initFuncs(string str) {
     str->isBlank = isBlank();
     str->isNotBlank = isNotBlank();
     str->defaultIfNull = defaultIfNull();
+    str->getBytes = getBytes();
 }
