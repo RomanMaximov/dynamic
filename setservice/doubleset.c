@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "doubleset.h"
 
@@ -179,15 +180,6 @@ bool isEqualsDoubleSet(DoubleSet set1, DoubleSet set2) {
     }
 
     return true;
-}
-
-DoubleSet emptyIfNullDoubleSet(DoubleSet set) {
-    if (set == NULL) {
-        DoubleSet temp = newDoubleSet(temp);
-        return temp;
-    }
-
-    return set;
 }
 
 Iterator iteratorDoubleSet(DoubleSet list){

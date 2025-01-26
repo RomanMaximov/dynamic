@@ -444,9 +444,6 @@ bool isEqualListsDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
     return true;
 }
 
-DoubleLinkedList emptyIfNullDoubleLL(DoubleLinkedList list) {
-    return list == NULL ? newDoubleLinkedList(list) : list;
-}
 
 // ===================== private funcs =======================
 

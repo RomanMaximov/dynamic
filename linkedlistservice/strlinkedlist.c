@@ -468,10 +468,6 @@ bool isEqualListsStrLL(StrLinkedList list1, StrLinkedList list2) {
     return true;
 }
 
-StrLinkedList emptyIfNullStrLL(StrLinkedList list) {
-    return list == NULL ? newStrLinkedList(list) : list;
-}
-
 void printStrLL(StrLinkedList list) {
     if (list == NULL || list->pf == NULL) return;
 

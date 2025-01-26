@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 #include "string.h"
 #include "arraylist.h"
 
@@ -28,7 +29,6 @@ typedef struct InnerStrList {
 
 // prototypes private funcs
 static String** increaseCapacity(StrList list);
-static int compareTo(string s1, string s2 );
 
 
 // private prototypes funcs for pointers initialization
@@ -371,8 +371,8 @@ StrList splitStr(string s, char delimeter) {
             }
 
             ch[tempIndex] = '\0';
-            dataSize = strlen(ch);
-            // данные строки
+            dataSize = (int) strlen(ch);
+
             list->pf->data[index] = malloc(sizeof(String));
             list->pf->data[index]->pf->data = malloc((dataSize + 1) * sizeof(char));
             list->pf->data[index]->pf->count = dataSize;
@@ -392,7 +392,7 @@ StrList splitStr(string s, char delimeter) {
     }
 
     ch[tempIndex] = '\0';
-    dataSize = strlen(ch);
+    dataSize = (int) strlen(ch);
     list->pf->data[index] = malloc(sizeof(String));
     list->pf->data[index]->pf->data = malloc((dataSize + 1) * sizeof(char));
     list->pf->data[index]->pf->count = dataSize;
@@ -405,8 +405,25 @@ StrList splitStr(string s, char delimeter) {
 }
 
 string trimStr(string s) {
-    char* temp = s->pf->data;
-    // TODO
+    if (s == NULL) {
+        return s;
+    }
+
+    const char* start = s->pf->data;
+    while (*start && isspace((unsigned char)*start)) {
+        start++;
+    }
+
+    const char* end = s->pf->data + strlen(s->pf->data) - 1;
+    while (end > start && isspace((unsigned char)*end)) {
+        end--;
+    }
+
+    int length = (int) (end - start + 1);
+
+    strncpy(s->pf->data, start, length);
+    s->pf->data[length] = '\0';
+
     return s;
 }
 
@@ -506,15 +523,22 @@ void deleteString(string* s) {
 // =================  private funcs  ===================
 
 static String** increaseCapacity(StrList list) {
+    int oldSize = list->pf->count;
     list->pf->capacity *= 2;
+
     String** temp = list->pf->data;
     list->pf->data = malloc(list->pf->capacity * sizeof(String*));
-    for (int i = 0; i < list->pf->capacity; ++i) {
+
+    for (int i = 0; i < list->pf->capacity; ++i)
         list->pf->data[i] = NULL;
-    }
-    for (int i = 0; i < list->pf->count; ++i) {
-        memcpy(&list->pf->data[i], &temp[i], sizeof(String));
-    }
+
+    for (int i = 0; i < oldSize; ++i)
+        list->pf->data[i] = strOf(temp[i]->pf->data);
+
+    for (int i = 0; i < oldSize; ++i)
+        deleteString(&temp[i]);
+
+    free(temp);
 
     return list->pf->data;
 }

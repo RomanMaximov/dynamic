@@ -77,12 +77,6 @@ typedef struct ArrayListStr ArrayListStr;
     StringList : printArrayString \
 )(T)
 
-#define size(T) _Generic((T), \
-    DoubleList : sizeDoubleList, \
-    IntList : sizeIntList, \
-    StringList : sizeStrList, \
-    StrStrMap : sizeStrStrMap \
-)(T)
 
 /*#define add(T, V) _Generic((T), \
     IntList: addIntElem, \

@@ -478,10 +478,6 @@ bool isEqualListsIntLL(IntLinkedList list1, IntLinkedList list2) {
     return true;
 }
 
-IntLinkedList emptyIfNullIntLL(IntLinkedList list) {
-    return list == NULL ? newIntLinkedList(list) : list;
-}
-
 Iterator iteratorIntLL(IntLinkedList list){
     Iterator iter = malloc(sizeof(Itr));
     iter->count = 0;

@@ -218,29 +218,6 @@ bool isEqualsStrSet(StrSet set1, StrSet set2) {
     return true;
 }
 
-StrSet emptyIfNullStrSet(StrSet set) {
-    if (set == NULL) {
-        StrSet temp = newStrSet(temp);
-        return temp;
-    }
-
-    return set;
-}
-
-Iterator iteratorStrSet(StrSet list) { // TODO принимать void* и преобразовывать к Collection
-    Iterator iter = malloc(sizeof(Itr));
-    iter->count = 0;
-    iter->data = list;
-    iter->collectionSize = list->pf->count;
-    iter->hasNext = (void*) hasNext(iter);
-    iter->type = STR_SET;
-    return iter;
-}
-
-static bool hasNext(Iterator iter) {
-    return iter->count < iter->collectionSize;
-}
-
 int sizeStrSet(StrSet set) {
     return set->pf->count;
 }
@@ -272,6 +249,20 @@ void deleteStrSet(StrSet* set) {
     free((*set)->pf);
     free(*set);
     *set = NULL;
+}
+
+Iterator iteratorStrSet(StrSet list) { // TODO принимать void* и преобразовывать к Collection
+    Iterator iter = malloc(sizeof(Itr));
+    iter->count = 0;
+    iter->data = list;
+    iter->collectionSize = list->pf->count;
+    iter->hasNext = (void*) hasNext(iter);
+    iter->type = STR_SET;
+    return iter;
+}
+
+static bool hasNext(Iterator iter) {
+    return iter->count < iter->collectionSize;
 }
 
 // ===================== private funcs =======================

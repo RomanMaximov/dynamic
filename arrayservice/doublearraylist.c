@@ -288,10 +288,6 @@ bool isEqualsDoubleList(DoubleList list1, DoubleList list2) {
     return true;
 }
 
-DoubleList emptyIfNullDoubleList(DoubleList list) {
-    return list == NULL ? newDoubleList(list) : list;
-}
-
 int sizeDoubleList(DoubleList list) {
     return list->pf->count;
 }

@@ -175,15 +175,6 @@ bool isEqualsIntSet(IntSet set1, IntSet set2) {
     return true;
 }
 
-IntSet emptyIfNullIntSet(IntSet set) {
-    if (set == NULL) {
-        IntSet temp = newIntSet(temp);
-        return temp;
-    }
-
-    return set;
-}
-
 Iterator iteratorIntSet(IntSet list){
     Iterator iter = malloc(sizeof(Itr));
     iter->count = 0;

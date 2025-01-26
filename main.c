@@ -203,7 +203,7 @@ int main()
     StringList stringList2 = newList(stringList2);*/
 
 
-    puts("========================= ////////               /////// ============================================");
+    puts("========================= ////////   LinkedList   /////// ============================================");
     string ll1 = strOf("s1");
     string ll2 = strOf("s2");
     string ll3 = strOf("s3");
@@ -222,6 +222,19 @@ int main()
     printStrLL(strLinkedList);
     deleteStrLL(&strLinkedList);
 
+    puts("========================= ////////   ArrayList   /////// ============================================");
+    StrList strList = newStrList(strList);
+
+    strList->add(strList, ll1);
+    strList->add(strList, ll2);
+    strList->add(strList, ll3);
+    strList->add(strList, ll4);
+    strList->add(strList, ll4);
+
+    printf("strList count: %d\n", strList->size(strList));
+    printStrList(strList);
+    strList->reverse(strList);
+    printStrList(strList);
 
     /*add(stringOf("str1"), stringList);
     add(stringOf("str2"), stringList);

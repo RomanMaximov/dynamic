@@ -295,10 +295,6 @@ bool isEqualsIntList(IntList list1, IntList list2) {
     return true;
 }
 
-IntList emptyIfNullIntList(IntList list) {
-    return list == NULL ? newIntList(list) : list;
-}
-
 int sizeIntList(IntList list) {
     return list->pf->count;
 }
