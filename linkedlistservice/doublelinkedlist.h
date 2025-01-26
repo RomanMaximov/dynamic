@@ -7,56 +7,34 @@
 #ifndef DOUBLELINKEDLIST_H
 #define DOUBLELINKEDLIST_H
 
-#include <stdio.h>
 #include "../linkedlist.h"
 
 typedef struct LinkedListDouble LinkedListDouble;
 typedef LinkedListDouble* DoubleLinkedList;
 
 
-
 void addDoubleElemLL(DoubleLinkedList, double);
-
 void addAllDoubleElemLL(DoubleLinkedList, DoubleLinkedList);
-
 double getDoubleElemLL(DoubleLinkedList, int);
-
 bool setDoubleElemLL(DoubleLinkedList, int, double);
-
 int indexOfDoubleLL(DoubleLinkedList, double);
-
-// toString
-
 void sortDoubleLL(DoubleLinkedList);
 void sortDoubleLLReverse(DoubleLinkedList);
-
 void clearDoubleLL(DoubleLinkedList);
-
 bool containsDoubleLL(DoubleLinkedList, double);
-
 bool containsAllDoubleLL(DoubleLinkedList, DoubleLinkedList);
-
 bool containsAnyDoubleLL(DoubleLinkedList, DoubleLinkedList);
-
 bool removeDoubleLL(DoubleLinkedList, int);
-
 bool removeAllDoubleLL(DoubleLinkedList, DoubleLinkedList);
-
 DoubleLinkedList subtractDoubleLL(DoubleLinkedList, DoubleLinkedList);
-
 bool isEmptyDoubleLL(DoubleLinkedList);
-
 void reverseDoubleLL(DoubleLinkedList);
-
 bool isEqualListsDoubleLL(DoubleLinkedList, DoubleLinkedList);
-
 DoubleLinkedList emptyIfNullDoubleLL(DoubleLinkedList);
 
 int sizeDoubleLL(DoubleLinkedList);
-
+string toStrDoubleLL(DoubleLinkedList);
 void printDoubleLL(DoubleLinkedList);
-
 void deleteDoubleLL(DoubleLinkedList*);
-
 
 #endif

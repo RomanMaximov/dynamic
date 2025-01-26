@@ -53,6 +53,7 @@ static void deleteNodeStr(StrLinkedList list, StrNode current, StrNode previous)
 static void copyLLToStrList(StrLinkedList strLL, StrList strList);
 static StrLinkedList copyStrLL(StrLinkedList list);
 static int compareStr(string s1, string s2);
+static void checkCapacity(char* text, int* count, int strLength);
 
 
 // funcs
@@ -174,7 +175,7 @@ void sortStrLL(StrLinkedList list) {
     StrNode temp = list->pf->begin;
     int index = 0;
     while (current != NULL) {
-        addStrList(strList, current->data);
+        strList->add(strList, current->data);
         current = current->next;
     }
 
@@ -182,10 +183,11 @@ void sortStrLL(StrLinkedList list) {
 
     index = 0;
     while (temp != NULL) {
+        temp->data->delete(&temp->data);
         temp->data = strOf(strList->pf->str[index++]->pf->data);
         temp = temp->next;
     }
-    deleteStrList(&strList);
+    strList->delete(&strList);
 }
 
 void sortStrLLReverse(StrLinkedList list) {
@@ -194,7 +196,7 @@ void sortStrLLReverse(StrLinkedList list) {
     StrNode temp = list->pf->begin;
     int index = 0;
     while (current != NULL) {
-        addStrList(strList, current->data);
+        strList->add(strList, current->data);
         current = current->next;
     }
 
@@ -202,10 +204,11 @@ void sortStrLLReverse(StrLinkedList list) {
 
     index = 0;
     while (temp != NULL) {
+        temp->data->delete(&temp->data);
         temp->data = strOf(strList->pf->str[index++]->pf->data);
         temp = temp->next;
     }
-    deleteStrList(&strList);
+    strList->delete(&strList);
 }
 
 int indexOfStrLL(StrLinkedList list, string s) {
@@ -235,7 +238,7 @@ void clearStrLL(StrLinkedList list) {
         temp = current;
         current = current->next;
 
-        deleteString(&(temp->data));
+        temp->data->delete(&temp->data);
         free(temp);
     }
 
@@ -267,7 +270,7 @@ bool containsAllStrLL(StrLinkedList list1, StrLinkedList list2) {
     StrNode current2 = list2->pf->begin;
 
     while (current != NULL) {
-        addStrList(tempList, current->data);
+        tempList->add(tempList, current->data);
         current = current->next;
     }
 
@@ -275,14 +278,14 @@ bool containsAllStrLL(StrLinkedList list1, StrLinkedList list2) {
 
     while (current2 != NULL) {
         if (!binarySearchStr(current2->data, tempList->pf->str, list1->pf->count)) {
-            deleteStrList(&tempList);
+            tempList->delete(&tempList);
             return false;
         }
 
         current2 = current2->next;
     }
 
-    deleteStrList(&tempList);
+    tempList->delete(&tempList);
     return true;
 }
 
@@ -294,7 +297,7 @@ bool containsAnyStrLL(StrLinkedList list1, StrLinkedList list2) {
     StrNode current2 = list2->pf->begin;
 
     while (current != NULL) {
-        addStrList(tempList, current->data);
+        tempList->add(tempList, current->data);
         current = current->next;
     }
 
@@ -302,14 +305,14 @@ bool containsAnyStrLL(StrLinkedList list1, StrLinkedList list2) {
 
     while (current2 != NULL) {
         if (binarySearchStr(current2->data, tempList->pf->str, list1->pf->count)) {
-            deleteStrList(&tempList);
+            tempList->delete(&tempList);
             return true;
         }
 
         current2 = current2->next;
     }
 
-    deleteStrList(&tempList);
+    tempList->delete(&tempList);
     return false;
 }
 
@@ -355,7 +358,7 @@ bool removeAllStrLL(StrLinkedList list1, StrLinkedList list2) {
     while (current2 != NULL) {
         bool isExist = binarySearchStr(current2->data, tempForBS->pf->str, listSize);
         if (isExist)
-            addStrList(filtered, current2->data);
+            filtered->add(filtered, current2->data);
 
         current2 = current2->next;
     }
@@ -367,12 +370,12 @@ bool removeAllStrLL(StrLinkedList list1, StrLinkedList list2) {
         if (binarySearchStr(tempList->pf->str[i], filtered->pf->str, filtered->pf->count))
             continue;
 
-        addStrElemLL(list1, tempList->pf->str[i]);
+        list1->add(list1, tempList->pf->str[i]);
     }
 
-    deleteStrList(&tempForBS);
-    deleteStrList(&filtered);
-    deleteStrList(&tempList);
+    tempForBS->delete(&tempForBS);
+    filtered->delete(&filtered);
+    tempList->delete(&tempList);
 
     return true;
 }
@@ -400,7 +403,7 @@ StrLinkedList subtractStrLL(StrLinkedList list1, StrLinkedList list2) {
     while (current2 != NULL) {
         bool isExist = binarySearchStr(current2->data, tempForBS->pf->str, listSize);
         if (isExist)
-            addStrList(filtered, current2->data);
+            filtered->add(filtered, current2->data);
 
         current2 = current2->next;
     }
@@ -415,9 +418,9 @@ StrLinkedList subtractStrLL(StrLinkedList list1, StrLinkedList list2) {
         addStrElemLL(list1, tempList->pf->str[i]);
     }
 
-    deleteStrList(&tempForBS);
-    deleteStrList(&filtered);
-    deleteStrList(&tempList);
+    tempForBS->delete(&tempForBS);
+    filtered->delete(&filtered);
+    tempList->delete(&tempList);
 
     return newLL;
 }
@@ -437,10 +440,6 @@ void reverseStrLL(StrLinkedList list) {
         end = end->prev;
         ++counter;
     }
-}
-
-int sizeStrLL(StrLinkedList list) {
-    return list->pf->count;
 }
 
 bool isEmptyStrLL(StrLinkedList list) {
@@ -466,6 +465,42 @@ bool isEqualListsStrLL(StrLinkedList list1, StrLinkedList list2) {
     }
 
     return true;
+}
+
+int sizeStrLL(StrLinkedList list) {
+    return list->pf->count;
+}
+
+string toStrStrLL(StrLinkedList list) {
+    char* text = NULL;
+    if (list->pf->count == 0) {
+        text = (char*)malloc(3 * sizeof(char));
+        text[0] = '[';
+        text[1] = ']';
+        text[2] = '\0';
+        return strOf(text);
+    }
+
+    int count = 256;
+    text = malloc(count * sizeof(char));
+    strcpy(text, "[");
+
+    StrNode current = list->pf->begin;
+    StrNode end = list->pf->end;
+    while (current != end) {
+        checkCapacity(text, &count, current->data->pf->count);
+        sprintf(&text[strlen(text)], "%s,", current->data->pf->data);
+        current = current->next;
+    }
+
+    checkCapacity(text, &count, end->data->pf->count);
+    sprintf(&text[strlen(text)], "%s", end->data->pf->data);
+    strcat(text, "]");
+
+    string s = strOf(text);
+    free(text);
+
+    return s;
 }
 
 void printStrLL(StrLinkedList list) {
@@ -506,7 +541,7 @@ void deleteStrLL(StrLinkedList* list) {
             current = current->next;
 
             if (temp->data != NULL)
-                deleteString(&(temp->data));
+                temp->data->delete(&temp->data);
 
             free(temp);
         }
@@ -556,7 +591,7 @@ static void deleteFirstNodeStr(StrLinkedList list, StrNode current) {
     list->pf->begin = current;
     list->pf->count--;
     list->pf->index--;
-    deleteString(&(temp->data));
+    temp->data->delete(&temp->data);
     free(temp);
 }
 
@@ -573,7 +608,7 @@ static void deleteNodeStr(StrLinkedList list, StrNode current, StrNode previous)
     previous->next = current;
     list->pf->count--;
     list->pf->index--;
-    deleteString(&(temp->data));
+    temp->data->delete(&temp->data);
     free(temp);
 }
 
@@ -688,4 +723,11 @@ static StrLinkedList copyStrLL(StrLinkedList list) {
 static int compareStr(string s1, string s2) {
     int result = strcmp(s1->pf->data, s2->pf->data);
     return result;
+}
+
+static void checkCapacity(char* text, int* count, int strLength) {
+    if (strLength >= *count - strlen(text)) {
+        *count = (*count + strLength) * 2;
+        realloc(text, *count * sizeof(char));
+    }
 }

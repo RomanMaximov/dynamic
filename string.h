@@ -34,8 +34,8 @@ typedef struct String {
     bool (*isNotBlank)(struct String* str);
     struct String* (*defaultIfNull)(struct String* str1, struct String* str2);
     byte* (*getBytes)(struct String* str);
-    //void (*printString)(struct String* list);
-    //void (*deleteString)(struct String* list);
+    void (*print)(struct String* str);
+    void (*delete)(struct String** str);
 } String;
 
 typedef String* string;
@@ -66,8 +66,8 @@ string joinStr(char* delimeter, int countParams, ...);
 //string joinStrList(StrList list, char* delimeter);
 //string defaultIfNull(string, string);
 
-void printString(string s);
-void deleteString(string* s);
+//void printString(string s);
+//oid deleteString(string* s);
 
 
 #endif

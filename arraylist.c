@@ -6,6 +6,9 @@
 
 
 #include "arraylist.h"
+#include "arrayservice/intarraylist.h"
+#include "arrayservice/doublearraylist.h"
+#include "arrayservice/strarraylist.h"
 
 // structures
 /*typedef struct String {
@@ -64,8 +67,9 @@ static void* reverse(Type type);
 static void* isEquals(Type type);
 
 static void* size(Type type);
-static void* printList(Type type);
-static void* deleteList(Type type);
+static void* print(Type type);
+static void* delete(Type type);
+static void* toString(Type type);
 static void* iterator(Type type);
 
 
@@ -479,6 +483,45 @@ static void* size(Type type) {
     }
 }
 
+static void* toString(Type type) {
+    switch (type) {
+        case INT_LIST:
+            return toStrIntList;
+        case DOUBLE_LIST:
+            return toStrDoubleList;
+        case STR_LIST:
+            return toStrStrList;
+        default:
+            return NULL;
+    }
+}
+
+static void* print(Type type) {
+    switch (type) {
+        case INT_LIST:
+            return printIntList;
+        case DOUBLE_LIST:
+            return printDoubleList;
+        case STR_LIST:
+            return printStrList;
+        default:
+            return NULL;
+    }
+}
+
+static void* delete(Type type) {
+    switch (type) {
+        case INT_LIST:
+            return deleteIntList;
+        case DOUBLE_LIST:
+            return deleteDoubleList;
+        case STR_LIST:
+            return deleteStrList;
+        default:
+            return NULL;
+    }
+}
+
 static void* iterator(Type type) {
     switch (type) {
         case INT_LIST:
@@ -515,9 +558,10 @@ static void initFuncs(Type type, void* data) {
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->reverse = reverse(type) : type == DOUBLE_LIST ? ((DoubleList) data)->reverse = reverse(type) : (((StrList) data)->reverse = reverse(type));
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->isEquals = isEquals(type) : type == DOUBLE_LIST ? ((DoubleList) data)->isEquals = isEquals(type) : (((StrList) data)->isEquals = isEquals(type));
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->size = size(type) : type == DOUBLE_LIST ? ((DoubleList) data)->size = size(type) : (((StrList) data)->size = size(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->toString = toString(type) : type == DOUBLE_LIST ? ((DoubleList) data)->toString = toString(type) : (((StrList) data)->toString= toString(type));
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->iterator = iterator(type) : type == DOUBLE_LIST ? ((DoubleList) data)->iterator = iterator(type) : (((StrList) data)->iterator = iterator(type));
     if (type == STR_LIST)
         ((StrList) data)->joinList = joinList(type);
-    //type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->printList = printList(type) : type == DOUBLE_LIST ? ((DoubleList) data)->printList = printList(type) : (((StrList) data)->printList = printList(type));
-    //type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->deleteList = deleteList(type) : type == DOUBLE_LIST ? ((DoubleList) data)->deleteList = deleteList(type) : (((StrList) data)->deleteList = deleteList(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->print = print(type) : type == DOUBLE_LIST ? ((DoubleList) data)->print = print(type) : (((StrList) data)->print = print(type));
+    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->delete = delete(type) : type == DOUBLE_LIST ? ((DoubleList) data)->delete = delete(type) : (((StrList) data)->delete = delete(type));
 }

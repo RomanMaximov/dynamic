@@ -12,9 +12,6 @@
 #include <stdlib.h>
 #include "string.h"
 #include "iterator.h"
-//#include "setservice/intset.h"
-#include "setservice/doubleset.h"
-#include "setservice/strset.h"
 
 // structures
 typedef struct String String;

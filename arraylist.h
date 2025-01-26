@@ -13,9 +13,6 @@
 #include <limits.h>
 #include <stdbool.h>
 #include "string.h"
-#include "arrayservice/intarraylist.h"
-#include "arrayservice/doublearraylist.h"
-#include "arrayservice/strarraylist.h"
 #include "collectiontypes.h"
 #include "iterator.h"
 
@@ -46,8 +43,8 @@ typedef struct ArrayListInt {
     int (*size)(struct ArrayListInt* list);
     struct String* (*toString)(struct ArrayListInt* list);
     struct Itr* (*iterator)(struct ArrayListInt* list);
-    //void (*printList)(struct ArrayListInt* list);
-    //void (*deleteList)(struct ArrayListInt* list);
+    void (*print)(struct ArrayListInt* list);
+    void (*delete)(struct ArrayListInt** list);
 } ArrayListInt;
 
 typedef struct ArrayListDouble {
@@ -73,8 +70,8 @@ typedef struct ArrayListDouble {
     int (*size)(struct ArrayListDouble* list);
     struct String* (*toString)(struct ArrayListDouble* list);
     struct Itr* (*iterator)(struct ArrayListDouble* list);
-    //void (*printList)(struct ArrayListInt* list);
-    //void (*deleteList)(struct ArrayListInt* list);
+    void (*print)(struct ArrayListInt* list);
+    void (*delete)(struct ArrayListInt** list);
 } ArrayListDouble;
 
 typedef struct ArrayListStr {
@@ -101,8 +98,8 @@ typedef struct ArrayListStr {
     struct String* (*joinList)(struct ArrayListStr* str, char* delimeter);
     struct String* (*toString)(struct ArrayListStr* list);
     struct Itr* (*iterator)(struct ArrayListStr* list);
-    //void (*printList)(struct ArrayListStr* list);
-    //void (*deleteList)(struct ArrayListStr* list);
+    void (*print)(struct ArrayListStr* list);
+    void (*delete)(struct ArrayListStr** list);
 } ArrayListStr;
 
 

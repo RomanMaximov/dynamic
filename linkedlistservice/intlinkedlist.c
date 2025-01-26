@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "intlinkedlist.h"
 
 
@@ -396,46 +397,6 @@ IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
     return newLL;
 }
 
-void printIntLL(IntLinkedList list) {
-    if (list == NULL || list->pf == NULL) return;
-
-    IntNode current = list->pf->begin;
-    printf("%s", "[");
-    while (current != NULL) {
-        if (current->next == NULL)
-            printf("%d", current->data);
-        else
-            printf("%d, ", current->data);
-        current = current->next;
-    }
-    printf("%s\n", "]");
-}
-
-
-void deleteIntLL(IntLinkedList* list) {
-    if (list == NULL || *list == NULL) return;
-
-    if ((*list)->pf != NULL) {
-        IntNode current = (*list)->pf->begin;
-        IntNode temp = NULL;
-
-        while (current != NULL) {
-            temp = current;
-            current = current->next;
-            free(temp);
-        }
-
-        free((*list)->pf);
-    }
-
-    free(*list);
-    *list = NULL;
-}
-
-int sizeIntLL(IntLinkedList list) {
-    return list->pf->count;
-}
-
 bool isEmptyIntLL(IntLinkedList list) {
     return list == NULL || list->pf->count == 0;
 }
@@ -476,6 +437,78 @@ bool isEqualListsIntLL(IntLinkedList list1, IntLinkedList list2) {
     }
 
     return true;
+}
+
+int sizeIntLL(IntLinkedList list) {
+    return list->pf->count;
+}
+
+string toStrIntLL(IntLinkedList list) {
+    char* text = NULL;
+    if (list->pf->count == 0) {
+        text = (char*)malloc(3 * sizeof(char));
+        text[0] = '[';
+        text[1] = ']';
+        text[2] = '\0';
+        return strOf(text);
+    }
+
+    int count = 256;
+    text = malloc(count * sizeof(char));
+    strcpy(text, "[");
+    IntNode current = list->pf->begin;
+    IntNode end = list->pf->end;
+    while (current != end) {
+        sprintf(&text[strlen(text)], "%d,", current->data);
+        if (strlen(text) > (int)(count / 8 * 7)) {
+            count *= 2;
+            text = realloc(text, count * sizeof(char));
+        }
+        current =current->next;
+    }
+
+    sprintf(&text[strlen(text)], "%d", end->data);
+    strcat(text, "]");
+    string s = strOf(text);
+    free(text);
+
+    return s;
+}
+
+void printIntLL(IntLinkedList list) {
+    if (list == NULL || list->pf == NULL) return;
+
+    IntNode current = list->pf->begin;
+    printf("%s", "[");
+    while (current != NULL) {
+        if (current->next == NULL)
+            printf("%d", current->data);
+        else
+            printf("%d, ", current->data);
+        current = current->next;
+    }
+    printf("%s\n", "]");
+}
+
+
+void deleteIntLL(IntLinkedList* list) {
+    if (list == NULL || *list == NULL) return;
+
+    if ((*list)->pf != NULL) {
+        IntNode current = (*list)->pf->begin;
+        IntNode temp = NULL;
+
+        while (current != NULL) {
+            temp = current;
+            current = current->next;
+            free(temp);
+        }
+
+        free((*list)->pf);
+    }
+
+    free(*list);
+    *list = NULL;
 }
 
 Iterator iteratorIntLL(IntLinkedList list){

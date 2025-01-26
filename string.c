@@ -52,6 +52,8 @@ static void* isBlank();
 static void* isNotBlank();
 static void* defaultIfNull();
 static void* getBytes();
+static void* print();
+static void* delete();
 
 
 // funcs
@@ -423,7 +425,7 @@ byte* getBytesStr(string s) {
     return bytes;
 }
 
-void printString(string s) {
+void printStr(string s) {
     if (s == NULL)
         return;
 
@@ -434,7 +436,7 @@ void printString(string s) {
     }
 }
 
-void deleteString(string* s) {
+void deleteStr(string* s) {
     if (s != NULL || *s != NULL) {
         if ((*s)->pf->data != NULL) {
             free((*s)->pf->data);
@@ -461,35 +463,12 @@ static String** increaseCapacity(StrList list) {
         list->pf->data[i] = strOf(temp[i]->pf->data);
 
     for (int i = 0; i < oldSize; ++i)
-        deleteString(&temp[i]);
+        temp[i]->delete(&temp[i]);
 
     free(temp);
 
     return list->pf->data;
 }
-
-static int compareTo(string s1, string s2) {
-    int result = strcmp(s1->pf->data, s2->pf->data);
-    return result;
-}
-
-/*static int binarySearch(char ch, const char* arr, int high) {
-    int low, middle;
-    --high;
-    low = 0;
-    while (low <= high)
-    {
-        middle = (low + high) / 2;
-        if (ch < arr[middle])
-            high = middle - 1;
-        else if (ch > arr[middle])
-            low = middle + 1;
-        else
-            return middle;
-    }
-    return -1;
-}*/
-
 
 
 // private prototypes funcs for pointers initialization
@@ -569,6 +548,14 @@ static void* getBytes() {
     return getBytesStr;
 }
 
+static void* print() {
+    return printStr;
+}
+
+static void* delete() {
+    return deleteStr;
+}
+
 // funcs pointers initialization
 static void initFuncs(string str) {
     str->length = length();
@@ -590,4 +577,6 @@ static void initFuncs(string str) {
     str->isNotBlank = isNotBlank();
     str->defaultIfNull = defaultIfNull();
     str->getBytes = getBytes();
+    str->print = print();
+    str->delete = delete();
 }

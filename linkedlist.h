@@ -13,9 +13,6 @@
 #include <limits.h>
 #include <stdbool.h>
 #include "string.h"
-#include "linkedlistservice/intlinkedlist.h"
-#include "linkedlistservice/doublelinkedlist.h"
-#include "linkedlistservice/strlinkedlist.h"
 #include "collectiontypes.h"
 #include "iterator.h"
 
@@ -44,9 +41,10 @@ typedef struct LinkedListInt {
     void (*reverse)(struct LinkedListInt* list);
     bool (*isEquals)(struct LinkedListInt* list1, struct LinkedListInt* list2);
     int (*size)(struct LinkedListInt* list);
+    void (*toString)(struct LinkedListInt* list);
     struct Itr* (*iterator)(struct LinkedListInt* list);
-    //void (*printList)(struct LinkedListInt* list);
-    //void (*deleteList)(struct LinkedListInt* list);
+    void (*print)(struct LinkedListInt* list);
+    void (*delete)(struct LinkedListInt** list);
 } LinkedListInt;
 
 typedef struct LinkedListDouble {
@@ -70,9 +68,10 @@ typedef struct LinkedListDouble {
     void (*reverse)(struct LinkedListDouble* list);
     bool (*isEquals)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
     int (*size)(struct LinkedListDouble* list);
+    void (*toString)(struct LinkedListDouble* list);
     struct Itr* (*iterator)(struct LinkedListDouble* list);
-    //void (*printList)(struct LinkedListDouble* list);
-    //void (*deleteList)(struct LinkedListDouble* list);
+    void (*print)(struct LinkedListDouble* list);
+    void (*delete)(struct LinkedListDouble** list);
 } LinkedListDouble;
 
 typedef struct LinkedListStr {
@@ -96,9 +95,10 @@ typedef struct LinkedListStr {
     void (*reverse)(struct LinkedListStr* list);
     bool (*isEquals)(struct LinkedListStr* list1, struct LinkedListStr* list2);
     int (*size)(struct LinkedListStr* list);
+    void (*toString)(struct LinkedListStr* list);
     struct Itr* (*iterator)(struct LinkedListStr* list);
-    //void (*printList)(struct LinkedListStr* list);
-    //void (*deleteList)(struct LinkedListStr* list);
+    void (*print)(struct LinkedListStr* list);
+    void (*delete)(struct LinkedListStr** list);
 } LinkedListStr;
 
 typedef LinkedListInt* IntLinkedList;

@@ -6,6 +6,8 @@
 
 #include "set.h"
 #include "setservice/intset.h"
+#include "setservice/doubleset.h"
+#include "setservice/strset.h"
 #include "collectiontypes.h"
 
 

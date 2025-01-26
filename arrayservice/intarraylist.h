@@ -36,7 +36,7 @@ void reverseIntList(IntList);
 bool isEqualsIntList(IntList, IntList);
 IntList emptyIfNullIntList(IntList);
 int sizeIntList(IntList);
-string toStringIntList(IntList);
+string toStrIntList(IntList);
 Iterator iteratorIntList(IntList);
 
 void printIntList(IntList);

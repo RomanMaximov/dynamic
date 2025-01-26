@@ -34,7 +34,7 @@ void reverseDoubleList(DoubleList);
 bool isEqualsDoubleList(DoubleList, DoubleList);
 DoubleList emptyIfNullDoubleList(DoubleList);
 int sizeDoubleList(DoubleList);
-string toStringDoubleList(DoubleList);
+string toStrDoubleList(DoubleList);
 Iterator iteratorDoubleList(DoubleList);
 
 void printDoubleList(DoubleList);

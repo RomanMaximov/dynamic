@@ -20,9 +20,6 @@ void addAllIntElemLL(IntLinkedList, IntLinkedList);
 int getIntElemLL(IntLinkedList, int);
 bool setIntElemLL(IntLinkedList, int, int);
 int indexOfIntLL(IntLinkedList, int);
-
-// toString
-
 void sortIntLL(IntLinkedList);
 void sortIntLLReverse(IntLinkedList);
 void clearIntLL(IntLinkedList);
@@ -39,6 +36,7 @@ IntLinkedList emptyIfNullIntLL(IntLinkedList);
 int sizeIntLL(IntLinkedList);
 Iterator iteratorIntLL(IntLinkedList);
 
+string toStrIntLL(IntLinkedList);
 void printIntLL(IntLinkedList);
 void deleteIntLL(IntLinkedList*);
 

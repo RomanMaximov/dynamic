@@ -366,7 +366,7 @@ static void deleteInOrder(StrNode node) {
     deleteInOrder(node->left);
     deleteInOrder(node->right);
 
-    deleteString(&node->str);
+    node->str->delete(&node->str);
     free(node);
 }
 
@@ -451,7 +451,7 @@ static void removeNode(StrNode* node, StrNode* previous, string s, bool* found) 
                 if (isRoot(node, previous)) {
                     StrNode temp = *node;
                     *node = NULL;
-                    deleteString(&temp->str);
+                    temp->str->delete(&temp->str);
                     free(temp);
                     *found = true;
                     return;
@@ -463,7 +463,7 @@ static void removeNode(StrNode* node, StrNode* previous, string s, bool* found) 
                 else
                     (*previous)->right = NULL;
 
-                deleteString(&temp->str);
+                temp->str->delete(&temp->str);
                 free(temp);
                 *found = true;
                 return;
@@ -473,7 +473,7 @@ static void removeNode(StrNode* node, StrNode* previous, string s, bool* found) 
                 if (isRoot(node, previous)) {
                     StrNode temp = *node;
                     *node = (*node)->left != NULL ? (*node)->left : (*node)->right;
-                    deleteString(&temp->str);
+                    temp->str->delete(&temp->str);
                     free(temp);
                     *found = true;
                     return;
@@ -486,7 +486,7 @@ static void removeNode(StrNode* node, StrNode* previous, string s, bool* found) 
                     (*previous)->right = (*node)->left != NULL ? (*node)->left : (*node)->right;
                 }
 
-                deleteString(&temp->str);
+                temp->str->delete(&temp->str);
                 free(temp);
                 *found = true;
                 return;
@@ -511,7 +511,7 @@ static void removeNode(StrNode* node, StrNode* previous, string s, bool* found) 
                         (*node)->left->left = left;
                 }
 
-                deleteString(&temp->str);
+                temp->str->delete(&temp->str);
                 free(temp);
                 *found = true;
                 return;

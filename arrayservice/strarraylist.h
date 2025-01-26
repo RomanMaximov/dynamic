@@ -39,7 +39,7 @@ bool isEqualsStrList(StrList, StrList);
 StrList emptyIfNullStrList(StrList);
 int sizeStrList(StrList);
 string joinStrList(StrList, char*);
-string toStringStrList(StrList list);
+string toStrStrList(StrList list);
 Iterator iteratorStrList(StrList);
 
 void printStrList(StrList);

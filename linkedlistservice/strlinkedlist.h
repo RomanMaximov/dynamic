@@ -18,46 +18,27 @@ typedef String* string;
 
 void addStrElemLL(StrLinkedList, string);
 void addArrCharLL(StrLinkedList, char* arr);
-
 void addAllStrElemLL(StrLinkedList, StrLinkedList);
-
 string getStrElemLL(StrLinkedList, int);
-
 bool setStrElemLL(StrLinkedList, int, string);
-
 int indexOfStrLL(StrLinkedList, string);
-
-// toString
-
 void sortStrLL(StrLinkedList);
 void sortStrLLReverse(StrLinkedList);
-
 void clearStrLL(StrLinkedList);
-
 bool containsStrLL(StrLinkedList, string);
-
 bool containsAllStrLL(StrLinkedList, StrLinkedList);
-
 bool containsAnyStrLL(StrLinkedList, StrLinkedList);
-
 bool removeStrLL(StrLinkedList, int); // by index
-
 bool removeAllStrLL(StrLinkedList, StrLinkedList);
-
 StrLinkedList subtractStrLL(StrLinkedList, StrLinkedList);
-
 void reverseStrLL(StrLinkedList);
-
 bool isEqualListsStrLL(StrLinkedList, StrLinkedList);
-
+bool isEmptyStrLL(StrLinkedList);
 StrLinkedList emptyIfNullStrLL(StrLinkedList);
-
 int sizeStrLL(StrLinkedList);
 
-bool isEmptyStrLL(StrLinkedList);
-
+string toStrStrLL(StrLinkedList);
 void printStrLL(StrLinkedList);
-
 void deleteStrLL(StrLinkedList*);
 
 

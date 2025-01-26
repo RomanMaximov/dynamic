@@ -292,7 +292,7 @@ int sizeDoubleList(DoubleList list) {
     return list->pf->count;
 }
 
-string toStringDoubleList(DoubleList list) {
+string toStrDoubleList(DoubleList list) {
     char* text = NULL;
     if (list->pf->count == 0) {
         text = (char*)malloc(3 * sizeof(char));
@@ -307,7 +307,7 @@ string toStringDoubleList(DoubleList list) {
     strcpy(text, "[");
     for (int i = 0; i < list->pf->count - 1; ++i) {
         sprintf(&text[strlen(text)], "%f,", list->pf->data[i]);
-        if (strlen(text) > (unsigned long long int)(count * 0.8)) {
+        if (strlen(text) > (int)(count / 8 * 7)) {
             count *= 2;
             text = realloc(text, count * sizeof(char));
         }

@@ -6,11 +6,9 @@
 //#include "linkedlist.h"
 #include "string.h"
 //#include "map.h"
-#include <crtdbg.h>
 
 int main()
 {
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     ///////////   int index = hashCode(key) % capacity;  индекс бакета
 
     /*IntArray* arrInt = null;
@@ -147,26 +145,26 @@ int main()
 
     puts("============================================");
     string s = strOf("MotoCYclE");
-    printString(s);
+    s->print(s);
     int len = s->length(s);
     s->toLowerCase(s);
     printf("size: %d\n", len);
-    printString(s);
+    s->print(s);
 
     s->toUpperCase(s);
-    printString(s);
+    s->print(s);
     //delStr(&s);
-    deleteString(&s);
+    s->delete(&s);
 
 
     string s2 = strOf("How it was?");
     string s3 = strOf("broken");
     s2->concat(s2, s3);
     puts("==========  concat  ========");
-    printString(s2);
+    s2->print(s2);
 
     string s4 = joinStr("-", 3, s2, s3, s2);
-    printString(s4);
+    s4->print(s4);
 
 
     //printf("ch = %c\n", charAt(s2, 4));
@@ -187,14 +185,14 @@ int main()
     }
 
     s2->reverse(s2);
-    printString(s2);
+    s2->print(s2);
     printf("char index: %d\n", s2->indexOf(s2, '?'));
-    deleteString(&s2);
-    deleteString(&s3);
-    deleteString(&s4);
-    deleteString(&sub);
-    deleteString(&sub2);
-    deleteString(&sub3);
+    s2->delete(&s2);
+    s3->delete(&s3);
+    s4->delete(&s4);
+    sub->delete(&sub);
+    sub2->delete(&sub2);
+    sub3->delete(&sub3);
 
     /*string s5 = stringOf("don,sun,dog");//,string,milk,bob,ron,see,str11,str12,str13");
     printString(s5);
@@ -249,10 +247,10 @@ int main()
 
     string joinStr = afterSplit->joinList(afterSplit, "-");
     puts("After join");
-    printString(joinStr);
+    joinStr->print(joinStr);
     puts("After reverse");
     joinStr->reverse(joinStr);
-    printString(joinStr);
+    joinStr->print(joinStr);
 
     /*add(stringOf("str1"), stringList);
     add(stringOf("str2"), stringList);

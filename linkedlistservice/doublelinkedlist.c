@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "doublelinkedlist.h"
 
@@ -314,6 +315,23 @@ bool removeAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
     return true;
 }
 
+void reverseDoubleLL(DoubleLinkedList list) {
+    double* arr = malloc(list->pf->count * sizeof(int));
+    copyLLToArray(list, arr);
+
+    reverseArr(arr, list->pf->count);
+
+    DoubleNode current = list->pf->begin;
+    int index = 0;
+    while (current != NULL) {
+        current->data = arr[index];
+        current = current->next;
+        ++index;
+    }
+
+    free(arr);
+}
+
 DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
     if (isEmptyDoubleLL(list1)) {
         DoubleLinkedList temp = NULL;
@@ -362,6 +380,67 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2
     return newLL;
 }
 
+bool isEmptyDoubleLL(DoubleLinkedList list) {
+    return list == NULL || list->pf->count == 0;
+}
+
+bool isEqualListsDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
+    if (list1 == NULL || list2 == NULL)
+        return false;
+
+    if (list1->pf->count != list2->pf->count)
+        return false;
+
+    DoubleNode current1 = list1->pf->begin;
+    DoubleNode current2 = list2->pf->begin;
+
+    while (current1 != NULL) {
+        if (current1->data != current2->data)
+            return false;
+
+        current1 = current1->next;
+        current2 = current2->next;
+    }
+
+    return true;
+}
+
+int sizeDoubleLL(DoubleLinkedList list) {
+    return list->pf->count;
+}
+
+string toStrDoubleLL(DoubleLinkedList list) {
+    char* text = NULL;
+    if (list->pf->count == 0) {
+        text = (char*)malloc(3 * sizeof(char));
+        text[0] = '[';
+        text[1] = ']';
+        text[2] = '\0';
+        return strOf(text);
+    }
+
+    int count = 256;
+    text = malloc(count * sizeof(char));
+    strcpy(text, "[");
+    DoubleNode current = list->pf->begin;
+    DoubleNode end = list->pf->end;
+    while (current != end) {
+        sprintf(&text[strlen(text)], "%.9f,", current->data);
+        if (strlen(text) > (int)(count / 8 * 7)) {
+            count *= 2;
+            text = realloc(text, count * sizeof(char));
+        }
+        current =current->next;
+    }
+
+    sprintf(&text[strlen(text)], "%.9f", end->data);
+    strcat(text, "]");
+    string s = strOf(text);
+    free(text);
+
+    return s;
+}
+
 void printDoubleLL(DoubleLinkedList list) {
     if (list == NULL || list->pf == NULL) return;
 
@@ -369,9 +448,9 @@ void printDoubleLL(DoubleLinkedList list) {
     printf("%s", "[");
     while (current != NULL) {
         if (current->next == NULL)
-            printf("%f", current->data);
+            printf("%.9f", current->data);
         else
-            printf("%f, ", current->data);
+            printf("%.9f, ", current->data);
         current = current->next;
     }
     printf("%s\n", "]");
@@ -397,53 +476,6 @@ void deleteDoubleLL(DoubleLinkedList* list) {
     free(*list);
     *list = NULL;
 }
-
-int sizeDoubleLL(DoubleLinkedList list) {
-    return list->pf->count;
-}
-
-bool isEmptyDoubleLL(DoubleLinkedList list) {
-    return list == NULL || list->pf->count == 0;
-}
-
-void reverseDoubleLL(DoubleLinkedList list) {
-    double* arr = malloc(list->pf->count * sizeof(int));
-    copyLLToArray(list, arr);
-
-    reverseArr(arr, list->pf->count);
-
-    DoubleNode current = list->pf->begin;
-    int index = 0;
-    while (current != NULL) {
-        current->data = arr[index];
-        current = current->next;
-        ++index;
-    }
-
-    free(arr);
-}
-
-bool isEqualListsDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
-    if (list1 == NULL || list2 == NULL)
-        return false;
-
-    if (list1->pf->count != list2->pf->count)
-        return false;
-
-    DoubleNode current1 = list1->pf->begin;
-    DoubleNode current2 = list2->pf->begin;
-
-    while (current1 != NULL) {
-        if (current1->data != current2->data)
-            return false;
-
-        current1 = current1->next;
-        current2 = current2->next;
-    }
-
-    return true;
-}
-
 
 // ===================== private funcs =======================
 

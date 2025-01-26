@@ -299,7 +299,7 @@ int sizeIntList(IntList list) {
     return list->pf->count;
 }
 
-string toStringInt(IntList list) {
+string toStrIntList(IntList list) {
     char* text = NULL;
     if (list->pf->count == 0) {
         text = (char*)malloc(3 * sizeof(char));
@@ -314,7 +314,7 @@ string toStringInt(IntList list) {
     strcpy(text, "[");
     for (int i = 0; i < list->pf->count - 1; ++i) {
         sprintf(&text[strlen(text)], "%d,", list->pf->data[i]);
-        if (strlen(text) > (int)(count / 8 * 6)) {
+        if (strlen(text) > (int)(count / 8 * 7)) {
             count *= 2;
             text = realloc(text, count * sizeof(char));
         }

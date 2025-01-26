@@ -239,7 +239,7 @@ bool removeStrList(StrList list, int index) {
     }
 
     if (list->pf->count == 1 && index == 0) {
-        deleteString(&list->pf->data[index]);
+        list->pf->data[index]->delete(&list->pf->data[index]);
         list->pf->count = 0;
         list->pf->data[index] = NULL;
         return true;
@@ -282,7 +282,7 @@ bool removeAllStrList(StrList list1, StrList list2) {
 
     qsort(indexList, j - 1, sizeof(int), compareInt);
     for (int i = 0; i < list1->pf->count; ++i) {
-        deleteString(&list1->pf->data[i]);
+        list1->pf->data[i]->delete(&list1->pf->data[i]);
     }
 
     free(list1->pf->data);
@@ -326,7 +326,7 @@ StrList subtractStrList(StrList list1, StrList list2) {
     for (int i = 0; i < list2->pf->count; ++i) {
         int index = indexOfStrList(copyValues, list2->pf->data[i]);
         if (index != -1) {
-            deleteString(&copyValues->pf->data[index]);
+            copyValues->pf->data[index]->delete(&copyValues->pf->data[index]);
         }
     }
 
@@ -421,7 +421,7 @@ string joinStrList(StrList list, char* delimeter) {
     return s;
 }
 
-string toStringStrList(StrList list) {
+string toStrStrList(StrList list) {
     char* text = NULL;
     if (list->pf->count == 0) {
         text = (char*)malloc(3 * sizeof(char));
@@ -480,7 +480,7 @@ void deleteStrList(StrList* list) {
     if ((*list)->pf->data != NULL) {
         for (int i = 0; i < (*list)->pf->count; ++i) {
             if ((*list)->pf->data[i] != NULL) {
-                deleteString(&(*list)->pf->data[i]);
+                (*list)->pf->data[i]->delete(&(*list)->pf->data[i]);
             }
         }
     }
@@ -521,7 +521,7 @@ static String** increaseCapacity(StrList list) {
         list->pf->data[i] = strOf(temp[i]->pf->data);
 
     for (int i = 0; i < oldSize; ++i)
-        deleteString(&temp[i]);
+        temp[i]->delete(&temp[i]);
 
     free(temp);
 
