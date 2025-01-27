@@ -300,6 +300,9 @@ int sizeIntList(IntList list) {
 }
 
 string toStrIntList(IntList list) {
+    if (list == NULL)
+        return NULL;
+
     char* text = NULL;
     if (list->pf->count == 0) {
         text = (char*)malloc(3 * sizeof(char));

@@ -49,6 +49,7 @@ static DoubleNode findNode(DoubleNode* node, DoubleNode* previous);
 static bool isRoot(DoubleNode* node, DoubleNode* previous);
 static bool hasNext(Iterator iter);
 static int hashDouble(double value);
+static  void toStringInOrder(DoubleNode node, int* counter, char* text, int* count);
 
 
 
@@ -200,8 +201,39 @@ int sizeDoubleSet(DoubleSet set) {
     return set->pf->count;
 }
 
+string toStrDoubleSet(DoubleSet set) {
+    if (set == NULL || set->pf == NULL || set->pf->bucket == NULL) {
+        printf("%s", "[]\n");
+        return NULL;
+    }
+
+    char* text = NULL;
+    if (set->pf->count == 0) {
+        text = (char*)malloc(3 * sizeof(char));
+        text[0] = '[';
+        text[1] = ']';
+        text[2] = '\0';
+        return strOf(text);
+    }
+
+    int count = 256;
+    text = malloc(count * sizeof(char));
+    strcpy(text, "[");
+
+    int counter = set->pf->count;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        toStringInOrder(set->pf->bucket[i], &counter, text, &count);
+    }
+
+    strcat(text, "]");
+    string s = strOf(text);
+    free(text);
+
+    return s;
+}
+
 void printDoubleSet(DoubleSet set) {
-    if (set == NULL || set->pf == NULL) {
+    if (set == NULL || set->pf == NULL || set->pf->bucket == NULL) {
         printf("%s", "[]\n");
         return;
     }
@@ -480,5 +512,22 @@ static  void printInOrder(DoubleNode node, int* counter) {
             --(*counter);
         }
         printInOrder(node->right, counter);
+    }
+}
+
+static  void toStringInOrder(DoubleNode node, int* counter, char* text, int* count) {
+    if (node != NULL) {
+        toStringInOrder(node->left, counter, text, count);
+        sprintf(&text[strlen(text)], "%.9f,", node->data);
+        if (strlen(text) > (int)(*count / 8 * 7)) {
+            *count *= 2;
+            text = realloc(text, *count * sizeof(char));
+        }
+
+        if (*counter - 1 != 0) {
+            printf("%s", ",");
+            --(*counter);
+        }
+        toStringInOrder(node->right, counter, text, count);
     }
 }

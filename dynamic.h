@@ -96,22 +96,6 @@ typedef struct ArrayListStr ArrayListStr;
 //    ),\                                   \
 
 
-#define getElem(T, V) _Generic((T), \
-    DoubleList : getElemDouble,\
-    IntList : getElemInt \
-)(T, V)
-
-#define setElem(T, V, K) _Generic((T), \
-    DoubleList : setElemDouble,\
-    IntList : setElemInt, \
-    string : setElemStr,  \
-    char* : setElemCharArr \
-)(T, V, K)
-
-#define toString(T) _Generic((T), \
-    DoubleList : toStringDouble,\
-    IntList : toStringInt \
-)(T)
 
 
 

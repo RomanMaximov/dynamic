@@ -464,7 +464,7 @@ string toStrIntLL(IntLinkedList list) {
             count *= 2;
             text = realloc(text, count * sizeof(char));
         }
-        current =current->next;
+        current = current->next;
     }
 
     sprintf(&text[strlen(text)], "%d", end->data);

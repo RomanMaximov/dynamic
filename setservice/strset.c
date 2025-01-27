@@ -60,6 +60,8 @@ static void toListAndSort(StrSet set, StrList list);
 static void removeNode(StrNode* node, StrNode* previous, string s, bool* found);
 static StrNode findNode(StrNode* node, StrNode* previous);
 static bool isRoot(StrNode* node, StrNode* previous);
+static  void toStringInOrder(StrNode node, int* counter, char* text, int* count);
+static void checkCapacity(char* text, int* count, int strLength);
 static bool hasNext(Iterator iter);
 
 
@@ -96,7 +98,7 @@ void addAllStrElemSet(StrSet set1, StrSet set2) {
         insertNode(&set1->pf->bucket[indexBucket], list->pf->str[i]->pf->data, &set1->pf->count);
     }
 
-    deleteStrList(&list);
+    list->delete(&list);
 }
 
 void clearStrSet(StrSet set) {
@@ -138,8 +140,8 @@ bool containsAllStrSet(StrSet set1, StrSet set2) {
             return false;
     }
 
-    deleteStrList(&list1);
-    deleteStrList(&list2);
+    list1->delete(&list1);
+    list2->delete(&list2);
 
     return  true;
 }
@@ -157,14 +159,14 @@ bool containsAnyStrSet(StrSet set1, StrSet set2) {
 
     for (int i = 0; i < count2; ++i) {
         if(binarySearch(list2->pf->str[i], list1->pf->str, count1)) {
-            deleteStrList(&list1);
-            deleteStrList(&list2);
+            list1->delete(&list1);
+            list2->delete(&list2);
             return true;
         }
     }
 
-    deleteStrList(&list1);
-    deleteStrList(&list2);
+    list1->delete(&list1);
+    list2->delete(&list2);
 
     return  false;
 }
@@ -189,7 +191,7 @@ bool removeAllStrSet(StrSet set1, StrSet set2) {
         removeStrSet(set1, list2->pf->str[i]);
     }
 
-    deleteStrList(&list2);
+    list2->delete(&list2);
 
     return true;
 }
@@ -212,8 +214,8 @@ bool isEqualsStrSet(StrSet set1, StrSet set2) {
             return false;
     }
 
-    deleteStrList(&list1);
-    deleteStrList(&list2);
+    list1->delete(&list1);
+    list2->delete(&list2);
 
     return true;
 }
@@ -222,8 +224,39 @@ int sizeStrSet(StrSet set) {
     return set->pf->count;
 }
 
+string toStrStrSet(StrSet set) {
+    if (set == NULL || set->pf == NULL || set->pf->bucket == NULL) {
+        printf("%s", "[]\n");
+        return NULL;
+    }
+
+    char* text = NULL;
+    if (set->pf->count == 0) {
+        text = (char*)malloc(3 * sizeof(char));
+        text[0] = '[';
+        text[1] = ']';
+        text[2] = '\0';
+        return strOf(text);
+    }
+
+    int count = 256;
+    text = malloc(count * sizeof(char));
+    strcpy(text, "[");
+
+    int counter = set->pf->count;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        toStringInOrder(set->pf->bucket[i], &counter, text, &count);
+    }
+
+    strcat(text, "]");
+    string s = strOf(text);
+    free(text);
+
+    return s;
+}
+
 void printStrSet(StrSet set) {
-    if (set == NULL || set->pf == NULL) {
+    if (set == NULL || set->pf == NULL || set->pf->bucket == NULL) {
         printf("%s", "[]\n");
         return;
     }
@@ -307,7 +340,7 @@ static void increaseCapacity(StrSet set) {
         insertNode(&set->pf->bucket[indexBucket], list->pf->str[i]->pf->data, &set->pf->count);
     }
 
-    deleteStrList(&list);
+    list->delete(&list);
     deleteNodes(temp, oldCapacity);
     free(temp);
 }
@@ -322,7 +355,7 @@ static void setToArr(StrSet set, StrList list) {
 static void copyValuesToList(StrNode node, StrList list) {
     if (node != NULL) {
         copyValuesToList(node->left, list);
-        addCharArrList(list, node->str->pf->data);
+        list->add(list, node->str);
         copyValuesToList(node->right, list);
     }
 }
@@ -548,5 +581,30 @@ static  void printInOrder(StrNode node, int* counter) {
             --(*counter);
         }
         printInOrder(node->right, counter);
+    }
+}
+
+static  void toStringInOrder(StrNode node, int* counter, char* text, int* count) {
+    if (node != NULL) {
+        toStringInOrder(node->left, counter, text, count);
+        checkCapacity(text, &count, node->str->pf->count);
+        sprintf(&text[strlen(text)], "%s,", node->str->pf->data);
+        if (strlen(text) > (int)(*count / 8 * 7)) {
+            *count *= 2;
+            text = realloc(text, *count * sizeof(char));
+        }
+
+        if (*counter - 1 != 0) {
+            printf("%s", ",");
+            --(*counter);
+        }
+        toStringInOrder(node->right, counter, text, count);
+    }
+}
+
+static void checkCapacity(char* text, int* count, int strLength) {
+    if (strLength >= *count - strlen(text)) {
+        *count = (*count + strLength) * 2;
+        realloc(text, *count * sizeof(char));
     }
 }

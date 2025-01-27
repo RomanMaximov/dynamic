@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
 #include "dynamic.h"
 //#include "dynamicarray.h"
 //#include "linkedlist.h"
@@ -214,25 +215,19 @@ int main()
     strLinkedList->add(strLinkedList, ll4);
     strLinkedList->add(strLinkedList, ll4);
     puts("// === //");
-    printStrLL(strLinkedList);
+    strLinkedList->print(strLinkedList);
     strLinkedList->reverse(strLinkedList);
     puts("// === //");
-    printStrLL(strLinkedList);
-    deleteStrLL(&strLinkedList);
+    strLinkedList->print(strLinkedList);
+    strLinkedList->delete(&strLinkedList);
 
     puts("========================= ////////   ArrayList   /////// ============================================");
-    StrList strList = newStrList(strList);
+    IntList intList = newIntList(intList);
+    intList->add(intList, rand() % 100);
 
-    strList->add(strList, ll1);
-    strList->add(strList, ll2);
-    strList->add(strList, ll3);
-    strList->add(strList, ll4);
-    strList->add(strList, ll4);
-
-    printf("strList count: %d\n", strList->size(strList));
-    printStrList(strList);
-    strList->reverse(strList);
-    printStrList(strList);
+    intList->print(intList);
+    string toStr = intList->toString(intList);
+    toStr->print(toStr);
 
     puts("");
     puts("================ ////////   string   /////// ==================");
@@ -240,17 +235,6 @@ int main()
     string subStr = strOf("great country");
     printf("subStr index: %d\n", strForSub->indexOfSubStr(strForSub, subStr));
 
-    string splitStr = strOf("don,ton,sunGlassException,dog,string,milk,bob,ron,see,str11");
-    StrList afterSplit = splitStr->split(splitStr, ",");
-    puts("After split");
-    printStrList(afterSplit);
-
-    string joinStr = afterSplit->joinList(afterSplit, "-");
-    puts("After join");
-    joinStr->print(joinStr);
-    puts("After reverse");
-    joinStr->reverse(joinStr);
-    joinStr->print(joinStr);
 
     /*add(stringOf("str1"), stringList);
     add(stringOf("str2"), stringList);

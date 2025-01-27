@@ -11,6 +11,7 @@
 #include <ctype.h>
 #include "string.h"
 #include "arraylist.h"
+#include "arrayservice/strarraylist.h"
 
 // structures
 typedef struct InnerStr {

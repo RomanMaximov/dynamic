@@ -85,8 +85,9 @@ static void* isEmpty(Type type);
 static void* isEquals(Type type);
 
 static void* size(Type type);
-static void* printList(Type type);
-static void* deleteList(Type type);
+static void* toString(Type type);
+static void* print(Type type);
+static void* delete(Type type);
 static void* iterator(Type type);
 
 // funcs
@@ -282,6 +283,45 @@ static void* size(Type type) {
     }
 }
 
+static void* toString(Type type) {
+    switch (type) {
+        case INT_SET:
+            return toStrIntSet;
+        case DOUBLE_SET:
+            return toStrDoubleSet;
+        case STR_SET:
+            return toStrStrSet;
+        default:
+            return NULL;
+    }
+}
+
+static void* print(Type type) {
+    switch (type) {
+        case INT_SET:
+            return printIntSet;
+        case DOUBLE_SET:
+            return printDoubleSet;
+        case STR_SET:
+            return printStrSet;
+        default:
+            return NULL;
+    }
+}
+
+static void* delete(Type type) {
+    switch (type) {
+        case INT_SET:
+            return deleteIntSet;
+        case DOUBLE_SET:
+            return deleteDoubleSet;
+        case STR_SET:
+            return deleteStrSet;
+        default:
+            return NULL;
+    }
+}
+
 static void* iterator(Type type) {
     switch (type) {
         case INT_SET:
@@ -307,7 +347,8 @@ static void initFuncs(Type type, void* data) {
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->isEmpty = isEmpty(type) : type == DOUBLE_SET ? ((DoubleSet) data)->isEmpty = isEmpty(type) : (((StrSet) data)->isEmpty = isEmpty(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->isEquals = isEquals(type) : type == DOUBLE_SET ? ((DoubleSet) data)->isEquals = isEquals(type) : (((StrSet) data)->isEquals = isEquals(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->size = size(type) : type == DOUBLE_SET ? ((DoubleSet) data)->size = size(type) : (((StrSet) data)->size = size(type));
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->toString = toString(type) : type == DOUBLE_SET ? ((DoubleSet) data)->toString = toString(type) : (((StrSet) data)->toString = toString(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->iterator = iterator(type) : type == DOUBLE_SET ? ((DoubleSet) data)->iterator = iterator(type) : (((StrSet) data)->iterator = iterator(type));
-    //type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->printList = printList(type) : type == DOUBLE_SET ? ((DoubleLinkedList) data)->printList = printList(type) : (((StrLinkedList) data)->printList = printList(type));
-    //type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->deleteList = deleteList(type) : type == DOUBLE_SET ? ((DoubleLinkedList) data)->deleteList = deleteList(type) : (((StrLinkedList) data)->deleteList = deleteList(type));
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->print = print(type) : type == DOUBLE_SET ? ((DoubleSet) data)->print = print(type) : (((StrSet) data)->print = print(type));
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->delete = delete(type) : type == DOUBLE_SET ? ((DoubleSet) data)->delete = delete(type) : (((StrSet) data)->delete = delete(type));
 }

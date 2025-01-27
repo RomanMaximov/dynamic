@@ -430,7 +430,7 @@ string toStrDoubleLL(DoubleLinkedList list) {
             count *= 2;
             text = realloc(text, count * sizeof(char));
         }
-        current =current->next;
+        current = current->next;
     }
 
     sprintf(&text[strlen(text)], "%.9f", end->data);

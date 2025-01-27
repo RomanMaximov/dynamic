@@ -27,11 +27,13 @@ bool isEmptyIntSet(IntSet);
 bool isEqualsIntSet(IntSet, IntSet);
 IntSet emptyIfNullIntSet(IntSet);
 int sizeIntSet(IntSet);
+string toStrIntSet(IntSet);
 Iterator iteratorIntSet(IntSet);
 
 void printIntSet(IntSet);
 void deleteIntSet(IntSet*);
 
+// for debugging
 void printTree(IntSet set);
 
 #endif

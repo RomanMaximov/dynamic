@@ -29,11 +29,13 @@ bool isEmptyStrSet(StrSet);
 bool isEqualsStrSet(StrSet, StrSet);
 StrSet emptyIfNullStrSet(StrSet);
 int sizeStrSet(StrSet);
+string toStrStrSet(StrSet);
 Iterator iteratorStrSet(StrSet);
 
 void printStrSet(StrSet);
 void deleteStrSet(StrSet*);
 
+// for debugging
 void printStrTree(StrSet set);
 
 #endif 

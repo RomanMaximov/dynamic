@@ -27,11 +27,13 @@ bool isEmptyDoubleSet(DoubleSet);
 bool isEqualsDoubleSet(DoubleSet, DoubleSet);
 DoubleSet emptyIfNullDoubleSet(DoubleSet);
 int sizeDoubleSet(DoubleSet);
+string toStrDoubleSet(DoubleSet);
 Iterator iteratorDoubleSet(DoubleSet);
 
 void printDoubleSet(DoubleSet);
 void deleteDoubleSet(DoubleSet*);
 
+// for debugging
 void printDoubleTree(DoubleSet set);
 
 #endif

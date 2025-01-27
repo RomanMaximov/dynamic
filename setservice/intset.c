@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "intset.h"
 
 typedef struct NodeInt {
@@ -42,6 +43,7 @@ static void toArrAndSort(IntSet set, int* arr);
 static void removeNode(IntNode* node, IntNode* previous, int num, bool* found);
 static IntNode findNode(IntNode* node, IntNode* previous);
 static bool isRoot(IntNode* node, IntNode* previous);
+static  void toStringInOrder(IntNode node, int* counter, char* text, int* count);
 static bool hasNext(Iterator iter);
 
 
@@ -193,8 +195,39 @@ int sizeIntSet(IntSet set) {
     return set->pf->count;
 }
 
+string toStrIntSet(IntSet set) {
+    if (set == NULL || set->pf == NULL || set->pf->bucket == NULL) {
+        printf("%s", "[]\n");
+        return NULL;
+    }
+
+    char* text = NULL;
+    if (set->pf->count == 0) {
+        text = (char*)malloc(3 * sizeof(char));
+        text[0] = '[';
+        text[1] = ']';
+        text[2] = '\0';
+        return strOf(text);
+    }
+
+    int count = 256;
+    text = malloc(count * sizeof(char));
+    strcpy(text, "[");
+
+    int counter = set->pf->count;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        toStringInOrder(set->pf->bucket[i], &counter, text, &count);
+    }
+
+    strcat(text, "]");
+    string s = strOf(text);
+    free(text);
+
+    return s;
+}
+
 void printIntSet(IntSet set) {
-    if (set == NULL || set->pf == NULL) {
+    if (set == NULL || set->pf == NULL || set->pf->bucket == NULL) {
         printf("%s", "[]\n");
         return;
     }
@@ -479,4 +512,21 @@ static void toArrAndSort(IntSet set, int* arr) {
 
 static bool isRoot(IntNode* node, IntNode* previous) {
     return (*node)->data == (*previous)->data;
+}
+
+static  void toStringInOrder(IntNode node, int* counter, char* text, int* count) {
+    if (node != NULL) {
+        toStringInOrder(node->left, counter, text, count);
+        sprintf(&text[strlen(text)], "%d,", node->data);
+        if (strlen(text) > (int)(*count / 8 * 7)) {
+            *count *= 2;
+            text = realloc(text, *count * sizeof(char));
+        }
+
+        if (*counter - 1 != 0) {
+            printf("%s", ",");
+            --(*counter);
+        }
+        toStringInOrder(node->right, counter, text, count);
+    }
 }
