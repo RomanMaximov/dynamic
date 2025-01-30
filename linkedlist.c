@@ -9,6 +9,7 @@
 #include "linkedlistservice/intlinkedlist.h"
 #include "linkedlistservice/doublelinkedlist.h"
 #include "linkedlistservice/strlinkedlist.h"
+#include "context.h"
 
 // structures
 /*typedef struct String {
@@ -109,6 +110,12 @@ IntLinkedList newIntLinkedList(IntLinkedList temp) {
     list->pf->begin = NULL;
     list->pf->end = NULL;
     initFuncs(INT_LL, (void*)list);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = INT_LL;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
 
     return list;
 }

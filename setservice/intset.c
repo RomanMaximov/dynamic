@@ -9,41 +9,42 @@
 #include <string.h>
 #include "intset.h"
 
-typedef struct NodeInt {
+typedef struct NodeSetInt {
     int data;
-    struct NodeInt* left;
-    struct NodeInt* right;
-} NodeInt;
+    struct NodeSetInt* left;
+    struct NodeSetInt* right;
+} NodeSetInt;
 
 // Set data encapsulation
 typedef struct InnerIntSet {
     int count;
     int capacity;
-    NodeInt** bucket;
+    NodeSetInt** bucket;
 } InnerIntSet;
 
 typedef SetInt* IntSet;
-typedef NodeInt* IntNode;
+typedef NodeSetInt* IntSetNode;
 
 // prototypes private funcs
-static IntNode createNode(int num);
+static IntSetNode createNode(int num);
 static int compareInt(int elem1, int elem2);
-static void insertNode(NodeInt** node, int num, int* counter);
-static void printInOrder(IntNode node, int* counter);
+static void insertNode(NodeSetInt** node, int num, int* counter);
+static void printInOrder(IntSetNode node, int* counter);
 static bool isCapacityFull(IntSet set);
+unsigned long long hashCode(int key);
 static void increaseCapacity(IntSet set);
-static void copyValuesToArr(IntNode node, int* arr, int* index);
+static void copyValuesToArr(IntSetNode node, int* arr, int* index);
 static void setToArr(IntSet set, int* arr);
-static void deleteNodes(NodeInt** buckets, int capacity);
-static void deleteInOrder(IntNode node);
-static bool isContains(IntNode node, int num);
+static void deleteNodes(NodeSetInt** buckets, int capacity);
+static void deleteInOrder(IntSetNode node);
+static bool isContains(IntSetNode node, int num);
 static int compareqsort(const void* elem1, const void* elem2);
 static bool binarySearch(int elem, const int* arr, int high);
 static void toArrAndSort(IntSet set, int* arr);
-static void removeNode(IntNode* node, IntNode* previous, int num, bool* found);
-static IntNode findNode(IntNode* node, IntNode* previous);
-static bool isRoot(IntNode* node, IntNode* previous);
-static  void toStringInOrder(IntNode node, int* counter, char* text, int* count);
+static void removeNode(IntSetNode* node, IntSetNode* previous, int num, bool* found);
+static IntSetNode findNode(IntSetNode* node, IntSetNode* previous);
+static bool isRoot(IntSetNode* node, IntSetNode* previous);
+static  void toStringInOrder(IntSetNode node, int* counter, char* text, int* count);
 static bool hasNext(Iterator iter);
 
 
@@ -51,7 +52,7 @@ void addIntElemSet(IntSet set, int num) {
     if (isCapacityFull(set))
         increaseCapacity(set);
 
-    int indexBucket = num % set->pf->capacity;
+    int indexBucket = (int) (hashCode(num) % set->pf->capacity);
     insertNode(&set->pf->bucket[indexBucket], num, &set->pf->count);
 }
 
@@ -67,7 +68,7 @@ void addAllIntElemSet(IntSet set1, IntSet set2) {
     setToArr(set2, arr);
 
     for (int i = 0; i < count; ++i) {
-        int indexBucket = arr[i] % set1->pf->capacity;
+        int indexBucket = (int) (hashCode(arr[i]) % set1->pf->capacity);
         insertNode(&set1->pf->bucket[indexBucket], arr[i], &set1->pf->count);
     }
 }
@@ -80,7 +81,7 @@ void clearIntSet(IntSet set) {
 
     set->pf->count = 0;
     set->pf->capacity = 16;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeInt*));
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
 }
@@ -135,7 +136,7 @@ bool containsAnyIntSet(IntSet set1, IntSet set2) {
 
 bool removeIntSet(IntSet set, int num) {
     for (int i = 0; i < set->pf->capacity; ++i) {
-        IntNode previous = set->pf->bucket[i];
+        IntSetNode previous = set->pf->bucket[i];
         bool found = false;
         removeNode(&set->pf->bucket[i], &previous, num, &found);
         if (found)
@@ -257,7 +258,7 @@ void deleteIntSet(IntSet* set) {
 
 // ===================== private funcs =======================
 
-static  void printInOrder(IntNode node, int* counter) {
+static  void printInOrder(IntSetNode node, int* counter) {
     if (node != NULL) {
         printInOrder(node->left, counter);
         printf("%d", node->data);
@@ -298,7 +299,7 @@ static bool binarySearch(int elem, const int* arr, int high) {
     return false;
 }
 
-static void insertNode(NodeInt** node, int num, int* counter) {
+static void insertNode(NodeSetInt** node, int num, int* counter) {
     if (*node == NULL) {
         *node = createNode(num);
         (*counter)++;
@@ -314,8 +315,8 @@ static void insertNode(NodeInt** node, int num, int* counter) {
     }
 }
 
-static IntNode createNode(int num) {
-    IntNode node = malloc(sizeof(NodeInt));
+static IntSetNode createNode(int num) {
+    IntSetNode node = malloc(sizeof(NodeSetInt));
     node->data = num;
     node->left = NULL;
     node->right = NULL;
@@ -336,19 +337,19 @@ static bool isCapacityFull(IntSet set) {
 static void increaseCapacity(IntSet set) {
     int oldCapacity = set->pf->capacity;
     int count = set->pf->count;
-    NodeInt** temp = set->pf->bucket;
+    NodeSetInt** temp = set->pf->bucket;
 
     int arr[count];
     setToArr(set, arr);
 
     set->pf->capacity *= 2;
     set->pf->count = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeInt*));
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
 
     for (int i = 0; i < count; ++i) {
-        int indexBucket = arr[i] % set->pf->capacity;
+        int indexBucket = (int) (hashCode(arr[i]) % set->pf->capacity);
         insertNode(&set->pf->bucket[indexBucket], arr[i], &set->pf->count);
     }
 
@@ -356,7 +357,7 @@ static void increaseCapacity(IntSet set) {
     free(temp);
 }
 
-static void copyValuesToArr(IntNode node, int* arr, int* index) {
+static void copyValuesToArr(IntSetNode node, int* arr, int* index) {
     if (node != NULL) {
         copyValuesToArr(node->left, arr, index);
         arr[(*index)++] = node->data;
@@ -364,9 +365,9 @@ static void copyValuesToArr(IntNode node, int* arr, int* index) {
     }
 }
 
-static IntNode findNode(IntNode* node, IntNode* previous) {
+static IntSetNode findNode(IntSetNode* node, IntSetNode* previous) {
     if ((*node)->right == NULL) {
-        IntNode temp = *node;
+        IntSetNode temp = *node;
         (*previous)->right = NULL;
         return temp;
     }
@@ -374,21 +375,21 @@ static IntNode findNode(IntNode* node, IntNode* previous) {
     return findNode(&(*node)->right, &(*node));
 }
 
-static void removeNode(IntNode* node, IntNode* previous, int num, bool* found) {
+static void removeNode(IntSetNode* node, IntSetNode* previous, int num, bool* found) {
     if (*found) return;
 
     if (*node != NULL && *previous != NULL) {
         if (compareInt(num, (*node)->data) == 0) {
             if ((*node)->right == NULL && (*node)->left == NULL) {
                 if (isRoot(node, previous)) {
-                    IntNode temp = *node;
+                    IntSetNode temp = *node;
                     *node = NULL;
                     free(temp);
                     *found = true;
                     return;
                 }
 
-                IntNode temp = *node;
+                IntSetNode temp = *node;
                 if (compareInt((*node)->data, (*previous)->data) == -1)
                     (*previous)->left = NULL;
                 else
@@ -401,14 +402,14 @@ static void removeNode(IntNode* node, IntNode* previous, int num, bool* found) {
 
             if (((*node)->left != NULL && (*node)->right == NULL) || ((*node)->left == NULL && (*node)->right != NULL)) {
                 if (isRoot(node, previous)) {
-                    IntNode temp = *node;
+                    IntSetNode temp = *node;
                     *node = (*node)->left != NULL ? (*node)->left : (*node)->right;
                     free(temp);
                     *found = true;
                     return;
                 }
 
-                IntNode temp = *node;
+                IntSetNode temp = *node;
                 if (compareInt((*node)->data, (*previous)->data) == -1) {
                     (*previous)->left = (*node)->left != NULL ? (*node)->left : (*node)->right;
                 } else {
@@ -421,9 +422,9 @@ static void removeNode(IntNode* node, IntNode* previous, int num, bool* found) {
             }
 
             if ((*node)->right != NULL && (*node)->left != NULL) {
-                IntNode temp = *node;
-                IntNode left = (*node)->left;
-                IntNode right = (*node)->right;
+                IntSetNode temp = *node;
+                IntSetNode left = (*node)->left;
+                IntSetNode right = (*node)->right;
 
 
                 *node = findNode(&temp->left, &temp);
@@ -453,7 +454,7 @@ static void removeNode(IntNode* node, IntNode* previous, int num, bool* found) {
 }
 
 // служебная функция для вывода дерева
-void outputTree(IntNode node, int* counter) {
+void outputTree(IntSetNode node, int* counter) {
     if (node != NULL) {
         ++(*counter);
         outputTree(node->right, counter);
@@ -478,14 +479,14 @@ static void setToArr(IntSet set, int* arr) {
     }
 }
 
-static void deleteNodes(NodeInt** buckets, int capacity) {
+static void deleteNodes(NodeSetInt** buckets, int capacity) {
     for (int i = 0; i < capacity; ++i) {
         if (buckets[i] != NULL)
             deleteInOrder(buckets[i]);
     }
 }
 
-static void deleteInOrder(IntNode node) {
+static void deleteInOrder(IntSetNode node) {
     if (node == NULL)
         return;
 
@@ -495,7 +496,7 @@ static void deleteInOrder(IntNode node) {
     free(node);
 }
 
-static bool isContains(IntNode node, int num) {
+static bool isContains(IntSetNode node, int num) {
     if (node != NULL) {
         isContains(node->left, num);
         if (compareInt(node->data, num) == 0)
@@ -510,11 +511,11 @@ static void toArrAndSort(IntSet set, int* arr) {
     qsort(arr, set->pf->count, sizeof(int), compareqsort);
 }
 
-static bool isRoot(IntNode* node, IntNode* previous) {
+static bool isRoot(IntSetNode* node, IntSetNode* previous) {
     return (*node)->data == (*previous)->data;
 }
 
-static  void toStringInOrder(IntNode node, int* counter, char* text, int* count) {
+static  void toStringInOrder(IntSetNode node, int* counter, char* text, int* count) {
     if (node != NULL) {
         toStringInOrder(node->left, counter, text, count);
         sprintf(&text[strlen(text)], "%d,", node->data);
@@ -529,4 +530,10 @@ static  void toStringInOrder(IntNode node, int* counter, char* text, int* count)
         }
         toStringInOrder(node->right, counter, text, count);
     }
+}
+
+unsigned long long hashCode(int key) {
+    unsigned long long tempKey = (unsigned long long) key;
+    tempKey = ((tempKey >> 4) ^ tempKey) * 0x1b873593ULL;
+    return tempKey;
 }

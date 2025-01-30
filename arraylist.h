@@ -15,16 +15,17 @@
 #include "string.h"
 #include "collectiontypes.h"
 #include "iterator.h"
-
+#include "context.h"
 
 // structures
 typedef struct String String;
 
 typedef struct ArrayListInt {
     struct InnerIntList* pf;   // private field
+    void* values;              // private field
     // funcs pointers
     void (*add)(struct ArrayListInt* list, int number);
-    void (*addAll)(struct ArrayListInt* list1, struct ArrayListInt* list2);
+    void (*addAll)(struct ArrayListInt* list1, void* list2);
     int (*get)(struct ArrayListInt* list, int index);
     bool (*set)(struct ArrayListInt* list, int index, int number);
     int (*indexOf)(struct ArrayListInt* list, int number);

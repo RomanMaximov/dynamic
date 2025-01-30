@@ -9,6 +9,7 @@
 #include "arrayservice/intarraylist.h"
 #include "arrayservice/doublearraylist.h"
 #include "arrayservice/strarraylist.h"
+#include "context.h"
 
 // structures
 /*typedef struct String {
@@ -81,6 +82,12 @@ IntList newIntList(IntList temp) {
     list->pf->capacity = 20;
     list->pf->data = malloc(list->pf->capacity * sizeof(int));
     initFuncs(INT_LIST, (void*)list);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = INT_LIST;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
 
     return list;
 }

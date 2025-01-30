@@ -10,6 +10,7 @@
 #include <string.h>
 #include <assert.h>
 #include "intarraylist.h"
+#include "../util.h"
 
 typedef struct InnerIntList {
     int count;
@@ -43,22 +44,35 @@ void addIntList(IntList list, int num) {
     }
 }
 
-void addAllIntList(IntList dest, IntList from) {
-    if (dest == NULL || from == NULL || from->pf->data == NULL) return;
+void addAllIntList(IntList dest, void* source) {
+    if (dest == NULL || source == NULL) return;
 
-    int sizeFrom = sizeIntList(from);
-    int sizeDest = sizeIntList(dest);
+    Ctx ctx = (Ctx) source;
 
-    if ((sizeDest + sizeFrom) > dest->pf->capacity) {
-        int newCapacity = (sizeDest + sizeFrom) * 2;
-        dest->pf->capacity = newCapacity;
-        dest->pf->data = realloc(dest->pf->data, newCapacity * sizeof(int));
+    if (ctx->type == INT_LIST) {
+        IntList from = (IntList) ctx->collection;
+        if (from == NULL) return;
+        for (int i = 0; i < from->pf->count; ++i)
+            addIntList(dest, from->pf->data[i]);
+    }
 
-        memcpy(&dest->pf->data[dest->pf->count], from->pf->data, sizeFrom * sizeof(int));
-        dest->pf->count += sizeFrom;
-    } else {
-        memcpy(&dest->pf->data[dest->pf->count], from->pf->data, sizeFrom * sizeof(int));
-        dest->pf->count += sizeFrom;
+    if (ctx->type == INT_LL) {
+        IntLinkedList from = (IntLinkedList) ctx->collection;
+        if (from == NULL) return;
+        IntNode current = from->pf->begin;
+        while (current != NULL) {
+            addIntList(dest, current->data);
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == INT_SET) {
+        IntSet from = (IntSet) ctx->collection;
+        if (from == NULL) return;
+        int arr[from->pf->count];
+        setToArr(from, arr);
+        for (int i = 0; i < from->pf->count; ++i)
+            addIntList(dest, arr[i]);
     }
 }
 

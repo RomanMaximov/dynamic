@@ -18,7 +18,7 @@ typedef struct String* string;
 
 
 void addIntList(IntList, int);
-void addAllIntList(IntList, IntList);
+void addAllIntList(IntList, void*);
 int getIntList(IntList, int);
 bool setIntList(IntList, int, int);
 int indexOfIntList(IntList, int);

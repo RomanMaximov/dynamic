@@ -23,25 +23,24 @@ typedef struct Collection {
     Type type;
 } Collection;
 
-typedef struct NodeInt {
+typedef struct NodeSetInt {
     int data;
-    struct NodeInt* left;
-    struct NodeInt* right;
-} NodeInt;
+    struct NodeSetInt* left;
+    struct NodeSetInt* right;
+} NodeSetInt;
 
 // Set data encapsulation
 typedef struct InnerIntSet {
     int count;
     int capacity;
     struct NodeInt** bucket;
-    struct Collection* collection;
 } InnerIntSet;
 
-typedef struct NodeDouble {
+typedef struct NodeSetDouble {
     double data;
-    struct NodeInt* left;
-    struct NodeInt* right;
-} NodeDouble;
+    struct NodeSetDouble* left;
+    struct NodeSetDouble* right;
+} NodeSetDouble;
 
 // Set data encapsulation
 typedef struct InnerDoubleSet {
@@ -50,11 +49,11 @@ typedef struct InnerDoubleSet {
     struct NodeInt** bucket;
 } InnerDoubleSet;
 
-typedef struct NodeStr {
+typedef struct NodeSetStr {
     string data;
-    struct NodeStr* left;
-    struct NodeStr* right;
-} NodeStr;
+    struct NodeSetStr* left;
+    struct NodeSetStr* right;
+} NodeSetStr;
 
 // Set data encapsulation
 typedef struct InnerStrSet {
@@ -64,11 +63,11 @@ typedef struct InnerStrSet {
 } InnerStrSet;
 
 typedef SetInt* IntSet;
-typedef NodeInt* IntNode;
+typedef NodeSetInt* IntSetNode;
 typedef SetDouble* DoubleSet;
-typedef NodeDouble* DoubleNode;
+typedef NodeSetDouble* DoubleSetNode;
 typedef SetStr* StrSet;
-typedef NodeStr* StrNode;
+typedef NodeSetStr* StrSetNode;
 typedef String* string;
 
 // prototypes common funcs
@@ -95,16 +94,12 @@ static void* iterator(Type type);
 IntSet newIntSet(IntSet temp) {
     IntSet set = malloc(sizeof(SetInt));
     set->pf = malloc(sizeof(InnerIntSet));
-    set->pf->collection = malloc(sizeof(Collection));
-    set->pf->collection->data = (void*) set;
-    set->pf->collection->type = INT_SET;
     set->pf->count = 0;
-    set->pf->capacity = 16;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeInt*));
+    set->pf->capacity = 64;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
 
-    set->values = (void*) set->pf->collection;
     initFuncs(INT_SET, (void*)set);
 
     return set;
@@ -114,8 +109,8 @@ DoubleSet newDoubleSet(DoubleSet temp) {
     DoubleSet set = malloc(sizeof(SetDouble));
     set->pf = malloc(sizeof(InnerDoubleSet));
     set->pf->count = 0;
-    set->pf->capacity = 16;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeDouble*));
+    set->pf->capacity = 64;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
 
@@ -128,8 +123,8 @@ StrSet newStrSet(StrSet temp) {
     StrSet set = malloc(sizeof(SetStr));
     set->pf = malloc(sizeof(InnerStrSet));
     set->pf->count = 0;
-    set->pf->capacity = 16;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeStr*));
+    set->pf->capacity = 64;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetStr*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
 

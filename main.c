@@ -11,6 +11,20 @@
 int main()
 {
     ///////////   int index = hashCode(key) % capacity;  индекс бакета
+    unsigned int key = 510;
+    unsigned long long tempKey = (unsigned long long) key;
+    tempKey = ((tempKey >> 4) ^ tempKey) * 0x1b873593ULL;
+    printf("key: %lld\n", tempKey);
+
+    unsigned int key2 = 550;
+    unsigned long long tempKey2 = (unsigned long long) key2;
+    tempKey2 = ((tempKey2 >> 4) ^ tempKey2) * 0x1b873593ULL;
+    printf("key: %lld\n", tempKey2);
+    printf("key: %d\n", (int) (tempKey % 16));
+    printf("key2: %d\n", (int) (tempKey2 % 16));
+
+
+
 
     /*IntArray* arrInt = null;
     arrInt = newArray(arrInt);
@@ -223,7 +237,12 @@ int main()
 
     puts("========================= ////////   ArrayList   /////// ============================================");
     IntList intList = newIntList(intList);
+    IntList intList2 = newIntList(intList2);
+    IntLinkedList linkedList = newIntLinkedList(linkedList);
     intList->add(intList, rand() % 100);
+    intList2->add(intList2, rand() % 100);
+    linkedList->add(linkedList, rand() % 100);
+    intList->addAll(intList, linkedList->values);
 
     intList->print(intList);
     string toStr = intList->toString(intList);

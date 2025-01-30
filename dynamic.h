@@ -85,16 +85,6 @@ typedef struct ArrayListStr ArrayListStr;
     char* : addCharArrElem \
 )(T, V)*/
 
-#define addAll(T, V) _Generic((T), \
-    DoubleList : addAllDouble,\
-    IntList : addAllInt, \
-    StringList : addAllStr         \
-)(T, V)
-//  IntList:   _Generic((V),\
-//        IntLinkedList:   addAllIntListLL,\
-//        IntSet: addAllIntListSet
-//    ),\                                   \
-
 
 
 

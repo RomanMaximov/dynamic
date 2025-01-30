@@ -22,6 +22,7 @@ typedef struct String String;
 
 typedef struct LinkedListInt {
     struct InnerIntLL* pf;   // private field
+    void* values;            // private field
     // funcs pointers
     void (*add)(struct LinkedListInt* list, int number);
     void (*addAll)(struct LinkedListInt* list1, struct LinkedListInt* list2);

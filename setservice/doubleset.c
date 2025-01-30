@@ -13,43 +13,43 @@
 
 #define ACCURACY 0.000000001
 
-typedef struct NodeDouble {
+typedef struct NodeSetDouble {
     double data;
-    struct NodeDouble* left;
-    struct NodeDouble* right;
-} NodeDouble;
+    struct NodeSetDouble* left;
+    struct NodeSetDouble* right;
+} NodeSetDouble;
 
 // Set data encapsulation
 typedef struct InnerDoubleSet {
     int count;
     int capacity;
-    NodeDouble** bucket;
+    NodeSetDouble** bucket;
 } InnerDoubleSet;
 
 typedef SetDouble* DoubleSet;
-typedef NodeDouble* DoubleNode;
+typedef NodeSetDouble* DoubleSetNode;
 
 // prototypes private funcs
-static DoubleNode createNode(double num);
+static DoubleSetNode createNode(double num);
 static int compareDouble(double elem1, double elem2);
-static void insertNode(NodeDouble** node, double num, int* counter);
-static void printInOrder(DoubleNode node, int* counter);
+static void insertNode(NodeSetDouble** node, double num, int* counter);
+static void printInOrder(DoubleSetNode node, int* counter);
 static bool isCapacityFull(DoubleSet set);
 static void increaseCapacity(DoubleSet set);
-static void copyValuesToArr(DoubleNode node, double* arr, int* index);
+static void copyValuesToArr(DoubleSetNode node, double* arr, int* index);
 static void setToArr(DoubleSet set, double* arr);
-static void deleteNodes(NodeDouble** buckets, int capacity);
-static void deleteInOrder(DoubleNode node);
-static bool isContains(DoubleNode node, double num);
+static void deleteNodes(NodeSetDouble** buckets, int capacity);
+static void deleteInOrder(DoubleSetNode node);
+static bool isContains(DoubleSetNode node, double num);
 static int compareqsort(const void* elem1, const void* elem2);
 static bool binarySearch(double elem, const double* arr, int high);
 static void toArrAndSort(DoubleSet set, double* arr);
-static void removeNode(DoubleNode* node, DoubleNode* previous, double num, bool* found);
-static DoubleNode findNode(DoubleNode* node, DoubleNode* previous);
-static bool isRoot(DoubleNode* node, DoubleNode* previous);
+static void removeNode(DoubleSetNode* node, DoubleSetNode* previous, double num, bool* found);
+static DoubleSetNode findNode(DoubleSetNode* node, DoubleSetNode* previous);
+static bool isRoot(DoubleSetNode* node, DoubleSetNode* previous);
 static bool hasNext(Iterator iter);
 static int hashDouble(double value);
-static  void toStringInOrder(DoubleNode node, int* counter, char* text, int* count);
+static  void toStringInOrder(DoubleSetNode node, int* counter, char* text, int* count);
 
 
 
@@ -86,7 +86,7 @@ void clearDoubleSet(DoubleSet set) {
 
     set->pf->count = 0;
     set->pf->capacity = 16;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeDouble*));
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
 }
@@ -141,7 +141,7 @@ bool containsAnyDoubleSet(DoubleSet set1, DoubleSet set2) {
 
 bool removeDoubleSet(DoubleSet set, double num) {
     for (int i = 0; i < set->pf->capacity; ++i) {
-        DoubleNode previous = set->pf->bucket[i];
+        DoubleSetNode previous = set->pf->bucket[i];
         bool found = false;
         removeNode(&set->pf->bucket[i], &previous, num, &found);
         if (found)
@@ -285,14 +285,14 @@ static bool isCapacityFull(DoubleSet set) {
 static void increaseCapacity(DoubleSet set) {
     int oldCapacity = set->pf->capacity;
     int count = set->pf->count;
-    NodeDouble** temp = set->pf->bucket;
+    NodeSetDouble** temp = set->pf->bucket;
 
     double arr[count];
     setToArr(set, arr);
 
     set->pf->capacity *= 2;
     set->pf->count = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeDouble*));
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
 
@@ -305,7 +305,7 @@ static void increaseCapacity(DoubleSet set) {
     free(temp);
 }
 
-static void insertNode(NodeDouble** node, double num, int* counter) {
+static void insertNode(NodeSetDouble** node, double num, int* counter) {
     if (*node == NULL) {
         *node = createNode(num);
         (*counter)++;
@@ -321,8 +321,8 @@ static void insertNode(NodeDouble** node, double num, int* counter) {
     }
 }
 
-static DoubleNode createNode(double num) {
-    DoubleNode node = malloc(sizeof(NodeDouble));
+static DoubleSetNode createNode(double num) {
+    DoubleSetNode node = malloc(sizeof(NodeSetDouble));
     node->data = num;
     node->left = NULL;
     node->right = NULL;
@@ -339,14 +339,14 @@ static int compareDouble(double elem1, double elem2) {
         return -1;
 }
 
-static void deleteNodes(NodeDouble** buckets, int capacity) {
+static void deleteNodes(NodeSetDouble** buckets, int capacity) {
     for (int i = 0; i < capacity; ++i) {
         if (buckets[i] != NULL)
             deleteInOrder(buckets[i]);
     }
 }
 
-static void deleteInOrder(DoubleNode node) {
+static void deleteInOrder(DoubleSetNode node) {
     if (node == NULL)
         return;
 
@@ -363,7 +363,7 @@ static void setToArr(DoubleSet set, double* arr) {
     }
 }
 
-static void copyValuesToArr(DoubleNode node, double* arr, int* index) {
+static void copyValuesToArr(DoubleSetNode node, double* arr, int* index) {
     if (node != NULL) {
         copyValuesToArr(node->left, arr, index);
         arr[(*index)++] = node->data;
@@ -371,7 +371,7 @@ static void copyValuesToArr(DoubleNode node, double* arr, int* index) {
     }
 }
 
-static bool isContains(DoubleNode node, double num) {
+static bool isContains(DoubleSetNode node, double num) {
     if (node != NULL) {
         isContains(node->left, num);
         if (compareDouble(node->data, num) == 0)
@@ -395,7 +395,7 @@ static int compareqsort(const void* elem1, const void* elem2) {
         return -1;
 }
 
-static bool isRoot(DoubleNode* node, DoubleNode* previous) {
+static bool isRoot(DoubleSetNode* node, DoubleSetNode* previous) {
     return (*node)->data == (*previous)->data;
 }
 
@@ -415,21 +415,21 @@ static bool binarySearch(double elem, const double* arr, int high) {
     return false;
 }
 
-static void removeNode(DoubleNode* node, DoubleNode* previous, double num, bool* found) {
+static void removeNode(DoubleSetNode* node, DoubleSetNode* previous, double num, bool* found) {
     if (*found) return;
 
     if (*node != NULL && *previous != NULL) {
         if (compareDouble(num, (*node)->data) == 0) {
             if ((*node)->right == NULL && (*node)->left == NULL) {
                 if (isRoot(node, previous)) {
-                    DoubleNode temp = *node;
+                    DoubleSetNode temp = *node;
                     *node = NULL;
                     free(temp);
                     *found = true;
                     return;
                 }
 
-                DoubleNode temp = *node;
+                DoubleSetNode temp = *node;
                 if (compareDouble((*node)->data, (*previous)->data) == -1)
                     (*previous)->left = NULL;
                 else
@@ -442,14 +442,14 @@ static void removeNode(DoubleNode* node, DoubleNode* previous, double num, bool*
 
             if (((*node)->left != NULL && (*node)->right == NULL) || ((*node)->left == NULL && (*node)->right != NULL)) {
                 if (isRoot(node, previous)) {
-                    DoubleNode temp = *node;
+                    DoubleSetNode temp = *node;
                     *node = (*node)->left != NULL ? (*node)->left : (*node)->right;
                     free(temp);
                     *found = true;
                     return;
                 }
 
-                DoubleNode temp = *node;
+                DoubleSetNode temp = *node;
                 if (compareDouble((*node)->data, (*previous)->data) == -1) {
                     (*previous)->left = (*node)->left != NULL ? (*node)->left : (*node)->right;
                 } else {
@@ -462,9 +462,9 @@ static void removeNode(DoubleNode* node, DoubleNode* previous, double num, bool*
             }
 
             if ((*node)->right != NULL && (*node)->left != NULL) {
-                DoubleNode temp = *node;
-                DoubleNode left = (*node)->left;
-                DoubleNode right = (*node)->right;
+                DoubleSetNode temp = *node;
+                DoubleSetNode left = (*node)->left;
+                DoubleSetNode right = (*node)->right;
 
 
                 *node = findNode(&temp->left, &temp);
@@ -493,9 +493,9 @@ static void removeNode(DoubleNode* node, DoubleNode* previous, double num, bool*
     }
 }
 
-static DoubleNode findNode(DoubleNode* node, DoubleNode* previous) {
+static DoubleSetNode findNode(DoubleSetNode* node, DoubleSetNode* previous) {
     if ((*node)->right == NULL) {
-        DoubleNode temp = *node;
+        DoubleSetNode temp = *node;
         (*previous)->right = NULL;
         return temp;
     }
@@ -503,7 +503,7 @@ static DoubleNode findNode(DoubleNode* node, DoubleNode* previous) {
     return findNode(&(*node)->right, &(*node));
 }
 
-static  void printInOrder(DoubleNode node, int* counter) {
+static  void printInOrder(DoubleSetNode node, int* counter) {
     if (node != NULL) {
         printInOrder(node->left, counter);
         printf("%f", node->data);
@@ -515,7 +515,7 @@ static  void printInOrder(DoubleNode node, int* counter) {
     }
 }
 
-static  void toStringInOrder(DoubleNode node, int* counter, char* text, int* count) {
+static  void toStringInOrder(DoubleSetNode node, int* counter, char* text, int* count) {
     if (node != NULL) {
         toStringInOrder(node->left, counter, text, count);
         sprintf(&text[strlen(text)], "%.9f,", node->data);
