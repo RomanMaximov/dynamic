@@ -50,6 +50,7 @@ typedef struct ArrayListInt {
 
 typedef struct ArrayListDouble {
     struct InnerDoubleList* pf;   // private field
+    void* values;                 // private field
     // funcs pointers
     void (*add)(struct ArrayListDouble* list, double number);
     void (*addAll)(struct ArrayListDouble* list1, struct ArrayListDouble* list2);
@@ -77,6 +78,7 @@ typedef struct ArrayListDouble {
 
 typedef struct ArrayListStr {
     struct InnerStrList* pf;   // private field
+    void* values;              // private field
     // funcs pointers
     void (*add)(struct ArrayListStr* list, struct String* s);
     void (*addAll)(struct ArrayListStr* list1, struct ArrayListStr* list2);
@@ -111,12 +113,17 @@ typedef String* string;
 typedef Itr* Iterator;
 
 // func prototypes
-IntList newIntList(IntList);
-DoubleList newDoubleList(DoubleList);
-StrList newStrList(StrList);
+IntList pr_initLi_(IntList);
+IntList pr_initLi_lo_(IntList, int, ...);
+IntList pr_initLi_loa_(IntList, int*, int);
 
-IntList listOfInt(IntList, int, ...);
-DoubleList listOfDouble(DoubleList, int, ...);
-StrList listOfStr(StrList, int, ...);
+DoubleList pr_initLd_(DoubleList);
+DoubleList pr_initLd_lo_(DoubleList, int, ...);
+DoubleList pr_initLd_loa_(DoubleList, double*, int);
+
+StrList pr_initLs_(StrList);
+StrList pr_initLs_lo_(StrList, int, ...);
+
+
 
 #endif

@@ -228,16 +228,16 @@ bool removeAllDoubleList(DoubleList list1, DoubleList list2) {
 DoubleList subtractDoubleList(DoubleList list1, DoubleList list2) {
     if (isEmptyDoubleList(list1)) {
         DoubleList temp = NULL;
-        return newDoubleList(temp);
+        return pr_initLd_(temp);
     }
 
     if (isEmptyDoubleList(list2)) {
-        DoubleList temp = newDoubleList(temp);
+        DoubleList temp = pr_initLd_(temp);
         copyList(temp, list1);
         return temp;
     }
 
-    DoubleList copyValues = newDoubleList(copyValues);
+    DoubleList copyValues = pr_initLd_(copyValues);
     copyList(copyValues, list1);
     for (int i = 0; i < list2->pf->count; ++i) {
         int index = indexOfDoubleList(copyValues, list2->pf->data[i]);
@@ -245,7 +245,7 @@ DoubleList subtractDoubleList(DoubleList list1, DoubleList list2) {
             copyValues->pf->data[index] = INT_MIN;
     }
 
-    DoubleList temp = newDoubleList(temp);
+    DoubleList temp = pr_initLd_(temp);
     int index = 0;
     for (int i = 0; i < copyValues->pf->count; ++i) {
         if (copyValues->pf->data[i] != INT_MIN) {

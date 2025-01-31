@@ -352,7 +352,7 @@ bool removeAllIntLL(IntLinkedList list1, IntLinkedList list2) {
 IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
     if (isEmptyIntLL(list1)) {
         IntLinkedList temp = NULL;
-        return newIntLinkedList(temp);
+        return pr_initLLi_(temp);
     }
 
     if (isEmptyIntLL(list2)) {
@@ -380,7 +380,7 @@ IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
         current2 = current2->next;
     }
 
-    IntLinkedList newLL = newIntLinkedList(newLL);
+    IntLinkedList newLL = pr_initLLi_(newLL);
 
     qsort(filtered, j, sizeof(int), compareInt);
     for (int i = 0; i < listSize; ++i) {
@@ -636,7 +636,7 @@ static void copyLLToArray(IntLinkedList list, int* arr) {
 }
 
 static IntLinkedList copyIntLL(IntLinkedList list) {
-    IntLinkedList temp = newIntLinkedList(temp);
+    IntLinkedList temp = pr_initLLi_(temp);
     IntNode current = list->pf->begin;
 
     while (current != NULL) {

@@ -242,16 +242,16 @@ bool removeAllIntList(IntList list1, IntList list2) {
 IntList subtractIntList(IntList list1, IntList list2) {
     if (isEmptyIntList(list1)) {
         IntList temp = NULL;
-        return newIntList(temp);
+        return pr_initLi_(temp);
     }
 
     if (isEmptyIntList(list2)) {
-        IntList temp = newIntList(temp);
+        IntList temp = pr_initLi_(temp);
         copyList(temp, list1);
         return temp;
     }
 
-    IntList copyValues = newIntList(copyValues);
+    IntList copyValues = pr_initLi_(copyValues);
     copyList(copyValues, list1);
 
     for (int i = 0; i < list2->pf->count; ++i) {
@@ -260,7 +260,7 @@ IntList subtractIntList(IntList list1, IntList list2) {
             copyValues->pf->data[index] = INT_MIN;
     }
 
-    IntList temp = newIntList(temp);
+    IntList temp = pr_initLi_(temp);
     int index = 0;
     for (int i = 0; i < copyValues->pf->count; ++i) {
         if (copyValues->pf->data[i] != INT_MIN) {

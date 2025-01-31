@@ -325,11 +325,11 @@ int indexOfSubString(string str, string sub) {
 
 StrList splitStr(string s, const char* delimeter) {
     if (s == NULL || delimeter == NULL) {
-        StrList strList = newStrList(strList);
+        StrList strList = pr_initLs_(strList);
         return strList;
     }
 
-    StrList list = newStrList(list);
+    StrList list = pr_initLs_(list);
 
     char* text = s->pf->data;
     char* current = text;

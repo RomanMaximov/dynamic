@@ -236,9 +236,9 @@ int main()
     strLinkedList->delete(&strLinkedList);
 
     puts("========================= ////////   ArrayList   /////// ============================================");
-    IntList intList = newIntList(intList);
-    IntList intList2 = newIntList(intList2);
-    IntLinkedList linkedList = newIntLinkedList(linkedList);
+    IntList intList = newList(intList);
+    IntList intList2 = newList(intList2);
+    IntLinkedList linkedList = newList(linkedList);
     intList->add(intList, rand() % 100);
     intList2->add(intList2, rand() % 100);
     linkedList->add(linkedList, rand() % 100);

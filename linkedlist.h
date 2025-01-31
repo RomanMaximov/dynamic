@@ -111,7 +111,7 @@ typedef Itr* Iterator;
 
 
 // func prototypes
-IntLinkedList newIntLinkedList(IntLinkedList);
+IntLinkedList pr_initLLi_(IntLinkedList);
 DoubleLinkedList newDoubleLinkedList(DoubleLinkedList);
 StrLinkedList newStrLinkedList(StrLinkedList);
 

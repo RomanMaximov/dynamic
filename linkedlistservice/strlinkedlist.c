@@ -170,7 +170,7 @@ string getStrElemLL(StrLinkedList list, int index) {
 }
 
 void sortStrLL(StrLinkedList list) {
-    StrList strList = newStrList(strList);
+    StrList strList = pr_initLs_(strList);
     StrNode current = list->pf->begin;
     StrNode temp = list->pf->begin;
     int index = 0;
@@ -191,7 +191,7 @@ void sortStrLL(StrLinkedList list) {
 }
 
 void sortStrLLReverse(StrLinkedList list) {
-    StrList strList = newStrList(strList);
+    StrList strList = pr_initLs_(strList);
     StrNode current = list->pf->begin;
     StrNode temp = list->pf->begin;
     int index = 0;
@@ -265,7 +265,7 @@ bool containsStrLL(StrLinkedList list, string s) {
 bool containsAllStrLL(StrLinkedList list1, StrLinkedList list2) {
     if (list1 == NULL || list2 == NULL || list2->pf->count > list1->pf->count) return false;
 
-    StrList tempList = newStrList(tempList);
+    StrList tempList = pr_initLs_(tempList);
     StrNode current = list1->pf->begin;
     StrNode current2 = list2->pf->begin;
 
@@ -292,7 +292,7 @@ bool containsAllStrLL(StrLinkedList list1, StrLinkedList list2) {
 bool containsAnyStrLL(StrLinkedList list1, StrLinkedList list2) {
     if (list1 == NULL || list2 == NULL) return false;
 
-    StrList tempList = newStrList(tempList);
+    StrList tempList = pr_initLs_(tempList);
     StrNode current = list1->pf->begin;
     StrNode current2 = list2->pf->begin;
 
@@ -346,9 +346,9 @@ bool removeAllStrLL(StrLinkedList list1, StrLinkedList list2) {
     if (list1 == NULL || list2 ==NULL) return false;
 
     int listSize = list1->pf->count;
-    StrList tempList = newStrList(tempList);
-    StrList filtered = newStrList(filtered);
-    StrList tempForBS = newStrList(tempForBS);
+    StrList tempList = pr_initLs_(tempList);
+    StrList filtered = pr_initLs_(filtered);
+    StrList tempForBS = pr_initLs_(tempForBS);
 
     copyLLToStrList(list1, tempList);
     copyLLToStrList(list1, tempForBS);
@@ -391,9 +391,9 @@ StrLinkedList subtractStrLL(StrLinkedList list1, StrLinkedList list2) {
     }
 
     int listSize = list1->pf->count;
-    StrList tempList = newStrList(tempList);
-    StrList filtered = newStrList(filtered);
-    StrList tempForBS = newStrList(tempForBS);
+    StrList tempList = pr_initLs_(tempList);
+    StrList filtered = pr_initLs_(filtered);
+    StrList tempForBS = pr_initLs_(tempForBS);
 
     copyLLToStrList(list1, tempList);
     copyLLToStrList(list1, tempForBS);

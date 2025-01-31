@@ -36,40 +36,37 @@
 
 
 typedef struct LinkedListInt LinkedListInt;
-typedef struct NodeInt NodeInt;
+
+
 typedef struct ArrayListInt ArrayListInt;
 typedef struct ArrayListDouble ArrayListDouble;
-typedef struct String String;
 typedef struct ArrayListStr ArrayListStr;
+
+typedef struct String String;
 
 
 /**
- *  через дженерики создаем и удаляем, выводим коллекции
+ *  через дженерики создаем коллекции
  */
 
-#define newList(T) _Generic((T), \
-    DoubleList : newDoubleArray,\
-    IntList : newIntArray, \
-    StringList : newStrArray,     \
-    IntLinkedList : newIntLinkedList  \
+#define newList(T) _Generic((T),             \
+    IntList : pr_initLi_,                    \
+    DoubleList : pr_initLd_,                 \
+    StrList : pr_initLs_,                    \
+    IntLinkedList : pr_initLLi_         \
 )(T)
 
-#define listOf(T, V, ...) _Generic((T), \
-    DoubleList : listOfDouble, \
-    IntList : listOfInt, \
-    StringList : _Generic((V),      \
-        char* : listOfStrLiteral,  \
-        char* arr[] : listOfArrChar,  \
-        default : listOfStr,  \
-    ), \
-    IntLinkedList : linkedListOfInt          \
+#define listOf(T, V, ...) _Generic((T),       \
+    IntList : pr_initLi_lo_,                  \
+    DoubleList : pr_initLd_lo_,                \
+    IntLinkedList : linkedListOfInt           \
 )(T, V, __VA_ARGS__)
 
-#define listOfArr(T, V, K) _Generic((T), \
-    DoubleList : listOfArrDouble,\
-    IntList : listOfArrInt,              \
-    StringList : listOfArrChar  \
-)(T, V, K)
+#define listOfArr(T, V) _Generic((T),          \
+    DoubleList : pr_initLd_loa_,           \
+    IntList : pr_initLi_loa_,              \
+    StrList : pr_initLs_loa_  \
+)(T, V)
 
 #define printList(T) _Generic((T), \
     DoubleList : printArrayDouble,\

@@ -101,7 +101,7 @@ static void* iterator(Type type);
 
 
 // funcs
-IntLinkedList newIntLinkedList(IntLinkedList temp) {
+IntLinkedList pr_initLLi_(IntLinkedList temp) {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
     list->pf = malloc(sizeof(InnerIntLL));
     list->pf->count = 0;

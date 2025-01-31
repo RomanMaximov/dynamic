@@ -75,7 +75,7 @@ static void* iterator(Type type);
 
 
 // funcs
-IntList newIntList(IntList temp) {
+IntList pr_initLi_(IntList temp) {
     IntList list = malloc(sizeof(ArrayListInt));
     list->pf = malloc(sizeof(InnerIntList));
     list->pf->count = 0;
@@ -92,41 +92,50 @@ IntList newIntList(IntList temp) {
     return list;
 }
 
-IntList listOfInt(IntList temp, int paramCount, ...) {
+IntList pr_initLi_lo_(IntList temp, int paramCount, ...) {
     IntList list = malloc(sizeof(ArrayListInt));
-    /*list->pf = malloc(sizeof(InnerIntList));
+    list->pf = malloc(sizeof(InnerIntList));
     list->pf->count = 0;
     list->pf->capacity = 20;
     list->pf->data = malloc(list->pf->capacity * sizeof(int));
     initFuncs(INT_LIST, (void*)list);
 
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = INT_LIST;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
+
     va_list param;
     va_start(param, paramCount);
     for (int i = 0; i < paramCount; ++i) {
-        addIntElemList(list, va_arg(param, int));
+        addIntList(list, va_arg(param, int));
     }
-    va_end(param);*/
+    va_end(param);
     return list;
 }
 
-/*IntList listOfArrInt(IntList temp, int* temp, int size) {
+IntList pr_initLi_loa_(IntList temp, int* arr, int size) {
     IntList list = malloc(sizeof(ArrayListInt));
     list->pf = malloc(sizeof(InnerIntList));
-    list->count = 0;
-    list->capacity = size < 20 ? 20 : size;
-    list->data = malloc(list->capacity * sizeof(int));
-    for (int i = 0; i < size; ++i) {
-        if (list->count == list->capacity) {
-            list->data = increaseCapacityInt(list);
-        }
+    list->pf->count = 0;
+    list->pf->capacity = 20;
+    list->pf->data = malloc(list->pf->capacity * sizeof(int));
+    initFuncs(INT_LIST, (void*)list);
 
-        memcpy(&list->data[list->count], &temp[i], sizeof(int));
-        list->count++;
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = INT_LIST;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
+
+    for (int i = 0; i < size; ++i) {
+        addIntList(list, arr[i]);
     }
     return list;
-}*/
+}
 
-DoubleList newDoubleList(DoubleList temp) {
+DoubleList pr_initLd_(DoubleList temp) {
     DoubleList list = malloc(sizeof(ArrayListDouble));
     list->pf = malloc(sizeof(InnerDoubleList));
     list->pf->count = 0;
@@ -134,44 +143,60 @@ DoubleList newDoubleList(DoubleList temp) {
     list->pf->data = malloc(list->pf->capacity * sizeof(double));
     initFuncs(DOUBLE_LIST, (void*)list);
 
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = DOUBLE_LIST;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
+
     return list;
 }
 
-DoubleList listOfDouble(DoubleList temp, int paramCount, ...) {
+DoubleList pr_initLd_lo_(DoubleList temp, int paramCount, ...) {
     DoubleList list = malloc(sizeof(ArrayListDouble));
-    /*list->pf = malloc(sizeof(InnerDoubleList));
+    list->pf = malloc(sizeof(InnerDoubleList));
     list->pf->count = 0;
     list->pf->capacity = 20;
     list->pf->data = malloc(list->pf->capacity * sizeof(double));
     initFuncs(DOUBLE_LIST, (void*)list);
 
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = DOUBLE_LIST;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
+
     va_list param;
     va_start(param, paramCount);
     for (int i = 0; i < paramCount; ++i) {
-        addDoubleElemList(list, va_arg(param, double));
+        addDoubleList(list, va_arg(param, double));
     }
-    va_end(param);*/
+    va_end(param);
     return list;
 }
 
-/*DoubleList listOfArrDouble(DoubleList temp, double* temp, int size) {
+DoubleList pr_initLd_loa_(DoubleList temp, double* arr, int size) {
     DoubleList list = malloc(sizeof(ArrayListDouble));
-    list->pf = malloc(sizeof(InnerDoubleList))
-    list->count = 0;
-    list->capacity = size < 20 ? 20 : size;
-    list->data = malloc(list->capacity * sizeof(double));
-    for (int i = 0; i < size; ++i) {
-        if (list->count == list->capacity) {
-            list->data = increaseCapacityDouble(list);
-        }
+    list->pf = malloc(sizeof(InnerDoubleList));
+    list->pf->count = 0;
+    list->pf->capacity = 20;
+    list->pf->data = malloc(list->pf->capacity * sizeof(double));
+    initFuncs(DOUBLE_LIST, (void*)list);
 
-        memcpy(&list->data[list->count], &temp[i], sizeof(double));
-        list->count++;
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = DOUBLE_LIST;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
+
+
+    for (int i = 0; i < size; ++i) {
+        addDoubleList(list, arr[i]);
     }
     return list;
-}*/
+}
 
-StrList newStrList(StrList temp) {
+StrList pr_initLs_(StrList temp) {
     StrList list = malloc(sizeof(ArrayListStr));
     list->pf = malloc(sizeof(InnerStrList));
     list->pf->count = 0;
@@ -181,6 +206,12 @@ StrList newStrList(StrList temp) {
         list->pf->data[i] = NULL;
 
     initFuncs(STR_LIST, (void*)list);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = STR_LIST;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
 
     return list;
 }
