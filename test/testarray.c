@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include"testarray.h"
-#include"arraylist.h"
+#include"../arraylist.h"
 
 
 void test() {

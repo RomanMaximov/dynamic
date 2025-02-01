@@ -89,7 +89,7 @@ void addAllStrElemSet(StrSet set1, StrSet set2) {
         increaseCapacity(set1);
 
     int count = set2->pf->count;
-    StrList list = pr_initLs_(list);
+    StrList list = pr_initLs_(list, NULL);
     setToArr(set2, list);
 
     for (int i = 0; i < count; ++i) {
@@ -127,11 +127,11 @@ bool containsAllStrSet(StrSet set1, StrSet set2) {
     if (isEmptyStrSet(set2)) return true;
 
     int count2 = set2->pf->count;
-    StrList list2 = pr_initLs_(list2);
+    StrList list2 = pr_initLs_(list2, NULL);
     setToArr(set2, list2);
 
     int count1 = set1->pf->count;
-    StrList list1 = pr_initLs_(list1);
+    StrList list1 = pr_initLs_(list1, NULL);
     toListAndSort(set1, list1);
 
     for (int i = 0; i < count2; ++i) {
@@ -149,11 +149,11 @@ bool containsAnyStrSet(StrSet set1, StrSet set2) {
     if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
 
     int count2 = set2->pf->count;
-    StrList list2 = pr_initLs_(list2);
+    StrList list2 = pr_initLs_(list2, NULL);
     setToArr(set2, list2);
 
     int count1 = set1->pf->count;
-    StrList list1 = pr_initLs_(list1);
+    StrList list1 = pr_initLs_(list1, NULL);
     toListAndSort(set1, list1);
 
     for (int i = 0; i < count2; ++i) {
@@ -183,7 +183,7 @@ bool removeStrSet(StrSet set, string s) {
 }
 
 bool removeAllStrSet(StrSet set1, StrSet set2) {
-    StrList list2 = pr_initLs_(list2);
+    StrList list2 = pr_initLs_(list2, NULL);
     setToArr(set2, list2);
 
     for (int i = 0; i < set2->pf->count; ++i) {
@@ -202,8 +202,8 @@ bool isEmptyStrSet(StrSet set) {
 bool isEqualsStrSet(StrSet set1, StrSet set2) {
     if (set1 == NULL || set2 == NULL || set1->pf->count != set2->pf->count) return false;
 
-    StrList list1 = pr_initLs_(list1);
-    StrList list2 = pr_initLs_(list2);
+    StrList list1 = pr_initLs_(list1, NULL);
+    StrList list2 = pr_initLs_(list2, NULL);
 
     toListAndSort(set1, list1);
     toListAndSort(set2, list2);
@@ -325,7 +325,7 @@ static void increaseCapacity(StrSet set) {
     int count = set->pf->count;
     NodeSetStr** temp = set->pf->bucket;
 
-    StrList list = pr_initLs_(list);
+    StrList list = pr_initLs_(list, NULL);
     setToArr(set, list);
 
     set->pf->capacity *= 2;

@@ -26,7 +26,7 @@ void sortIntList(IntList);
 void sortIntListReverse(IntList);
 void clearIntList(IntList);
 bool containsIntList(IntList, int);
-bool containsAllIntList(IntList, IntList);
+bool containsAllIntList(IntList, void*);
 bool containsAnyIntList(IntList, IntList);
 bool removeIntList(IntList, int);
 bool removeAllIntList(IntList, IntList);

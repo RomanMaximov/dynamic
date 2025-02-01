@@ -2,9 +2,7 @@
 #include <stdlib.h>
 #include <stdlib.h>
 #include <time.h>
-#include "dynamic.h"
-//#include "dynamicarray.h"
-//#include "linkedlist.h"
+#include "dynamiccollection.h"
 #include "string.h"
 //#include "map.h"
 
@@ -236,17 +234,18 @@ int main()
     strLinkedList->delete(&strLinkedList);
 
     puts("========================= ////////   ArrayList   /////// ============================================");
-    IntList intList = newList(intList);
-    IntList intList2 = newList(intList2);
-    IntLinkedList linkedList = newList(linkedList);
+    IntList intList = newList(intList, NULL);
     intList->add(intList, rand() % 100);
-    intList2->add(intList2, rand() % 100);
-    linkedList->add(linkedList, rand() % 100);
-    intList->addAll(intList, linkedList->values);
-
+    IntList intList2 = newList(intList2, intList->values);
     intList->print(intList);
-    string toStr = intList->toString(intList);
-    toStr->print(toStr);
+    intList2->print(intList2);
+
+    StrList strList = listOf(strList, 3, "dob", "pop", "com");
+    strList->print(strList);
+
+    char* arr[] = {"fact", "pact", "tact"};
+    StrList strList2 = listOfArr(strList2, arr, 3);
+    strList2->print(strList2);
 
     puts("");
     puts("================ ////////   string   /////// ==================");

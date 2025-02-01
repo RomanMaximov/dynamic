@@ -33,7 +33,7 @@ typedef struct ArrayListInt {
     void (*sortReverse)(struct ArrayListInt* list);
     void (*clear)(struct ArrayListInt* list);
     bool (*contains)(struct ArrayListInt* list, int number);
-    bool (*containsAll)(struct ArrayListInt* list1, struct ArrayListInt* list2);
+    bool (*containsAll)(struct ArrayListInt* list1, void* list2);
     bool (*containsAny)(struct ArrayListInt* list1, struct ArrayListInt* list2);
     bool (*removeElem)(struct ArrayListInt* list, int number);
     bool (*removeAll)(struct ArrayListInt* list1, struct ArrayListInt* list2);
@@ -43,9 +43,9 @@ typedef struct ArrayListInt {
     bool (*isEquals)(struct ArrayListInt* list1, struct ArrayListInt* list2);
     int (*size)(struct ArrayListInt* list);
     struct String* (*toString)(struct ArrayListInt* list);
-    struct Itr* (*iterator)(struct ArrayListInt* list);
     void (*print)(struct ArrayListInt* list);
     void (*delete)(struct ArrayListInt** list);
+    struct Itr* (*iterator)(struct ArrayListInt* list);
 } ArrayListInt;
 
 typedef struct ArrayListDouble {
@@ -71,9 +71,9 @@ typedef struct ArrayListDouble {
     bool (*isEquals)(struct ArrayListDouble* list1, struct ArrayListDouble* list2);
     int (*size)(struct ArrayListDouble* list);
     struct String* (*toString)(struct ArrayListDouble* list);
-    struct Itr* (*iterator)(struct ArrayListDouble* list);
     void (*print)(struct ArrayListInt* list);
     void (*delete)(struct ArrayListInt** list);
+    struct Itr* (*iterator)(struct ArrayListDouble* list);
 } ArrayListDouble;
 
 typedef struct ArrayListStr {
@@ -100,9 +100,9 @@ typedef struct ArrayListStr {
     int (*size)(struct ArrayListStr* list);
     struct String* (*joinList)(struct ArrayListStr* str, char* delimeter);
     struct String* (*toString)(struct ArrayListStr* list);
-    struct Itr* (*iterator)(struct ArrayListStr* list);
     void (*print)(struct ArrayListStr* list);
     void (*delete)(struct ArrayListStr** list);
+    struct Itr* (*iterator)(struct ArrayListStr* list);
 } ArrayListStr;
 
 
@@ -113,17 +113,17 @@ typedef String* string;
 typedef Itr* Iterator;
 
 // func prototypes
-IntList pr_initLi_(IntList);
+IntList pr_initLi_(IntList, void*);
 IntList pr_initLi_lo_(IntList, int, ...);
 IntList pr_initLi_loa_(IntList, int*, int);
 
-DoubleList pr_initLd_(DoubleList);
+DoubleList pr_initLd_(DoubleList, void*);
 DoubleList pr_initLd_lo_(DoubleList, int, ...);
 DoubleList pr_initLd_loa_(DoubleList, double*, int);
 
-StrList pr_initLs_(StrList);
+StrList pr_initLs_(StrList, void*);
 StrList pr_initLs_lo_(StrList, int, ...);
-
+StrList pr_initLs_loa_(StrList, char* arr[], int);
 
 
 #endif

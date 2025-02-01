@@ -199,7 +199,7 @@ bool containsAllStrList(StrList list1, StrList list2) {
     if (list1 == NULL || list2 == NULL || list2->pf->count > list1->pf->count)
         return false;
 
-    StrList temp = pr_initLs_(temp);
+    StrList temp = pr_initLs_(temp, NULL);
     copyList(temp, list1);
     sortStrList(temp);
 
@@ -216,7 +216,7 @@ bool containsAnyStrList(StrList list1, StrList list2) {
     if (isEmptyStrList(list1) || isEmptyStrList(list2))
         return false;
 
-    StrList temp = pr_initLs_(temp);
+    StrList temp = pr_initLs_(temp, NULL);
     copyList(temp, list1);
     sortStrList(temp);
 
@@ -268,7 +268,7 @@ bool removeAllStrList(StrList list1, StrList list2) {
     if (list1 == NULL || list2 == NULL)
         return false;
 
-    StrList temp = pr_initLs_(temp);//malloc(list1->count * sizeof(string));
+    StrList temp = pr_initLs_(temp, NULL);//malloc(list1->count * sizeof(string));
     copyList(temp, list1);
 
     int* indexList = malloc(list2->pf->count * sizeof(int));
@@ -311,16 +311,16 @@ bool removeAllStrList(StrList list1, StrList list2) {
 StrList subtractStrList(StrList list1, StrList list2) {
     if (isEmptyStrList(list1)) {
         StrList temp = NULL;
-        return pr_initLs_(temp);
+        return pr_initLs_(temp, NULL);
     }
 
     if (isEmptyStrList(list2)) {
-        StrList temp = pr_initLs_(temp);
+        StrList temp = pr_initLs_(temp, NULL);
         copyList(temp, list1);
         return temp;
     }
 
-    StrList copyValues = pr_initLs_(copyValues);
+    StrList copyValues = pr_initLs_(copyValues, NULL);
     copyList(copyValues, list1);
 
     for (int i = 0; i < list2->pf->count; ++i) {
@@ -330,7 +330,7 @@ StrList subtractStrList(StrList list1, StrList list2) {
         }
     }
 
-    StrList temp = pr_initLs_(temp);
+    StrList temp = pr_initLs_(temp, NULL);
     int index = 0;
     for (int i = 0; i < copyValues->pf->count; ++i) {
         if (copyValues->pf->data[i] != NULL) {

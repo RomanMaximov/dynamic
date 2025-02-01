@@ -67,11 +67,11 @@ build CMakeFiles/DynamicCollection.dir/linkedlist.c.obj: C_COMPILER__DynamicColl
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
   OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir
 
-build CMakeFiles/DynamicCollection.dir/testarray.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/testarray.c || cmake_object_order_depends_target_DynamicCollection
-  DEP_FILE = CMakeFiles\DynamicCollection.dir\testarray.c.obj.d
+build CMakeFiles/DynamicCollection.dir/test/testarray.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/test/testarray.c || cmake_object_order_depends_target_DynamicCollection
+  DEP_FILE = CMakeFiles\DynamicCollection.dir\test\testarray.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir
-  OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir
+  OBJECT_FILE_DIR = CMakeFiles\DynamicCollection.dir\test
 
 build CMakeFiles/DynamicCollection.dir/linkedlistservice/intlinkedlist.c.obj: C_COMPILER__DynamicCollection_Debug C$:/C/C$ projects/DynamicCollection/linkedlistservice/intlinkedlist.c || cmake_object_order_depends_target_DynamicCollection
   DEP_FILE = CMakeFiles\DynamicCollection.dir\linkedlistservice\intlinkedlist.c.obj.d
@@ -147,7 +147,7 @@ build CMakeFiles/DynamicCollection.dir/arrayservice/strarraylist.c.obj: C_COMPIL
 #############################################
 # Link the executable DynamicCollection.exe
 
-build DynamicCollection.exe: C_EXECUTABLE_LINKER__DynamicCollection_Debug CMakeFiles/DynamicCollection.dir/main.c.obj CMakeFiles/DynamicCollection.dir/string.c.obj CMakeFiles/DynamicCollection.dir/linkedlist.c.obj CMakeFiles/DynamicCollection.dir/testarray.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/intlinkedlist.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/doublelinkedlist.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/strlinkedlist.c.obj CMakeFiles/DynamicCollection.dir/set.c.obj CMakeFiles/DynamicCollection.dir/setservice/intset.c.obj CMakeFiles/DynamicCollection.dir/setservice/doubleset.c.obj CMakeFiles/DynamicCollection.dir/setservice/strset.c.obj CMakeFiles/DynamicCollection.dir/arraylist.c.obj CMakeFiles/DynamicCollection.dir/arrayservice/intarraylist.c.obj CMakeFiles/DynamicCollection.dir/arrayservice/doublearraylist.c.obj CMakeFiles/DynamicCollection.dir/arrayservice/strarraylist.c.obj
+build DynamicCollection.exe: C_EXECUTABLE_LINKER__DynamicCollection_Debug CMakeFiles/DynamicCollection.dir/main.c.obj CMakeFiles/DynamicCollection.dir/string.c.obj CMakeFiles/DynamicCollection.dir/linkedlist.c.obj CMakeFiles/DynamicCollection.dir/test/testarray.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/intlinkedlist.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/doublelinkedlist.c.obj CMakeFiles/DynamicCollection.dir/linkedlistservice/strlinkedlist.c.obj CMakeFiles/DynamicCollection.dir/set.c.obj CMakeFiles/DynamicCollection.dir/setservice/intset.c.obj CMakeFiles/DynamicCollection.dir/setservice/doubleset.c.obj CMakeFiles/DynamicCollection.dir/setservice/strset.c.obj CMakeFiles/DynamicCollection.dir/arraylist.c.obj CMakeFiles/DynamicCollection.dir/arrayservice/intarraylist.c.obj CMakeFiles/DynamicCollection.dir/arrayservice/doublearraylist.c.obj CMakeFiles/DynamicCollection.dir/arrayservice/strarraylist.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\DynamicCollection.dir

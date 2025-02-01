@@ -11,6 +11,7 @@
       <file path="$PROJECT_DIR$/linkedlist" />
       <file path="$PROJECT_DIR$/linkedlistservice" />
       <file path="$PROJECT_DIR$/setservice" />
+      <file path="$PROJECT_DIR$/test" />
     </sourceRoots>
   </component>
 </project>

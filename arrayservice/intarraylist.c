@@ -146,13 +146,66 @@ bool containsIntList(IntList list, int num) {
     return false;
 }
 
-bool containsAllIntList(IntList list1, IntList list2) {
-    if (list1 == NULL || list2 == NULL || list2->pf->count > list1->pf->count)
-        return false;
+bool containsAllIntList(IntList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
 
-    for (int i = 0; i < list2->pf->count; ++i) {
-        if (indexOfIntList(list1, list2->pf->data[i]) == -1)
+    Ctx ctx = (Ctx) source;
+
+    if (ctx->type == INT_LIST) {
+        IntList list2 = (IntList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
             return false;
+
+        IntList temp = pr_initLi_(temp, NULL);
+        copyList(temp, list1);
+        sortIntList(temp);
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (!binarySearch(list2->pf->data[i], temp->pf->data, temp->pf->count)) {
+                temp->delete(temp);
+                return false;
+            }
+        }
+        temp->delete(temp);
+    }
+
+    if (ctx->type == INT_LL) {
+        IntLinkedList list2 = (IntLinkedList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
+            return false;
+
+        IntList temp = pr_initLi_(temp, NULL);
+        copyList(temp, list1);
+        sortIntList(temp);
+
+        IntNode current = list2->pf->begin;
+        while (current != NULL) {
+            if (!binarySearch(current->data, temp->pf->data, temp->pf->count)) {
+                temp->delete(temp);
+                return false;
+            }
+            current = current->next;
+        }
+        temp->delete(temp);
+    }
+
+    if (ctx->type == INT_SET) {
+        IntSet set = (IntSet) ctx->collection;
+        if (set->pf->count > list1->pf->count)
+            return false;
+
+        IntList temp = pr_initLi_(temp, NULL);
+        copyList(temp, list1);
+        sortIntList(temp);
+
+        int arr[set->pf->count];
+        setToArr(set, arr);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (!binarySearch(arr[i], temp->pf->data, temp->pf->count)) {
+                temp->delete(temp);
+                return false;
+            }
+        }
+        temp->delete(temp);
     }
 
     return true;
@@ -242,16 +295,16 @@ bool removeAllIntList(IntList list1, IntList list2) {
 IntList subtractIntList(IntList list1, IntList list2) {
     if (isEmptyIntList(list1)) {
         IntList temp = NULL;
-        return pr_initLi_(temp);
+        return pr_initLi_(temp, NULL);
     }
 
     if (isEmptyIntList(list2)) {
-        IntList temp = pr_initLi_(temp);
+        IntList temp = pr_initLi_(temp, NULL);
         copyList(temp, list1);
         return temp;
     }
 
-    IntList copyValues = pr_initLi_(copyValues);
+    IntList copyValues = pr_initLi_(copyValues, NULL);
     copyList(copyValues, list1);
 
     for (int i = 0; i < list2->pf->count; ++i) {
@@ -260,7 +313,7 @@ IntList subtractIntList(IntList list1, IntList list2) {
             copyValues->pf->data[index] = INT_MIN;
     }
 
-    IntList temp = pr_initLi_(temp);
+    IntList temp = pr_initLi_(temp, NULL);
     int index = 0;
     for (int i = 0; i < copyValues->pf->count; ++i) {
         if (copyValues->pf->data[i] != INT_MIN) {
