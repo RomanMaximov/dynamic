@@ -16,7 +16,7 @@ typedef Itr* Iterator;
 
 
 void addDoubleList(DoubleList, double);
-void addAllDoubleList(DoubleList, DoubleList);
+void addAllDoubleList(DoubleList, void*);
 double getDoubleList(DoubleList, int);
 bool setDoubleList(DoubleList, int, double);
 int indexOfDoubleList(DoubleList, double);
@@ -24,10 +24,10 @@ void sortDoubleList(DoubleList);
 void sortDoubleListReverse(DoubleList);
 void clearDoubleList(DoubleList);
 bool containsDoubleList(DoubleList, double);
-bool containsAllDoubleList(DoubleList, DoubleList);
-bool containsAnyDoubleList(DoubleList, DoubleList);
+bool containsAllDoubleList(DoubleList, void*);
+bool containsAnyDoubleList(DoubleList, void*);
 bool removeDoubleList(DoubleList, int);
-bool removeAllDoubleList(DoubleList, DoubleList);
+bool removeAllDoubleList(DoubleList, void*);
 DoubleList subtractDoubleList(DoubleList, DoubleList);
 bool isEmptyDoubleList(DoubleList);
 void reverseDoubleList(DoubleList);

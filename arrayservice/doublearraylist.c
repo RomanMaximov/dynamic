@@ -11,6 +11,7 @@
 #include <assert.h>
 #include <math.h>
 #include "doublearraylist.h"
+#include "../util.h"
 
 #define ACCURACY 0.000000001
 
@@ -25,7 +26,7 @@ typedef struct InnerDoubleList {
 static double* increaseCapacity(DoubleList list);
 static int compareDouble(const void* elem1, const void* elem2);
 static int compareReverse(const void* elem1, const void* elem2);
-static bool binarySearch(double elem, const int* arr, int high);
+static bool binarySearch(double elem, const double* arr, int high);
 static void copyList(DoubleList dest, DoubleList from);
 static bool hasNext(Iterator iter);
 static bool binarySearchInt(int elem, const int* arr, int high);
@@ -45,22 +46,35 @@ void addDoubleList(DoubleList list, double num) {
     }
 }
 
-void addAllDoubleList(DoubleList dest, DoubleList from) {
-    if (dest == NULL || from == NULL || from->pf->data == NULL) return;
+void addAllDoubleList(DoubleList dest, void* source) {
+    if (dest == NULL || source == NULL) return;
 
-    int sizeFrom = sizeDoubleList(from);
-    int sizeDest = sizeDoubleList(dest);
+    Ctx ctx = (Ctx) source;
 
-    if ((sizeDest + sizeFrom) > dest->pf->capacity) {
-        int newCapacity = (sizeDest + sizeFrom) * 2;
-        dest->pf->capacity = newCapacity;
-        dest->pf->data = realloc(dest->pf->data, newCapacity * sizeof(double));
+    if (ctx->type == DOUBLE_LIST) {
+        DoubleList from = (DoubleList) ctx->collection;
+        if (from == NULL) return;
+        for (int i = 0; i < from->pf->count; ++i)
+            addDoubleList(dest, from->pf->data[i]);
+    }
 
-        memcpy(&dest->pf->data[dest->pf->count], from->pf->data, sizeFrom * sizeof(double));
-        dest->pf->count += sizeFrom;
-    } else {
-        memcpy(&dest->pf->data[dest->pf->count], from->pf->data, sizeFrom * sizeof(double));
-        dest->pf->count += sizeFrom;
+    if (ctx->type == DOUBLE_LL) {
+        DoubleLinkedList from = (DoubleLinkedList) ctx->collection;
+        if (from == NULL) return;
+        DoubleNode current = from->pf->begin;
+        while (current != NULL) {
+            addDoubleList(dest, current->data);
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == DOUBLE_SET) {
+        DoubleSet from = (DoubleSet) ctx->collection;
+        if (from == NULL) return;
+        double arr[from->pf->count];
+        setToArrDouble(from, arr);
+        for (int i = 0; i < from->pf->count; ++i)
+            addDoubleList(dest, arr[i]);
     }
 }
 
@@ -134,27 +148,131 @@ bool containsDoubleList(DoubleList list, double num) {
     return false;
 }
 
-bool containsAllDoubleList(DoubleList list1, DoubleList list2) {
-    if (list1 == NULL || list2 == NULL || list2->pf->count > list1->pf->count)
-        return false;
+bool containsAllDoubleList(DoubleList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
 
-    for (int i = 0; i < list1->pf->count; ++i) {
-        for (int j = 0; j < list2->pf->count; ++j) {
-            if (fabs(list1->pf->data[i] - list2->pf->data[j]) > 0.000001)
+    Ctx ctx = (Ctx) source;
+
+    if (ctx->type == DOUBLE_LIST) {
+        DoubleList list2 = (DoubleList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
+            return false;
+
+        DoubleList temp = pr_initLd_(temp, NULL);
+        copyList(temp, list1);
+        sortDoubleList(temp);
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (!binarySearch(list2->pf->data[i], temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
                 return false;
+            }
         }
+        temp->delete(&temp);
+    }
+
+    if (ctx->type == DOUBLE_LL) {
+        DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
+            return false;
+
+        DoubleList temp = pr_initLd_(temp, NULL);
+        copyList(temp, list1);
+        sortDoubleList(temp);
+
+        DoubleNode current = list2->pf->begin;
+        while (current != NULL) {
+            if (!binarySearch(current->data, temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                return false;
+            }
+            current = current->next;
+        }
+        temp->delete(&temp);
+    }
+
+    if (ctx->type == DOUBLE_SET) {
+        DoubleSet set = (DoubleSet) ctx->collection;
+        if (set->pf->count > list1->pf->count)
+            return false;
+
+        DoubleList temp = pr_initLd_(temp, NULL);
+        copyList(temp, list1);
+        sortDoubleList(temp);
+
+        double arr[set->pf->count];
+        setToArrDouble(set, arr);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (!binarySearch(arr[i], temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                return false;
+            }
+        }
+        temp->delete(&temp);
     }
 
     return true;
 }
 
-bool containsAnyDoubleList(DoubleList list1, DoubleList list2) {
-    if (isEmptyDoubleList(list1) || isEmptyDoubleList(list2))
-        return false;
+bool containsAnyDoubleList(DoubleList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
 
-    for (int i = 0; i < list2->pf->count; ++i) {
-        if (containsDoubleList(list1, list2->pf->data[i]))
-            return true;
+    Ctx ctx = (Ctx) source;
+
+    if (ctx->type == DOUBLE_LIST) {
+        DoubleList list2 = (DoubleList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
+            return false;
+
+        DoubleList temp = pr_initLd_(temp, NULL);
+        copyList(temp, list1);
+        sortDoubleList(temp);
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (binarySearch(list2->pf->data[i], temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                return true;
+            }
+        }
+        temp->delete(&temp);
+    }
+
+    if (ctx->type == DOUBLE_LL) {
+        DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
+            return false;
+
+        DoubleList temp = pr_initLd_(temp, NULL);
+        copyList(temp, list1);
+        sortDoubleList(temp);
+
+        DoubleNode current = list2->pf->begin;
+        while (current != NULL) {
+            if (binarySearch(current->data, temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                return true;
+            }
+            current = current->next;
+        }
+        temp->delete(&temp);
+    }
+
+    if (ctx->type == DOUBLE_SET) {
+        DoubleSet set = (DoubleSet) ctx->collection;
+        if (set->pf->count > list1->pf->count)
+            return false;
+
+        DoubleList temp = pr_initLd_(temp, NULL);
+        copyList(temp, list1);
+        sortDoubleList(temp);
+
+        double arr[set->pf->count];
+        setToArrDouble(set, arr);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (binarySearch(arr[i], temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                return true;
+            }
+        }
+        temp->delete(&temp);
     }
 
     return false;
@@ -190,19 +308,48 @@ bool removeDoubleList(DoubleList list, int index) {
     return true;
 }
 
-bool removeAllDoubleList(DoubleList list1, DoubleList list2) {
-    if (list1 == NULL || list2 == NULL)
-        return false;
+bool removeAllDoubleList(DoubleList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
+
+    Ctx ctx = (Ctx) source;
 
     double* temp = malloc(list1->pf->count * sizeof(double));
-    int* indexList = malloc(list2->pf->count * sizeof(int));
+    int* indexList = malloc(list1->pf->count * sizeof(int));
     memcpy(&temp[0], list1->pf->data, list1->pf->count * sizeof(double));
 
     int j = 0;
-    for (int i = 0; i < list2->pf->count; ++i) {
-        int index = indexOfDoubleList(list1, list2->pf->data[i]);
-        if (index != -1)
-            indexList[j++] = index;
+    if (ctx->type == DOUBLE_LIST) {
+        DoubleList list2 = (DoubleList) ctx->collection;
+
+        for (int i = 0; i < list2->pf->count; ++i) {
+            int index = indexOfDoubleList(list1, list2->pf->data[i]);
+            if (index != -1)
+                indexList[j++] = index;
+        }
+    }
+
+    if (ctx->type == DOUBLE_LL) {
+        DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
+
+        DoubleNode current = list2->pf->begin;
+        while (current != NULL) {
+            int index = indexOfDoubleList(list1, current->data);
+            if (index != -1)
+                indexList[j++] = index;
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == DOUBLE_SET) {
+        DoubleSet set = (DoubleSet) ctx->collection;
+        double arr[set->pf->count];
+        setToArrDouble(set, arr);
+
+        for (int i = 0; i < set->pf->count; ++i) {
+            int index = indexOfDoubleList(list1, arr[i]);
+            if (index != -1)
+                indexList[j++] = index;
+        }
     }
 
     qsort(indexList, j - 1, sizeof(int), compareDouble);
@@ -217,8 +364,10 @@ bool removeAllDoubleList(DoubleList list1, DoubleList list2) {
         list1->pf->data[index] = temp[i];
         ++index;
     }
+
     list1->pf->count -= j;
     if (list1->pf->count == 0) list1->pf->data = NULL;
+
     free(indexList);
     free(temp);
 
@@ -397,6 +546,22 @@ static void copyList(DoubleList dest, DoubleList from) {
 }
 
 static bool binarySearchInt(int elem, const int* arr, int high) {
+    int low, middle;
+    --high;
+    low = 0;
+    while (low <= high) {
+        middle = (low + high) / 2;
+        if (elem < arr[middle])
+            high = middle - 1;
+        else if (elem > arr[middle])
+            low = middle + 1;
+        else
+            return true;
+    }
+    return false;
+}
+
+static bool binarySearch(double elem, const double* arr, int high) {
     int low, middle;
     --high;
     low = 0;

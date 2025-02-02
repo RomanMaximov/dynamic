@@ -10,6 +10,7 @@
 #include <string.h>
 #include <assert.h>
 #include "strarraylist.h"
+#include "../util.h"
 
 
 typedef struct InnerStr {
@@ -79,28 +80,37 @@ void addCharArrList(StrList list, char* str) {
     }
 }
 
-void addAllStrList(StrList dest, StrList from) {
-    if (dest == NULL || from == NULL || from->pf->data == NULL) return;
+void addAllStrList(StrList dest, void* source) {
+    if (dest == NULL || source == NULL) return;
 
-    int sizeFrom = sizeStrList(from);
-    int sizeDest = sizeStrList(dest);
-    if ((sizeDest + sizeFrom) > dest->pf->capacity) {
-        int newCapacity = (sizeDest + sizeFrom) * 2;
-        dest->pf->capacity = newCapacity;
-        dest->pf->data = realloc(dest->pf->data, newCapacity * sizeof(String*));
-        for (int i = 0; i < dest->pf->capacity; ++i)
-            dest->pf->data[i] = NULL;
+    Ctx ctx = (Ctx) source;
 
-        for (int i = sizeFrom; i < sizeFrom + sizeDest; ++i) {
-            dest->pf->data[i] = strOf(from->pf->data[i]->pf->data);
+    if (ctx->type == STR_LIST) {
+        StrList from = (StrList) ctx->collection;
+        if (from == NULL) return;
+        for (int i = 0; i < from->pf->count; ++i)
+            addStrList(dest, from->pf->data[i]);
+    }
+
+    if (ctx->type == STR_LL) {
+        StrLinkedList from = (StrLinkedList) ctx->collection;
+        if (from == NULL) return;
+        StrNode current = from->pf->begin;
+        while (current != NULL) {
+            addStrList(dest, current->data);
+            current = current->next;
         }
-        dest->pf->count += sizeFrom;
-    } else {
-        int indexFrom = 0;
-        for (int i = sizeDest; i < sizeFrom + sizeDest; ++i) {
-            dest->pf->data[i] = strOf(from->pf->data[indexFrom++]->pf->data);
-        }
-        dest->pf->count += sizeFrom;
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet from = (StrSet) ctx->collection;
+        if (from == NULL) return;
+
+        StrList temp = pr_initLs_(temp, NULL);
+        setToArrStr(from, temp);
+        for (int i = 0; i < from->pf->count; ++i)
+            addStrList(dest, temp->pf->data[i]);
+        temp->delete(&temp);
     }
 }
 
@@ -195,37 +205,138 @@ bool containsStrList(StrList list, string str) {
     return false;
 }
 
-bool containsAllStrList(StrList list1, StrList list2) {
-    if (list1 == NULL || list2 == NULL || list2->pf->count > list1->pf->count)
-        return false;
+bool containsAllStrList(StrList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
 
-    StrList temp = pr_initLs_(temp, NULL);
-    copyList(temp, list1);
-    sortStrList(temp);
+    Ctx ctx = (Ctx) source;
 
-    for (int i = 0; i < list2->pf->count; ++i) {
-        if (!binarySearchStr(list2->pf->data[i], temp->pf->data, temp->pf->count))
+    if (ctx->type == STR_LIST) {
+        StrList list2 = (StrList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
             return false;
+
+        StrList temp = pr_initLs_(temp, NULL);
+        copyList(temp, list1);
+        sortStrList(temp);
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (!binarySearchStr(list2->pf->data[i], temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                return false;
+            }
+        }
+        temp->delete(&temp);
     }
 
-    deleteStrList(&temp);
+    if (ctx->type == STR_LL) {
+        StrLinkedList list2 = (StrLinkedList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
+            return false;
+
+        StrList temp = pr_initLs_(temp, NULL);
+        copyList(temp, list1);
+        sortStrList(temp);
+
+        StrNode current = list2->pf->begin;
+        while (current != NULL) {
+            if (!binarySearchStr(current->data, temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                return false;
+            }
+            current = current->next;
+        }
+        temp->delete(&temp);
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet set = (StrSet) ctx->collection;
+        if (set->pf->count > list1->pf->count)
+            return false;
+
+        StrList temp = pr_initLs_(temp, NULL);
+        copyList(temp, list1);
+        sortStrList(temp);
+
+        StrList sourceList = pr_initLs_(sourceList, NULL);
+        int arr[set->pf->count];
+        setToArrStr(set, sourceList);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (!binarySearchStr(sourceList->pf->data[i], temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                sourceList->delete(&sourceList);
+                return false;
+            }
+        }
+        temp->delete(&temp);
+        sourceList->delete(&sourceList);
+    }
+
     return true;
 }
 
-bool containsAnyStrList(StrList list1, StrList list2) {
-    if (isEmptyStrList(list1) || isEmptyStrList(list2))
-        return false;
+bool containsAnyStrList(StrList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
 
-    StrList temp = pr_initLs_(temp, NULL);
-    copyList(temp, list1);
-    sortStrList(temp);
+    Ctx ctx = (Ctx) source;
 
-    for (int i = 0; i < list2->pf->count; ++i) {
-        if (binarySearchStr(list2->pf->data[i], temp->pf->data, temp->pf->count))
-            return true;
+    if (ctx->type == STR_LIST) {
+        StrList list2 = (StrList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
+            return false;
+
+        StrList temp = pr_initLs_(temp, NULL);
+        copyList(temp, list1);
+        sortStrList(temp);
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (binarySearchStr(list2->pf->data[i], temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                return true;
+            }
+        }
+        temp->delete(&temp);
     }
 
-    deleteStrList(&temp);
+    if (ctx->type == STR_LL) {
+        StrLinkedList list2 = (StrLinkedList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
+            return false;
+
+        StrList temp = pr_initLs_(temp, NULL);
+        copyList(temp, list1);
+        sortStrList(temp);
+
+        StrNode current = list2->pf->begin;
+        while (current != NULL) {
+            if (binarySearchStr(current->data, temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                return true;
+            }
+            current = current->next;
+        }
+        temp->delete(&temp);
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet set = (StrSet) ctx->collection;
+        if (set->pf->count > list1->pf->count)
+            return false;
+
+        StrList temp = pr_initLs_(temp, NULL);
+        copyList(temp, list1);
+        sortStrList(temp);
+
+        StrList sourceList = pr_initLs_(sourceList, NULL);
+        int arr[set->pf->count];
+        setToArrStr(set, sourceList);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (binarySearchStr(sourceList->pf->data[i], temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                sourceList->delete(&sourceList);
+                return true;
+            }
+        }
+        temp->delete(&temp);
+        sourceList->delete(&sourceList);
+    }
 
     return false;
 }

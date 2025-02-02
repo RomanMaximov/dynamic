@@ -70,7 +70,7 @@ void addAllIntList(IntList dest, void* source) {
         IntSet from = (IntSet) ctx->collection;
         if (from == NULL) return;
         int arr[from->pf->count];
-        setToArr(from, arr);
+        setToArrInt(from, arr);
         for (int i = 0; i < from->pf->count; ++i)
             addIntList(dest, arr[i]);
     }
@@ -161,11 +161,11 @@ bool containsAllIntList(IntList list1, void* source) {
         sortIntList(temp);
         for (int i = 0; i < list2->pf->count; ++i) {
             if (!binarySearch(list2->pf->data[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(temp);
+                temp->delete(&temp);
                 return false;
             }
         }
-        temp->delete(temp);
+        temp->delete(&temp);
     }
 
     if (ctx->type == INT_LL) {
@@ -180,12 +180,12 @@ bool containsAllIntList(IntList list1, void* source) {
         IntNode current = list2->pf->begin;
         while (current != NULL) {
             if (!binarySearch(current->data, temp->pf->data, temp->pf->count)) {
-                temp->delete(temp);
+                temp->delete(&temp);
                 return false;
             }
             current = current->next;
         }
-        temp->delete(temp);
+        temp->delete(&temp);
     }
 
     if (ctx->type == INT_SET) {
@@ -198,26 +198,79 @@ bool containsAllIntList(IntList list1, void* source) {
         sortIntList(temp);
 
         int arr[set->pf->count];
-        setToArr(set, arr);
+        setToArrInt(set, arr);
         for (int i = 0; i < set->pf->count; ++i) {
             if (!binarySearch(arr[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(temp);
+                temp->delete(&temp);
                 return false;
             }
         }
-        temp->delete(temp);
+        temp->delete(&temp);
     }
 
     return true;
 }
 
-bool containsAnyIntList(IntList list1, IntList list2) {
-    if (isEmptyIntList(list1) || isEmptyIntList(list2 ))
-        return false;
+bool containsAnyIntList(IntList list1, void* source) {
+    if (list1 == NULL || source == NULL || isEmptyIntList(list1)) return false;
 
-    for (int i = 0; i < list2->pf->count; ++i) {
-        if (containsIntList(list1, list2->pf->data[i]))
-            return true;
+    Ctx ctx = (Ctx) source;
+
+    if (ctx->type == INT_LIST) {
+        IntList list2 = (IntList) ctx->collection;
+        if (isEmptyIntList(list2 ))
+            return false;
+
+        IntList temp = pr_initLi_(temp, NULL);
+        copyList(temp, list1);
+        sortIntList(temp);
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (binarySearch(list2->pf->data[i], temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                return true;
+            }
+        }
+        temp->delete(&temp);
+    }
+
+    if (ctx->type == INT_LL) {
+        IntLinkedList list2 = (IntLinkedList) ctx->collection;
+        if (list2 == NULL || list2->pf->count == 0)
+            return false;
+
+        IntList temp = pr_initLi_(temp, NULL);
+        copyList(temp, list1);
+        sortIntList(temp);
+
+        IntNode current = list2->pf->begin;
+        while (current != NULL) {
+            if (binarySearch(current->data, temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                return true;
+            }
+            current = current->next;
+        }
+        temp->delete(&temp);
+    }
+
+    if (ctx->type == INT_SET) {
+        IntSet set = (IntSet) ctx->collection;
+        if (set == NULL || set->pf->count == 0)
+            return false;
+
+        IntList temp = pr_initLi_(temp, NULL);
+        copyList(temp, list1);
+        sortIntList(temp);
+
+        int arr[set->pf->count];
+        setToArrInt(set, arr);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (binarySearch(arr[i], temp->pf->data, temp->pf->count)) {
+                temp->delete(&temp);
+                return true;
+            }
+        }
+        temp->delete(&temp);
     }
 
     return false;
@@ -254,19 +307,48 @@ bool removeIntList(IntList list, int index) {
     return true;
 }
 
-bool removeAllIntList(IntList list1, IntList list2) {
-    if (list1 == NULL || list2 == NULL)
-        return false;
+bool removeAllIntList(IntList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
+
+    Ctx ctx = (Ctx) source;
 
     int* temp = malloc(list1->pf->count * sizeof(int));
-    int* indexList = malloc(list2->pf->count * sizeof(int));
+    int* indexList = malloc(list1->pf->count * sizeof(int));
     memcpy(&temp[0], list1->pf->data, list1->pf->count * sizeof(int));
 
     int j = 0;
-    for (int i = 0; i < list2->pf->count; ++i) {
-        int index = indexOfIntList(list1, list2->pf->data[i]);
-        if (index != -1)
-            indexList[j++] = index;
+    if (ctx->type == INT_LIST) {
+        IntList list2 = (IntList) ctx->collection;
+
+        for (int i = 0; i < list2->pf->count; ++i) {
+            int index = indexOfIntList(list1, list2->pf->data[i]);
+            if (index != -1)
+                indexList[j++] = index;
+        }
+    }
+
+    if (ctx->type == INT_LL) {
+        IntLinkedList list2 = (IntLinkedList) ctx->collection;
+
+        IntNode current = list2->pf->begin;
+        while (current != NULL) {
+            int index = indexOfIntList(list1, current->data);
+            if (index != -1)
+                indexList[j++] = index;
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == INT_SET) {
+        IntSet set = (IntSet) ctx->collection;
+        int arr[set->pf->count];
+        setToArrInt(set, arr);
+
+        for (int i = 0; i < set->pf->count; ++i) {
+            int index = indexOfIntList(list1, arr[i]);
+            if (index != -1)
+                indexList[j++] = index;
+        }
     }
 
     qsort(indexList, j - 1, sizeof(int), compareInt);

@@ -40,27 +40,112 @@ typedef struct InnerIntSet {
     struct NodeSetInt** bucket;
 } InnerIntSet;
 
+typedef struct NodeDouble {
+    double data;
+    struct NodeDouble* next;
+    struct NodeDouble* prev;
+} NodeDouble;
+
+typedef struct InnerDoubleLL {
+    int count;
+    int index;
+    struct NodeDouble* nodes;
+    struct NodeDouble* begin;
+    struct NodeDouble* end;
+} InnerDoubleLL;
+
+typedef struct NodeStr {
+    string data;
+    struct NodeStr* next;
+    struct NodeStr* prev;
+} NodeStr;
+
+typedef struct InnerStrLL {
+    int count;
+    int index;
+    struct NodeStr* nodes;
+    struct NodeStr* begin;
+    struct NodeStr* end;
+} InnerStrLL;
+
+typedef struct NodeSetDouble {
+    double data;
+    struct NodeSetDouble* left;
+    struct NodeSetDouble* right;
+} NodeSetDouble;
+
+typedef struct InnerDoubleSet {
+    int count;
+    int capacity;
+    struct NodeSetDouble** bucket;
+} InnerDoubleSet;
+
+typedef struct NodeSetStr {
+    string str;
+    struct NodeSetStr* left;
+    struct NodeSetStr* right;
+} NodeSetStr;
+
+typedef struct InnerStrSet {
+    int count;
+    int capacity;
+    struct NodeSetStr** bucket;
+} InnerStrSet;
+
+
 typedef struct NodeInt NodeInt;
 typedef NodeInt* IntNode;
-typedef NodeSetInt* IntSetNode;
+typedef NodeDouble* DoubleNode;
+typedef NodeStr* StrNode;
 
+typedef NodeSetInt* IntSetNode;
+typedef NodeSetDouble* DoubleSetNode;
+typedef NodeSetStr* StrSetNode;
 
 // private funcs
 
-
-
-static void copyValuesToArr(IntSetNode node, int* arr, int* index) {
+static void copyValuesToArrInt(IntSetNode node, int* arr, int* index) {
     if (node != NULL) {
-        copyValuesToArr(node->left, arr, index);
+        copyValuesToArrInt(node->left, arr, index);
         arr[(*index)++] = node->data;
-        copyValuesToArr(node->right, arr, index);
+        copyValuesToArrInt(node->right, arr, index);
     }
 }
 
-void setToArr(IntSet set, int* arr) {
+static void setToArrInt(IntSet set, int* arr) {
     int index = 0;
     for (int i = 0; i < set->pf->capacity; ++i) {
-        copyValuesToArr(set->pf->bucket[i], arr, &index);
+        copyValuesToArrInt(set->pf->bucket[i], arr, &index);
+    }
+}
+
+static void copyValuesToArrDouble(DoubleSetNode node, double* arr, int* index) {
+    if (node != NULL) {
+        copyValuesToArrDouble(node->left, arr, index);
+        arr[(*index)++] = node->data;
+        copyValuesToArrDouble(node->right, arr, index);
+    }
+}
+
+static void setToArrDouble(DoubleSet set, double* arr) {
+    int index = 0;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        copyValuesToArrDouble(set->pf->bucket[i], arr, &index);
+    }
+}
+
+static void copyValuesToList(StrSetNode node, StrList list) {
+    if (node != NULL) {
+        copyValuesToList(node->left, list);
+        list->add(list, node->str);
+        copyValuesToList(node->right, list);
+    }
+}
+
+static void setToArrStr(StrSet set, StrList list) {
+    int index = 0;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        copyValuesToList(set->pf->bucket[i], list);
     }
 }
 
