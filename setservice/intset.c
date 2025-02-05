@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "intset.h"
+#include "../util/setutil.h"
 
 typedef struct NodeSetInt {
     int data;
@@ -31,7 +32,7 @@ static int compareInt(int elem1, int elem2);
 static void insertNode(NodeSetInt** node, int num, int* counter);
 static void printInOrder(IntSetNode node, int* counter);
 static bool isCapacityFull(IntSet set);
-unsigned long long hashCode(int key);
+static unsigned long long hashCode(int key);
 static void increaseCapacity(IntSet set);
 static void copyValuesToArr(IntSetNode node, int* arr, int* index);
 static void setToArr(IntSet set, int* arr);
@@ -46,9 +47,10 @@ static IntSetNode findNode(IntSetNode* node, IntSetNode* previous);
 static bool isRoot(IntSetNode* node, IntSetNode* previous);
 static  void toStringInOrder(IntSetNode node, int* counter, char* text, int* count);
 static bool hasNext(Iterator iter);
+static bool containsKeyInt(IntSet set, int num);
 
 
-void addIntElemSet(IntSet set, int num) {
+void addIntSet(IntSet set, int num) {
     if (isCapacityFull(set))
         increaseCapacity(set);
 
@@ -56,20 +58,32 @@ void addIntElemSet(IntSet set, int num) {
     insertNode(&set->pf->bucket[indexBucket], num, &set->pf->count);
 }
 
-void addAllIntElemSet(IntSet set1, IntSet set2) {
-    if (set2 == NULL) return;
+void addAllIntSet(IntSet set, void* source) {
+    if (set == NULL || source == NULL) return;
 
-    if (isCapacityFull(set1))
-        increaseCapacity(set1);
+    Ctx ctx = (Ctx) source;
+    if (ctx->type == INT_LIST) {
+        IntList from = (IntList) ctx->collection;
+        for (int i = 0; i < from->pf->count; ++i) {
+            addIntSet(set, from->pf->data[i]);
+        }
+    }
 
-    int count = set2->pf->count;
-    int arr[count];
+    if (ctx->type == INT_LL) {
+        IntLinkedList from = (IntLinkedList) ctx->collection;
+        IntNode current = from->pf->begin;
+        while (current != NULL) {
+            addIntSet(set, current->data);
+            current = current->next;
+        }
+    }
 
-    setToArr(set2, arr);
-
-    for (int i = 0; i < count; ++i) {
-        int indexBucket = (int) (hashCode(arr[i]) % set1->pf->capacity);
-        insertNode(&set1->pf->bucket[indexBucket], arr[i], &set1->pf->count);
+    if (ctx->type == INT_SET) {
+        IntSet from = (IntSet) ctx->collection;
+        int arr[from->pf->count];
+        setToArr(from, arr);
+        for (int i = 0; i < from->pf->count; ++i)
+            addIntSet(set, arr[i]);
     }
 }
 
@@ -103,12 +117,8 @@ bool containsAllIntSet(IntSet set1, IntSet set2) {
     int arr2[count2];
     setToArr(set2, arr2);
 
-    int count1 = set1->pf->count;
-    int arr1[count1];
-    toArrAndSort(set1, arr1);
-
     for (int i = 0; i < count2; ++i) {
-        if(!binarySearch(arr2[i], arr1, count1))
+        if (!containsKeyInt(set1, arr2[i]))
             return false;
     }
 
@@ -122,12 +132,8 @@ bool containsAnyIntSet(IntSet set1, IntSet set2) {
     int arr2[count2];
     setToArr(set2, arr2);
 
-    int count1 = set1->pf->count;
-    int arr1[count1];
-    toArrAndSort(set1, arr1);
-
     for (int i = 0; i < count2; ++i) {
-        if(binarySearch(arr2[i], arr1, count1))
+        if(containsKeyInt(set1, arr2[i]))
             return true;
     }
 
@@ -135,13 +141,14 @@ bool containsAnyIntSet(IntSet set1, IntSet set2) {
 }
 
 bool removeIntSet(IntSet set, int num) {
-    for (int i = 0; i < set->pf->capacity; ++i) {
-        IntSetNode previous = set->pf->bucket[i];
-        bool found = false;
-        removeNode(&set->pf->bucket[i], &previous, num, &found);
-        if (found)
-            set->pf->count--;
-    }
+    if (set == NULL) return false;
+
+    int indexBucket = (int) (hashCode(num) % set->pf->capacity);
+    IntSetNode previous = set->pf->bucket[indexBucket];
+    bool found = false;
+    removeNode(&set->pf->bucket[indexBucket], &previous, num, &found);
+    if (found)
+        set->pf->count--;
 
     return true;
 }
@@ -532,8 +539,27 @@ static  void toStringInOrder(IntSetNode node, int* counter, char* text, int* cou
     }
 }
 
-unsigned long long hashCode(int key) {
+static unsigned long long hashCode(int key) {
     unsigned long long tempKey = (unsigned long long) key;
     tempKey = ((tempKey >> 4) ^ tempKey) * 0x1b873593ULL;
     return tempKey;
+}
+
+static bool findKey(NodeSetInt** node, int num) {
+    if (node == NULL || *node == NULL) return false;
+
+    int cmp = compareInt(num, (*node)->data);
+    if (cmp == 0) {
+        return true;
+    } else if (cmp < 0) {
+        findKey(&((*node)->left), num);
+    } else {
+        findKey(&((*node)->right), num);
+    }
+    return false;
+}
+
+static bool containsKeyInt(IntSet set, int num) {
+    int indexBucket = (int) (hashCode(num) % set->pf->capacity);
+    return findKey(&set->pf->bucket[indexBucket], num);
 }

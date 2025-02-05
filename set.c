@@ -91,7 +91,7 @@ static void* iterator(Type type);
 
 // funcs
 // TODO добавить другие способы инициализации сетов как у массивов
-IntSet newIntSet(IntSet temp) {
+IntSet pr_initSi_(IntSet temp, void* collection) {
     IntSet set = malloc(sizeof(SetInt));
     set->pf = malloc(sizeof(InnerIntSet));
     set->pf->count = 0;
@@ -101,6 +101,15 @@ IntSet newIntSet(IntSet temp) {
         set->pf->bucket[i] = NULL;
 
     initFuncs(INT_SET, (void*)set);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = INT_SET;
+    ctx->collection = (void*) set;
+
+    set->values = (void*) ctx;
+
+    if (collection == NULL) return set;
+    addAllIntSet(set, collection);
 
     return set;
 }
@@ -138,7 +147,7 @@ StrSet newStrSet(StrSet temp) {
 static void* add(Type type) {
     switch (type) {
         case INT_SET:
-            return addIntElemSet;
+            return addIntSet;
         case DOUBLE_SET:
             return addDoubleElemSet;
         case STR_SET:
@@ -151,7 +160,7 @@ static void* add(Type type) {
 static void* addAll(Type type) {
     switch (type) {
         case INT_SET:
-            return addAllIntElemSet;
+            return addAllIntSet;
         case DOUBLE_SET:
             return addAllDoubleElemSet;
         case STR_SET:

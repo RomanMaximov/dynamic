@@ -4,6 +4,7 @@
 #include <time.h>
 #include "dynamiccollection.h"
 #include "string.h"
+#include "setservice/intset.h"
 //#include "map.h"
 
 int main()
@@ -243,9 +244,11 @@ int main()
     StrList strList = listOf(strList, 3, "dob", "pop", "com");
     strList->print(strList);
 
-    char* arr[] = {"fact", "pact", "tact"};
+    char* arr[] = {"fact", "pop", "com"};
     StrList strList2 = listOfArr(strList2, arr, 3);
     strList2->print(strList2);
+    strList->removeAll(strList, strList2->values);
+    strList->print(strList);
 
     puts("");
     puts("================ ////////   string   /////// ==================");
@@ -253,6 +256,15 @@ int main()
     string subStr = strOf("great country");
     printf("subStr index: %d\n", strForSub->indexOfSubStr(strForSub, subStr));
 
+    puts("");
+    puts("================ ////////   set   /////// ==================");
+    IntSet intSet = newSet(intSet, NULL);
+    intSet->add(intSet, 2);
+    intSet->add(intSet, 5);
+    intSet->add(intSet, 7);
+
+    //bool isKey = containsKeyInt(intSet, 8);
+    puts("");
 
     /*add(stringOf("str1"), stringList);
     add(stringOf("str2"), stringList);
@@ -342,8 +354,8 @@ int main()
 
     puts("===========================================");
 
-    IntSet set = newIntSet(set);
-    IntSet set2 = newIntSet(set2);
+    IntSet set = newSet(set, NULL);
+    IntSet set2 = newSet(set2, NULL);
 
     set->add(set, 200);
     set->add(set, 120);

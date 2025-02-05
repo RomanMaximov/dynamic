@@ -55,11 +55,11 @@ typedef struct String String;
     StrList : pr_initLs_                    \
 )(T, V)
 
-#define newSet(T) _Generic((T),             \
+#define newSet(T, V) _Generic((T),             \
     IntSet : pr_initSi_,                    \
     DoubleSet : pr_initSd_,                 \
     StrSet : pr_initSs_                     \
-)(T)
+)(T, V)
 
 #define listOf(T, V, ...) _Generic((T),       \
     IntList : pr_initLi_lo_,                  \

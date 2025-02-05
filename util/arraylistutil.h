@@ -4,12 +4,11 @@
 // Copyright (c) 2024 Roman Maximov.
 //
 
-#ifndef UTIL_H
-#define UTIL_H
+#ifndef ARRAYLISTUTIL_H
+#define ARRAYLISTUTIL_H
 
-#include "arraylist.h"
-#include "linkedlist.h"
-#include "set.h"
+#include "../linkedlist.h"
+#include "../set.h"
 
 // structures for LL
 typedef struct NodeInt {
@@ -147,6 +146,40 @@ static void setToArrStr(StrSet set, StrList list) {
     for (int i = 0; i < set->pf->capacity; ++i) {
         copyValuesToList(set->pf->bucket[i], list);
     }
+}
+
+static int compareIntNums(int elem1, int elem2) {
+    if (elem1 == elem2)
+        return 0;
+    else if (elem1 > elem2)
+        return 1;
+    else
+        return -1;
+}
+
+static bool findKey(NodeSetInt** node, int num) {
+    if (node == NULL || *node == NULL) return false;
+
+    int cmp = compareIntNums(num, (*node)->data);
+    if (cmp == 0) {
+        return true;
+    } else if (cmp < 0) {
+        findKey(&((*node)->left), num);
+    } else {
+        findKey(&((*node)->right), num);
+    }
+    return false;
+}
+
+static unsigned long long hashCode(int key) {
+    unsigned long long tempKey = (unsigned long long) key;
+    tempKey = ((tempKey >> 4) ^ tempKey) * 0x1b873593ULL;
+    return tempKey;
+}
+
+static bool containsKeyInt(IntSet set, int num) {
+    int indexBucket = (int) (hashCode(num) % set->pf->capacity);
+    return findKey(&set->pf->bucket[indexBucket], num);
 }
 
 #endif

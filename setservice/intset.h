@@ -15,8 +15,8 @@ typedef SetInt* IntSet;
 typedef Itr* Iterator;
 
 
-void addIntElemSet(IntSet, int);
-void addAllIntElemSet(IntSet, IntSet);
+void addIntSet(IntSet, int);
+void addAllIntSet(IntSet, void*);
 void clearIntSet(IntSet);
 bool containsIntSet(IntSet, int);
 bool containsAllIntSet(IntSet, IntSet);

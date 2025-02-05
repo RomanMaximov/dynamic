@@ -10,7 +10,7 @@
 #include <string.h>
 #include <assert.h>
 #include "intarraylist.h"
-#include "../util.h"
+#include "../util/arraylistutil.h"
 
 typedef struct InnerIntList {
     int count;
@@ -51,14 +51,12 @@ void addAllIntList(IntList dest, void* source) {
 
     if (ctx->type == INT_LIST) {
         IntList from = (IntList) ctx->collection;
-        if (from == NULL) return;
         for (int i = 0; i < from->pf->count; ++i)
             addIntList(dest, from->pf->data[i]);
     }
 
     if (ctx->type == INT_LL) {
         IntLinkedList from = (IntLinkedList) ctx->collection;
-        if (from == NULL) return;
         IntNode current = from->pf->begin;
         while (current != NULL) {
             addIntList(dest, current->data);
@@ -68,7 +66,6 @@ void addAllIntList(IntList dest, void* source) {
 
     if (ctx->type == INT_SET) {
         IntSet from = (IntSet) ctx->collection;
-        if (from == NULL) return;
         int arr[from->pf->count];
         setToArrInt(from, arr);
         for (int i = 0; i < from->pf->count; ++i)
@@ -156,16 +153,14 @@ bool containsAllIntList(IntList list1, void* source) {
         if (list2->pf->count > list1->pf->count)
             return false;
 
-        IntList temp = pr_initLi_(temp, NULL);
-        copyList(temp, list1);
-        sortIntList(temp);
+        IntSet set = pr_initSi_(set, list1->values);
         for (int i = 0; i < list2->pf->count; ++i) {
-            if (!binarySearch(list2->pf->data[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+            if (!containsKeyInt(set, list2->pf->data[i])) {
+                set->delete(&set);
                 return false;
             }
         }
-        temp->delete(&temp);
+        set->delete(&set);
     }
 
     if (ctx->type == INT_LL) {
@@ -173,39 +168,34 @@ bool containsAllIntList(IntList list1, void* source) {
         if (list2->pf->count > list1->pf->count)
             return false;
 
-        IntList temp = pr_initLi_(temp, NULL);
-        copyList(temp, list1);
-        sortIntList(temp);
-
+        IntSet set = pr_initSi_(set, list1->values);
         IntNode current = list2->pf->begin;
         while (current != NULL) {
-            if (!binarySearch(current->data, temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+            if (!containsKeyInt(set, current->data)) {
+                set->delete(&set);
                 return false;
             }
             current = current->next;
         }
-        temp->delete(&temp);
+        set->delete(&set);
     }
 
     if (ctx->type == INT_SET) {
-        IntSet set = (IntSet) ctx->collection;
-        if (set->pf->count > list1->pf->count)
+        IntSet setFrom = (IntSet) ctx->collection;
+        if (setFrom->pf->count > list1->pf->count)
             return false;
 
-        IntList temp = pr_initLi_(temp, NULL);
-        copyList(temp, list1);
-        sortIntList(temp);
+        IntSet setTemp = pr_initSi_(setTemp, list1->values);
 
-        int arr[set->pf->count];
-        setToArrInt(set, arr);
-        for (int i = 0; i < set->pf->count; ++i) {
-            if (!binarySearch(arr[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+        int arr[setFrom->pf->count];
+        setToArrInt(setFrom, arr);
+        for (int i = 0; i < setFrom->pf->count; ++i) {
+            if (!containsKeyInt(setTemp, arr[i])) {
+                setTemp->delete(&setTemp);
                 return false;
             }
         }
-        temp->delete(&temp);
+        setTemp->delete(&setTemp);
     }
 
     return true;
@@ -218,59 +208,52 @@ bool containsAnyIntList(IntList list1, void* source) {
 
     if (ctx->type == INT_LIST) {
         IntList list2 = (IntList) ctx->collection;
-        if (isEmptyIntList(list2 ))
+        if (list2->pf->count > list1->pf->count)
             return false;
 
-        IntList temp = pr_initLi_(temp, NULL);
-        copyList(temp, list1);
-        sortIntList(temp);
+        IntSet set = pr_initSi_(set, list1->values);
         for (int i = 0; i < list2->pf->count; ++i) {
-            if (binarySearch(list2->pf->data[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+            if (containsKeyInt(set, list2->pf->data[i])) {
+                set->delete(&set);
                 return true;
             }
         }
-        temp->delete(&temp);
+        set->delete(&set);
     }
 
     if (ctx->type == INT_LL) {
         IntLinkedList list2 = (IntLinkedList) ctx->collection;
-        if (list2 == NULL || list2->pf->count == 0)
+        if (list2->pf->count > list1->pf->count)
             return false;
 
-        IntList temp = pr_initLi_(temp, NULL);
-        copyList(temp, list1);
-        sortIntList(temp);
-
+        IntSet set = pr_initSi_(set, list1->values);
         IntNode current = list2->pf->begin;
         while (current != NULL) {
-            if (binarySearch(current->data, temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+            if (containsKeyInt(set, current->data)) {
+                set->delete(&set);
                 return true;
             }
             current = current->next;
         }
-        temp->delete(&temp);
+        set->delete(&set);
     }
 
     if (ctx->type == INT_SET) {
-        IntSet set = (IntSet) ctx->collection;
-        if (set == NULL || set->pf->count == 0)
+        IntSet setFrom = (IntSet) ctx->collection;
+        if (setFrom->pf->count > list1->pf->count)
             return false;
 
-        IntList temp = pr_initLi_(temp, NULL);
-        copyList(temp, list1);
-        sortIntList(temp);
+        IntSet setTemp = pr_initSi_(setTemp, list1->values);
 
-        int arr[set->pf->count];
-        setToArrInt(set, arr);
-        for (int i = 0; i < set->pf->count; ++i) {
-            if (binarySearch(arr[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+        int arr[setFrom->pf->count];
+        setToArrInt(setFrom, arr);
+        for (int i = 0; i < setFrom->pf->count; ++i) {
+            if (containsKeyInt(setTemp, arr[i])) {
+                setTemp->delete(&setTemp);
                 return true;
             }
         }
-        temp->delete(&temp);
+        setTemp->delete(&setTemp);
     }
 
     return false;

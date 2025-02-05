@@ -10,7 +10,7 @@
 #include <string.h>
 #include <assert.h>
 #include "strarraylist.h"
-#include "../util.h"
+#include "../util/arraylistutil.h"
 
 
 typedef struct InnerStr {
@@ -325,7 +325,6 @@ bool containsAnyStrList(StrList list1, void* source) {
         sortStrList(temp);
 
         StrList sourceList = pr_initLs_(sourceList, NULL);
-        int arr[set->pf->count];
         setToArrStr(set, sourceList);
         for (int i = 0; i < set->pf->count; ++i) {
             if (binarySearchStr(sourceList->pf->data[i], temp->pf->data, temp->pf->count)) {
@@ -375,20 +374,49 @@ bool removeStrList(StrList list, int index) {
     return true;
 }
 
-bool removeAllStrList(StrList list1, StrList list2) {
-    if (list1 == NULL || list2 == NULL)
-        return false;
+bool removeAllStrList(StrList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
 
-    StrList temp = pr_initLs_(temp, NULL);//malloc(list1->count * sizeof(string));
+    Ctx ctx = (Ctx) source;
+
+    StrList temp = pr_initLs_(temp, NULL);
     copyList(temp, list1);
-
-    int* indexList = malloc(list2->pf->count * sizeof(int));
+    int* indexList = malloc(list1->pf->count * sizeof(int));
 
     int j = 0;
-    for (int i = 0; i < list2->pf->count; ++i) {
-        int index = indexOfStrList(list1, list2->pf->data[i]);
-        if (index != -1)
-            indexList[j++] = index;
+    if (ctx->type == STR_LIST) {
+        StrList list2 = (StrList) ctx->collection;
+
+        for (int i = 0; i < list2->pf->count; ++i) {
+            int index = indexOfStrList(list1, list2->pf->data[i]);
+            if (index != -1)
+                indexList[j++] = index;
+        }
+    }
+
+    if (ctx->type == STR_LL) {
+        StrLinkedList list2 = (StrLinkedList) ctx->collection;
+
+        StrNode current = list2->pf->begin;
+        while (current != NULL) {
+            int index = indexOfStrList(list1, current->data);
+            if (index != -1)
+                indexList[j++] = index;
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet set = (StrSet) ctx->collection;
+        StrList sourceList = pr_initLs_(sourceList, NULL);
+        setToArrStr(set, sourceList);
+
+        for (int i = 0; i < set->pf->count; ++i) {
+            int index = indexOfStrList(list1, sourceList->pf->data[i]);
+            if (index != -1)
+                indexList[j++] = index;
+        }
+        sourceList->delete(&sourceList);
     }
 
     qsort(indexList, j - 1, sizeof(int), compareInt);
@@ -396,25 +424,19 @@ bool removeAllStrList(StrList list1, StrList list2) {
         list1->pf->data[i]->delete(&list1->pf->data[i]);
     }
 
-    free(list1->pf->data);
-    list1->pf->data = malloc(list1->pf->capacity * sizeof(string));
-    for (int i = 0; i < list1->pf->capacity; ++i) {
-        list1->pf->data[i] = NULL;
-    }
-
     int index = 0;
     for (int i = 0; i < list1->pf->count; ++i) {
         if (binarySearch(i, indexList, j)) // 1
             continue;
 
-        list1->pf->data[index] = temp->pf->data[i];
+        list1->pf->data[index] = strOf(temp->pf->data[i]->pf->data);
         ++index;
     }
 
     list1->pf->count -= j;
 
     free(indexList);
-    deleteStrList(&temp);
+    temp->delete(&temp);
 
     return true;
 }

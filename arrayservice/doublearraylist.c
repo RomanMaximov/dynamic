@@ -11,7 +11,7 @@
 #include <assert.h>
 #include <math.h>
 #include "doublearraylist.h"
-#include "../util.h"
+#include "../util/arraylistutil.h"
 
 #define ACCURACY 0.000000001
 

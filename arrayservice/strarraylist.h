@@ -31,7 +31,7 @@ bool containsStrList(StrList, string);
 bool containsAllStrList(StrList, void*);
 bool containsAnyStrList(StrList, void*);
 bool removeStrList(StrList, int);
-bool removeAllStrList(StrList, StrList);
+bool removeAllStrList(StrList, void*);
 StrList subtractStrList(StrList, StrList);
 bool isEmptyStrList(StrList);
 void reverseStrList(StrList);
