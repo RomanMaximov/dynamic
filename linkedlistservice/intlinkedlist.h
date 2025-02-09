@@ -15,10 +15,10 @@ typedef LinkedListInt* IntLinkedList;
 typedef Itr* Iterator;
 
 
-void addIntElemLL(IntLinkedList, int);
-void addAllIntElemLL(IntLinkedList, IntLinkedList);
-int getIntElemLL(IntLinkedList, int);
-bool setIntElemLL(IntLinkedList, int, int);
+void addIntLL(IntLinkedList, int);
+void addAllIntLL(IntLinkedList, IntLinkedList);
+int getIntLL(IntLinkedList, int);
+bool setIntLL(IntLinkedList, int, int);
 int indexOfIntLL(IntLinkedList, int);
 void sortIntLL(IntLinkedList);
 void sortIntLLReverse(IntLinkedList);

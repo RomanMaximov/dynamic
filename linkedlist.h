@@ -50,6 +50,7 @@ typedef struct LinkedListInt {
 
 typedef struct LinkedListDouble {
     struct InnerDoubleLL* pf;   // private field
+    void* values;               // private field
     // funcs pointers
     void (*add)(struct LinkedListDouble* list, double number);
     void (*addAll)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
@@ -77,6 +78,7 @@ typedef struct LinkedListDouble {
 
 typedef struct LinkedListStr {
     struct InnerStrLL* pf;   // private field
+    void* values;            // private field
     // funcs pointers
     void (*add)(struct LinkedListStr* list, string s);
     void (*addAll)(struct LinkedListStr* list1, struct LinkedListStr* list2);
@@ -111,13 +113,16 @@ typedef Itr* Iterator;
 
 
 // func prototypes
-IntLinkedList pr_initLLi_(IntLinkedList);
-DoubleLinkedList newDoubleLinkedList(DoubleLinkedList);
-StrLinkedList newStrLinkedList(StrLinkedList);
+IntLinkedList pr_initLLi_(IntLinkedList, void*);
+DoubleLinkedList pr_initLLd_(DoubleLinkedList, void*);
+StrLinkedList pr_initLLs_(StrLinkedList, void*);
 
-IntLinkedList linkedListOfInt(IntLinkedList, int, ...);
-DoubleLinkedList linkedListOfDouble(DoubleLinkedList, int, ...);
-StrLinkedList linkedListOfStr(StrLinkedList, int, ...);
+IntLinkedList pr_initLLi_lo_(IntLinkedList, int, ...);
+DoubleLinkedList pr_initLLd_lo_(DoubleLinkedList, int, ...);
+StrLinkedList pr_initLLs_lo_(StrLinkedList, int, ...);
 
+IntLinkedList pr_initLLi_loa_(IntLinkedList, int*, int);
+DoubleLinkedList pr_initLLd_loa_(DoubleLinkedList, double*, int);
+StrLinkedList pr_initLLs_loa_(StrLinkedList, char* [], int);
 
 #endif

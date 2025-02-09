@@ -57,7 +57,7 @@ static void checkCapacity(char* text, int* count, int strLength);
 
 
 // funcs
-void addStrElemLL(StrLinkedList list, string s) {
+void addStrLL(StrLinkedList list, string s) {
     StrNode newNodeEnd = NULL;
     StrNode newNode = NULL;
     StrNode current = list->pf->end;
@@ -119,7 +119,7 @@ void addArrCharLL(StrLinkedList list, char* arr) {
     list->pf->count++;
 }
 
-bool setStrElemLL(StrLinkedList list, int index, string s) {
+bool setStrLL(StrLinkedList list, int index, string s) {
     if (list == NULL)
         return false;
 
@@ -146,7 +146,7 @@ void addAllStrElemLL(StrLinkedList list1, StrLinkedList list2) {
 
     StrNode current2 = list2->pf->nodes;
     while (current2 != NULL) {
-        addStrElemLL(list1, current2->data);
+        addStrLL(list1, current2->data);
         current2 = current2->next;
     }
 }
@@ -383,7 +383,7 @@ bool removeAllStrLL(StrLinkedList list1, StrLinkedList list2) {
 StrLinkedList subtractStrLL(StrLinkedList list1, StrLinkedList list2) {
     if (isEmptyStrLL(list1)) {
         StrLinkedList temp = NULL;
-        return newStrLinkedList(temp);
+        return pr_initLLs_(temp, NULL);
     }
 
     if (isEmptyStrLL(list2)) {
@@ -408,14 +408,14 @@ StrLinkedList subtractStrLL(StrLinkedList list1, StrLinkedList list2) {
         current2 = current2->next;
     }
 
-    StrLinkedList newLL = newStrLinkedList(newLL);
+    StrLinkedList newLL = pr_initLLs_(newLL, NULL);
 
     quickSortStr(filtered->pf->str, 0, filtered->pf->count);
     for (int i = 0; i < listSize; ++i) {
         if (binarySearchStr(tempList->pf->str[i], filtered->pf->str, filtered->pf->count))
             continue;
 
-        addStrElemLL(list1, tempList->pf->str[i]);
+        addStrLL(list1, tempList->pf->str[i]);
     }
 
     tempForBS->delete(&tempForBS);
@@ -710,11 +710,11 @@ static void copyLLToStrList(StrLinkedList strLL, StrList strList) {
 }
 
 static StrLinkedList copyStrLL(StrLinkedList list) {
-    StrLinkedList temp = newStrLinkedList(temp);
+    StrLinkedList temp = pr_initLLs_(temp, NULL);
     StrNode current = list->pf->begin;
 
     while (current != NULL) {
-        addStrElemLL(temp, current->data);
+        addStrLL(temp, current->data);
         current = current->next;
     }
     return temp;

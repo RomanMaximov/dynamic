@@ -36,7 +36,7 @@ static int getNextInt(Iterator iter) {
     if (iter->type == INT_LL) {
         if (iter->hasNext) {
             IntLinkedList list = (IntLinkedList) iter->data;
-            int number = getIntElemLL(list, iter->count);
+            int number = getIntLL(list, iter->count);
             iter->count++;
             return number;
         }

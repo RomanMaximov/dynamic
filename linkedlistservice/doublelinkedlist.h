@@ -13,10 +13,10 @@ typedef struct LinkedListDouble LinkedListDouble;
 typedef LinkedListDouble* DoubleLinkedList;
 
 
-void addDoubleElemLL(DoubleLinkedList, double);
-void addAllDoubleElemLL(DoubleLinkedList, DoubleLinkedList);
-double getDoubleElemLL(DoubleLinkedList, int);
-bool setDoubleElemLL(DoubleLinkedList, int, double);
+void addDoubleLL(DoubleLinkedList, double);
+void addAllDoubleLL(DoubleLinkedList, DoubleLinkedList);
+double getDoubleLL(DoubleLinkedList, int);
+bool setDoubleLL(DoubleLinkedList, int, double);
 int indexOfDoubleLL(DoubleLinkedList, double);
 void sortDoubleLL(DoubleLinkedList);
 void sortDoubleLLReverse(DoubleLinkedList);

@@ -16,9 +16,9 @@ typedef SetStr* StrSet;
 typedef Itr* Iterator;
 
 
-void addStrElemSet(StrSet, string);
-void addCharElemSet(StrSet, char*);
-void addAllStrElemSet(StrSet, StrSet);
+void addStrSet(StrSet, string);
+void addCharArrSet(StrSet, char*);
+void addAllStrSet(StrSet, StrSet);
 void clearStrSet(StrSet);
 bool containsStrSet(StrSet, string);
 bool containsAllStrSet(StrSet, StrSet);

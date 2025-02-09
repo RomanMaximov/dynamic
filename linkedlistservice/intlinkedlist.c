@@ -77,7 +77,7 @@ static void insertBeginInt(IntLinkedList list, int num, int* index) {
     list->pf->count++;
 }
 
-void addIntElemLL(IntLinkedList list, int num) {
+void addIntLL(IntLinkedList list, int num) {
     IntNode newNodeEnd = NULL;
     IntNode newNode = NULL;
     IntNode current = list->pf->end;
@@ -108,7 +108,7 @@ void addIntElemLL(IntLinkedList list, int num) {
     list->pf->count++;
 }
 
-bool setIntElemLL(IntLinkedList list, int index, int num) {
+bool setIntLL(IntLinkedList list, int index, int num) {
     if (list == NULL)
         return false;
 
@@ -130,17 +130,17 @@ bool setIntElemLL(IntLinkedList list, int index, int num) {
     return false;
 }
 
-void addAllIntElemLL(IntLinkedList list1, IntLinkedList list2) {
+void addAllIntLL(IntLinkedList list1, IntLinkedList list2) {
     if (list1 == NULL || list2 == NULL) return;
 
     IntNode current = list2->pf->nodes;
     while (current != NULL) {
-        addIntElemLL(list1, current->data);
+        addIntLL(list1, current->data);
         current = current->next;
     }
 }
 
-int getIntElemLL(IntLinkedList list, int index) {
+int getIntLL(IntLinkedList list, int index) {
     if (index >= list->pf->count) {
         printf("Index %d out of bounds for length %d\n", index, list->pf->count);
         return INT_MAX;
@@ -339,7 +339,7 @@ bool removeAllIntLL(IntLinkedList list1, IntLinkedList list2) {
         if (binarySearch(temp[i], filtered, j))
             continue;
 
-        addIntElemLL(list1, temp[i]);
+        addIntLL(list1, temp[i]);
     }
 
     free(tempForBS);
@@ -352,7 +352,7 @@ bool removeAllIntLL(IntLinkedList list1, IntLinkedList list2) {
 IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
     if (isEmptyIntLL(list1)) {
         IntLinkedList temp = NULL;
-        return pr_initLLi_(temp);
+        return pr_initLLi_(temp, NULL);
     }
 
     if (isEmptyIntLL(list2)) {
@@ -380,14 +380,14 @@ IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
         current2 = current2->next;
     }
 
-    IntLinkedList newLL = pr_initLLi_(newLL);
+    IntLinkedList newLL = pr_initLLi_(newLL, NULL);
 
     qsort(filtered, j, sizeof(int), compareInt);
     for (int i = 0; i < listSize; ++i) {
         if (binarySearch(temp[i], filtered, j))
             continue;
 
-        addIntElemLL(newLL, temp[i]);
+        addIntLL(newLL, temp[i]);
     }
 
     free(tempForBS);
@@ -636,11 +636,11 @@ static void copyLLToArray(IntLinkedList list, int* arr) {
 }
 
 static IntLinkedList copyIntLL(IntLinkedList list) {
-    IntLinkedList temp = pr_initLLi_(temp);
+    IntLinkedList temp = pr_initLLi_(temp, NULL);
     IntNode current = list->pf->begin;
 
     while (current != NULL) {
-        addIntElemLL(temp, current->data);
+        addIntLL(temp, current->data);
         current = current->next;
     }
     return temp;

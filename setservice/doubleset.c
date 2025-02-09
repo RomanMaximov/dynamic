@@ -53,7 +53,7 @@ static  void toStringInOrder(DoubleSetNode node, int* counter, char* text, int* 
 
 
 
-void addDoubleElemSet(DoubleSet set, double num) {
+void addDoubleSet(DoubleSet set, double num) {
     if (isCapacityFull(set))
         increaseCapacity(set);
 
@@ -61,7 +61,7 @@ void addDoubleElemSet(DoubleSet set, double num) {
     insertNode(&set->pf->bucket[indexBucket], num, &set->pf->count);
 }
 
-void addAllDoubleElemSet(DoubleSet set1, DoubleSet set2) {
+void addAllDoubleSet(DoubleSet set1, DoubleSet set2) {
     if (set2 == NULL) return;
 
     if (isCapacityFull(set1))

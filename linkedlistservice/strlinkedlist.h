@@ -16,11 +16,11 @@ typedef struct String String;
 typedef String* string;
 
 
-void addStrElemLL(StrLinkedList, string);
+void addStrLL(StrLinkedList, string);
 void addArrCharLL(StrLinkedList, char* arr);
-void addAllStrElemLL(StrLinkedList, StrLinkedList);
-string getStrElemLL(StrLinkedList, int);
-bool setStrElemLL(StrLinkedList, int, string);
+void addAllStrLL(StrLinkedList, StrLinkedList);
+string getStrLL(StrLinkedList, int);
+bool setStrLL(StrLinkedList, int, string);
 int indexOfStrLL(StrLinkedList, string);
 void sortStrLL(StrLinkedList);
 void sortStrLLReverse(StrLinkedList);

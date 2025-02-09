@@ -61,6 +61,7 @@ typedef struct SetDouble {
 
 typedef struct SetStr {
     struct InnerStrSet* pf;   // private field
+    void* values;
     // funcs pointers
     void (*add)(struct SetStr* set, string s);
     void (*addAll)(struct SetStr* set1, struct SetStr* set2);
@@ -87,11 +88,15 @@ typedef Itr* Iterator;
 
 // func prototypes
 IntSet pr_initSi_(IntSet, void*);
-DoubleSet pr_initSd_(DoubleSet);
-StrSet pr_initSs_(StrSet);
+DoubleSet pr_initSd_(DoubleSet, void*);
+StrSet pr_initSs_(StrSet, void*);
 
-IntSet setOfInt(IntSet, int, ...);
-DoubleSet setOfDouble(DoubleSet, int, ...);
-StrSet setOfStr(StrSet, int, ...);
+IntSet pr_initSi_so_(IntSet, int, ...);
+DoubleSet pr_initSd_so_(DoubleSet, int, ...);
+StrSet pr_initSs_so_(StrSet, int, ...);
+
+IntSet pr_initSi_soa_(IntSet, int*, int);
+DoubleSet pr_initSd_soa_(DoubleSet, double*, int);
+StrSet pr_initSs_soa_(StrSet, char* [], int);
 
 #endif

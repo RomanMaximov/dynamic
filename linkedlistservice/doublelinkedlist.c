@@ -44,7 +44,7 @@ static int compareDouble(const void* elem1, const void* elem2);
 static int compareDoubleReverse(const void* elem1, const void* elem2);
 
 // funcs
-void addDoubleElemLL(DoubleLinkedList list, double num) {
+void addDoubleLL(DoubleLinkedList list, double num) {
     DoubleNode newNodeEnd = NULL;
     DoubleNode newNode = NULL;
     DoubleNode current = list->pf->end;
@@ -75,7 +75,7 @@ void addDoubleElemLL(DoubleLinkedList list, double num) {
     list->pf->count++;
 }
 
-bool setDoubleElemLL(DoubleLinkedList list, int index, double num) {
+bool setDoubleLL(DoubleLinkedList list, int index, double num) {
     if (list == NULL)
         return false;
 
@@ -97,12 +97,12 @@ bool setDoubleElemLL(DoubleLinkedList list, int index, double num) {
     return false;
 }
 
-void addAllDoubleElemLL(DoubleLinkedList list1, DoubleLinkedList list2) {
+void addAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
     if (list1 == NULL || list2 == NULL) return;
 
     DoubleNode current = list2->pf->nodes;
     while (current != NULL) {
-        addDoubleElemLL(list1, current->data);
+        addDoubleLL(list1, current->data);
         current = current->next;
     }
 }
@@ -305,7 +305,7 @@ bool removeAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
         if (binarySearch(temp[i], filtered, j))
             continue;
 
-        addDoubleElemLL(list1, temp[i]);
+        addDoubleLL(list1, temp[i]);
     }
 
     free(tempForBS);
@@ -335,7 +335,7 @@ void reverseDoubleLL(DoubleLinkedList list) {
 DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
     if (isEmptyDoubleLL(list1)) {
         DoubleLinkedList temp = NULL;
-        return newDoubleLinkedList(temp);
+        return pr_initLLd_(temp, NULL);
     }
 
     if (isEmptyDoubleLL(list2)) {
@@ -363,14 +363,14 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2
         current2 = current2->next;
     }
 
-    DoubleLinkedList newLL = newDoubleLinkedList(newLL);
+    DoubleLinkedList newLL = pr_initLLd_(newLL, NULL);
 
     qsort(filtered, j, sizeof(double), compareDouble);
     for (int i = 0; i < listSize; ++i) {
         if (binarySearch(temp[i], filtered, j))
             continue;
 
-        addDoubleElemLL(newLL, temp[i]);
+        addDoubleLL(newLL, temp[i]);
     }
 
     free(tempForBS);
@@ -581,11 +581,11 @@ static void copyLLToArray(DoubleLinkedList list, double* arr) {
 }
 
 static DoubleLinkedList copyDoubleLL(DoubleLinkedList list) {
-    DoubleLinkedList temp = newDoubleLinkedList(temp);
+    DoubleLinkedList temp = pr_initLLd_(temp, NULL);
     DoubleNode current = list->pf->begin;
 
     while (current != NULL) {
-        addDoubleElemLL(temp, current->data);
+        addDoubleLL(temp, current->data);
         current = current->next;
     }
     return temp;

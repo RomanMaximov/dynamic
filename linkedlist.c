@@ -101,7 +101,7 @@ static void* iterator(Type type);
 
 
 // funcs
-IntLinkedList pr_initLLi_(IntLinkedList temp) {
+IntLinkedList pr_initLLi_(IntLinkedList temp, void* collection) {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
     list->pf = malloc(sizeof(InnerIntLL));
     list->pf->count = 0;
@@ -117,10 +117,13 @@ IntLinkedList pr_initLLi_(IntLinkedList temp) {
 
     list->values = (void*) ctx;
 
+    if (collection == NULL) return list;
+    addAllIntLL(list, collection);
+
     return list;
 }
 
-IntLinkedList linkedListOfInt(IntLinkedList temp, int paramCount, ...) {
+IntLinkedList pr_initLLi_lo_(IntLinkedList temp, int paramCount, ...) {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
     list->pf = malloc(sizeof(InnerIntLL));
     list->pf->count = 0;
@@ -130,16 +133,45 @@ IntLinkedList linkedListOfInt(IntLinkedList temp, int paramCount, ...) {
     list->pf->end = NULL;
     initFuncs(INT_LL, (void*)list);
 
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = INT_LL;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
+
     va_list param;
     va_start(param, paramCount);
     for (int i = 0; i < paramCount; ++i) {
-        addIntElemLL(list, va_arg(param, int));
+        addIntLL(list, va_arg(param, int));
     }
     va_end(param);
     return list;
 }
 
-DoubleLinkedList newDoubleLinkedList(DoubleLinkedList temp) {
+IntLinkedList pr_initLLi_loa_(IntLinkedList temp, int* arr, int size) {
+    IntLinkedList list = malloc(sizeof(LinkedListInt));
+    list->pf = malloc(sizeof(InnerIntLL));
+    list->pf->count = 0;
+    list->pf->index = 0;
+    list->pf->nodes = NULL;
+    list->pf->begin = NULL;
+    list->pf->end = NULL;
+    initFuncs(INT_LL, (void*)list);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = INT_LL;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
+
+    for (int i = 0; i < size; ++i) {
+        addIntLL(list, arr[i]);
+    }
+
+    return list;
+}
+
+DoubleLinkedList pr_initLLd_(DoubleLinkedList temp, void* collection) {
     DoubleLinkedList list = malloc(sizeof(LinkedListDouble));
     list->pf = malloc(sizeof(InnerDoubleLL));
     list->pf->count = 0;
@@ -149,10 +181,19 @@ DoubleLinkedList newDoubleLinkedList(DoubleLinkedList temp) {
     list->pf->end = NULL;
     initFuncs(DOUBLE_LL, (void*)list);
 
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = DOUBLE_LL;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
+
+    if (collection == NULL) return list;
+    addAllDoubleLL(list, collection);
+
     return list;
 }
 
-DoubleLinkedList linkedListOfDouble(DoubleLinkedList temp, int paramCount, ...) {
+DoubleLinkedList pr_initLLd_lo_(DoubleLinkedList temp, int paramCount, ...) {
     DoubleLinkedList list = malloc(sizeof(LinkedListDouble));
     list->pf = malloc(sizeof(InnerDoubleLL));
     list->pf->count = 0;
@@ -162,12 +203,41 @@ DoubleLinkedList linkedListOfDouble(DoubleLinkedList temp, int paramCount, ...) 
     list->pf->end = NULL;
     initFuncs(DOUBLE_LL, (void*)list);
 
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = DOUBLE_LL;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
+
     va_list param;
     va_start(param, paramCount);
     for (int i = 0; i < paramCount; ++i) {
-        addDoubleElemLL(list, va_arg(param, int));
+        addDoubleLL(list, va_arg(param, int));
     }
     va_end(param);
+    return list;
+}
+
+DoubleLinkedList pr_initLLd_loa_(DoubleLinkedList temp, double* arr, int size) {
+    DoubleLinkedList list = malloc(sizeof(LinkedListDouble));
+    list->pf = malloc(sizeof(InnerDoubleLL));
+    list->pf->count = 0;
+    list->pf->index = 0;
+    list->pf->nodes = NULL;
+    list->pf->begin = NULL;
+    list->pf->end = NULL;
+    initFuncs(DOUBLE_LL, (void*)list);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = DOUBLE_LL;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
+
+    for (int i = 0; i < size; ++i) {
+        addDoubleLL(list, arr[i]);
+    }
+
     return list;
 }
 
@@ -207,11 +277,11 @@ StrLinkedList linkedListOfStr(StrLinkedList temp, int paramCount, ...) {
 static void* add(Type type) {
     switch (type) {
         case INT_LL:
-            return addIntElemLL;
+            return addIntLL;
         case DOUBLE_LL:
-            return addDoubleElemLL;
+            return addDoubleLL;
         case STR_LL:
-            return addStrElemLL;
+            return addStrLL;
         default:
             return NULL;
     }
@@ -220,11 +290,11 @@ static void* add(Type type) {
 static void* addAll(Type type) {
     switch (type) {
         case INT_LL:
-            return addAllIntElemLL;
+            return addAllIntLL;
         case DOUBLE_LL:
-            return addAllDoubleElemLL;
+            return addAllDoubleLL;
         case STR_LL:
-            return addAllStrElemLL;
+            return addAllStrLL;
         default:
             return NULL;
     }
@@ -233,11 +303,11 @@ static void* addAll(Type type) {
 static void* get(Type type) {
     switch (type) {
         case INT_LL:
-            return getIntElemLL;
+            return getIntLL;
         case DOUBLE_LL:
-            return getDoubleElemLL;
+            return getDoubleLL;
         case STR_LL:
-            return getStrElemLL;
+            return getStrLL;
         default:
             return NULL;
     }
@@ -246,11 +316,11 @@ static void* get(Type type) {
 static void* set(Type type) {
     switch (type) {
         case INT_LL:
-            return setIntElemLL;
+            return setIntLL;
         case DOUBLE_LL:
-            return setDoubleElemLL;
+            return setDoubleLL;
         case STR_LL:
-            return setStrElemLL;
+            return setStrLL;
         default:
             return NULL;
     }

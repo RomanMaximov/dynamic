@@ -12,12 +12,6 @@
 
 
 // structures
-/*typedef struct String {
-    int count;
-    char* data;
-    int capacity;
-} String;*/
-
 typedef struct Collection {
     void* data;
     Type type;
@@ -114,7 +108,58 @@ IntSet pr_initSi_(IntSet temp, void* collection) {
     return set;
 }
 
-DoubleSet newDoubleSet(DoubleSet temp) {
+IntSet pr_initSi_so_(IntSet temp, int paramCount, ...) {
+    IntSet set = malloc(sizeof(SetInt));
+    set->pf = malloc(sizeof(InnerIntSet));
+    set->pf->count = 0;
+    set->pf->capacity = 64;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
+
+    initFuncs(INT_SET, (void*)set);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = INT_SET;
+    ctx->collection = (void*) set;
+
+    set->values = (void*) ctx;
+
+    va_list param;
+    va_start(param, paramCount);
+    for (int i = 0; i < paramCount; ++i) {
+        addIntSet(set, va_arg(param, int));
+    }
+    va_end(param);
+
+    return set;
+}
+
+IntSet pr_initSi_soa_(IntSet temp, int* arr, int size) {
+    IntSet set = malloc(sizeof(SetInt));
+    set->pf = malloc(sizeof(InnerIntSet));
+    set->pf->count = 0;
+    set->pf->capacity = 64;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
+
+    initFuncs(INT_SET, (void*)set);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = INT_SET;
+    ctx->collection = (void*) set;
+
+    set->values = (void*) ctx;
+
+    for (int i = 0; i < size; ++i) {
+        addIntSet(set, arr[i]);
+    }
+
+    return set;
+}
+
+DoubleSet pr_initSd_(DoubleSet temp, void* collection) {
     DoubleSet set = malloc(sizeof(SetDouble));
     set->pf = malloc(sizeof(InnerDoubleSet));
     set->pf->count = 0;
@@ -125,10 +170,70 @@ DoubleSet newDoubleSet(DoubleSet temp) {
 
     initFuncs(DOUBLE_SET, (void*)set);
 
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = DOUBLE_SET;
+    ctx->collection = (void*) set;
+
+    set->values = (void*) ctx;
+
+    if (collection == NULL) return set;
+    addAllDoubleSet(set, collection);
+
     return set;
 }
 
-StrSet newStrSet(StrSet temp) {
+DoubleSet pr_initSd_so_(DoubleSet temp, int paramCount, ...) {
+    DoubleSet set = malloc(sizeof(SetDouble));
+    set->pf = malloc(sizeof(InnerDoubleSet));
+    set->pf->count = 0;
+    set->pf->capacity = 64;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
+
+    initFuncs(DOUBLE_SET, (void*)set);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = DOUBLE_SET;
+    ctx->collection = (void*) set;
+
+    set->values = (void*) ctx;
+
+    va_list param;
+    va_start(param, paramCount);
+    for (int i = 0; i < paramCount; ++i) {
+        addDoubleSet(set, va_arg(param, double ));
+    }
+    va_end(param);
+
+    return set;
+}
+
+DoubleSet pr_initSd_soa_(DoubleSet temp, double* arr, int size) {
+    DoubleSet set = malloc(sizeof(SetDouble));
+    set->pf = malloc(sizeof(InnerDoubleSet));
+    set->pf->count = 0;
+    set->pf->capacity = 64;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
+
+    initFuncs(DOUBLE_SET, (void*)set);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = DOUBLE_SET;
+    ctx->collection = (void*) set;
+
+    set->values = (void*) ctx;
+
+    for (int i = 0; i < size; ++i) {
+        addDoubleSet(set, arr[i]);
+    }
+
+    return set;
+}
+
+StrSet pr_initSs_(StrSet temp, void* collection) {
     StrSet set = malloc(sizeof(SetStr));
     set->pf = malloc(sizeof(InnerStrSet));
     set->pf->count = 0;
@@ -138,6 +243,66 @@ StrSet newStrSet(StrSet temp) {
         set->pf->bucket[i] = NULL;
 
     initFuncs(STR_SET, (void*)set);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = STR_SET;
+    ctx->collection = (void*) set;
+
+    set->values = (void*) ctx;
+
+    if (collection == NULL) return set;
+    addAllStrSet(set, collection);
+
+    return set;
+}
+
+StrSet pr_initSs_so_(StrSet temp, int paramCount, ...) {
+    StrSet set = malloc(sizeof(SetStr));
+    set->pf = malloc(sizeof(InnerStrSet));
+    set->pf->count = 0;
+    set->pf->capacity = 64;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetStr*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
+
+    initFuncs(STR_SET, (void*)set);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = STR_SET;
+    ctx->collection = (void*) set;
+
+    set->values = (void*) ctx;
+
+    va_list param;
+    va_start(param, paramCount);
+    for (int i = 0; i < paramCount; ++i) {
+        addCharArrSet(set, va_arg(param, char*));
+    }
+    va_end(param);
+
+    return set;
+}
+
+StrSet pr_initSs_soa_(StrSet temp, char* arr[], int size) {
+    StrSet set = malloc(sizeof(SetStr));
+    set->pf = malloc(sizeof(InnerStrSet));
+    set->pf->count = 0;
+    set->pf->capacity = 64;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetStr*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
+
+    initFuncs(STR_SET, (void*)set);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = STR_SET;
+    ctx->collection = (void*) set;
+
+    set->values = (void*) ctx;
+
+    for (int i = 0; i < size; ++i) {
+        addCharArrSet(set, arr[i]);
+    }
 
     return set;
 }
@@ -149,9 +314,9 @@ static void* add(Type type) {
         case INT_SET:
             return addIntSet;
         case DOUBLE_SET:
-            return addDoubleElemSet;
+            return addDoubleSet;
         case STR_SET:
-            return addStrElemSet;
+            return addStrSet;
         default:
             return NULL;
     }
@@ -162,9 +327,9 @@ static void* addAll(Type type) {
         case INT_SET:
             return addAllIntSet;
         case DOUBLE_SET:
-            return addAllDoubleElemSet;
+            return addAllDoubleSet;
         case STR_SET:
-            return addAllStrElemSet;
+            return addAllStrSet;
         default:
             return NULL;
     }

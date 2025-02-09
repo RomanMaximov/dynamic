@@ -35,36 +35,35 @@
 #include "set.h"
 
 
-typedef struct LinkedListInt LinkedListInt;
-
-
-typedef struct ArrayListInt ArrayListInt;
-typedef struct ArrayListDouble ArrayListDouble;
-typedef struct ArrayListStr ArrayListStr;
-
-typedef struct String String;
-
-
 /**
  *  через дженерики создаем коллекции
  */
 
-#define newList(T, V) _Generic((T),        \
+#define newList(T, V) _Generic((T),          \
     IntList : pr_initLi_,                    \
     DoubleList : pr_initLd_,                 \
-    StrList : pr_initLs_                    \
+    StrList : pr_initLs_,                    \
+    IntLinkedList : pr_initLLi_,             \
+    DoubleLinkedList : pr_initLLd_,          \
+    StrLinkedList : pr_initLLs_              \
 )(T, V)
 
 #define listOf(T, V, ...) _Generic((T),       \
     IntList : pr_initLi_lo_,                  \
     DoubleList : pr_initLd_lo_,               \
-    StrList : pr_initLs_lo_                  \
+    StrList : pr_initLs_lo_,                   \
+    IntLinkedList : pr_initLLi_lo_,             \
+    DoubleLinkedList : pr_initLLd_lo_,          \
+    StrLinkedList : pr_initLLs_lo_              \
 )(T, V, __VA_ARGS__)
 
-#define listOfArr(T, V, S) _Generic((T),      \
-    DoubleList : pr_initLd_loa_,              \
-    IntList : pr_initLi_loa_,                 \
-    StrList : pr_initLs_loa_                  \
+#define listOfArr(T, V, S) _Generic((T),        \
+    DoubleList : pr_initLd_loa_,                \
+    IntList : pr_initLi_loa_,                   \
+    StrList : pr_initLs_loa_,                    \
+    IntLinkedList : pr_initLLi_loa_,             \
+    DoubleLinkedList : pr_initLLd_loa_,          \
+    StrLinkedList : pr_initLLs_loa_              \
 )(T, V, S)
 
 #define newSet(T, V) _Generic((T),             \
@@ -72,6 +71,18 @@ typedef struct String String;
     DoubleSet : pr_initSd_,                 \
     StrSet : pr_initSs_                     \
 )(T, V)
+
+#define setOf(T, V, ...) _Generic((T),       \
+    IntSet : pr_initSi_so_,                  \
+    DoubleSet : pr_initSd_so_,               \
+    StrSet : pr_initSs_so_                  \
+)(T, V, __VA_ARGS__)
+
+#define setOfArr(T, V, S) _Generic((T),      \
+    DoubleSet : pr_initSd_soa_,              \
+    IntSet : pr_initSi_soa_,                 \
+    StrSet : pr_initSs_soa_                  \
+)(T, V, S)
 
 
 #endif

@@ -128,6 +128,7 @@ IntList pr_initLi_loa_(IntList temp, int* arr, int size) {
     for (int i = 0; i < size; ++i) {
         addIntList(list, arr[i]);
     }
+
     return list;
 }
 

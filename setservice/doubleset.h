@@ -15,8 +15,8 @@ typedef SetDouble* DoubleSet;
 typedef Itr* Iterator;
 
 
-void addDoubleElemSet(DoubleSet, double);
-void addAllDoubleElemSet(DoubleSet, DoubleSet);
+void addDoubleSet(DoubleSet, double);
+void addAllDoubleSet(DoubleSet, DoubleSet);
 void clearDoubleSet(DoubleSet);
 bool containsDoubleSet(DoubleSet, double);
 bool containsAllDoubleSet(DoubleSet, DoubleSet);

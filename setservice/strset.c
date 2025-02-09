@@ -64,7 +64,7 @@ static void checkCapacity(char* text, int* count, int strLength);
 static bool hasNext(Iterator iter);
 
 
-void addStrElemSet(StrSet set, string s) {
+void addStrSet(StrSet set, string s) {
     if (s == NULL || s->pf->data == NULL) return;
 
     if (isCapacityFull(set))
@@ -74,7 +74,7 @@ void addStrElemSet(StrSet set, string s) {
     insertNode(&set->pf->bucket[indexBucket], s->pf->data, &set->pf->count);
 }
 
-void addCharElemSet(StrSet set, char* s) {
+void addCharArrSet(StrSet set, char* s) {
     if (isCapacityFull(set))
         increaseCapacity(set);
 
@@ -82,7 +82,7 @@ void addCharElemSet(StrSet set, char* s) {
     insertNode(&set->pf->bucket[indexBucket], s, &set->pf->count);
 }
 
-void addAllStrElemSet(StrSet set1, StrSet set2) {
+void addAllStrSet(StrSet set1, StrSet set2) {
     if (set2 == NULL) return;
 
     if (isCapacityFull(set1))
