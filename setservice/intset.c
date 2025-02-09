@@ -38,7 +38,6 @@ static void copyValuesToArr(IntSetNode node, int* arr, int* index);
 static void setToArr(IntSet set, int* arr);
 static void deleteNodes(NodeSetInt** buckets, int capacity);
 static void deleteInOrder(IntSetNode node);
-static bool isContains(IntSetNode node, int num);
 static int compareqsort(const void* elem1, const void* elem2);
 static bool binarySearch(int elem, const int* arr, int high);
 static void toArrAndSort(IntSet set, int* arr);
@@ -101,12 +100,7 @@ void clearIntSet(IntSet set) {
 }
 
 bool containsIntSet(IntSet set, int num) {
-    for (int i = 0; i < set->pf->capacity; ++i) {
-        if(isContains(set->pf->bucket[i], num))
-            return true;
-    }
-
-    return false;
+    return containsKeyInt(set, num);
 }
 
 bool containsAllIntSet(IntSet set1, IntSet set2) {
@@ -501,16 +495,6 @@ static void deleteInOrder(IntSetNode node) {
     deleteInOrder(node->right);
 
     free(node);
-}
-
-static bool isContains(IntSetNode node, int num) {
-    if (node != NULL) {
-        isContains(node->left, num);
-        if (compareInt(node->data, num) == 0)
-            return true;
-        isContains(node->right, num);
-    }
-    return false;
 }
 
 static void toArrAndSort(IntSet set, int* arr) {

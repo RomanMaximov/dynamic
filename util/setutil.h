@@ -10,14 +10,13 @@
 #include "../linkedlist.h"
 #include "../arraylist.h"
 
-// structures for LL
+
 typedef struct NodeInt {
     int data;
     struct NodeInt* next;
     struct NodeInt* prev;
 } NodeInt;
 
-// structures for LL
 typedef struct InnerIntLL {
     int count;
     int index;

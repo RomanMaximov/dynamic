@@ -40,6 +40,7 @@ typedef struct SetInt {
 
 typedef struct SetDouble {
     struct InnerDoubleSet* pf;   // private field
+    void* values;
     // funcs pointers
     void (*add)(struct SetDouble* set, double number);
     void (*addAll)(struct SetDouble* set1, struct SetDouble* set2);

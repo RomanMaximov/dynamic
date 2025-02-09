@@ -294,65 +294,38 @@ bool removeAllIntList(IntList list1, void* source) {
     if (list1 == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
+    IntList tempList;
 
-    int* temp = malloc(list1->pf->count * sizeof(int));
-    int* indexList = malloc(list1->pf->count * sizeof(int));
-    memcpy(&temp[0], list1->pf->data, list1->pf->count * sizeof(int));
-
-    int j = 0;
     if (ctx->type == INT_LIST) {
         IntList list2 = (IntList) ctx->collection;
-
-        for (int i = 0; i < list2->pf->count; ++i) {
-            int index = indexOfIntList(list1, list2->pf->data[i]);
-            if (index != -1)
-                indexList[j++] = index;
-        }
+        tempList = subtractIntList(list1, list2);
     }
 
     if (ctx->type == INT_LL) {
         IntLinkedList list2 = (IntLinkedList) ctx->collection;
+        IntList copyValues = pr_initLi_(copyValues, NULL);
 
         IntNode current = list2->pf->begin;
+        int index = 0;
         while (current != NULL) {
-            int index = indexOfIntList(list1, current->data);
-            if (index != -1)
-                indexList[j++] = index;
+            copyValues->pf->data[index++] = current->data;
             current = current->next;
         }
+        tempList = subtractIntList(list1, copyValues);
+        copyValues->delete(&copyValues);
     }
 
     if (ctx->type == INT_SET) {
         IntSet set = (IntSet) ctx->collection;
-        int arr[set->pf->count];
-        setToArrInt(set, arr);
+        IntList copyValues = pr_initLi_(copyValues, NULL);
+        setToArrInt(set, copyValues->pf->data);
 
-        for (int i = 0; i < set->pf->count; ++i) {
-            int index = indexOfIntList(list1, arr[i]);
-            if (index != -1)
-                indexList[j++] = index;
-        }
+        tempList = subtractIntList(list1, copyValues);
+        copyValues->delete(&copyValues);
     }
 
-    qsort(indexList, j - 1, sizeof(int), compareInt);
-    free(list1->pf->data);
-    list1->pf->data = malloc(list1->pf->capacity * sizeof(int));
-
-    int index = 0;
-    for (int i = 0; i < list1->pf->count; ++i) {
-        if (binarySearch(i, indexList, j))
-            continue;
-
-        list1->pf->data[index] = temp[i];
-        ++index;
-    }
-
-    list1->pf->count -= j;
-    if (list1->pf->count == 0)
-        list1->pf->data = NULL;
-
-    free(indexList);
-    free(temp);
+    list1->delete(&list1);
+    list1 = tempList;
 
     return true;
 }
@@ -369,27 +342,16 @@ IntList subtractIntList(IntList list1, IntList list2) {
         return temp;
     }
 
-    IntList copyValues = pr_initLi_(copyValues, NULL);
-    copyList(copyValues, list1);
-
-    for (int i = 0; i < list2->pf->count; ++i) {
-        int index = indexOfIntList(copyValues, list2->pf->data[i]);
-        if (index != -1)
-            copyValues->pf->data[index] = INT_MIN;
-    }
-
+    IntSet set = pr_initSi_(set, list2);
     IntList temp = pr_initLi_(temp, NULL);
-    int index = 0;
-    for (int i = 0; i < copyValues->pf->count; ++i) {
-        if (copyValues->pf->data[i] != INT_MIN) {
-            if (temp->pf->count == temp->pf->capacity) {
-                temp->pf->data = increaseCapacity(temp);
-            }
-            temp->pf->data[index++] = copyValues->pf->data[i];
-        }
+
+    for (int i = 0; i < list1->pf->count; ++i) {
+        if (!set->contains(set, list1->pf->data[i]))
+            temp->add(temp, list1->pf->data[i]);
     }
 
-    deleteIntList(&copyValues);
+    set->delete(&set);
+
     return temp;
 }
 
@@ -464,7 +426,7 @@ string toStrIntList(IntList list) {
 }
 
 void printIntList(IntList list) {
-    if (list == NULL || list->pf->data == NULL) {
+    if (list == NULL || list->pf->count == 0) {
         puts("[]");
         return;
     }
