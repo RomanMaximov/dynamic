@@ -107,7 +107,7 @@ void addAllDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
     }
 }
 
-double getDoubleElemLL(DoubleLinkedList list, int index) {
+double getDoubleLL(DoubleLinkedList list, int index) {
     if (index >= list->pf->count) {
         printf("Index %d out of bounds for length %d\n", index, list->pf->count);
         return INT_MAX;

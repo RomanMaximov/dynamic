@@ -27,9 +27,7 @@ static double* increaseCapacity(DoubleList list);
 static int compareDouble(const void* elem1, const void* elem2);
 static int compareReverse(const void* elem1, const void* elem2);
 static bool binarySearch(double elem, const double* arr, int high);
-static void copyList(DoubleList dest, DoubleList from);
 static bool hasNext(Iterator iter);
-static bool binarySearchInt(int elem, const int* arr, int high);
 
 
 void addDoubleList(DoubleList list, double num) {
@@ -158,16 +156,14 @@ bool containsAllDoubleList(DoubleList list1, void* source) {
         if (list2->pf->count > list1->pf->count)
             return false;
 
-        DoubleList temp = pr_initLd_(temp, NULL);
-        copyList(temp, list1);
-        sortDoubleList(temp);
+        DoubleSet set = pr_initSd_(set, list1->values);
         for (int i = 0; i < list2->pf->count; ++i) {
-            if (!binarySearch(list2->pf->data[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+            if (!containsKeyDouble(set, list2->pf->data[i])) {
+                set->delete(&set);
                 return false;
             }
         }
-        temp->delete(&temp);
+        set->delete(&set);
     }
 
     if (ctx->type == DOUBLE_LL) {
@@ -175,39 +171,34 @@ bool containsAllDoubleList(DoubleList list1, void* source) {
         if (list2->pf->count > list1->pf->count)
             return false;
 
-        DoubleList temp = pr_initLd_(temp, NULL);
-        copyList(temp, list1);
-        sortDoubleList(temp);
-
+        DoubleSet set = pr_initSd_(set, list1->values);
         DoubleNode current = list2->pf->begin;
         while (current != NULL) {
-            if (!binarySearch(current->data, temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+            if (!containsKeyDouble(set, current->data)) {
+                set->delete(&set);
                 return false;
             }
             current = current->next;
         }
-        temp->delete(&temp);
+        set->delete(&set);
     }
 
     if (ctx->type == DOUBLE_SET) {
-        DoubleSet set = (DoubleSet) ctx->collection;
-        if (set->pf->count > list1->pf->count)
+        DoubleSet setFrom = (DoubleSet) ctx->collection;
+        if (setFrom->pf->count > list1->pf->count)
             return false;
 
-        DoubleList temp = pr_initLd_(temp, NULL);
-        copyList(temp, list1);
-        sortDoubleList(temp);
+        DoubleSet setTemp = pr_initSd_(setTemp, list1->values);
+        double arr[setFrom->pf->count];
+        setToArrDouble(setFrom, arr);
 
-        double arr[set->pf->count];
-        setToArrDouble(set, arr);
-        for (int i = 0; i < set->pf->count; ++i) {
-            if (!binarySearch(arr[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+        for (int i = 0; i < setFrom->pf->count; ++i) {
+            if (!containsKeyDouble(setTemp, arr[i])) {
+                setTemp->delete(&setTemp);
                 return false;
             }
         }
-        temp->delete(&temp);
+        setTemp->delete(&setTemp);
     }
 
     return true;
@@ -223,16 +214,14 @@ bool containsAnyDoubleList(DoubleList list1, void* source) {
         if (list2->pf->count > list1->pf->count)
             return false;
 
-        DoubleList temp = pr_initLd_(temp, NULL);
-        copyList(temp, list1);
-        sortDoubleList(temp);
+        DoubleSet set = pr_initSd_(set, list1->values);
         for (int i = 0; i < list2->pf->count; ++i) {
-            if (binarySearch(list2->pf->data[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+            if (containsKeyDouble(set, list2->pf->data[i])) {
+                set->delete(&set);
                 return true;
             }
         }
-        temp->delete(&temp);
+        set->delete(&set);
     }
 
     if (ctx->type == DOUBLE_LL) {
@@ -240,39 +229,34 @@ bool containsAnyDoubleList(DoubleList list1, void* source) {
         if (list2->pf->count > list1->pf->count)
             return false;
 
-        DoubleList temp = pr_initLd_(temp, NULL);
-        copyList(temp, list1);
-        sortDoubleList(temp);
-
+        DoubleSet set = pr_initSd_(set, list1->values);
         DoubleNode current = list2->pf->begin;
         while (current != NULL) {
-            if (binarySearch(current->data, temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+            if (containsKeyDouble(set, current->data)) {
+                set->delete(&set);
                 return true;
             }
             current = current->next;
         }
-        temp->delete(&temp);
+        set->delete(&set);
     }
 
     if (ctx->type == DOUBLE_SET) {
-        DoubleSet set = (DoubleSet) ctx->collection;
-        if (set->pf->count > list1->pf->count)
+        DoubleSet setFrom = (DoubleSet) ctx->collection;
+        if (setFrom->pf->count > list1->pf->count)
             return false;
 
-        DoubleList temp = pr_initLd_(temp, NULL);
-        copyList(temp, list1);
-        sortDoubleList(temp);
+        DoubleSet setTemp = pr_initSd_(setTemp, list1->values);
+        double arr[setFrom->pf->count];
+        setToArrDouble(setFrom, arr);
 
-        double arr[set->pf->count];
-        setToArrDouble(set, arr);
-        for (int i = 0; i < set->pf->count; ++i) {
-            if (binarySearch(arr[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+        for (int i = 0; i < setFrom->pf->count; ++i) {
+            if (containsKeyDouble(setTemp, arr[i])) {
+                setTemp->delete(&setTemp);
                 return true;
             }
         }
-        temp->delete(&temp);
+        setTemp->delete(&setTemp);
     }
 
     return false;
@@ -313,63 +297,37 @@ bool removeAllDoubleList(DoubleList list1, void* source) {
 
     Ctx ctx = (Ctx) source;
 
-    double* temp = malloc(list1->pf->count * sizeof(double));
-    int* indexList = malloc(list1->pf->count * sizeof(int));
-    memcpy(&temp[0], list1->pf->data, list1->pf->count * sizeof(double));
+    DoubleList tempList;
 
-    int j = 0;
     if (ctx->type == DOUBLE_LIST) {
         DoubleList list2 = (DoubleList) ctx->collection;
-
-        for (int i = 0; i < list2->pf->count; ++i) {
-            int index = indexOfDoubleList(list1, list2->pf->data[i]);
-            if (index != -1)
-                indexList[j++] = index;
-        }
+        tempList = subtractDoubleList(list1, list2);
     }
 
     if (ctx->type == DOUBLE_LL) {
         DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
+        DoubleList copyValues = pr_initLd_(copyValues, NULL);
 
         DoubleNode current = list2->pf->begin;
+        int index = 0;
         while (current != NULL) {
-            int index = indexOfDoubleList(list1, current->data);
-            if (index != -1)
-                indexList[j++] = index;
+            copyValues->pf->data[index++] = current->data;
             current = current->next;
         }
+        tempList = subtractDoubleList(list1, copyValues);
+        copyValues->delete(&copyValues);
     }
 
     if (ctx->type == DOUBLE_SET) {
         DoubleSet set = (DoubleSet) ctx->collection;
-        double arr[set->pf->count];
-        setToArrDouble(set, arr);
+        DoubleList copyValues = pr_initLd_(copyValues, set->values);
 
-        for (int i = 0; i < set->pf->count; ++i) {
-            int index = indexOfDoubleList(list1, arr[i]);
-            if (index != -1)
-                indexList[j++] = index;
-        }
+        tempList = subtractDoubleList(list1, copyValues);
+        copyValues->delete(&copyValues);
     }
 
-    qsort(indexList, j - 1, sizeof(int), compareDouble);
-    free(list1->pf->data);
-    list1->pf->data = malloc(list1->pf->capacity * sizeof(double));
-
-    int index = 0;
-    for (int i = 0; i < list1->pf->count; ++i) {
-        if (binarySearchInt(i, indexList, j)) // 1
-            continue;
-
-        list1->pf->data[index] = temp[i];
-        ++index;
-    }
-
-    list1->pf->count -= j;
-    if (list1->pf->count == 0) list1->pf->data = NULL;
-
-    free(indexList);
-    free(temp);
+    list1->delete(&list1);
+    list1 = tempList;
 
     return true;
 }
@@ -381,30 +339,20 @@ DoubleList subtractDoubleList(DoubleList list1, DoubleList list2) {
     }
 
     if (isEmptyDoubleList(list2)) {
-        DoubleList temp = pr_initLd_(temp, NULL);
-        copyList(temp, list1);
+        DoubleList temp = pr_initLd_(temp, list1->values);
         return temp;
     }
 
-    DoubleList copyValues = pr_initLd_(copyValues, NULL);
-    copyList(copyValues, list1);
-    for (int i = 0; i < list2->pf->count; ++i) {
-        int index = indexOfDoubleList(copyValues, list2->pf->data[i]);
-        if (index != -1)
-            copyValues->pf->data[index] = INT_MIN;
+    DoubleSet set = pr_initSd_(set, list2->values);
+    DoubleList temp = pr_initLd_(temp, NULL);
+
+    for (int i = 0; i < list1->pf->count; ++i) {
+        if (!set->contains(set, list1->pf->data[i]))
+            temp->add(temp, list1->pf->data[i]);
     }
 
-    DoubleList temp = pr_initLd_(temp, NULL);
-    int index = 0;
-    for (int i = 0; i < copyValues->pf->count; ++i) {
-        if (copyValues->pf->data[i] != INT_MIN) {
-            if (temp->pf->count == temp->pf->capacity) {
-                temp->pf->data = increaseCapacity(temp);
-            }
-            temp->pf->data[index++] = copyValues->pf->data[i];
-        }
-    }
-    deleteDoubleList(&copyValues);
+    set->delete(&set);
+
     return temp;
 }
 
@@ -533,32 +481,6 @@ static double* increaseCapacity(DoubleList list) {
     assert(list->pf->data != NULL);
 
     return list->pf->data;
-}
-
-static void copyList(DoubleList dest, DoubleList from) {
-    for (int i = 0; i < from->pf->count; ++i) {
-        if (dest->pf->count == dest->pf->capacity) {
-            dest->pf->data = increaseCapacity(dest);
-        }
-        dest->pf->data[i] = from->pf->data[i];
-        dest->pf->count++;
-    }
-}
-
-static bool binarySearchInt(int elem, const int* arr, int high) {
-    int low, middle;
-    --high;
-    low = 0;
-    while (low <= high) {
-        middle = (low + high) / 2;
-        if (elem < arr[middle])
-            high = middle - 1;
-        else if (elem > arr[middle])
-            low = middle + 1;
-        else
-            return true;
-    }
-    return false;
 }
 
 static bool binarySearch(double elem, const double* arr, int high) {

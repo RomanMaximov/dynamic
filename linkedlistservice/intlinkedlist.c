@@ -108,29 +108,7 @@ void addIntLL(IntLinkedList list, int num) {
     list->pf->count++;
 }
 
-bool setIntLL(IntLinkedList list, int index, int num) {
-    if (list == NULL)
-        return false;
-
-    if (index >= list->pf->count) {
-        printf("Index %d out of bounds for length %d\n", index, list->pf->count);
-        return false;
-    }
-
-    int tempIndex = 0;
-    IntNode current = list->pf->begin;
-    while (current != NULL) {
-        if (index == tempIndex) {
-            current->data = num;
-            return true;
-        }
-        ++tempIndex;
-        current = current->next;
-    }
-    return false;
-}
-
-void addAllIntLL(IntLinkedList list1, IntLinkedList list2) {
+void addAllIntLL(IntLinkedList list1, void* source) {
     if (list1 == NULL || list2 == NULL) return;
 
     IntNode current = list2->pf->nodes;
@@ -156,6 +134,28 @@ int getIntLL(IntLinkedList list, int index) {
         current = current->next;
     }
     return INT_MAX;
+}
+
+bool setIntLL(IntLinkedList list, int index, int num) {
+    if (list == NULL)
+        return false;
+
+    if (index >= list->pf->count) {
+        printf("Index %d out of bounds for length %d\n", index, list->pf->count);
+        return false;
+    }
+
+    int tempIndex = 0;
+    IntNode current = list->pf->begin;
+    while (current != NULL) {
+        if (index == tempIndex) {
+            current->data = num;
+            return true;
+        }
+        ++tempIndex;
+        current = current->next;
+    }
+    return false;
 }
 
 void sortIntLL(IntLinkedList list) {

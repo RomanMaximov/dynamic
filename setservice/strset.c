@@ -89,8 +89,7 @@ void addAllStrSet(StrSet set1, StrSet set2) {
         increaseCapacity(set1);
 
     int count = set2->pf->count;
-    StrList list = pr_initLs_(list, NULL);
-    setToArr(set2, list);
+    StrList list = pr_initLs_(list, set2->values);
 
     for (int i = 0; i < count; ++i) {
         int indexBucket = (hashString(list->pf->str[i]->pf->data) & 0x7FFFFFFF) % set1->pf->capacity;

@@ -13,11 +13,7 @@
 #include "../util/arraylistutil.h"
 
 
-typedef struct InnerStr {
-    int count;
-    char* data;
-    int capacity;
-} InnerStr;
+
 
 typedef struct InnerStrList {
     int count;
@@ -31,7 +27,6 @@ typedef String* string;
 // private funcs prototypes
 static String** increaseCapacity(StrList list);
 static int compareStr(string s1, string s2);
-static void copyList(StrList dest, StrList from);
 static void quickSort(String** strList, int low, int high);
 static void quickSortReverse(String** strList, int low, int high);
 static bool isFull(StrList list);
@@ -215,16 +210,14 @@ bool containsAllStrList(StrList list1, void* source) {
         if (list2->pf->count > list1->pf->count)
             return false;
 
-        StrList temp = pr_initLs_(temp, NULL);
-        copyList(temp, list1);
-        sortStrList(temp);
+        StrSet set = pr_initSs_(set, NULL);
         for (int i = 0; i < list2->pf->count; ++i) {
-            if (!binarySearchStr(list2->pf->data[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+            if (!containsKeyStr(set, list2->pf->data[i])) {
+                set->delete(&set);
                 return false;
             }
         }
-        temp->delete(&temp);
+        set->delete(&set);
     }
 
     if (ctx->type == STR_LL) {
@@ -232,42 +225,35 @@ bool containsAllStrList(StrList list1, void* source) {
         if (list2->pf->count > list1->pf->count)
             return false;
 
-        StrList temp = pr_initLs_(temp, NULL);
-        copyList(temp, list1);
-        sortStrList(temp);
-
+        StrSet set = pr_initSs_(set, list1->values);
         StrNode current = list2->pf->begin;
         while (current != NULL) {
-            if (!binarySearchStr(current->data, temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+            if (!containsKeyStr(set, current->data)) {
+                set->delete(&set);
                 return false;
             }
             current = current->next;
         }
-        temp->delete(&temp);
+        set->delete(&set);
     }
 
     if (ctx->type == STR_SET) {
-        StrSet set = (StrSet) ctx->collection;
-        if (set->pf->count > list1->pf->count)
+        StrSet setFrom = (StrSet) ctx->collection;
+        if (setFrom->pf->count > list1->pf->count)
             return false;
 
-        StrList temp = pr_initLs_(temp, NULL);
-        copyList(temp, list1);
-        sortStrList(temp);
+        StrList strList = pr_initLs_(strList, setFrom->values);
+        StrSet setTemp = pr_initSs_(setTemp, list1->values);
 
-        StrList sourceList = pr_initLs_(sourceList, NULL);
-        int arr[set->pf->count];
-        setToArrStr(set, sourceList);
-        for (int i = 0; i < set->pf->count; ++i) {
-            if (!binarySearchStr(sourceList->pf->data[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
-                sourceList->delete(&sourceList);
+        for (int i = 0; i < setFrom->pf->count; ++i) {
+            if (!containsKeyStr(setTemp, strList->pf->data[i])) {
+                setTemp->delete(&setTemp);
+                strList->delete(&strList);
                 return false;
             }
         }
-        temp->delete(&temp);
-        sourceList->delete(&sourceList);
+        setTemp->delete(&setTemp);
+        strList->delete(&strList);
     }
 
     return true;
@@ -283,16 +269,14 @@ bool containsAnyStrList(StrList list1, void* source) {
         if (list2->pf->count > list1->pf->count)
             return false;
 
-        StrList temp = pr_initLs_(temp, NULL);
-        copyList(temp, list1);
-        sortStrList(temp);
+        StrSet set = pr_initSs_(set, NULL);
         for (int i = 0; i < list2->pf->count; ++i) {
-            if (binarySearchStr(list2->pf->data[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+            if (containsKeyStr(set, list2->pf->data[i])) {
+                set->delete(&set);
                 return true;
             }
         }
-        temp->delete(&temp);
+        set->delete(&set);
     }
 
     if (ctx->type == STR_LL) {
@@ -300,41 +284,35 @@ bool containsAnyStrList(StrList list1, void* source) {
         if (list2->pf->count > list1->pf->count)
             return false;
 
-        StrList temp = pr_initLs_(temp, NULL);
-        copyList(temp, list1);
-        sortStrList(temp);
-
+        StrSet set = pr_initSs_(set, list1->values);
         StrNode current = list2->pf->begin;
         while (current != NULL) {
-            if (binarySearchStr(current->data, temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
+            if (containsKeyStr(set, current->data)) {
+                set->delete(&set);
                 return true;
             }
             current = current->next;
         }
-        temp->delete(&temp);
+        set->delete(&set);
     }
 
     if (ctx->type == STR_SET) {
-        StrSet set = (StrSet) ctx->collection;
-        if (set->pf->count > list1->pf->count)
+        StrSet setFrom = (StrSet) ctx->collection;
+        if (setFrom->pf->count > list1->pf->count)
             return false;
 
-        StrList temp = pr_initLs_(temp, NULL);
-        copyList(temp, list1);
-        sortStrList(temp);
+        StrList strList = pr_initLs_(strList, setFrom->values);
+        StrSet setTemp = pr_initSs_(setTemp, list1->values);
 
-        StrList sourceList = pr_initLs_(sourceList, NULL);
-        setToArrStr(set, sourceList);
-        for (int i = 0; i < set->pf->count; ++i) {
-            if (binarySearchStr(sourceList->pf->data[i], temp->pf->data, temp->pf->count)) {
-                temp->delete(&temp);
-                sourceList->delete(&sourceList);
+        for (int i = 0; i < setFrom->pf->count; ++i) {
+            if (containsKeyStr(setTemp, strList->pf->data[i])) {
+                setTemp->delete(&setTemp);
+                strList->delete(&strList);
                 return true;
             }
         }
-        temp->delete(&temp);
-        sourceList->delete(&sourceList);
+        setTemp->delete(&setTemp);
+        strList->delete(&strList);
     }
 
     return false;
@@ -378,65 +356,37 @@ bool removeAllStrList(StrList list1, void* source) {
     if (list1 == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
+    StrList tempList;
 
-    StrList temp = pr_initLs_(temp, NULL);
-    copyList(temp, list1);
-    int* indexList = malloc(list1->pf->count * sizeof(int));
-
-    int j = 0;
     if (ctx->type == STR_LIST) {
         StrList list2 = (StrList) ctx->collection;
-
-        for (int i = 0; i < list2->pf->count; ++i) {
-            int index = indexOfStrList(list1, list2->pf->data[i]);
-            if (index != -1)
-                indexList[j++] = index;
-        }
+        tempList = subtractStrList(list1, list2);
     }
 
     if (ctx->type == STR_LL) {
         StrLinkedList list2 = (StrLinkedList) ctx->collection;
+        StrList copyValues = pr_initLs_(copyValues, NULL);
 
         StrNode current = list2->pf->begin;
+        int index = 0;
         while (current != NULL) {
-            int index = indexOfStrList(list1, current->data);
-            if (index != -1)
-                indexList[j++] = index;
+            copyValues->pf->data[index++] = current->data;
             current = current->next;
         }
+        tempList = subtractStrList(list1, copyValues);
+        copyValues->delete(&copyValues);
     }
 
     if (ctx->type == STR_SET) {
         StrSet set = (StrSet) ctx->collection;
-        StrList sourceList = pr_initLs_(sourceList, NULL);
-        setToArrStr(set, sourceList);
+        StrList copyValues = pr_initLs_(copyValues, set->values);
 
-        for (int i = 0; i < set->pf->count; ++i) {
-            int index = indexOfStrList(list1, sourceList->pf->data[i]);
-            if (index != -1)
-                indexList[j++] = index;
-        }
-        sourceList->delete(&sourceList);
+        tempList = subtractStrList(list1, copyValues);
+        copyValues->delete(&copyValues);
     }
 
-    qsort(indexList, j - 1, sizeof(int), compareInt);
-    for (int i = 0; i < list1->pf->count; ++i) {
-        list1->pf->data[i]->delete(&list1->pf->data[i]);
-    }
-
-    int index = 0;
-    for (int i = 0; i < list1->pf->count; ++i) {
-        if (binarySearch(i, indexList, j)) // 1
-            continue;
-
-        list1->pf->data[index] = strOf(temp->pf->data[i]->pf->data);
-        ++index;
-    }
-
-    list1->pf->count -= j;
-
-    free(indexList);
-    temp->delete(&temp);
+    list1->delete(&list1);
+    list1 = tempList;
 
     return true;
 }
@@ -448,35 +398,20 @@ StrList subtractStrList(StrList list1, StrList list2) {
     }
 
     if (isEmptyStrList(list2)) {
-        StrList temp = pr_initLs_(temp, NULL);
-        copyList(temp, list1);
+        StrList temp = pr_initLs_(temp, list1->values);
         return temp;
     }
 
-    StrList copyValues = pr_initLs_(copyValues, NULL);
-    copyList(copyValues, list1);
-
-    for (int i = 0; i < list2->pf->count; ++i) {
-        int index = indexOfStrList(copyValues, list2->pf->data[i]);
-        if (index != -1) {
-            copyValues->pf->data[index]->delete(&copyValues->pf->data[index]);
-        }
-    }
-
+    StrSet set = pr_initSs_(set, list2->values);
     StrList temp = pr_initLs_(temp, NULL);
-    int index = 0;
-    for (int i = 0; i < copyValues->pf->count; ++i) {
-        if (copyValues->pf->data[i] != NULL) {
-            if (isFull(temp)) {
-                temp->pf->data = increaseCapacity(temp);
-            }
 
-            temp->pf->data[index++] = strOf(copyValues->pf->data[i]->pf->data);
-            temp->pf->count++;
-        }
+    for (int i = 0; i < list1->pf->count; ++i) {
+        if (!set->contains(set, list1->pf->data[i]))
+            temp->add(temp, list1->pf->data[i]);
     }
 
-    deleteStrList(&copyValues);
+    set->delete(&set);
+
     return temp;
 }
 
@@ -664,17 +599,6 @@ static String** increaseCapacity(StrList list) {
 static int compareStr(string s1, string s2) {
     int result = strcmp(s1->pf->data, s2->pf->data);
     return result;
-}
-
-static void copyList(StrList dest, StrList from) {
-    for (int i = 0; i < from->pf->count; ++i) {
-        if (isFull(dest)) {
-            dest->pf->data = increaseCapacity(dest);
-        }
-
-        dest->pf->data[i] = strOf(from->pf->data[i]->pf->data);
-        dest->pf->count++;
-    }
 }
 
 static void quickSort(String** strList, int low, int high)

@@ -12,12 +12,6 @@
 #include "context.h"
 
 // structures
-/*typedef struct String {
-    int count;
-    char* data;
-    int capacity;
-} String;*/
-
 typedef struct NodeInt {
     int data;
     struct NodeInt* next;
@@ -241,7 +235,7 @@ DoubleLinkedList pr_initLLd_loa_(DoubleLinkedList temp, double* arr, int size) {
     return list;
 }
 
-StrLinkedList newStrLinkedList(StrLinkedList temp) {
+StrLinkedList pr_initLLs_(StrLinkedList temp, void* collection) {
     StrLinkedList list = malloc(sizeof(LinkedListStr));
     list->pf = malloc(sizeof(InnerStrLL));
     list->pf->count = 0;
@@ -250,11 +244,17 @@ StrLinkedList newStrLinkedList(StrLinkedList temp) {
     list->pf->begin = NULL;
     list->pf->end = NULL;
     initFuncs(STR_LL, (void*)list);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = STR_LL;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
 
     return list;
 }
 
-StrLinkedList linkedListOfStr(StrLinkedList temp, int paramCount, ...) {
+StrLinkedList pr_initLLs_lo_(StrLinkedList temp, int paramCount, ...) {
     StrLinkedList list = malloc(sizeof(LinkedListStr));
     list->pf = malloc(sizeof(InnerStrLL));
     list->pf->count = 0;
@@ -264,12 +264,40 @@ StrLinkedList linkedListOfStr(StrLinkedList temp, int paramCount, ...) {
     list->pf->end = NULL;
     initFuncs(STR_LL, (void*)list);
 
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = STR_LL;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
+
     va_list param;
     va_start(param, paramCount);
     for (int i = 0; i < paramCount; ++i) {
-        addStrElemLL(list, va_arg(param, string));
+        addArrCharLL(list, va_arg(param, char*));
     }
     va_end(param);
+    return list;
+}
+
+StrLinkedList pr_initLLs_loa_(StrLinkedList temp, char* arr[], int size) {
+    StrLinkedList list = malloc(sizeof(LinkedListStr));
+    list->pf = malloc(sizeof(InnerStrLL));
+    list->pf->count = 0;
+    list->pf->index = 0;
+    list->pf->nodes = NULL;
+    list->pf->begin = NULL;
+    list->pf->end = NULL;
+    initFuncs(STR_LL, (void*)list);
+
+    Ctx ctx = malloc(sizeof(Context));
+    ctx->type = STR_LL;
+    ctx->collection = (void*) list;
+
+    list->values = (void*) ctx;
+
+    for (int i = 0; i < size; ++i) {
+        addArrCharLL(list, arr[i]);
+    }
     return list;
 }
 

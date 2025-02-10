@@ -7,8 +7,13 @@
 #ifndef ARRAYLISTUTIL_H
 #define ARRAYLISTUTIL_H
 
+#include <stdint.h>
+#include <math.h>
 #include "../linkedlist.h"
 #include "../set.h"
+#include "../string.h"
+
+#define ACCURACY 0.000000001
 
 // structures for LL
 typedef struct NodeInt {
@@ -91,6 +96,12 @@ typedef struct InnerStrSet {
     struct NodeSetStr** bucket;
 } InnerStrSet;
 
+typedef struct InnerStr {
+    int count;
+    char* data;
+    int capacity;
+} InnerStr;
+
 
 typedef struct NodeInt NodeInt;
 typedef NodeInt* IntNode;
@@ -157,16 +168,29 @@ static int compareIntNums(int elem1, int elem2) {
         return -1;
 }
 
-static bool findKey(NodeSetInt** node, int num) {
+static int compareDoubleNums(double elem1, double elem2) {
+    if (fabs(elem1 - elem2) < ACCURACY)
+        return 0;
+    else if (elem1 > elem2)
+        return 1;
+    else
+        return -1;
+}
+
+static int compareStrings(string s1, string s2) {
+    return strcmp(s1->pf->data, s2->pf->data);
+}
+
+static bool findKeyInt(NodeSetInt** node, int num) {
     if (node == NULL || *node == NULL) return false;
 
     int cmp = compareIntNums(num, (*node)->data);
     if (cmp == 0) {
         return true;
     } else if (cmp < 0) {
-        findKey(&((*node)->left), num);
+        findKeyInt(&((*node)->left), num);
     } else {
-        findKey(&((*node)->right), num);
+        findKeyInt(&((*node)->right), num);
     }
     return false;
 }
@@ -179,7 +203,65 @@ static unsigned long long hashCode(int key) {
 
 static bool containsKeyInt(IntSet set, int num) {
     int indexBucket = (int) (hashCode(num) % set->pf->capacity);
-    return findKey(&set->pf->bucket[indexBucket], num);
+    return findKeyInt(&set->pf->bucket[indexBucket], num);
+}
+
+static bool findKeyDouble(NodeSetDouble** node, double num) {
+    if (node == NULL || *node == NULL) return false;
+
+    int cmp = compareDoubleNums(num, (*node)->data);
+    if (cmp == 0) {
+        return true;
+    } else if (cmp < 0) {
+        findKeyDouble(&((*node)->left), num);
+    } else {
+        findKeyDouble(&((*node)->right), num);
+    }
+    return false;
+}
+
+static int hashDouble(double value) {
+    uint64_t intRepresentation;
+    memcpy(&intRepresentation, &value, sizeof(double));
+    intRepresentation = (intRepresentation ^ (intRepresentation >> 32)) * 0x45d9f3b;
+    intRepresentation = (intRepresentation ^ (intRepresentation >> 16)) * 0x45d9f3b;
+    intRepresentation = intRepresentation ^ (intRepresentation >> 16);
+    return (int)intRepresentation;
+}
+
+static bool containsKeyDouble(DoubleSet set, double num) {
+    int indexBucket = (int) (hashDouble(num) % set->pf->capacity);
+    return findKeyDouble(&set->pf->bucket[indexBucket], num);
+}
+
+static bool findKeyStr(NodeSetStr** node, string s) {
+    if (node == NULL || *node == NULL) return false;
+
+    int cmp = compareStrings(s, (*node)->str);
+    if (cmp == 0) {
+        return true;
+    } else if (cmp < 0) {
+        findKeyStr(&((*node)->left), s);
+    } else {
+        findKeyStr(&((*node)->right), s);
+    }
+    return false;
+}
+
+static int hashString(const char* str) {
+    unsigned long hash = 5381;
+    int c;
+
+    while ((c = (int)*str++)) {
+        hash = ((hash << 5) + hash) + c;
+    }
+
+    return (int) hash;
+}
+
+static bool containsKeyStr(StrSet set, string s) {
+    int indexBucket = (int) (hashString(s->pf->data) % set->pf->capacity);
+    return findKeyStr(&set->pf->bucket[indexBucket], s);
 }
 
 #endif

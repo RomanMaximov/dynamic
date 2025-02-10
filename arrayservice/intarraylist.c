@@ -24,7 +24,6 @@ static int* increaseCapacity(IntList list);
 static int compareInt(const void* elem1, const void* elem2);
 static int compareReverse(const void* elem1, const void* elem2);
 static bool binarySearch(int elem, const int* arr, int high);
-static void copyList(IntList dest, IntList from);
 static bool hasNext(Iterator iter);
 
 
@@ -186,9 +185,9 @@ bool containsAllIntList(IntList list1, void* source) {
             return false;
 
         IntSet setTemp = pr_initSi_(setTemp, list1->values);
-
         int arr[setFrom->pf->count];
         setToArrInt(setFrom, arr);
+
         for (int i = 0; i < setFrom->pf->count; ++i) {
             if (!containsKeyInt(setTemp, arr[i])) {
                 setTemp->delete(&setTemp);
@@ -317,8 +316,7 @@ bool removeAllIntList(IntList list1, void* source) {
 
     if (ctx->type == INT_SET) {
         IntSet set = (IntSet) ctx->collection;
-        IntList copyValues = pr_initLi_(copyValues, NULL);
-        setToArrInt(set, copyValues->pf->data);
+        IntList copyValues = pr_initLi_(copyValues, set->values);
 
         tempList = subtractIntList(list1, copyValues);
         copyValues->delete(&copyValues);
@@ -337,12 +335,11 @@ IntList subtractIntList(IntList list1, IntList list2) {
     }
 
     if (isEmptyIntList(list2)) {
-        IntList temp = pr_initLi_(temp, NULL);
-        copyList(temp, list1);
+        IntList temp = pr_initLi_(temp, list1->values);
         return temp;
     }
 
-    IntSet set = pr_initSi_(set, list2);
+    IntSet set = pr_initSi_(set, list2->values);
     IntList temp = pr_initLi_(temp, NULL);
 
     for (int i = 0; i < list1->pf->count; ++i) {
@@ -501,14 +498,4 @@ static bool binarySearch(int elem, const int* arr, int high) {
             return true;
     }
     return false;
-}
-
-static void copyList(IntList dest, IntList from) {
-    for (int i = 0; i < from->pf->count; ++i) {
-        if (dest->pf->count == dest->pf->capacity) {
-            dest->pf->data = increaseCapacity(dest);
-        }
-        dest->pf->data[i] = from->pf->data[i];
-        dest->pf->count++;
-    }
 }

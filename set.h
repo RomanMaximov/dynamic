@@ -19,7 +19,7 @@ typedef struct Collection Collection;
 
 typedef struct SetInt {
     struct InnerIntSet* pf;   // private field
-    void* values;
+    void* values;             // private field
     // funcs pointers
     void (*add)(struct SetInt* set, int number);
     void (*addAll)(struct SetInt* set1, struct SetInt* set2);
@@ -40,7 +40,7 @@ typedef struct SetInt {
 
 typedef struct SetDouble {
     struct InnerDoubleSet* pf;   // private field
-    void* values;
+    void* values;                // private field
     // funcs pointers
     void (*add)(struct SetDouble* set, double number);
     void (*addAll)(struct SetDouble* set1, struct SetDouble* set2);
@@ -61,7 +61,7 @@ typedef struct SetDouble {
 
 typedef struct SetStr {
     struct InnerStrSet* pf;   // private field
-    void* values;
+    void* values;             // private field
     // funcs pointers
     void (*add)(struct SetStr* set, string s);
     void (*addAll)(struct SetStr* set1, struct SetStr* set2);

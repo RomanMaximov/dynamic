@@ -16,7 +16,7 @@ typedef Itr* Iterator;
 
 
 void addIntLL(IntLinkedList, int);
-void addAllIntLL(IntLinkedList, IntLinkedList);
+void addAllIntLL(IntLinkedList, void*);
 int getIntLL(IntLinkedList, int);
 bool setIntLL(IntLinkedList, int, int);
 int indexOfIntLL(IntLinkedList, int);
@@ -24,10 +24,10 @@ void sortIntLL(IntLinkedList);
 void sortIntLLReverse(IntLinkedList);
 void clearIntLL(IntLinkedList);
 bool containsIntLL(IntLinkedList, int);
-bool containsAllIntLL(IntLinkedList, IntLinkedList);
-bool containsAnyIntLL(IntLinkedList, IntLinkedList);
+bool containsAllIntLL(IntLinkedList, void*);
+bool containsAnyIntLL(IntLinkedList, void*);
 bool removeIntLL(IntLinkedList, int);
-bool removeAllIntLL(IntLinkedList, IntLinkedList);
+bool removeAllIntLL(IntLinkedList, void*);
 IntLinkedList subtractIntLL(IntLinkedList, IntLinkedList);
 bool isEmptyIntLL(IntLinkedList);
 void reverseIntLL(IntLinkedList);

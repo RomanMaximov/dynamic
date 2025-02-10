@@ -18,13 +18,13 @@ typedef Itr* Iterator;
 
 void addStrSet(StrSet, string);
 void addCharArrSet(StrSet, char*);
-void addAllStrSet(StrSet, StrSet);
+void addAllStrSet(StrSet, void*);
 void clearStrSet(StrSet);
 bool containsStrSet(StrSet, string);
-bool containsAllStrSet(StrSet, StrSet);
-bool containsAnyStrSet(StrSet, StrSet);
+bool containsAllStrSet(StrSet, void*);
+bool containsAnyStrSet(StrSet, void*);
 bool removeStrSet(StrSet, string);
-bool removeAllStrSet(StrSet, StrSet);
+bool removeAllStrSet(StrSet, void*);
 bool isEmptyStrSet(StrSet);
 bool isEqualsStrSet(StrSet, StrSet);
 StrSet emptyIfNullStrSet(StrSet);

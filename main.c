@@ -220,7 +220,7 @@ int main()
     string ll2 = strOf("s2");
     string ll3 = strOf("s3");
     string ll4 = strOf("s4");
-    StrLinkedList strLinkedList = newStrLinkedList(strLinkedList);
+    StrLinkedList strLinkedList = newList(strLinkedList, NULL);
     strLinkedList->add(strLinkedList, ll1);
     strLinkedList->add(strLinkedList, ll2);
     strLinkedList->add(strLinkedList, ll3);

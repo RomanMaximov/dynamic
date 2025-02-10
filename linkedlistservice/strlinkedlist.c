@@ -141,7 +141,7 @@ bool setStrLL(StrLinkedList list, int index, string s) {
     return false;
 }
 
-void addAllStrElemLL(StrLinkedList list1, StrLinkedList list2) {
+void addAllStrLL(StrLinkedList list1, StrLinkedList list2) {
     if (list1 == NULL || list2 == NULL) return;
 
     StrNode current2 = list2->pf->nodes;
@@ -151,7 +151,7 @@ void addAllStrElemLL(StrLinkedList list1, StrLinkedList list2) {
     }
 }
 
-string getStrElemLL(StrLinkedList list, int index) {
+string getStrLL(StrLinkedList list, int index) {
     if (index >= list->pf->count) {
         printf("Index %d out of bounds for length %d\n", index, list->pf->count);
         return NULL;
