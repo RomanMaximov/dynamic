@@ -105,6 +105,7 @@ void addAllStrList(StrList dest, void* source) {
         setToArrStr(from, temp);
         for (int i = 0; i < from->pf->count; ++i)
             addStrList(dest, temp->pf->data[i]);
+
         temp->delete(&temp);
     }
 }

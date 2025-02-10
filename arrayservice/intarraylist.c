@@ -185,16 +185,17 @@ bool containsAllIntList(IntList list1, void* source) {
             return false;
 
         IntSet setTemp = pr_initSi_(setTemp, list1->values);
-        int arr[setFrom->pf->count];
-        setToArrInt(setFrom, arr);
+        IntList listFrom = pr_initLi_(listFrom, setTemp->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
-            if (!containsKeyInt(setTemp, arr[i])) {
+            if (!containsKeyInt(setTemp, listFrom->pf->data[i])) {
                 setTemp->delete(&setTemp);
+                listFrom->delete(&listFrom);
                 return false;
             }
         }
         setTemp->delete(&setTemp);
+        listFrom->delete(&listFrom);
     }
 
     return true;
@@ -243,16 +244,17 @@ bool containsAnyIntList(IntList list1, void* source) {
             return false;
 
         IntSet setTemp = pr_initSi_(setTemp, list1->values);
+        IntList listFrom = pr_initLi_(listFrom, setTemp->values);
 
-        int arr[setFrom->pf->count];
-        setToArrInt(setFrom, arr);
         for (int i = 0; i < setFrom->pf->count; ++i) {
-            if (containsKeyInt(setTemp, arr[i])) {
+            if (containsKeyInt(setTemp, listFrom->pf->data[i])) {
                 setTemp->delete(&setTemp);
+                listFrom->delete(&listFrom);
                 return true;
             }
         }
         setTemp->delete(&setTemp);
+        listFrom->delete(&listFrom);
     }
 
     return false;

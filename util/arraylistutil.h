@@ -112,8 +112,8 @@ typedef NodeSetInt* IntSetNode;
 typedef NodeSetDouble* DoubleSetNode;
 typedef NodeSetStr* StrSetNode;
 
-// private funcs
 
+// private funcs
 static void copyValuesToArrInt(IntSetNode node, int* arr, int* index) {
     if (node != NULL) {
         copyValuesToArrInt(node->left, arr, index);

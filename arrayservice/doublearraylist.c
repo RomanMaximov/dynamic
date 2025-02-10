@@ -51,15 +51,15 @@ void addAllDoubleList(DoubleList dest, void* source) {
 
     if (ctx->type == DOUBLE_LIST) {
         DoubleList from = (DoubleList) ctx->collection;
-        if (from == NULL) return;
+
         for (int i = 0; i < from->pf->count; ++i)
             addDoubleList(dest, from->pf->data[i]);
     }
 
     if (ctx->type == DOUBLE_LL) {
         DoubleLinkedList from = (DoubleLinkedList) ctx->collection;
-        if (from == NULL) return;
         DoubleNode current = from->pf->begin;
+
         while (current != NULL) {
             addDoubleList(dest, current->data);
             current = current->next;
@@ -71,6 +71,7 @@ void addAllDoubleList(DoubleList dest, void* source) {
         if (from == NULL) return;
         double arr[from->pf->count];
         setToArrDouble(from, arr);
+
         for (int i = 0; i < from->pf->count; ++i)
             addDoubleList(dest, arr[i]);
     }
@@ -189,16 +190,17 @@ bool containsAllDoubleList(DoubleList list1, void* source) {
             return false;
 
         DoubleSet setTemp = pr_initSd_(setTemp, list1->values);
-        double arr[setFrom->pf->count];
-        setToArrDouble(setFrom, arr);
+        DoubleList listTemp = pr_initLd_(listTemp, setTemp->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
-            if (!containsKeyDouble(setTemp, arr[i])) {
+            if (!containsKeyDouble(setTemp, listTemp->pf->data[i])) {
                 setTemp->delete(&setTemp);
+                listTemp->delete(&listTemp);
                 return false;
             }
         }
         setTemp->delete(&setTemp);
+        listTemp->delete(&listTemp);
     }
 
     return true;
@@ -247,16 +249,17 @@ bool containsAnyDoubleList(DoubleList list1, void* source) {
             return false;
 
         DoubleSet setTemp = pr_initSd_(setTemp, list1->values);
-        double arr[setFrom->pf->count];
-        setToArrDouble(setFrom, arr);
+        DoubleList listTemp = pr_initLd_(listTemp, setTemp->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
-            if (containsKeyDouble(setTemp, arr[i])) {
+            if (containsKeyDouble(setTemp, listTemp->pf->data[i])) {
                 setTemp->delete(&setTemp);
+                listTemp->delete(&listTemp);
                 return true;
             }
         }
         setTemp->delete(&setTemp);
+        listTemp->delete(&listTemp);
     }
 
     return false;

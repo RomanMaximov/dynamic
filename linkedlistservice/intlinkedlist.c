@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "intlinkedlist.h"
+#include "../util/linkedlistutil.h"
 
 
 // structures
@@ -108,13 +109,32 @@ void addIntLL(IntLinkedList list, int num) {
     list->pf->count++;
 }
 
-void addAllIntLL(IntLinkedList list1, void* source) {
-    if (list1 == NULL || list2 == NULL) return;
+void addAllIntLL(IntLinkedList dest, void* source) {
+    if (dest == NULL || source == NULL) return;
 
-    IntNode current = list2->pf->nodes;
-    while (current != NULL) {
-        addIntLL(list1, current->data);
-        current = current->next;
+    Ctx ctx = (Ctx) source;
+
+    if (ctx->type == INT_LIST) {
+        IntList from = (IntList) ctx->collection;
+        for (int i = 0; i < from->pf->count; ++i)
+            addIntLL(dest, from->pf->data[i]);
+    }
+
+    if (ctx->type == INT_LL) {
+        IntLinkedList from = (IntLinkedList) ctx->collection;
+        IntNode current = from->pf->begin;
+        while (current != NULL) {
+            addIntLL(dest, current->data);
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == INT_SET) {
+        IntSet from = (IntSet) ctx->collection;
+        int arr[from->pf->count];
+        setToArrInt(from, arr);
+        for (int i = 0; i < from->pf->count; ++i)
+            addIntLL(dest, arr[i]);
     }
 }
 
