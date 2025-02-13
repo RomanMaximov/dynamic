@@ -152,7 +152,7 @@ static void copyValuesToList(StrSetNode node, StrList list) {
     }
 }
 
-static void setToArrStr(StrSet set, StrList list) {
+static void setToStrList(StrSet set, StrList list) {
     int index = 0;
     for (int i = 0; i < set->pf->capacity; ++i) {
         copyValuesToList(set->pf->bucket[i], list);

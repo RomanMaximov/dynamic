@@ -65,10 +65,12 @@ void addAllIntList(IntList dest, void* source) {
 
     if (ctx->type == INT_SET) {
         IntSet from = (IntSet) ctx->collection;
-        int arr[from->pf->count];
+        int* arr = malloc(from->pf->count * sizeof(int));
         setToArrInt(from, arr);
         for (int i = 0; i < from->pf->count; ++i)
             addIntList(dest, arr[i]);
+
+        free(arr);
     }
 }
 
@@ -185,7 +187,7 @@ bool containsAllIntList(IntList list1, void* source) {
             return false;
 
         IntSet setTemp = pr_initSi_(setTemp, list1->values);
-        IntList listFrom = pr_initLi_(listFrom, setTemp->values);
+        IntList listFrom = pr_initLi_(listFrom, setFrom->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
             if (!containsKeyInt(setTemp, listFrom->pf->data[i])) {
@@ -244,7 +246,7 @@ bool containsAnyIntList(IntList list1, void* source) {
             return false;
 
         IntSet setTemp = pr_initSi_(setTemp, list1->values);
-        IntList listFrom = pr_initLi_(listFrom, setTemp->values);
+        IntList listFrom = pr_initLi_(listFrom, setFrom->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
             if (containsKeyInt(setTemp, listFrom->pf->data[i])) {
@@ -304,14 +306,8 @@ bool removeAllIntList(IntList list1, void* source) {
 
     if (ctx->type == INT_LL) {
         IntLinkedList list2 = (IntLinkedList) ctx->collection;
-        IntList copyValues = pr_initLi_(copyValues, NULL);
+        IntList copyValues = pr_initLi_(copyValues, list2->values);
 
-        IntNode current = list2->pf->begin;
-        int index = 0;
-        while (current != NULL) {
-            copyValues->pf->data[index++] = current->data;
-            current = current->next;
-        }
         tempList = subtractIntList(list1, copyValues);
         copyValues->delete(&copyValues);
     }

@@ -68,12 +68,14 @@ void addAllDoubleList(DoubleList dest, void* source) {
 
     if (ctx->type == DOUBLE_SET) {
         DoubleSet from = (DoubleSet) ctx->collection;
-        if (from == NULL) return;
-        double arr[from->pf->count];
+
+        double* arr = malloc(from->pf->count * sizeof(double));
         setToArrDouble(from, arr);
 
         for (int i = 0; i < from->pf->count; ++i)
             addDoubleList(dest, arr[i]);
+
+        free(arr);
     }
 }
 
@@ -190,7 +192,7 @@ bool containsAllDoubleList(DoubleList list1, void* source) {
             return false;
 
         DoubleSet setTemp = pr_initSd_(setTemp, list1->values);
-        DoubleList listTemp = pr_initLd_(listTemp, setTemp->values);
+        DoubleList listTemp = pr_initLd_(listTemp, setFrom->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
             if (!containsKeyDouble(setTemp, listTemp->pf->data[i])) {
@@ -249,7 +251,7 @@ bool containsAnyDoubleList(DoubleList list1, void* source) {
             return false;
 
         DoubleSet setTemp = pr_initSd_(setTemp, list1->values);
-        DoubleList listTemp = pr_initLd_(listTemp, setTemp->values);
+        DoubleList listTemp = pr_initLd_(listTemp, setFrom->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
             if (containsKeyDouble(setTemp, listTemp->pf->data[i])) {
@@ -309,14 +311,8 @@ bool removeAllDoubleList(DoubleList list1, void* source) {
 
     if (ctx->type == DOUBLE_LL) {
         DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
-        DoubleList copyValues = pr_initLd_(copyValues, NULL);
+        DoubleList copyValues = pr_initLd_(copyValues, list2->values);
 
-        DoubleNode current = list2->pf->begin;
-        int index = 0;
-        while (current != NULL) {
-            copyValues->pf->data[index++] = current->data;
-            current = current->next;
-        }
         tempList = subtractDoubleList(list1, copyValues);
         copyValues->delete(&copyValues);
     }

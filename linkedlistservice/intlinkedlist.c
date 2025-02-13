@@ -131,10 +131,12 @@ void addAllIntLL(IntLinkedList dest, void* source) {
 
     if (ctx->type == INT_SET) {
         IntSet from = (IntSet) ctx->collection;
-        int arr[from->pf->count];
+        int* arr = malloc(from->pf->count * sizeof(int));
         setToArrInt(from, arr);
         for (int i = 0; i < from->pf->count; ++i)
             addIntLL(dest, arr[i]);
+
+        free(arr);
     }
 }
 
@@ -266,37 +268,119 @@ bool containsIntLL(IntLinkedList list, int num) {
     return false;
 }
 
-bool containsAllIntLL(IntLinkedList list1, IntLinkedList list2) {
-    if (list1 == NULL || list2 == NULL || list2->pf->count > list1->pf->count) return false;
+bool containsAllIntLL(IntLinkedList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
 
-    int arr[list1->pf->count];
-    IntNode temp = list2->pf->begin;
+    Ctx ctx = (Ctx) source;
 
-    toArrAndSort(list1, arr);
-
-    while (temp != NULL) {
-        if (!binarySearch(temp->data, arr, list1->pf->count))
+    if (ctx->type == INT_LIST) {
+        IntList list2 = (IntList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
             return false;
 
-        temp = temp->next;
+        IntSet set = pr_initSi_(set, list1->values);
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (!containsKeyInt(set, list2->pf->data[i])) {
+                set->delete(&set);
+                return false;
+            }
+        }
+        set->delete(&set);
+    }
+
+    if (ctx->type == INT_LL) {
+        IntLinkedList list2 = (IntLinkedList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
+            return false;
+
+        IntSet set = pr_initSi_(set, list1->values);
+        IntNode current = list2->pf->begin;
+        while (current != NULL) {
+            if (!containsKeyInt(set, current->data)) {
+                set->delete(&set);
+                return false;
+            }
+            current = current->next;
+        }
+        set->delete(&set);
+    }
+
+    if (ctx->type == INT_SET) {
+        IntSet setFrom = (IntSet) ctx->collection;
+        if (setFrom->pf->count > list1->pf->count)
+            return false;
+
+        IntSet setTemp = pr_initSi_(setTemp, list1->values);
+        IntList listFrom = pr_initLi_(listFrom, setFrom->values);
+
+        for (int i = 0; i < setFrom->pf->count; ++i) {
+            if (!containsKeyInt(setTemp, listFrom->pf->data[i])) {
+                setTemp->delete(&setTemp);
+                listFrom->delete(&listFrom);
+                return false;
+            }
+        }
+        setTemp->delete(&setTemp);
+        listFrom->delete(&listFrom);
     }
 
     return true;
 }
 
-bool containsAnyIntLL(IntLinkedList list1, IntLinkedList list2) {
-    if (list1 == NULL || list2 == NULL) return false;
+bool containsAnyIntLL(IntLinkedList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
 
-    int arr[list1->pf->count];
-    IntNode temp = list2->pf->begin;
+    Ctx ctx = (Ctx) source;
 
-    toArrAndSort(list1, arr);
+    if (ctx->type == INT_LIST) {
+        IntList list2 = (IntList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
+            return false;
 
-    while (temp != NULL) {
-        if (binarySearch(temp->data, arr, list1->pf->count))
-            return true;
+        IntSet set = pr_initSi_(set, list1->values);
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (containsKeyInt(set, list2->pf->data[i])) {
+                set->delete(&set);
+                return true;
+            }
+        }
+        set->delete(&set);
+    }
 
-        temp = temp->next;
+    if (ctx->type == INT_LL) {
+        IntLinkedList list2 = (IntLinkedList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
+            return false;
+
+        IntSet set = pr_initSi_(set, list1->values);
+        IntNode current = list2->pf->begin;
+        while (current != NULL) {
+            if (containsKeyInt(set, current->data)) {
+                set->delete(&set);
+                return true;
+            }
+            current = current->next;
+        }
+        set->delete(&set);
+    }
+
+    if (ctx->type == INT_SET) {
+        IntSet setFrom = (IntSet) ctx->collection;
+        if (setFrom->pf->count > list1->pf->count)
+            return false;
+
+        IntSet setTemp = pr_initSi_(setTemp, list1->values);
+        IntList listFrom = pr_initLi_(listFrom, setFrom->values);
+
+        for (int i = 0; i < setFrom->pf->count; ++i) {
+            if (containsKeyInt(setTemp, listFrom->pf->data[i])) {
+                setTemp->delete(&setTemp);
+                listFrom->delete(&listFrom);
+                return true;
+            }
+        }
+        setTemp->delete(&setTemp);
+        listFrom->delete(&listFrom);
     }
 
     return false;
@@ -328,43 +412,33 @@ bool removeIntLL(IntLinkedList list, int index) {
     return removeNodeInt(list, current, previous, index);
 }
 
-bool removeAllIntLL(IntLinkedList list1, IntLinkedList list2) {
-    if (list1 == NULL || list2 ==NULL) return false;
+bool removeAllIntLL(IntLinkedList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
 
-    int listSize = list1->pf->count;
-    int* temp = malloc(listSize * sizeof(int));
-    int* filtered = malloc(listSize * sizeof(int));
-    int* tempForBS = malloc(listSize * sizeof(int));
+    Ctx ctx = (Ctx) source;
+    IntLinkedList tempList;
 
-    copyLLToArray(list1, temp);
-    copyLLToArray(list1, tempForBS);
-    qsort(tempForBS, listSize, sizeof(int), compareInt);
-
-    int j = 0;
-    IntNode current2 = list2->pf->begin;
-    while (current2 != NULL) {
-        bool isExist = binarySearch(current2->data, tempForBS, listSize);
-        if (isExist) {
-            filtered[j] = current2->data;
-            ++j;
-        }
-
-        current2 = current2->next;
+    if (ctx->type == INT_LIST) {
+        IntList list2 = (IntList) ctx->collection;
+        IntLinkedList copyValues = pr_initLLi_(copyValues, list2->values);
+        tempList = subtractIntLL(list1, copyValues);
     }
 
-    clearIntLL(list1);
-
-    qsort(filtered, j, sizeof(int), compareInt);
-    for (int i = 0; i < listSize; ++i) {
-        if (binarySearch(temp[i], filtered, j))
-            continue;
-
-        addIntLL(list1, temp[i]);
+    if (ctx->type == INT_LL) {
+        IntLinkedList list2 = (IntLinkedList) ctx->collection;
+        tempList = subtractIntLL(list1, list2);
     }
 
-    free(tempForBS);
-    free(filtered);
-    free(temp);
+    if (ctx->type == INT_SET) {
+        IntSet set = (IntSet) ctx->collection;
+        IntLinkedList copyValues = pr_initLLi_(copyValues, set->values);
+
+        tempList = subtractIntLL(list1, copyValues);
+        copyValues->delete(&copyValues);
+    }
+
+    list1->delete(&list1);
+    list1 = tempList;
 
     return true;
 }
@@ -376,45 +450,23 @@ IntLinkedList subtractIntLL(IntLinkedList list1, IntLinkedList list2) {
     }
 
     if (isEmptyIntLL(list2)) {
-        return copyIntLL(list1);
+        IntLinkedList temp = pr_initLLi_(temp, list1->values);
+        return temp;
     }
 
-    int listSize = list1->pf->count;
-    int* temp = malloc(listSize * sizeof(int));
-    int* filtered = malloc(listSize * sizeof(int));
-    int* tempForBS = malloc(listSize * sizeof(int));
+    IntSet set = pr_initSi_(set, list2->values);
+    IntLinkedList temp = pr_initLLi_(temp, NULL);
 
-    copyLLToArray(list1, temp);
-    copyLLToArray(list1, tempForBS);
-    qsort(tempForBS, listSize, sizeof(int), compareInt);
-
-    int j = 0;
-    IntNode current2 = list2->pf->begin;
-    while (current2 != NULL) {
-        bool isExist = binarySearch(current2->data, tempForBS, listSize);
-        if (isExist) {
-            filtered[j] = current2->data;
-            ++j;
-        }
-
-        current2 = current2->next;
+    IntNode current = list1->pf->begin;
+    while (current != NULL) {
+        if (!set->contains(set, current->data))
+            temp->add(temp, current->data);
+        current = current->next;
     }
 
-    IntLinkedList newLL = pr_initLLi_(newLL, NULL);
+    set->delete(&set);
 
-    qsort(filtered, j, sizeof(int), compareInt);
-    for (int i = 0; i < listSize; ++i) {
-        if (binarySearch(temp[i], filtered, j))
-            continue;
-
-        addIntLL(newLL, temp[i]);
-    }
-
-    free(tempForBS);
-    free(filtered);
-    free(temp);
-
-    return newLL;
+    return temp;
 }
 
 bool isEmptyIntLL(IntLinkedList list) {

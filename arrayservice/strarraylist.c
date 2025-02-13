@@ -102,7 +102,7 @@ void addAllStrList(StrList dest, void* source) {
         if (from == NULL) return;
 
         StrList temp = pr_initLs_(temp, NULL);
-        setToArrStr(from, temp);
+        setToStrList(from, temp);
         for (int i = 0; i < from->pf->count; ++i)
             addStrList(dest, temp->pf->data[i]);
 
@@ -366,14 +366,8 @@ bool removeAllStrList(StrList list1, void* source) {
 
     if (ctx->type == STR_LL) {
         StrLinkedList list2 = (StrLinkedList) ctx->collection;
-        StrList copyValues = pr_initLs_(copyValues, NULL);
+        StrList copyValues = pr_initLs_(copyValues, list2->values);
 
-        StrNode current = list2->pf->begin;
-        int index = 0;
-        while (current != NULL) {
-            copyValues->pf->data[index++] = current->data;
-            current = current->next;
-        }
         tempList = subtractStrList(list1, copyValues);
         copyValues->delete(&copyValues);
     }

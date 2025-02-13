@@ -14,7 +14,7 @@ typedef LinkedListDouble* DoubleLinkedList;
 
 
 void addDoubleLL(DoubleLinkedList, double);
-void addAllDoubleLL(DoubleLinkedList, DoubleLinkedList);
+void addAllDoubleLL(DoubleLinkedList, void*);
 double getDoubleLL(DoubleLinkedList, int);
 bool setDoubleLL(DoubleLinkedList, int, double);
 int indexOfDoubleLL(DoubleLinkedList, double);
@@ -22,10 +22,10 @@ void sortDoubleLL(DoubleLinkedList);
 void sortDoubleLLReverse(DoubleLinkedList);
 void clearDoubleLL(DoubleLinkedList);
 bool containsDoubleLL(DoubleLinkedList, double);
-bool containsAllDoubleLL(DoubleLinkedList, DoubleLinkedList);
-bool containsAnyDoubleLL(DoubleLinkedList, DoubleLinkedList);
+bool containsAllDoubleLL(DoubleLinkedList, void*);
+bool containsAnyDoubleLL(DoubleLinkedList, void*);
 bool removeDoubleLL(DoubleLinkedList, int);
-bool removeAllDoubleLL(DoubleLinkedList, DoubleLinkedList);
+bool removeAllDoubleLL(DoubleLinkedList, void*);
 DoubleLinkedList subtractDoubleLL(DoubleLinkedList, DoubleLinkedList);
 bool isEmptyDoubleLL(DoubleLinkedList);
 void reverseDoubleLL(DoubleLinkedList);
