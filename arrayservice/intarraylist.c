@@ -210,10 +210,8 @@ bool containsAnyIntList(IntList list1, void* source) {
 
     if (ctx->type == INT_LIST) {
         IntList list2 = (IntList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
-            return false;
-
         IntSet set = pr_initSi_(set, list1->values);
+
         for (int i = 0; i < list2->pf->count; ++i) {
             if (containsKeyInt(set, list2->pf->data[i])) {
                 set->delete(&set);
@@ -225,11 +223,9 @@ bool containsAnyIntList(IntList list1, void* source) {
 
     if (ctx->type == INT_LL) {
         IntLinkedList list2 = (IntLinkedList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
-            return false;
-
         IntSet set = pr_initSi_(set, list1->values);
         IntNode current = list2->pf->begin;
+
         while (current != NULL) {
             if (containsKeyInt(set, current->data)) {
                 set->delete(&set);
@@ -242,9 +238,6 @@ bool containsAnyIntList(IntList list1, void* source) {
 
     if (ctx->type == INT_SET) {
         IntSet setFrom = (IntSet) ctx->collection;
-        if (setFrom->pf->count > list1->pf->count)
-            return false;
-
         IntSet setTemp = pr_initSi_(setTemp, list1->values);
         IntList listFrom = pr_initLi_(listFrom, setFrom->values);
 

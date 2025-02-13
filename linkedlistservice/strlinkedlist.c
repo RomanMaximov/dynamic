@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "strlinkedlist.h"
+#include "../util/linkedlistutil.h"
 
 // structures
 typedef struct NodeStr {
@@ -23,18 +24,6 @@ typedef struct InnerStrLL {
     NodeStr* begin;
     NodeStr* end;
 } InnerStrLL;
-
-typedef struct InnerStr {
-    int count;
-    char* data;
-    int capacity;
-} InnerStr;
-
-typedef struct InnerStrList {
-    int count;
-    String** str;
-    int capacity;
-} InnerStrList;
 
 typedef struct NodeStr NodeStr;
 typedef NodeStr* StrNode;
@@ -119,6 +108,53 @@ void addArrCharLL(StrLinkedList list, char* arr) {
     list->pf->count++;
 }
 
+void addAllStrLL(StrLinkedList dest, void* source) {
+    if (dest == NULL || source == NULL) return;
+
+    Ctx ctx = (Ctx) source;
+
+    if (ctx->type == STR_LIST) {
+        StrList from = (StrList) ctx->collection;
+        for (int i = 0; i < from->pf->count; ++i)
+            addStrLL(dest, from->pf->data[i]);
+    }
+
+    if (ctx->type == STR_LL) {
+        StrLinkedList from = (StrLinkedList) ctx->collection;
+        StrNode current = from->pf->begin;
+        while (current != NULL) {
+            addStrLL(dest, current->data);
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet from = (StrSet) ctx->collection;
+        StrList tempFrom = pr_initLs_(tempFrom, from->values);
+        for (int i = 0; i < from->pf->count; ++i)
+            addStrLL(dest, tempFrom->pf->data[i]);
+
+    }
+}
+
+string getStrLL(StrLinkedList list, int index) {
+    if (index >= list->pf->count) {
+        printf("Index %d out of bounds for length %d\n", index, list->pf->count);
+        return NULL;
+    }
+
+    int tempIndex = 0;
+    StrNode current = list->pf->nodes;
+    while (current != NULL) {
+        if (tempIndex == index)
+            return current->data;
+
+        ++tempIndex;
+        current = current->next;
+    }
+    return NULL;
+}
+
 bool setStrLL(StrLinkedList list, int index, string s) {
     if (list == NULL)
         return false;
@@ -141,34 +177,6 @@ bool setStrLL(StrLinkedList list, int index, string s) {
     return false;
 }
 
-void addAllStrLL(StrLinkedList list1, StrLinkedList list2) {
-    if (list1 == NULL || list2 == NULL) return;
-
-    StrNode current2 = list2->pf->nodes;
-    while (current2 != NULL) {
-        addStrLL(list1, current2->data);
-        current2 = current2->next;
-    }
-}
-
-string getStrLL(StrLinkedList list, int index) {
-    if (index >= list->pf->count) {
-        printf("Index %d out of bounds for length %d\n", index, list->pf->count);
-        return NULL;
-    }
-
-    int tempIndex = 0;
-    StrNode current = list->pf->nodes;
-    while (current != NULL) {
-        if (tempIndex == index)
-            return current->data;
-
-        ++tempIndex;
-        current = current->next;
-    }
-    return NULL;
-}
-
 void sortStrLL(StrLinkedList list) {
     StrList strList = pr_initLs_(strList, NULL);
     StrNode current = list->pf->begin;
@@ -179,12 +187,12 @@ void sortStrLL(StrLinkedList list) {
         current = current->next;
     }
 
-    quickSortStr(strList->pf->str, 0, strList->pf->count);
+    quickSortStr(strList->pf->data, 0, strList->pf->count);
 
     index = 0;
     while (temp != NULL) {
         temp->data->delete(&temp->data);
-        temp->data = strOf(strList->pf->str[index++]->pf->data);
+        temp->data = strOf(strList->pf->data[index++]->pf->data);
         temp = temp->next;
     }
     strList->delete(&strList);
@@ -200,12 +208,12 @@ void sortStrLLReverse(StrLinkedList list) {
         current = current->next;
     }
 
-    quickSortStrReverse(strList->pf->str, 0, strList->pf->count);
+    quickSortStrReverse(strList->pf->data, 0, strList->pf->count);
 
     index = 0;
     while (temp != NULL) {
         temp->data->delete(&temp->data);
-        temp->data = strOf(strList->pf->str[index++]->pf->data);
+        temp->data = strOf(strList->pf->data[index++]->pf->data);
         temp = temp->next;
     }
     strList->delete(&strList);
@@ -262,57 +270,114 @@ bool containsStrLL(StrLinkedList list, string s) {
     return false;
 }
 
-bool containsAllStrLL(StrLinkedList list1, StrLinkedList list2) {
-    if (list1 == NULL || list2 == NULL || list2->pf->count > list1->pf->count) return false;
+bool containsAllStrLL(StrLinkedList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
 
-    StrList tempList = pr_initLs_(tempList, NULL);
-    StrNode current = list1->pf->begin;
-    StrNode current2 = list2->pf->begin;
+    Ctx ctx = (Ctx) source;
 
-    while (current != NULL) {
-        tempList->add(tempList, current->data);
-        current = current->next;
-    }
-
-    quickSortStr(tempList->pf->str, 0, tempList->pf->count);
-
-    while (current2 != NULL) {
-        if (!binarySearchStr(current2->data, tempList->pf->str, list1->pf->count)) {
-            tempList->delete(&tempList);
+    if (ctx->type == STR_LIST) {
+        StrList list2 = (StrList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
             return false;
-        }
 
-        current2 = current2->next;
+        StrSet set = pr_initSs_(set, list1->values);
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (!containsKeyStr(set, list2->pf->data[i])) {
+                set->delete(&set);
+                return false;
+            }
+        }
+        set->delete(&set);
     }
 
-    tempList->delete(&tempList);
+    if (ctx->type == STR_LL) {
+        StrLinkedList list2 = (StrLinkedList) ctx->collection;
+        if (list2->pf->count > list1->pf->count)
+            return false;
+
+        StrSet set = pr_initSs_(set, list1->values);
+        StrNode current = list2->pf->begin;
+        while (current != NULL) {
+            if (!containsKeyStr(set, current->data)) {
+                set->delete(&set);
+                return false;
+            }
+            current = current->next;
+        }
+        set->delete(&set);
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet setFrom = (StrSet) ctx->collection;
+        if (setFrom->pf->count > list1->pf->count)
+            return false;
+
+        StrSet setTemp = pr_initSs_(setTemp, list1->values);
+        StrList listFrom = pr_initLs_(listFrom, setFrom->values);
+
+        for (int i = 0; i < setFrom->pf->count; ++i) {
+            if (!containsKeyStr(setTemp, listFrom->pf->data[i])) {
+                setTemp->delete(&setTemp);
+                listFrom->delete(&listFrom);
+                return false;
+            }
+        }
+        setTemp->delete(&setTemp);
+        listFrom->delete(&listFrom);
+    }
+
     return true;
 }
 
-bool containsAnyStrLL(StrLinkedList list1, StrLinkedList list2) {
-    if (list1 == NULL || list2 == NULL) return false;
+bool containsAnyStrLL(StrLinkedList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
 
-    StrList tempList = pr_initLs_(tempList, NULL);
-    StrNode current = list1->pf->begin;
-    StrNode current2 = list2->pf->begin;
+    Ctx ctx = (Ctx) source;
 
-    while (current != NULL) {
-        tempList->add(tempList, current->data);
-        current = current->next;
-    }
+    if (ctx->type == STR_LIST) {
+        StrList list2 = (StrList) ctx->collection;
+        StrSet set = pr_initSs_(set, list1->values);
 
-    quickSortStr(tempList->pf->str, 0, tempList->pf->count);
-
-    while (current2 != NULL) {
-        if (binarySearchStr(current2->data, tempList->pf->str, list1->pf->count)) {
-            tempList->delete(&tempList);
-            return true;
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (containsKeyStr(set, list2->pf->data[i])) {
+                set->delete(&set);
+                return true;
+            }
         }
-
-        current2 = current2->next;
+        set->delete(&set);
     }
 
-    tempList->delete(&tempList);
+    if (ctx->type == STR_LL) {
+        StrLinkedList list2 = (StrLinkedList) ctx->collection;
+        StrSet set = pr_initSs_(set, list1->values);
+        StrNode current = list2->pf->begin;
+
+        while (current != NULL) {
+            if (containsKeyStr(set, current->data)) {
+                set->delete(&set);
+                return true;
+            }
+            current = current->next;
+        }
+        set->delete(&set);
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet setFrom = (StrSet) ctx->collection;
+        StrSet setTemp = pr_initSs_(setTemp, list1->values);
+        StrList listFrom = pr_initLs_(listFrom, setFrom->values);
+
+        for (int i = 0; i < setFrom->pf->count; ++i) {
+            if (containsKeyStr(setTemp, listFrom->pf->data[i])) {
+                setTemp->delete(&setTemp);
+                listFrom->delete(&listFrom);
+                return true;
+            }
+        }
+        setTemp->delete(&setTemp);
+        listFrom->delete(&listFrom);
+    }
+
     return false;
 }
 
@@ -342,40 +407,33 @@ bool removeStrLL(StrLinkedList list, int index) {
     return removeNodeStr(list, current, previous, index);
 }
 
-bool removeAllStrLL(StrLinkedList list1, StrLinkedList list2) {
-    if (list1 == NULL || list2 ==NULL) return false;
+bool removeAllStrLL(StrLinkedList list1, void* source) {
+    if (list1 == NULL || source == NULL) return false;
 
-    int listSize = list1->pf->count;
-    StrList tempList = pr_initLs_(tempList, NULL);
-    StrList filtered = pr_initLs_(filtered, NULL);
-    StrList tempForBS = pr_initLs_(tempForBS, NULL);
+    Ctx ctx = (Ctx) source;
+    StrLinkedList tempList;
 
-    copyLLToStrList(list1, tempList);
-    copyLLToStrList(list1, tempForBS);
-    quickSortStr(tempForBS->pf->str, 0, listSize);
-
-    StrNode current2 = list2->pf->begin;
-    while (current2 != NULL) {
-        bool isExist = binarySearchStr(current2->data, tempForBS->pf->str, listSize);
-        if (isExist)
-            filtered->add(filtered, current2->data);
-
-        current2 = current2->next;
+    if (ctx->type == STR_LIST) {
+        StrList list2 = (IntList) ctx->collection;
+        StrLinkedList copyValues = pr_initLLs_(copyValues, list2->values);
+        tempList = subtractStrLL(list1, copyValues);
     }
 
-    clearStrLL(list1);
-
-    quickSortStr(filtered->pf->str, 0, filtered->pf->count);
-    for (int i = 0; i < listSize; ++i) {
-        if (binarySearchStr(tempList->pf->str[i], filtered->pf->str, filtered->pf->count))
-            continue;
-
-        list1->add(list1, tempList->pf->str[i]);
+    if (ctx->type == STR_LL) {
+        StrLinkedList list2 = (StrLinkedList) ctx->collection;
+        tempList = subtractStrLL(list1, list2);
     }
 
-    tempForBS->delete(&tempForBS);
-    filtered->delete(&filtered);
-    tempList->delete(&tempList);
+    if (ctx->type == STR_SET) {
+        StrSet set = (StrSet) ctx->collection;
+        StrLinkedList copyValues = pr_initLLs_(copyValues, set->values);
+
+        tempList = subtractStrLL(list1, copyValues);
+        copyValues->delete(&copyValues);
+    }
+
+    list1->delete(&list1);
+    list1 = tempList;
 
     return true;
 }
@@ -387,42 +445,23 @@ StrLinkedList subtractStrLL(StrLinkedList list1, StrLinkedList list2) {
     }
 
     if (isEmptyStrLL(list2)) {
-        return copyStrLL(list1);
+        StrLinkedList temp = pr_initLLs_(temp, list1->values);
+        return temp;
     }
 
-    int listSize = list1->pf->count;
-    StrList tempList = pr_initLs_(tempList, NULL);
-    StrList filtered = pr_initLs_(filtered, NULL);
-    StrList tempForBS = pr_initLs_(tempForBS, NULL);
+    StrSet set = pr_initSs_(set, list2->values);
+    StrLinkedList temp = pr_initLLs_(temp, NULL);
 
-    copyLLToStrList(list1, tempList);
-    copyLLToStrList(list1, tempForBS);
-    quickSortStr(tempForBS->pf->str, 0, listSize);
-
-    StrNode current2 = list2->pf->begin;
-    while (current2 != NULL) {
-        bool isExist = binarySearchStr(current2->data, tempForBS->pf->str, listSize);
-        if (isExist)
-            filtered->add(filtered, current2->data);
-
-        current2 = current2->next;
+    StrNode current = list1->pf->begin;
+    while (current != NULL) {
+        if (!set->contains(set, current->data))
+            temp->add(temp, current->data);
+        current = current->next;
     }
 
-    StrLinkedList newLL = pr_initLLs_(newLL, NULL);
+    set->delete(&set);
 
-    quickSortStr(filtered->pf->str, 0, filtered->pf->count);
-    for (int i = 0; i < listSize; ++i) {
-        if (binarySearchStr(tempList->pf->str[i], filtered->pf->str, filtered->pf->count))
-            continue;
-
-        addStrLL(list1, tempList->pf->str[i]);
-    }
-
-    tempForBS->delete(&tempForBS);
-    filtered->delete(&filtered);
-    tempList->delete(&tempList);
-
-    return newLL;
+    return temp;
 }
 
 void reverseStrLL(StrLinkedList list) {

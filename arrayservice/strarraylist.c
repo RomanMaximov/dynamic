@@ -267,10 +267,8 @@ bool containsAnyStrList(StrList list1, void* source) {
 
     if (ctx->type == STR_LIST) {
         StrList list2 = (StrList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
-            return false;
-
         StrSet set = pr_initSs_(set, NULL);
+
         for (int i = 0; i < list2->pf->count; ++i) {
             if (containsKeyStr(set, list2->pf->data[i])) {
                 set->delete(&set);
@@ -282,11 +280,9 @@ bool containsAnyStrList(StrList list1, void* source) {
 
     if (ctx->type == STR_LL) {
         StrLinkedList list2 = (StrLinkedList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
-            return false;
-
         StrSet set = pr_initSs_(set, list1->values);
         StrNode current = list2->pf->begin;
+
         while (current != NULL) {
             if (containsKeyStr(set, current->data)) {
                 set->delete(&set);
@@ -299,9 +295,6 @@ bool containsAnyStrList(StrList list1, void* source) {
 
     if (ctx->type == STR_SET) {
         StrSet setFrom = (StrSet) ctx->collection;
-        if (setFrom->pf->count > list1->pf->count)
-            return false;
-
         StrList strList = pr_initLs_(strList, setFrom->values);
         StrSet setTemp = pr_initSs_(setTemp, list1->values);
 

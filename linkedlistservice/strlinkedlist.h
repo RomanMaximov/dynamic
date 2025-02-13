@@ -18,7 +18,7 @@ typedef String* string;
 
 void addStrLL(StrLinkedList, string);
 void addArrCharLL(StrLinkedList, char* arr);
-void addAllStrLL(StrLinkedList, StrLinkedList);
+void addAllStrLL(StrLinkedList, void*);
 string getStrLL(StrLinkedList, int);
 bool setStrLL(StrLinkedList, int, string);
 int indexOfStrLL(StrLinkedList, string);
@@ -26,10 +26,10 @@ void sortStrLL(StrLinkedList);
 void sortStrLLReverse(StrLinkedList);
 void clearStrLL(StrLinkedList);
 bool containsStrLL(StrLinkedList, string);
-bool containsAllStrLL(StrLinkedList, StrLinkedList);
-bool containsAnyStrLL(StrLinkedList, StrLinkedList);
+bool containsAllStrLL(StrLinkedList, void*);
+bool containsAnyStrLL(StrLinkedList, void*);
 bool removeStrLL(StrLinkedList, int); // by index
-bool removeAllStrLL(StrLinkedList, StrLinkedList);
+bool removeAllStrLL(StrLinkedList, void*);
 StrLinkedList subtractStrLL(StrLinkedList, StrLinkedList);
 void reverseStrLL(StrLinkedList);
 bool isEqualListsStrLL(StrLinkedList, StrLinkedList);

@@ -300,10 +300,8 @@ bool containsAnyDoubleLL(DoubleLinkedList list1, void* source) {
 
     if (ctx->type == DOUBLE_LIST) {
         DoubleList list2 = (DoubleList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
-            return false;
-
         DoubleSet set = pr_initSd_(set, list1->values);
+
         for (int i = 0; i < list2->pf->count; ++i) {
             if (containsKeyDouble(set, list2->pf->data[i])) {
                 set->delete(&set);
@@ -315,11 +313,9 @@ bool containsAnyDoubleLL(DoubleLinkedList list1, void* source) {
 
     if (ctx->type == DOUBLE_LL) {
         DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
-            return false;
-
         DoubleSet set = pr_initSd_(set, list1->values);
         DoubleNode current = list2->pf->begin;
+
         while (current != NULL) {
             if (containsKeyDouble(set, current->data)) {
                 set->delete(&set);
@@ -332,9 +328,6 @@ bool containsAnyDoubleLL(DoubleLinkedList list1, void* source) {
 
     if (ctx->type == DOUBLE_SET) {
         DoubleSet setFrom = (DoubleSet) ctx->collection;
-        if (setFrom->pf->count > list1->pf->count)
-            return false;
-
         DoubleSet setTemp = pr_initSd_(setTemp, list1->values);
         DoubleList listFrom = pr_initLd_(listFrom, setFrom->values);
 
