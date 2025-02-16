@@ -186,7 +186,7 @@ bool isEqualsDoubleSet(DoubleSet set1, DoubleSet set2) {
 Iterator iteratorDoubleSet(DoubleSet list){
     Iterator iter = malloc(sizeof(Itr));
     iter->count = 0;
-    iter->data = list;
+    iter->collection = list;
     iter->collectionSize = list->pf->count;
     iter->hasNext = (void*) hasNext(iter);
     iter->type = DOUBLE_SET;

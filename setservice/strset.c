@@ -82,8 +82,8 @@ void addCharArrSet(StrSet set, char* s) {
     insertNode(&set->pf->bucket[indexBucket], s, &set->pf->count);
 }
 
-void addAllStrSet(StrSet set1, StrSet set2) {
-    if (set2 == NULL) return;
+void addAllStrSet(StrSet set1, void* source) {
+    /*if (set2 == NULL) return;
 
     if (isCapacityFull(set1))
         increaseCapacity(set1);
@@ -96,7 +96,7 @@ void addAllStrSet(StrSet set1, StrSet set2) {
         insertNode(&set1->pf->bucket[indexBucket], list->pf->str[i]->pf->data, &set1->pf->count);
     }
 
-    list->delete(&list);
+    list->delete(&list);*/
 }
 
 void clearStrSet(StrSet set) {
@@ -121,8 +121,8 @@ bool containsStrSet(StrSet set, string s) {
     return false;
 }
 
-bool containsAllStrSet(StrSet set1, StrSet set2) {
-    if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
+bool containsAllStrSet(StrSet set1, void* source) {
+    /*if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
     if (isEmptyStrSet(set2)) return true;
 
     int count2 = set2->pf->count;
@@ -139,13 +139,13 @@ bool containsAllStrSet(StrSet set1, StrSet set2) {
     }
 
     list1->delete(&list1);
-    list2->delete(&list2);
+    list2->delete(&list2);*/
 
     return  true;
 }
 
-bool containsAnyStrSet(StrSet set1, StrSet set2) {
-    if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
+bool containsAnyStrSet(StrSet set1, void* source) {
+    /*if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
 
     int count2 = set2->pf->count;
     StrList list2 = pr_initLs_(list2, NULL);
@@ -164,7 +164,7 @@ bool containsAnyStrSet(StrSet set1, StrSet set2) {
     }
 
     list1->delete(&list1);
-    list2->delete(&list2);
+    list2->delete(&list2);*/
 
     return  false;
 }
@@ -181,15 +181,15 @@ bool removeStrSet(StrSet set, string s) {
     return true;
 }
 
-bool removeAllStrSet(StrSet set1, StrSet set2) {
-    StrList list2 = pr_initLs_(list2, NULL);
+bool removeAllStrSet(StrSet set1, void* source) {
+    /*StrList list2 = pr_initLs_(list2, NULL);
     setToArr(set2, list2);
 
     for (int i = 0; i < set2->pf->count; ++i) {
         removeStrSet(set1, list2->pf->str[i]);
     }
 
-    list2->delete(&list2);
+    list2->delete(&list2);*/
 
     return true;
 }
@@ -285,7 +285,7 @@ void deleteStrSet(StrSet* set) {
 Iterator iteratorStrSet(StrSet list) { // TODO принимать void* и преобразовывать к Collection
     Iterator iter = malloc(sizeof(Itr));
     iter->count = 0;
-    iter->data = list;
+    iter->collection = list;
     iter->collectionSize = list->pf->count;
     iter->hasNext = (void*) hasNext(iter);
     iter->type = STR_SET;

@@ -34,9 +34,9 @@ typedef struct ArrayListInt {
     void (*clear)(struct ArrayListInt* list);
     bool (*contains)(struct ArrayListInt* list, int number);
     bool (*containsAll)(struct ArrayListInt* list1, void* list2);
-    bool (*containsAny)(struct ArrayListInt* list1, struct ArrayListInt* list2);
+    bool (*containsAny)(struct ArrayListInt* list1, void* list2);
     bool (*removeElem)(struct ArrayListInt* list, int number);
-    bool (*removeAll)(struct ArrayListInt* list1, struct ArrayListInt* list2);
+    bool (*removeAll)(struct ArrayListInt* list1, void* list2);
     struct ArrayListInt* (*subtract)(struct ArrayListInt* list1, struct ArrayListInt* list2);
     bool (*isEmpty)(struct ArrayListInt* list);
     void (*reverse)(struct ArrayListInt* list);
@@ -81,7 +81,7 @@ typedef struct ArrayListStr {
     void* values;              // private field
     // funcs pointers
     void (*add)(struct ArrayListStr* list, struct String* s);
-    void (*addAll)(struct ArrayListStr* list1, struct ArrayListStr* list2);
+    void (*addAll)(struct ArrayListStr* list1, void* list2);
     struct String* (*get)(struct ArrayListStr* list, int index);
     bool (*set)(struct ArrayListStr* list, int index, struct String* s);
     int (*indexOf)(struct ArrayListStr* list, struct String* s);
@@ -89,10 +89,10 @@ typedef struct ArrayListStr {
     void (*sortReverse)(struct ArrayListStr* list);
     void (*clear)(struct ArrayListStr* list);
     bool (*contains)(struct ArrayListStr* list, struct String* s);
-    bool (*containsAll)(struct ArrayListStr* list1, struct ArrayListStr* list2);
-    bool (*containsAny)(struct ArrayListStr* list1, struct ArrayListStr* list2);
+    bool (*containsAll)(struct ArrayListStr* list1, void* list2);
+    bool (*containsAny)(struct ArrayListStr* list1, void* list2);
     bool (*removeElem)(struct ArrayListStr* list, int number);
-    bool (*removeAll)(struct ArrayListStr* list1, struct ArrayListStr* list2);
+    bool (*removeAll)(struct ArrayListStr* list1, void* list2);
     struct ArrayListStr* (*subtract)(struct ArrayListStr* list1, struct ArrayListStr* list2);
     bool (*isEmpty)(struct ArrayListStr* list);
     void (*reverse)(struct ArrayListStr* list);

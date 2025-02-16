@@ -24,7 +24,8 @@ static int* increaseCapacity(IntList list);
 static int compareInt(const void* elem1, const void* elem2);
 static int compareReverse(const void* elem1, const void* elem2);
 static bool binarySearch(int elem, const int* arr, int high);
-static bool hasNext(Iterator iter);
+static void* hasNext(Type type);
+void initFuncs(Type type, Iterator iter);
 
 
 void addIntList(IntList list, int num) {
@@ -452,15 +453,32 @@ void deleteIntList(IntList* list) {
 Iterator iteratorIntList(IntList list){
     Iterator iter = malloc(sizeof(Itr));
     iter->count = 0;
-    iter->data = list;
+    iter->collection = list;
     iter->collectionSize = list->pf->count;
-    iter->hasNext = (void*) hasNext(iter);
+    //iter->hasNext = (void*) hasNext(iter);
     iter->type = INT_LIST;
+    initFuncs(INT_LIST, iter);
+
     return iter;
 }
 
-static bool hasNext(Iterator iter) {
-    return iter->count < iter->collectionSize;
+
+
+static bool hasNextInt(Iterator iter) {
+    if (iter->count < iter->collectionSize) {
+        IntList list = (IntList) iter->collection;
+        int num = getIntList(list, iter->count);
+        iter->elemValue = &num;
+        iter->count++;
+        return true;
+    }
+
+    return false;
+}
+
+void* hasNext(Type type) {
+    if (type == INT_LIST)
+     return hasNextInt;
 }
 
 // ===================== private funcs =======================
@@ -495,4 +513,8 @@ static bool binarySearch(int elem, const int* arr, int high) {
             return true;
     }
     return false;
+}
+
+void initFuncs(Type type, Iterator iter) {
+    iter->hasNext = hasNext(type);
 }

@@ -211,15 +211,59 @@ bool removeIntSet(IntSet set, int num) {
     return true;
 }
 
-bool removeAllIntSet(IntSet set1, IntSet set2) {
-    int arr[set2->pf->count];
-    setToArr(set2, arr);
+bool removeAllIntSet(IntSet set, void* source) {
+    if (set == NULL || source == NULL) return false;
 
-    for (int i = 0; i < set2->pf->count; ++i) {
-        removeIntSet(set1, arr[i]);
+    Ctx ctx = (Ctx) source;
+    IntSet tempList;
+
+    if (ctx->type == INT_LIST) {
+        IntList list = (IntList) ctx->collection;
+        tempList = subtractIntSet(set, list->values);
     }
 
+    if (ctx->type == INT_LL) {
+        IntLinkedList list = (IntLinkedList) ctx->collection;
+        tempList = subtractIntSet(set, list->values);
+    }
+
+    if (ctx->type == INT_SET) {
+        IntSet set2 = (IntSet) ctx->collection;
+        tempList = subtractIntSet(set, set2->values);
+    }
+
+    set->delete(&set);
+    set = tempList;
+
     return true;
+}
+
+IntSet subtractIntSet(IntSet set, void* source) {
+    if (isEmptyIntSet(set)) {
+        IntList temp = NULL;
+        return pr_initSi_(temp, NULL);
+    }
+
+    Ctx ctx = (Ctx) source;
+    IntSet tempSet = pr_initSi_(tempSet, NULL);;
+
+    if (ctx->type == INT_LIST) {
+        IntList list = (IntList) ctx->collection;
+        if (list->pf->count == 0) {
+            IntSet temp = pr_initSi_(temp, set->values);
+            return temp;
+        }
+
+        IntSet set2 = pr_initSi_(set, list->values);
+        /*for (int i = 0; i < list->pf->count; ++i) {
+            if (!set2->contains(set2, ))
+                tempSet->add(tempSet, );
+        }*/
+
+        set2->delete(&set2);
+    }
+
+    return tempSet;
 }
 
 bool isEmptyIntSet(IntSet set) {
@@ -246,7 +290,7 @@ bool isEqualsIntSet(IntSet set1, IntSet set2) {
 Iterator iteratorIntSet(IntSet list){
     Iterator iter = malloc(sizeof(Itr));
     iter->count = 0;
-    iter->data = list;
+    iter->collection = list;
     iter->collectionSize = list->pf->count;
     iter->hasNext = (void*) hasNext(iter);
     iter->type = INT_SET;

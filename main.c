@@ -21,6 +21,15 @@ int main()
     printf("key: %lld\n", tempKey2);
     printf("key: %d\n", (int) (tempKey % 16));
     printf("key2: %d\n", (int) (tempKey2 % 16));
+    puts("==============================");
+
+    IntList listForIter = listOf(listForIter, 2, 10, 15);
+    Iterator itr = listForIter->iterator(listForIter);
+    int value = 0;
+    while (itr->hasNext(itr)) {
+        value = next(itr);
+        printf("iterator value: %d\n", value);
+    }
 
 
 
@@ -215,7 +224,7 @@ int main()
     StringList stringList2 = newList(stringList2);*/
 
 
-    puts("========================= ////////   LinkedList   /////// ============================================");
+    /*puts("========================= ////////   LinkedList   /////// ============================================");
     string ll1 = strOf("s1");
     string ll2 = strOf("s2");
     string ll3 = strOf("s3");
@@ -261,7 +270,7 @@ int main()
     IntSet intSet = newSet(intSet, NULL);
     intSet->add(intSet, 2);
     intSet->add(intSet, 5);
-    intSet->add(intSet, 7);
+    intSet->add(intSet, 7);*/
 
     //bool isKey = containsKeyInt(intSet, 8);
     puts("");
@@ -380,7 +389,9 @@ int main()
     //deleteIntSet(&set);
     //printIntSet(set);
 
-    puts("");
+    puts("=======================");
+
+
 
     /*StrStrMap strStrMap = newStrStrMap(strStrMap);
     string s35 = stringOf("35");

@@ -23,6 +23,7 @@ bool containsAllIntSet(IntSet, void*);
 bool containsAnyIntSet(IntSet, void*);
 bool removeIntSet(IntSet, int);
 bool removeAllIntSet(IntSet, void*);
+IntSet subtractIntSet(IntSet, void*);
 bool isEmptyIntSet(IntSet);
 bool isEqualsIntSet(IntSet, IntSet);
 IntSet emptyIfNullIntSet(IntSet);

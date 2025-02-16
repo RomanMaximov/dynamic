@@ -34,6 +34,7 @@ static bool binarySearchStr(string s, String** strList, int high);
 static int compareInt(const void* elem1, const void* elem2);
 static bool binarySearch(int elem, const int* arr, int high);
 static void checkCapacity(char* text, int* count, int strLength);
+static void deleteStr(string* s);
 static bool hasNext(Iterator iter);
 
 
@@ -379,8 +380,12 @@ bool removeAllStrList(StrList list1, void* source) {
         copyValues->delete(&copyValues);
     }
 
-    list1->delete(&list1);
-    list1 = tempList;
+    for (int i = 0; i <list1->pf->count; ++i) {
+        deleteStr(&list1->pf->data[i]);
+        list1->pf->data[i] = strOf(tempList->pf->data[i]->pf->data);
+    }
+    list1->pf->count = tempList->pf->count;
+    tempList->delete(&tempList);
 
     return true;
 }
@@ -555,7 +560,7 @@ void deleteStrList(StrList* list) {
 Iterator iteratorStrList(StrList list){
     Iterator iter = malloc(sizeof(Itr));
     iter->count = 0;
-    iter->data = list;
+    iter->collection = list;
     iter->collectionSize = list->pf->count;
     iter->hasNext = (void*) hasNext(iter);
     iter->type = STR_LIST;
@@ -707,4 +712,15 @@ static void checkCapacity(char* text, int* count, int strLength) {
         *count = (*count + strLength) * 2;
         realloc(text, *count * sizeof(char));
     }
+}
+
+static void deleteStr(string* s) {
+    if (s != NULL || *s != NULL) {
+        if ((*s)->pf->data != NULL) {
+            free((*s)->pf->data);
+        }
+        free((*s)->pf);
+    }
+    free(*s);
+    *s = NULL;
 }

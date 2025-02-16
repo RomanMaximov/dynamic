@@ -412,6 +412,19 @@ static void* removeAll(Type type) {
     }
 }
 
+static void* subtract(Type type) {
+    switch (type) {
+        case INT_SET:
+            return subtractIntSet;
+        /*case DOUBLE_SET:
+            return subtractDoubleSet;
+        case STR_SET:
+            return subtractStrSet;
+        default:
+            return NULL;*/
+    }
+}
+
 static void* isEmpty(Type type) {
     switch (type) {
         case INT_SET:
@@ -512,6 +525,7 @@ static void initFuncs(Type type, void* data) {
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->containsAny = containsAny(type) : type == DOUBLE_SET ? ((DoubleSet) data)->containsAny = containsAny(type) : (((StrSet) data)->containsAny = containsAny(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->removeElem = removeElem(type) : type == DOUBLE_SET ? ((DoubleSet) data)->removeElem = removeElem(type) : (((StrSet) data)->removeElem = removeElem(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->removeAll = removeAll(type) : type == DOUBLE_SET ? ((DoubleSet) data)->removeAll = removeAll(type) : (((StrSet) data)->removeAll = removeAll(type));
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->subtract = subtract(type) : type == DOUBLE_SET ? ((DoubleSet) data)->subtract = subtract(type) : (((StrSet) data)->subtract = subtract(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->isEmpty = isEmpty(type) : type == DOUBLE_SET ? ((DoubleSet) data)->isEmpty = isEmpty(type) : (((StrSet) data)->isEmpty = isEmpty(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->isEquals = isEquals(type) : type == DOUBLE_SET ? ((DoubleSet) data)->isEquals = isEquals(type) : (((StrSet) data)->isEquals = isEquals(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->size = size(type) : type == DOUBLE_SET ? ((DoubleSet) data)->size = size(type) : (((StrSet) data)->size = size(type));

@@ -448,7 +448,7 @@ void deleteDoubleList(DoubleList* list) {
 Iterator iteratorDoubleList(DoubleList list){
     Iterator iter = malloc(sizeof(Itr));
     iter->count = 0;
-    iter->data = list;
+    iter->collection = list;
     iter->collectionSize = list->pf->count;
     iter->hasNext = (void*) hasNext(iter);
     iter->type = DOUBLE_LIST;

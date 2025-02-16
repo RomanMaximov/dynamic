@@ -25,7 +25,7 @@ typedef struct LinkedListInt {
     void* values;            // private field
     // funcs pointers
     void (*add)(struct LinkedListInt* list, int number);
-    void (*addAll)(struct LinkedListInt* list1, struct LinkedListInt* list2);
+    void (*addAll)(struct LinkedListInt* list1, void* list2);
     int (*get)(struct LinkedListInt* list, int index);
     bool (*set)(struct LinkedListInt* list, int index, int number);
     int (*indexOf)(struct LinkedListInt* list, int number);
@@ -33,10 +33,10 @@ typedef struct LinkedListInt {
     void (*sortReverse)(struct LinkedListInt* list);
     void (*clear)(struct LinkedListInt* list);
     bool (*contains)(struct LinkedListInt* list, int number);
-    bool (*containsAll)(struct LinkedListInt* list1, struct LinkedListInt* list2);
-    bool (*containsAny)(struct LinkedListInt* list1, struct LinkedListInt* list2);
+    bool (*containsAll)(struct LinkedListInt* list1, void* list2);
+    bool (*containsAny)(struct LinkedListInt* list1, void* list2);
     bool (*removeElem)(struct LinkedListInt* list, int number);
-    bool (*removeAll)(struct LinkedListInt* list1, struct LinkedListInt* list2);
+    bool (*removeAll)(struct LinkedListInt* list1, void* list2);
     struct LinkedListInt* (*subtract)(struct LinkedListInt* list1, struct LinkedListInt* list2);
     bool (*isEmpty)(struct LinkedListInt* list);
     void (*reverse)(struct LinkedListInt* list);
@@ -53,7 +53,7 @@ typedef struct LinkedListDouble {
     void* values;               // private field
     // funcs pointers
     void (*add)(struct LinkedListDouble* list, double number);
-    void (*addAll)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
+    void (*addAll)(struct LinkedListDouble* list1, void* list2);
     double (*get)(struct LinkedListDouble* list, int index);
     bool (*set)(struct LinkedListDouble* list, int index, double number);
     int (*indexOf)(struct LinkedListDouble* list, double number);
@@ -61,10 +61,10 @@ typedef struct LinkedListDouble {
     void (*sortReverse)(struct LinkedListDouble* list);
     void (*clear)(struct LinkedListDouble* list);
     bool (*contains)(struct LinkedListDouble* list, double number);
-    bool (*containsAll)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
-    bool (*containsAny)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
+    bool (*containsAll)(struct LinkedListDouble* list1, void* list2);
+    bool (*containsAny)(struct LinkedListDouble* list1, void* list2);
     bool (*removeElem)(struct LinkedListDouble* list, double number);
-    bool (*removeAll)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
+    bool (*removeAll)(struct LinkedListDouble* list1, void* list2);
     struct LinkedListDouble* (*subtract)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
     bool (*isEmpty)(struct LinkedListDouble* list);
     void (*reverse)(struct LinkedListDouble* list);
@@ -81,7 +81,7 @@ typedef struct LinkedListStr {
     void* values;            // private field
     // funcs pointers
     void (*add)(struct LinkedListStr* list, string s);
-    void (*addAll)(struct LinkedListStr* list1, struct LinkedListStr* list2);
+    void (*addAll)(struct LinkedListStr* list1, void* list2);
     String* (*get)(struct LinkedListStr* list, int index);
     bool (*set)(struct LinkedListStr* list, int index, String* s);
     int (*indexOf)(struct LinkedListStr* list, String* s);
@@ -89,10 +89,10 @@ typedef struct LinkedListStr {
     void (*sortReverse)(struct LinkedListStr* list);
     void (*clear)(struct LinkedListStr* list);
     bool (*contains)(struct LinkedListStr* list, String* s);
-    bool (*containsAll)(struct LinkedListStr* list1, struct LinkedListStr* list2);
-    bool (*containsAny)(struct LinkedListStr* list1, struct LinkedListStr* list2);
+    bool (*containsAll)(struct LinkedListStr* list1, void* list2);
+    bool (*containsAny)(struct LinkedListStr* list1, void* list2);
     bool (*removeElem)(struct LinkedListStr* list, String* s);
-    bool (*removeAll)(struct LinkedListStr* list1, struct LinkedListStr* list2);
+    bool (*removeAll)(struct LinkedListStr* list1, void* list2);
     struct LinkedListStr* (*subtract)(struct LinkedListStr* list1, struct LinkedListStr* list2);
     bool (*isEmpty)(struct LinkedListStr* list);
     void (*reverse)(struct LinkedListStr* list);
