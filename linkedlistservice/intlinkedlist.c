@@ -278,6 +278,8 @@ bool containsAllIntLL(IntLinkedList list1, void* source) {
         if (list2->pf->count > list1->pf->count)
             return false;
 
+        if (list2->pf->count == 0) return true;
+
         IntSet set = pr_initSi_(set, list1->values);
         for (int i = 0; i < list2->pf->count; ++i) {
             if (!containsKeyInt(set, list2->pf->data[i])) {
@@ -292,6 +294,8 @@ bool containsAllIntLL(IntLinkedList list1, void* source) {
         IntLinkedList list2 = (IntLinkedList) ctx->collection;
         if (list2->pf->count > list1->pf->count)
             return false;
+
+        if (list2->pf->count == 0) return true;
 
         IntSet set = pr_initSi_(set, list1->values);
         IntNode current = list2->pf->begin;
@@ -309,6 +313,8 @@ bool containsAllIntLL(IntLinkedList list1, void* source) {
         IntSet setFrom = (IntSet) ctx->collection;
         if (setFrom->pf->count > list1->pf->count)
             return false;
+
+        if (setFrom->pf->count == 0) return true;
 
         IntSet setTemp = pr_initSi_(setTemp, list1->values);
         IntList listFrom = pr_initLi_(listFrom, setFrom->values);

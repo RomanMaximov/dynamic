@@ -84,7 +84,6 @@ static void* delete(Type type);
 static void* iterator(Type type);
 
 // funcs
-// TODO добавить другие способы инициализации сетов как у массивов
 IntSet pr_initSi_(IntSet temp, void* collection) {
     IntSet set = malloc(sizeof(SetInt));
     set->pf = malloc(sizeof(InnerIntSet));

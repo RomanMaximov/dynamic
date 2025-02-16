@@ -280,6 +280,8 @@ bool containsAllStrLL(StrLinkedList list1, void* source) {
         if (list2->pf->count > list1->pf->count)
             return false;
 
+        if (list2->pf->count == 0) return true;
+
         StrSet set = pr_initSs_(set, list1->values);
         for (int i = 0; i < list2->pf->count; ++i) {
             if (!containsKeyStr(set, list2->pf->data[i])) {
@@ -294,6 +296,8 @@ bool containsAllStrLL(StrLinkedList list1, void* source) {
         StrLinkedList list2 = (StrLinkedList) ctx->collection;
         if (list2->pf->count > list1->pf->count)
             return false;
+
+        if (list2->pf->count == 0) return true;
 
         StrSet set = pr_initSs_(set, list1->values);
         StrNode current = list2->pf->begin;
@@ -311,6 +315,8 @@ bool containsAllStrLL(StrLinkedList list1, void* source) {
         StrSet setFrom = (StrSet) ctx->collection;
         if (setFrom->pf->count > list1->pf->count)
             return false;
+
+        if (setFrom->pf->count == 0) return true;
 
         StrSet setTemp = pr_initSs_(setTemp, list1->values);
         StrList listFrom = pr_initLs_(listFrom, setFrom->values);

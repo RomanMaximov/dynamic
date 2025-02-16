@@ -103,32 +103,96 @@ bool containsIntSet(IntSet set, int num) {
     return containsKeyInt(set, num);
 }
 
-bool containsAllIntSet(IntSet set1, IntSet set2) {
-    if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
-    if (isEmptyIntSet(set2)) return true;
+bool containsAllIntSet(IntSet set, void* source) {
+    if (set == NULL || source == NULL) return false;
 
-    int count2 = set2->pf->count;
-    int arr2[count2];
-    setToArr(set2, arr2);
+    Ctx ctx = (Ctx) source;
 
-    for (int i = 0; i < count2; ++i) {
-        if (!containsKeyInt(set1, arr2[i]))
+    if (ctx->type == INT_LIST) {
+        IntList list2 = (IntList) ctx->collection;
+        if (list2->pf->count > set->pf->count)
             return false;
+
+        if (list2->pf->count == 0) return true;
+
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (!containsKeyInt(set, list2->pf->data[i])) {
+                return false;
+            }
+        }
+    }
+
+    if (ctx->type == INT_LL) {
+        IntLinkedList list2 = (IntLinkedList) ctx->collection;
+        if (list2->pf->count > set->pf->count)
+            return false;
+
+        if (list2->pf->count == 0) return true;
+
+        IntNode current = list2->pf->begin;
+        while (current != NULL) {
+            if (!containsKeyInt(set, current->data)) {
+                return false;
+            }
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == INT_SET) {
+        IntSet setFrom = (IntSet) ctx->collection;
+        if (setFrom->pf->count > set->pf->count)
+            return false;
+
+        if (setFrom->pf->count == 0) return true;
+
+        IntList listFrom = pr_initLi_(listFrom, setFrom->values);
+
+        for (int i = 0; i < listFrom->pf->count; ++i) {
+            if (!containsKeyInt(set, listFrom->pf->data[i])) {
+                return false;
+            }
+        }
     }
 
     return  true;
 }
 
-bool containsAnyIntSet(IntSet set1, IntSet set2) {
-    if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
+bool containsAnyIntSet(IntSet set, void* source) {
+    if (set == NULL || source == NULL) return false;
 
-    int count2 = set2->pf->count;
-    int arr2[count2];
-    setToArr(set2, arr2);
+    Ctx ctx = (Ctx) source;
 
-    for (int i = 0; i < count2; ++i) {
-        if(containsKeyInt(set1, arr2[i]))
-            return true;
+    if (ctx->type == INT_LIST) {
+        IntList list2 = (IntList) ctx->collection;
+
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (containsKeyInt(set, list2->pf->data[i])) {
+                return true;
+            }
+        }
+    }
+
+    if (ctx->type == INT_LL) {
+        IntLinkedList list2 = (IntLinkedList) ctx->collection;
+        IntNode current = list2->pf->begin;
+
+        while (current != NULL) {
+            if (containsKeyInt(set, current->data)) {
+                return true;
+            }
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == INT_SET) {
+        IntSet setFrom = (IntSet) ctx->collection;
+        IntList listFrom = pr_initLi_(listFrom, setFrom->values);
+
+        for (int i = 0; i < listFrom->pf->count; ++i) {
+            if (containsKeyInt(set, listFrom->pf->data[i])) {
+                return true;
+            }
+        }
     }
 
     return  false;

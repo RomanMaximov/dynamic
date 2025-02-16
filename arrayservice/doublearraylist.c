@@ -159,6 +159,8 @@ bool containsAllDoubleList(DoubleList list1, void* source) {
         if (list2->pf->count > list1->pf->count)
             return false;
 
+        if (list2->pf->count == 0) return true;
+
         DoubleSet set = pr_initSd_(set, list1->values);
         for (int i = 0; i < list2->pf->count; ++i) {
             if (!containsKeyDouble(set, list2->pf->data[i])) {
@@ -173,6 +175,8 @@ bool containsAllDoubleList(DoubleList list1, void* source) {
         DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
         if (list2->pf->count > list1->pf->count)
             return false;
+
+        if (list2->pf->count == 0) return true;
 
         DoubleSet set = pr_initSd_(set, list1->values);
         DoubleNode current = list2->pf->begin;
@@ -190,6 +194,8 @@ bool containsAllDoubleList(DoubleList list1, void* source) {
         DoubleSet setFrom = (DoubleSet) ctx->collection;
         if (setFrom->pf->count > list1->pf->count)
             return false;
+
+        if (setFrom->pf->count == 0) return true;
 
         DoubleSet setTemp = pr_initSd_(setTemp, list1->values);
         DoubleList listTemp = pr_initLd_(listTemp, setFrom->values);
