@@ -45,8 +45,6 @@ static IntLinkedList copyIntLL(IntLinkedList list);
 static void reverseArr(int* arr, int size);
 static int compareInt(const void* elem1, const void* elem2);
 static int compareIntReverse(const void* elem1, const void* elem2);
-static bool hasNext(Iterator iter);
-//static int getIntValue(Iterator iter, IntLinkedList list);
 
 static void insertBeginInt(IntLinkedList list, int num, int* index) {
     IntNode newNodeStart = NULL;
@@ -580,20 +578,6 @@ void deleteIntLL(IntLinkedList* list) {
 
     free(*list);
     *list = NULL;
-}
-
-Iterator iteratorIntLL(IntLinkedList list){
-    Iterator iter = malloc(sizeof(Itr));
-    iter->count = 0;
-    iter->collection = list;
-    iter->collectionSize = list->pf->count;
-    iter->hasNext = (void*) hasNext(iter);
-    iter->type = INT_LL;
-    return iter;
-}
-
-static bool hasNext(Iterator iter) {
-    return iter->count < iter->collectionSize;
 }
 
 // ===================== private funcs =======================

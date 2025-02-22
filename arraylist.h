@@ -45,7 +45,6 @@ typedef struct ArrayListInt {
     struct String* (*toString)(struct ArrayListInt* list);
     void (*print)(struct ArrayListInt* list);
     void (*delete)(struct ArrayListInt** list);
-    struct Itr* (*iterator)(struct ArrayListInt* list);
 } ArrayListInt;
 
 typedef struct ArrayListDouble {
@@ -73,7 +72,6 @@ typedef struct ArrayListDouble {
     struct String* (*toString)(struct ArrayListDouble* list);
     void (*print)(struct ArrayListDouble* list);
     void (*delete)(struct ArrayListDouble** list);
-    struct Itr* (*iterator)(struct ArrayListDouble* list);
 } ArrayListDouble;
 
 typedef struct ArrayListStr {
@@ -102,7 +100,6 @@ typedef struct ArrayListStr {
     struct String* (*toString)(struct ArrayListStr* list);
     void (*print)(struct ArrayListStr* list);
     void (*delete)(struct ArrayListStr** list);
-    struct Itr* (*iterator)(struct ArrayListStr* list);
 } ArrayListStr;
 
 
@@ -110,7 +107,6 @@ typedef ArrayListInt* IntList;
 typedef ArrayListDouble* DoubleList;
 typedef ArrayListStr* StrList;
 typedef String* string;
-typedef Itr* Iterator;
 
 // func prototypes
 IntList pr_initLi_(IntList, void*);

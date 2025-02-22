@@ -43,7 +43,6 @@ typedef struct LinkedListInt {
     bool (*isEquals)(struct LinkedListInt* list1, struct LinkedListInt* list2);
     int (*size)(struct LinkedListInt* list);
     void (*toString)(struct LinkedListInt* list);
-    struct Itr* (*iterator)(struct LinkedListInt* list);
     void (*print)(struct LinkedListInt* list);
     void (*delete)(struct LinkedListInt** list);
 } LinkedListInt;
@@ -71,7 +70,6 @@ typedef struct LinkedListDouble {
     bool (*isEquals)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
     int (*size)(struct LinkedListDouble* list);
     void (*toString)(struct LinkedListDouble* list);
-    struct Itr* (*iterator)(struct LinkedListDouble* list);
     void (*print)(struct LinkedListDouble* list);
     void (*delete)(struct LinkedListDouble** list);
 } LinkedListDouble;
@@ -99,7 +97,6 @@ typedef struct LinkedListStr {
     bool (*isEquals)(struct LinkedListStr* list1, struct LinkedListStr* list2);
     int (*size)(struct LinkedListStr* list);
     void (*toString)(struct LinkedListStr* list);
-    struct Itr* (*iterator)(struct LinkedListStr* list);
     void (*print)(struct LinkedListStr* list);
     void (*delete)(struct LinkedListStr** list);
 } LinkedListStr;
@@ -108,7 +105,6 @@ typedef LinkedListInt* IntLinkedList;
 typedef LinkedListDouble* DoubleLinkedList;
 typedef LinkedListStr* StrLinkedList;
 typedef String* string;
-typedef Itr* Iterator;
 
 
 

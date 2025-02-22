@@ -64,7 +64,6 @@ static void* size(Type type);
 static void* print(Type type);
 static void* delete(Type type);
 static void* toString(Type type);
-static void* iterator(Type type);
 
 
 // funcs
@@ -544,19 +543,6 @@ static void* delete(Type type) {
     }
 }
 
-static void* iterator(Type type) {
-    switch (type) {
-        case INT_LIST:
-            return iteratorIntList;
-        case DOUBLE_LIST:
-            return iteratorDoubleList;
-        case STR_LIST:
-            return iteratorStrList;
-        default:
-            return NULL;
-    }
-}
-
 static void* joinList(Type type) {
     return joinStrList;
 }
@@ -581,7 +567,6 @@ static void initFuncs(Type type, void* data) {
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->isEquals = isEquals(type) : type == DOUBLE_LIST ? ((DoubleList) data)->isEquals = isEquals(type) : (((StrList) data)->isEquals = isEquals(type));
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->size = size(type) : type == DOUBLE_LIST ? ((DoubleList) data)->size = size(type) : (((StrList) data)->size = size(type));
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->toString = toString(type) : type == DOUBLE_LIST ? ((DoubleList) data)->toString = toString(type) : (((StrList) data)->toString= toString(type));
-    type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->iterator = iterator(type) : type == DOUBLE_LIST ? ((DoubleList) data)->iterator = iterator(type) : (((StrList) data)->iterator = iterator(type));
     if (type == STR_LIST)
         ((StrList) data)->joinList = joinList(type);
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->print = print(type) : type == DOUBLE_LIST ? ((DoubleList) data)->print = print(type) : (((StrList) data)->print = print(type));

@@ -34,7 +34,6 @@ typedef struct SetInt {
     bool (*isEquals)(struct SetInt* set1, struct SetInt* set2);
     int (*size)(struct SetInt* set);
     string (*toString)(struct SetInt* set);
-    struct Itr* (*iterator)(struct SetInt* set);
     void (*print)(struct SetInt* set);
     void (*delete)(struct SetInt**set);
 } SetInt;
@@ -56,7 +55,6 @@ typedef struct SetDouble {
     bool (*isEquals)(struct SetDouble* set1, struct SetDouble* set2);
     int (*size)(struct SetDouble* set);
     string (*toString)(struct SetDouble* set);
-    struct Itr* (*iterator)(struct SetDouble* set);
     void (*print)(struct SetDouble* set);
     void (*delete)(struct SetDouble** set);
 } SetDouble;
@@ -78,7 +76,6 @@ typedef struct SetStr {
     bool (*isEquals)(struct SetStr* set1, struct SetStr* set2);
     int (*size)(struct SetStr* set);
     string (*toString)(struct SetStr* set);
-    struct Itr* (*iterator)(struct SetStr* set);
     void (*print)(struct SetStr* set);
     void (*delete)(struct SetStr** set);
 } SetStr;
@@ -87,7 +84,6 @@ typedef SetInt* IntSet;
 typedef SetDouble* DoubleSet;
 typedef SetStr* StrSet;
 typedef String* string;
-typedef Itr* Iterator;
 
 // func prototypes
 IntSet pr_initSi_(IntSet, void*);

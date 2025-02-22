@@ -45,7 +45,6 @@ static void removeNode(IntSetNode* node, IntSetNode* previous, int num, bool* fo
 static IntSetNode findNode(IntSetNode* node, IntSetNode* previous);
 static bool isRoot(IntSetNode* node, IntSetNode* previous);
 static  void toStringInOrder(IntSetNode node, int* counter, char* text, int* count);
-static bool hasNext(Iterator iter);
 static bool containsKeyInt(IntSet set, int num);
 
 
@@ -285,20 +284,6 @@ bool isEqualsIntSet(IntSet set1, IntSet set2) {
     }
 
     return true;
-}
-
-Iterator iteratorIntSet(IntSet list){
-    Iterator iter = malloc(sizeof(Itr));
-    iter->count = 0;
-    iter->collection = list;
-    iter->collectionSize = list->pf->count;
-    iter->hasNext = (void*) hasNext(iter);
-    iter->type = INT_SET;
-    return iter;
-}
-
-static bool hasNext(Iterator iter) {
-    return iter->count < iter->collectionSize;
 }
 
 int sizeIntSet(IntSet set) {

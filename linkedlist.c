@@ -91,7 +91,6 @@ static void* size(Type type);
 static void* toString(Type type);
 static void* print(Type type);
 static void* delete(Type type);
-static void* iterator(Type type);
 
 
 // funcs
@@ -575,19 +574,6 @@ static void* delete(Type type) {
     }
 }
 
-static void* iterator(Type type) {
-    switch (type) {
-        case INT_LL:
-            return iteratorIntLL;
-        case DOUBLE_LL:
-            //return iteratorDoubleLL;
-        case STR_LL:
-            //return iteratorStrLL;
-        default:
-            return NULL;
-    }
-}
-
  static void initFuncs(Type type, void* data) {
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->add = add(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->add = add(type) : (((StrLinkedList) data)->add = add(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->addAll = addAll(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->addAll = addAll(type) : (((StrLinkedList) data)->addAll = addAll(type));
@@ -608,7 +594,6 @@ static void* iterator(Type type) {
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->isEquals = isEquals(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->isEquals = isEquals(type) : (((StrLinkedList) data)->isEquals = isEquals(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->size = size(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->size = size(type) : (((StrLinkedList) data)->size = size(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->toString = toString(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->toString = toString(type) : (((StrLinkedList) data)->toString = toString(type));
-     type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->iterator = iterator(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->iterator = iterator(type) : (((StrLinkedList) data)->iterator = iterator(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->print = print(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->print = print(type) : (((StrLinkedList) data)->print = print(type));
      type != DOUBLE_LL && type != STR_LL ? ((IntLinkedList) data)->delete = delete(type) : type == DOUBLE_LL ? ((DoubleLinkedList) data)->delete = delete(type) : (((StrLinkedList) data)->delete = delete(type));
 }

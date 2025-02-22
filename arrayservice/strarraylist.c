@@ -35,8 +35,6 @@ static int compareInt(const void* elem1, const void* elem2);
 static bool binarySearch(int elem, const int* arr, int high);
 static void checkCapacity(char* text, int* count, int strLength);
 static void deleteStr(string* s);
-static bool hasNext(Iterator iter);
-
 
 
 void addStrList(StrList list, string str) {
@@ -555,20 +553,6 @@ void deleteStrList(StrList* list) {
     free((*list)->pf);
     free(*list);
     *list = NULL;
-}
-
-Iterator iteratorStrList(StrList list){
-    Iterator iter = malloc(sizeof(Itr));
-    iter->count = 0;
-    iter->collection = list;
-    iter->collectionSize = list->pf->count;
-    iter->hasNext = (void*) hasNext(iter);
-    iter->type = STR_LIST;
-    return iter;
-}
-
-static bool hasNext(Iterator iter) {
-    return iter->count < iter->collectionSize;
 }
 
 // ===================== private funcs =======================

@@ -61,7 +61,6 @@ static StrSetNode findNode(StrSetNode* node, StrSetNode* previous);
 static bool isRoot(StrSetNode* node, StrSetNode* previous);
 static  void toStringInOrder(StrSetNode node, int* counter, char* text, int* count);
 static void checkCapacity(char* text, int* count, int strLength);
-static bool hasNext(Iterator iter);
 
 
 void addStrSet(StrSet set, string s) {
@@ -280,20 +279,6 @@ void deleteStrSet(StrSet* set) {
     free((*set)->pf);
     free(*set);
     *set = NULL;
-}
-
-Iterator iteratorStrSet(StrSet list) { // TODO принимать void* и преобразовывать к Collection
-    Iterator iter = malloc(sizeof(Itr));
-    iter->count = 0;
-    iter->collection = list;
-    iter->collectionSize = list->pf->count;
-    iter->hasNext = (void*) hasNext(iter);
-    iter->type = STR_SET;
-    return iter;
-}
-
-static bool hasNext(Iterator iter) {
-    return iter->count < iter->collectionSize;
 }
 
 // ===================== private funcs =======================

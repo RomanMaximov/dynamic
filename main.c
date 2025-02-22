@@ -5,7 +5,7 @@
 #include "dynamiccollection.h"
 #include "string.h"
 #include "setservice/intset.h"
-//#include "map.h"
+#include "iterator.h"
 
 int main()
 {
@@ -24,12 +24,15 @@ int main()
     puts("==============================");
 
     IntList listForIter = listOf(listForIter, 2, 10, 15);
-    Iterator itr = listForIter->iterator(listForIter);
+    Iterator itr = iterator(listForIter->values);
     int value = 0;
-    while (itr->hasNext(itr)) {
-        value = next(itr);
+    while (hasNext(itr)) {
+        value = nextInt(itr);
         printf("iterator value: %d\n", value);
     }
+
+    deleteItr(&itr);
+    puts("");
 
 
 

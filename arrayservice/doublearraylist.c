@@ -27,7 +27,6 @@ static double* increaseCapacity(DoubleList list);
 static int compareDouble(const void* elem1, const void* elem2);
 static int compareReverse(const void* elem1, const void* elem2);
 static bool binarySearch(double elem, const double* arr, int high);
-static bool hasNext(Iterator iter);
 
 
 void addDoubleList(DoubleList list, double num) {
@@ -443,20 +442,6 @@ void deleteDoubleList(DoubleList* list) {
     free((*list)->pf);
     free(*list);
     *list = NULL;
-}
-
-Iterator iteratorDoubleList(DoubleList list){
-    Iterator iter = malloc(sizeof(Itr));
-    iter->count = 0;
-    iter->collection = list;
-    iter->collectionSize = list->pf->count;
-    iter->hasNext = (void*) hasNext(iter);
-    iter->type = DOUBLE_LIST;
-    return iter;
-}
-
-static bool hasNext(Iterator iter) {
-    return iter->count < iter->collectionSize;
 }
 
 // ===================== private funcs =======================

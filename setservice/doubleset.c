@@ -47,7 +47,6 @@ static void toArrAndSort(DoubleSet set, double* arr);
 static void removeNode(DoubleSetNode* node, DoubleSetNode* previous, double num, bool* found);
 static DoubleSetNode findNode(DoubleSetNode* node, DoubleSetNode* previous);
 static bool isRoot(DoubleSetNode* node, DoubleSetNode* previous);
-static bool hasNext(Iterator iter);
 static int hashDouble(double value);
 static  void toStringInOrder(DoubleSetNode node, int* counter, char* text, int* count);
 
@@ -181,20 +180,6 @@ bool isEqualsDoubleSet(DoubleSet set1, DoubleSet set2) {
     }
 
     return true;
-}
-
-Iterator iteratorDoubleSet(DoubleSet list){
-    Iterator iter = malloc(sizeof(Itr));
-    iter->count = 0;
-    iter->collection = list;
-    iter->collectionSize = list->pf->count;
-    iter->hasNext = (void*) hasNext(iter);
-    iter->type = DOUBLE_SET;
-    return iter;
-}
-
-static bool hasNext(Iterator iter) {
-    return iter->count < iter->collectionSize;
 }
 
 int sizeDoubleSet(DoubleSet set) {
