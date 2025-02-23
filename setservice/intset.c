@@ -244,7 +244,7 @@ IntSet subtractIntSet(IntSet set, void* source) {
     }
 
     Ctx ctx = (Ctx) source;
-    IntSet tempSet = pr_initSi_(tempSet, NULL);;
+    IntSet tempSet = pr_initSi_(tempSet, set->values);
 
     if (ctx->type == INT_LIST) {
         IntList list = (IntList) ctx->collection;
@@ -253,13 +253,50 @@ IntSet subtractIntSet(IntSet set, void* source) {
             return temp;
         }
 
-        IntSet set2 = pr_initSi_(set, list->values);
-        /*for (int i = 0; i < list->pf->count; ++i) {
-            if (!set2->contains(set2, ))
-                tempSet->add(tempSet, );
-        }*/
+        IntSet setFrom = pr_initSi_(setFrom, list->values);
+        Iterator iter = iterator(set->values);
+        while (hasNext(iter)) {
+            int num = nextInt(iter);
+            if (!setFrom->contains(setFrom, num))
+                tempSet->removeElem(tempSet, num);
+        }
 
-        set2->delete(&set2);
+        setFrom->delete(&setFrom);
+    }
+
+    if (ctx->type == INT_LL) {
+        IntLinkedList list = (IntLinkedList) ctx->collection;
+        if (list->pf->count == 0) {
+            IntSet temp = pr_initSi_(temp, set->values);
+            return temp;
+        }
+
+        IntSet setFrom = pr_initSi_(setFrom, list->values);
+        Iterator iter = iterator(set->values);
+        while (hasNext(iter)) {
+            int num = nextInt(iter);
+            if (!setFrom->contains(setFrom, num))
+                tempSet->removeElem(tempSet, num);
+        }
+
+        setFrom->delete(&setFrom);
+    }
+
+    if (ctx->type == INT_SET) {
+        IntSet setFrom = (IntSet) ctx->collection;
+        if (setFrom->pf->count == 0) {
+            IntSet temp = pr_initSi_(temp, set->values);
+            return temp;
+        }
+
+        Iterator iter = iterator(set->values);
+        while (hasNext(iter)) {
+            int num = nextInt(iter);
+            if (!setFrom->contains(setFrom, num))
+                tempSet->removeElem(tempSet, num);
+        }
+
+        setFrom->delete(&setFrom);
     }
 
     return tempSet;
