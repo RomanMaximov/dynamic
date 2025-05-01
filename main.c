@@ -6,6 +6,7 @@
 #include "string.h"
 #include "setservice/intset.h"
 #include "iterator.h"
+#include "logerrors.h"
 
 int main()
 {
@@ -29,6 +30,13 @@ int main()
     while (hasNext(itr)) {
         value = nextInt(itr);
         printf("iterator value: %d\n", value);
+    }
+
+    IntList intList = NULL;
+    LOG_INFO("Response: code = %d, description = %s", 200, "OK");
+
+    if (intList == NULL) {
+        LOG_ERROR("intList is NULL");
     }
 
     deleteItr(&itr);
