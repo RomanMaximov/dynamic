@@ -211,16 +211,6 @@ string nextStr(Iterator iter) {
 void deleteItr(Iterator* iter) {
     if (iter == NULL || *iter == NULL) return;
 
-    if ((*iter)->array != NULL) {
-        if ((*iter)->type == INT_SET || (*iter)->type == DOUBLE_SET)
-            free((*iter)->array);
-
-        if ((*iter)->type == STR_SET) {
-            StrList list = (StrList) (*iter)->array;
-            list->delete(&list);
-        }
-    }
-
     free(*iter);
     *iter = NULL;
 }

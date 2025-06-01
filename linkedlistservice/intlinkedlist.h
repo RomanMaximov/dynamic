@@ -32,7 +32,6 @@ IntLinkedList subtractIntLL(IntLinkedList, IntLinkedList);
 bool isEmptyIntLL(IntLinkedList);
 void reverseIntLL(IntLinkedList);
 bool isEqualListsIntLL(IntLinkedList, IntLinkedList);
-IntLinkedList emptyIfNullIntLL(IntLinkedList);
 int sizeIntLL(IntLinkedList);
 Iterator iteratorIntLL(IntLinkedList);
 

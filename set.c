@@ -75,7 +75,6 @@ static void* containsAny(Type type);
 static void* removeElem(Type type);
 static void* removeAll(Type type);
 static void* isEmpty(Type type);
-static void* isEquals(Type type);
 
 static void* size(Type type);
 static void* toString(Type type);
@@ -437,19 +436,6 @@ static void* isEmpty(Type type) {
     }
 }
 
-static void* isEquals(Type type) {
-    switch (type) {
-        case INT_SET:
-            return isEqualsIntSet;
-        case DOUBLE_SET:
-            return isEqualsDoubleSet;
-        case STR_SET:
-            return isEqualsStrSet;
-        default:
-            return NULL;
-    }
-}
-
 static void* size(Type type) {
     switch (type) {
         case INT_SET:
@@ -513,7 +499,6 @@ static void initFuncs(Type type, void* data) {
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->removeAll = removeAll(type) : type == DOUBLE_SET ? ((DoubleSet) data)->removeAll = removeAll(type) : (((StrSet) data)->removeAll = removeAll(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->subtract = subtract(type) : type == DOUBLE_SET ? ((DoubleSet) data)->subtract = subtract(type) : (((StrSet) data)->subtract = subtract(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->isEmpty = isEmpty(type) : type == DOUBLE_SET ? ((DoubleSet) data)->isEmpty = isEmpty(type) : (((StrSet) data)->isEmpty = isEmpty(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->isEquals = isEquals(type) : type == DOUBLE_SET ? ((DoubleSet) data)->isEquals = isEquals(type) : (((StrSet) data)->isEquals = isEquals(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->size = size(type) : type == DOUBLE_SET ? ((DoubleSet) data)->size = size(type) : (((StrSet) data)->size = size(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->toString = toString(type) : type == DOUBLE_SET ? ((DoubleSet) data)->toString = toString(type) : (((StrSet) data)->toString = toString(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->print = print(type) : type == DOUBLE_SET ? ((DoubleSet) data)->print = print(type) : (((StrSet) data)->print = print(type));

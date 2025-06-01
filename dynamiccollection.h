@@ -36,7 +36,7 @@
 
 
 /**
- *  через дженерики создаем коллекции
+ *  через дженерики создаем коллекции (collections creating with _Generic)
  */
 
 #define newList(T, V) _Generic((T),          \

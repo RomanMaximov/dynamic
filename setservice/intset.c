@@ -39,8 +39,8 @@ static void setToArr(IntSet set, int* arr);
 static void deleteNodes(NodeSetInt** buckets, int capacity);
 static void deleteInOrder(IntSetNode node);
 static int compareqsort(const void* elem1, const void* elem2);
-static bool binarySearch(int elem, const int* arr, int high);
-static void toArrAndSort(IntSet set, int* arr);
+//static bool binarySearch(int elem, const int* arr, int high);
+//static void toArrAndSort(IntSet set, int* arr);
 static void removeNode(IntSetNode* node, IntSetNode* previous, int num, bool* found);
 static IntSetNode findNode(IntSetNode* node, IntSetNode* previous);
 static bool isRoot(IntSetNode* node, IntSetNode* previous);
@@ -262,6 +262,7 @@ IntSet subtractIntSet(IntSet set, void* source) {
         }
 
         setFrom->delete(&setFrom);
+        deleteItr(&iter);
     }
 
     if (ctx->type == INT_LL) {
@@ -280,6 +281,7 @@ IntSet subtractIntSet(IntSet set, void* source) {
         }
 
         setFrom->delete(&setFrom);
+        deleteItr(&iter);
     }
 
     if (ctx->type == INT_SET) {
@@ -297,6 +299,7 @@ IntSet subtractIntSet(IntSet set, void* source) {
         }
 
         setFrom->delete(&setFrom);
+        deleteItr(&iter);
     }
 
     return tempSet;
@@ -304,23 +307,6 @@ IntSet subtractIntSet(IntSet set, void* source) {
 
 bool isEmptyIntSet(IntSet set) {
     return set == NULL || set->pf->count == 0;
-}
-
-bool isEqualsIntSet(IntSet set1, IntSet set2) {
-    if (set1 == NULL || set2 == NULL || set1->pf->count != set2->pf->count) return false;
-
-    int arr1[set1->pf->count];
-    int arr2[set2->pf->count];
-
-    toArrAndSort(set1, arr1);
-    toArrAndSort(set2, arr2);
-
-    for (int i = 0; i < set1->pf->count; ++i) {
-        if (compareInt(arr1[i], arr2[i]) != 0)
-            return false;
-    }
-
-    return true;
 }
 
 int sizeIntSet(IntSet set) {
@@ -592,7 +578,6 @@ void outputTree(IntSetNode node, int* counter) {
         for (int i = 0; i < *counter * 3; ++i)
             printf("  ");
         printf("%d\n", node->data);
-        //--(*counter);
         outputTree(node->left, counter);
         --(*counter);
     }
@@ -627,7 +612,7 @@ static void deleteInOrder(IntSetNode node) {
     free(node);
 }
 
-static void toArrAndSort(IntSet set, int* arr) {
+static void  toArrAndSort(IntSet set, int* arr) {
     setToArr(set, arr);
     qsort(arr, set->pf->count, sizeof(int), compareqsort);
 }

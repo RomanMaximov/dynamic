@@ -32,7 +32,6 @@ DoubleList subtractDoubleList(DoubleList, DoubleList);
 bool isEmptyDoubleList(DoubleList);
 void reverseDoubleList(DoubleList);
 bool isEqualsDoubleList(DoubleList, DoubleList);
-DoubleList emptyIfNullDoubleList(DoubleList);
 int sizeDoubleList(DoubleList);
 string toStrDoubleList(DoubleList);
 Iterator iteratorDoubleList(DoubleList);

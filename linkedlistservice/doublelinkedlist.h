@@ -30,7 +30,6 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList, DoubleLinkedList);
 bool isEmptyDoubleLL(DoubleLinkedList);
 void reverseDoubleLL(DoubleLinkedList);
 bool isEqualListsDoubleLL(DoubleLinkedList, DoubleLinkedList);
-DoubleLinkedList emptyIfNullDoubleLL(DoubleLinkedList);
 
 int sizeDoubleLL(DoubleLinkedList);
 string toStrDoubleLL(DoubleLinkedList);

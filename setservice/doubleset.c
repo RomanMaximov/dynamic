@@ -161,6 +161,10 @@ bool removeAllDoubleSet(DoubleSet set1, DoubleSet set2) {
     return true;
 }
 
+DoubleSet subtractDoubleSet(DoubleSet set, void* source) {
+    // TODO
+}
+
 bool isEmptyDoubleSet(DoubleSet set) {
     return set == NULL || set->pf->count == 0;
 }

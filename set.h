@@ -31,7 +31,6 @@ typedef struct SetInt {
     bool (*removeAll)(struct SetInt* set1, struct SetInt* set2);
     struct SetInt* (*subtract)(struct SetInt* set1, void* source);
     bool (*isEmpty)(struct SetInt* set);
-    bool (*isEquals)(struct SetInt* set1, struct SetInt* set2);
     int (*size)(struct SetInt* set);
     string (*toString)(struct SetInt* set);
     void (*print)(struct SetInt* set);
@@ -52,7 +51,6 @@ typedef struct SetDouble {
     bool (*removeAll)(struct SetDouble* set1, struct SetDouble* set2);
     struct SetDouble* (*subtract)(struct SetDouble* set1, void* source);
     bool (*isEmpty)(struct SetDouble* set);
-    bool (*isEquals)(struct SetDouble* set1, struct SetDouble* set2);
     int (*size)(struct SetDouble* set);
     string (*toString)(struct SetDouble* set);
     void (*print)(struct SetDouble* set);
@@ -73,7 +71,6 @@ typedef struct SetStr {
     bool (*removeAll)(struct SetStr* set1, struct SetStr* set2);
     struct SetStr* (*subtract)(struct SetStr* set1, void* source);
     bool (*isEmpty)(struct SetStr* set);
-    bool (*isEquals)(struct SetStr* set1, struct SetStr* set2);
     int (*size)(struct SetStr* set);
     string (*toString)(struct SetStr* set);
     void (*print)(struct SetStr* set);

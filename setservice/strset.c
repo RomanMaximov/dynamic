@@ -193,6 +193,10 @@ bool removeAllStrSet(StrSet set1, void* source) {
     return true;
 }
 
+StrSet subtractStrSet(StrSet set, void* source) {
+    // TODO
+}
+
 bool isEmptyStrSet(StrSet set) {
     return set == NULL || set->pf->count == 0;
 }

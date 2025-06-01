@@ -12,7 +12,6 @@
 typedef struct SetDouble SetDouble;
 typedef struct Itr Itr;
 typedef SetDouble* DoubleSet;
-typedef Itr* Iterator;
 
 
 void addDoubleSet(DoubleSet, double);
@@ -23,12 +22,10 @@ bool containsAllDoubleSet(DoubleSet, DoubleSet);
 bool containsAnyDoubleSet(DoubleSet, DoubleSet);
 bool removeDoubleSet(DoubleSet, double);
 bool removeAllDoubleSet(DoubleSet, DoubleSet);
+DoubleSet subtractDoubleSet(DoubleSet, void*);
 bool isEmptyDoubleSet(DoubleSet);
-bool isEqualsDoubleSet(DoubleSet, DoubleSet);
-DoubleSet emptyIfNullDoubleSet(DoubleSet);
 int sizeDoubleSet(DoubleSet);
 string toStrDoubleSet(DoubleSet);
-Iterator iteratorDoubleSet(DoubleSet);
 
 void printDoubleSet(DoubleSet);
 void deleteDoubleSet(DoubleSet*);

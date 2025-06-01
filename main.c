@@ -40,7 +40,11 @@ int main()
     }
 
     deleteItr(&itr);
-    puts("");
+    puts("=======================================================================");
+
+
+    int arr[100];
+    printf("size of arr: %llu\n", sizeof(arr));
 
 
 
@@ -390,11 +394,6 @@ int main()
     //printIntSet(set);
     //printIntSet(set2);
 
-    if (set->isEquals(set, set2)) {
-        puts("set and set2 are equals");
-    } else {
-        puts("set and set2 are NOT equals");
-    }
 
 
     //deleteIntSet(&set);
@@ -402,40 +401,6 @@ int main()
 
     puts("=======================");
 
-
-
-    /*StrStrMap strStrMap = newStrStrMap(strStrMap);
-    string s35 = stringOf("35");
-    string key1 = stringOf("1");
-    put(strStrMap, key1, stringOf("water"));
-    put(strStrMap, stringOf("2"), stringOf("milk"));
-    put(strStrMap, stringOf("2"), stringOf("fruit"));
-    put(strStrMap, stringOf("67"), stringOf("TTTTT"));
-    put(strStrMap, stringOf("35"), stringOf("MMMM"));
-
-    //clear(strStrMap);
-    printf("%s", "key1: ");
-    printString(key1);
-    printf("map size: %d\n", size(strStrMap));
-
-    StringList keyList = getKeyList(strStrMap);
-    puts("key list:");
-    printList(keyList);
-    puts("====ok====");
-    StringList valueList = getValueList(strStrMap);
-    puts("====ok====");
-    puts("value list:");
-    printList(valueList);
-
-    bool isKey = containsKey(strStrMap, s35);
-
-    printf("value by key: \"35\" is: ");
-
-    string temp35 = get(strStrMap, s35);
-    printString(temp35);
-
-    printMap(strStrMap);
-    puts("====ok====");*/
 
 
     /*deleteString(empty);

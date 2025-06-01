@@ -34,7 +34,6 @@ IntList subtractIntList(IntList, IntList);
 bool isEmptyIntList(IntList);
 void reverseIntList(IntList);
 bool isEqualsIntList(IntList, IntList);
-IntList emptyIfNullIntList(IntList);
 int sizeIntList(IntList);
 string toStrIntList(IntList);
 Iterator iteratorIntList(IntList);

@@ -36,7 +36,6 @@ StrList subtractStrList(StrList, StrList);
 bool isEmptyStrList(StrList);
 void reverseStrList(StrList);
 bool isEqualsStrList(StrList, StrList);
-StrList emptyIfNullStrList(StrList);
 int sizeStrList(StrList);
 string joinStrList(StrList, char*);
 string toStrStrList(StrList list);

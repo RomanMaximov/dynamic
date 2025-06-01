@@ -12,7 +12,6 @@
 typedef struct SetInt SetInt;
 typedef struct Itr Itr;
 typedef SetInt* IntSet;
-typedef Itr* Iterator;
 
 
 void addIntSet(IntSet, int);
@@ -25,11 +24,8 @@ bool removeIntSet(IntSet, int);
 bool removeAllIntSet(IntSet, void*);
 IntSet subtractIntSet(IntSet, void*);
 bool isEmptyIntSet(IntSet);
-bool isEqualsIntSet(IntSet, IntSet);
-IntSet emptyIfNullIntSet(IntSet);
 int sizeIntSet(IntSet);
 string toStrIntSet(IntSet);
-Iterator iteratorIntSet(IntSet);
 
 void printIntSet(IntSet);
 void deleteIntSet(IntSet*);

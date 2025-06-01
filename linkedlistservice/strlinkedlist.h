@@ -34,7 +34,6 @@ StrLinkedList subtractStrLL(StrLinkedList, StrLinkedList);
 void reverseStrLL(StrLinkedList);
 bool isEqualListsStrLL(StrLinkedList, StrLinkedList);
 bool isEmptyStrLL(StrLinkedList);
-StrLinkedList emptyIfNullStrLL(StrLinkedList);
 int sizeStrLL(StrLinkedList);
 
 string toStrStrLL(StrLinkedList);

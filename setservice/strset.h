@@ -13,7 +13,6 @@
 typedef struct SetStr SetStr;
 typedef struct Itr Itr;
 typedef SetStr* StrSet;
-typedef Itr* Iterator;
 
 
 void addStrSet(StrSet, string);
@@ -25,12 +24,10 @@ bool containsAllStrSet(StrSet, void*);
 bool containsAnyStrSet(StrSet, void*);
 bool removeStrSet(StrSet, string);
 bool removeAllStrSet(StrSet, void*);
+StrSet subtractStrSet(StrSet, void*);
 bool isEmptyStrSet(StrSet);
-bool isEqualsStrSet(StrSet, StrSet);
-StrSet emptyIfNullStrSet(StrSet);
 int sizeStrSet(StrSet);
 string toStrStrSet(StrSet);
-Iterator iteratorStrSet(StrSet);
 
 void printStrSet(StrSet);
 void deleteStrSet(StrSet*);
