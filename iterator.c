@@ -62,6 +62,7 @@ typedef struct InnerStrList {
 Iterator iterator(void* source){
     Iterator iter = malloc(sizeof(Itr));
     iter->count = 0;
+    iter->collection = NULL;
     iter->elemValue = NULL;
     iter->array = NULL;
 
@@ -111,30 +112,30 @@ Iterator iterator(void* source){
 
     if (ctx->type == INT_SET) {
         IntSet collection = (IntSet) ctx->collection;
-        iter->collection = collection;
+        iter->collection = ctx->collection;
         iter->collectionSize = collection->pf->count;
         int* arr = malloc(collection->pf->count * sizeof(int));
-        setToArrInt(collection, arr);
+        setToArrIntVoidPtr(collection, arr);
         iter->array = (void*) arr;
         iter->type = INT_SET;
     }
 
     if (ctx->type == DOUBLE_SET) {
         DoubleSet collection = (DoubleSet) ctx->collection;
-        iter->collection = collection;
+        iter->collection = ctx->collection;
         iter->collectionSize = collection->pf->count;
         double* arr = malloc(collection->pf->count * sizeof(double));
-        setToArrDouble(collection, arr);
+        setToArrDoubleVoidPtr(collection, arr);
         iter->array = (void*) arr;
         iter->type = DOUBLE_SET;
     }
 
     if (ctx->type == STR_SET) {
         StrSet collection = (StrSet) ctx->collection;
-        iter->collection = collection;
+        iter->collection = ctx->collection;
         iter->collectionSize = collection->pf->count;
         StrList list = pr_initLs_(list, NULL);
-        setToStrList(collection, list);
+        setToStrListVoidPtr(collection, list);
         iter->array = (void*) list;
         iter->type = STR_SET;
     }
@@ -210,6 +211,27 @@ string nextStr(Iterator iter) {
 
 void deleteItr(Iterator* iter) {
     if (iter == NULL || *iter == NULL) return;
+
+    if ((*iter)->type == INT_SET) {
+        if ((*iter)->array != NULL) {
+            int* temp = (int*) (*iter)->array;
+            free(temp);
+        }
+    }
+
+    if ((*iter)->type == DOUBLE_SET) {
+        if ((*iter)->array != NULL) {
+            double* temp = (double*) (*iter)->array;
+            free(temp);
+        }
+    }
+
+    if ((*iter)->type == STR_SET) {
+        if ((*iter)->array != NULL) {
+            StrList temp = (StrList) (*iter)->array;
+            temp->delete(&temp);
+        }
+    }
 
     free(*iter);
     *iter = NULL;

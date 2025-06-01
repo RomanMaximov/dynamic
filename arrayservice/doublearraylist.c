@@ -393,7 +393,9 @@ string toStrDoubleList(DoubleList list) {
         text[0] = '[';
         text[1] = ']';
         text[2] = '\0';
-        return text;
+        string s = strOf(text);
+        free(text);
+        return s;
     }
 
     int count = 256;

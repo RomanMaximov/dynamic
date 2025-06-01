@@ -61,7 +61,8 @@ typedef struct SetStr {
     struct InnerStrSet* pf;   // private field
     void* values;             // private field
     // funcs pointers
-    void (*add)(struct SetStr* set, string s);
+    void (*addStr)(struct SetStr* set, string s);
+    void (*addLiteral)(struct SetStr* set, char* s);
     void (*addAll)(struct SetStr* set1, struct SetStr* set2);
     void (*clear)(struct SetStr* set);
     bool (*contains)(struct SetStr* set, string s);

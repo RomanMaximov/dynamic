@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "strset.h"
+#include "../util/setutil.h"
 
 typedef struct NodeSetStr {
     string str;
@@ -22,17 +23,12 @@ typedef struct InnerStrSet {
     NodeSetStr** bucket;
 } InnerStrSet;
 
+// String data encapsulation
 typedef struct InnerStr {
     int count;
     char* data;
     int capacity;
 } InnerStr;
-
-typedef struct InnerStrList {
-    int count;
-    String** str;
-    int capacity;
-} InnerStrList;
 
 typedef SetStr* StrSet;
 typedef NodeSetStr* StrSetNode;
@@ -52,15 +48,13 @@ static void copyValuesToList(StrSetNode node, StrList list);
 static void setToArr(StrSet set, StrList list);
 static void deleteNodes(NodeSetStr** buckets, int capacity);
 static void deleteInOrder(StrSetNode node);
-static bool isContains(StrSetNode node, string s);
 static void quickSortStr(String** strList, int low, int high);
-static bool binarySearch(string s, String** strList, int high);
-static void toListAndSort(StrSet set, StrList list);
 static void removeNode(StrSetNode* node, StrSetNode* previous, string s, bool* found);
 static StrSetNode findNode(StrSetNode* node, StrSetNode* previous);
 static bool isRoot(StrSetNode* node, StrSetNode* previous);
 static  void toStringInOrder(StrSetNode node, int* counter, char* text, int* count);
 static void checkCapacity(char* text, int* count, int strLength);
+static bool containsKeyStr(StrSet set, string s);
 
 
 void addStrSet(StrSet set, string s) {
@@ -81,21 +75,34 @@ void addCharArrSet(StrSet set, char* s) {
     insertNode(&set->pf->bucket[indexBucket], s, &set->pf->count);
 }
 
-void addAllStrSet(StrSet set1, void* source) {
-    /*if (set2 == NULL) return;
+void addAllStrSet(StrSet set, void* source) {
+    if (set == NULL || source == NULL) return;
 
-    if (isCapacityFull(set1))
-        increaseCapacity(set1);
-
-    int count = set2->pf->count;
-    StrList list = pr_initLs_(list, set2->values);
-
-    for (int i = 0; i < count; ++i) {
-        int indexBucket = (hashString(list->pf->str[i]->pf->data) & 0x7FFFFFFF) % set1->pf->capacity;
-        insertNode(&set1->pf->bucket[indexBucket], list->pf->str[i]->pf->data, &set1->pf->count);
+    Ctx ctx = (Ctx) source;
+    if (ctx->type == STR_LIST) {
+        StrList from = (StrList) ctx->collection;
+        for (int i = 0; i < from->pf->count; ++i) {
+            addStrSet(set, from->pf->data[i]);
+        }
     }
 
-    list->delete(&list);*/
+    if (ctx->type == STR_LL) {
+        StrLinkedList from = (StrLinkedList) ctx->collection;
+        StrNode current = from->pf->begin;
+        while (current != NULL) {
+            addStrSet(set, current->data);
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet from = (StrSet) ctx->collection;
+        Iterator iter = iterator(from->values);
+        while (hasNext(iter)) {
+            addStrSet(set, nextStr(iter));
+        }
+        deleteItr(&iter);
+    }
 }
 
 void clearStrSet(StrSet set) {
@@ -112,58 +119,102 @@ void clearStrSet(StrSet set) {
 }
 
 bool containsStrSet(StrSet set, string s) {
-    for (int i = 0; i < set->pf->capacity; ++i) {
-        if(isContains(set->pf->bucket[i], s))
-            return true;
-    }
-
-    return false;
+    return containsKeyStr(set, s);
 }
 
-bool containsAllStrSet(StrSet set1, void* source) {
-    /*if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
-    if (isEmptyStrSet(set2)) return true;
+bool containsAllStrSet(StrSet set, void* source) {
+    if (set == NULL || source == NULL) return false;
 
-    int count2 = set2->pf->count;
-    StrList list2 = pr_initLs_(list2, NULL);
-    setToArr(set2, list2);
+    Ctx ctx = (Ctx) source;
 
-    int count1 = set1->pf->count;
-    StrList list1 = pr_initLs_(list1, NULL);
-    toListAndSort(set1, list1);
-
-    for (int i = 0; i < count2; ++i) {
-        if(!binarySearch(list2->pf->str[i], list1->pf->str, count1))
+    if (ctx->type == STR_LIST) {
+        StrList list = (StrList) ctx->collection;
+        if (list->pf->count > set->pf->count)
             return false;
+
+        if (list->pf->count == 0) return true;
+
+        for (int i = 0; i < list->pf->count; ++i) {
+            if (!containsKeyStr(set, list->pf->data[i])) {
+                return false;
+            }
+        }
     }
 
-    list1->delete(&list1);
-    list2->delete(&list2);*/
+    if (ctx->type == STR_LL) {
+        StrLinkedList list = (StrLinkedList) ctx->collection;
+        if (list->pf->count > set->pf->count)
+            return false;
+
+        if (list->pf->count == 0) return true;
+
+        StrNode current = list->pf->begin;
+        while (current != NULL) {
+            if (!containsKeyStr(set, current->data)) {
+                return false;
+            }
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet setFrom = (StrSet) ctx->collection;
+        if (setFrom->pf->count > set->pf->count)
+            return false;
+
+        if (setFrom->pf->count == 0) return true;
+
+        StrList listFrom = pr_initLs_(listFrom, setFrom->values);
+
+        for (int i = 0; i < listFrom->pf->count; ++i) {
+            if (!containsKeyStr(set, listFrom->pf->data[i])) {
+                return false;
+            }
+        }
+        listFrom->delete(&listFrom);
+    }
 
     return  true;
 }
 
-bool containsAnyStrSet(StrSet set1, void* source) {
-    /*if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
+bool containsAnyStrSet(StrSet set, void* source) {
+    if (set == NULL || source == NULL) return false;
 
-    int count2 = set2->pf->count;
-    StrList list2 = pr_initLs_(list2, NULL);
-    setToArr(set2, list2);
+    Ctx ctx = (Ctx) source;
 
-    int count1 = set1->pf->count;
-    StrList list1 = pr_initLs_(list1, NULL);
-    toListAndSort(set1, list1);
+    if (ctx->type == STR_LIST) {
+        StrList list2 = (StrList) ctx->collection;
 
-    for (int i = 0; i < count2; ++i) {
-        if(binarySearch(list2->pf->str[i], list1->pf->str, count1)) {
-            list1->delete(&list1);
-            list2->delete(&list2);
-            return true;
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (containsKeyStr(set, list2->pf->data[i])) {
+                return true;
+            }
         }
     }
 
-    list1->delete(&list1);
-    list2->delete(&list2);*/
+    if (ctx->type == STR_LL) {
+        StrLinkedList list2 = (StrLinkedList) ctx->collection;
+        StrNode current = list2->pf->begin;
+
+        while (current != NULL) {
+            if (containsKeyStr(set, current->data)) {
+                return true;
+            }
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet setFrom = (StrSet) ctx->collection;
+        StrList listFrom = pr_initLs_(listFrom, setFrom->values);
+
+        for (int i = 0; i < listFrom->pf->count; ++i) {
+            if (containsKeyStr(set, listFrom->pf->data[i])) {
+                return true;
+            }
+        }
+        listFrom->delete(&listFrom);
+    }
 
     return  false;
 }
@@ -180,45 +231,103 @@ bool removeStrSet(StrSet set, string s) {
     return true;
 }
 
-bool removeAllStrSet(StrSet set1, void* source) {
-    /*StrList list2 = pr_initLs_(list2, NULL);
-    setToArr(set2, list2);
+bool removeAllStrSet(StrSet set, void* source) {
+    if (set == NULL || source == NULL) return false;
 
-    for (int i = 0; i < set2->pf->count; ++i) {
-        removeStrSet(set1, list2->pf->str[i]);
+    Ctx ctx = (Ctx) source;
+    StrSet tempList;
+
+    if (ctx->type == STR_LIST) {
+        StrList list = (StrList) ctx->collection;
+        tempList = subtractStrSet(set, list->values);
     }
 
-    list2->delete(&list2);*/
+    if (ctx->type == STR_LL) {
+        StrLinkedList list = (StrLinkedList) ctx->collection;
+        tempList = subtractStrSet(set, list->values);
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet set2 = (StrSet) ctx->collection;
+        tempList = subtractStrSet(set, set2->values);
+    }
+
+    set->delete(&set);
+    set = tempList;
 
     return true;
 }
 
 StrSet subtractStrSet(StrSet set, void* source) {
-    // TODO
+    if (isEmptyStrSet(set)) {
+        StrSet temp = NULL;
+        return pr_initSs_(temp, NULL);
+    }
+
+    Ctx ctx = (Ctx) source;
+    StrSet tempSet = pr_initSs_(tempSet, set->values);
+
+    if (ctx->type == STR_LIST) {
+        StrList list = (StrList) ctx->collection;
+        if (list->pf->count == 0) {
+            StrSet temp = pr_initSs_(temp, set->values);
+            return temp;
+        }
+
+        StrSet setFrom = pr_initSs_(setFrom, list->values);
+        Iterator iter = iterator(set->values);
+        while (hasNext(iter)) {
+            string s = nextStr(iter);
+            if (!setFrom->contains(setFrom, s))
+                tempSet->removeElem(tempSet, s);
+        }
+
+        setFrom->delete(&setFrom);
+        deleteItr(&iter);
+    }
+
+    if (ctx->type == STR_LL) {
+        StrLinkedList list = (StrLinkedList) ctx->collection;
+        if (list->pf->count == 0) {
+            StrSet temp = pr_initSs_(temp, set->values);
+            return temp;
+        }
+
+        StrSet setFrom = pr_initSs_(setFrom, list->values);
+        Iterator iter = iterator(set->values);
+        while (hasNext(iter)) {
+            string s = nextStr(iter);
+            if (!setFrom->contains(setFrom, s))
+                tempSet->removeElem(tempSet, s);
+        }
+
+        setFrom->delete(&setFrom);
+        deleteItr(&iter);
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet setFrom = (StrSet) ctx->collection;
+        if (setFrom->pf->count == 0) {
+            StrSet temp = pr_initSs_(temp, set->values);
+            return temp;
+        }
+
+        Iterator iter = iterator(set->values);
+        while (hasNext(iter)) {
+            string s = nextStr(iter);
+            if (!setFrom->contains(setFrom, s))
+                tempSet->removeElem(tempSet, s);
+        }
+
+        setFrom->delete(&setFrom);
+        deleteItr(&iter);
+    }
+
+    return tempSet;
 }
 
 bool isEmptyStrSet(StrSet set) {
     return set == NULL || set->pf->count == 0;
-}
-
-bool isEqualsStrSet(StrSet set1, StrSet set2) {
-    if (set1 == NULL || set2 == NULL || set1->pf->count != set2->pf->count) return false;
-
-    StrList list1 = pr_initLs_(list1, NULL);
-    StrList list2 = pr_initLs_(list2, NULL);
-
-    toListAndSort(set1, list1);
-    toListAndSort(set2, list2);
-
-    for (int i = 0; i < set1->pf->count; ++i) {
-        if (compareCharStr(list1->pf->str[i]->pf->data, list2->pf->str[i]->pf->data) != 0)
-            return false;
-    }
-
-    list1->delete(&list1);
-    list2->delete(&list2);
-
-    return true;
 }
 
 int sizeStrSet(StrSet set) {
@@ -287,17 +396,6 @@ void deleteStrSet(StrSet* set) {
 
 // ===================== private funcs =======================
 
-static int hashString(const char* str) {
-    unsigned long hash = 5381;
-    int c;
-
-    while ((c = (int)*str++)) {
-        hash = ((hash << 5) + hash) + c;  // hash * 33 + c
-    }
-
-    return (int) hash;
-}
-
 static bool isCapacityFull(StrSet set) {
     int counter = 0;
     int fullCapacity = set->pf->capacity / 8 * 6;
@@ -323,8 +421,8 @@ static void increaseCapacity(StrSet set) {
         set->pf->bucket[i] = NULL;
 
     for (int i = 0; i < count; ++i) {
-        int indexBucket = (hashString(list->pf->str[i]->pf->data) & 0x7FFFFFFF) % set->pf->capacity;
-        insertNode(&set->pf->bucket[indexBucket], list->pf->str[i]->pf->data, &set->pf->count);
+        int indexBucket = (hashString(list->pf->data[i]->pf->data) & 0x7FFFFFFF) % set->pf->capacity;
+        insertNode(&set->pf->bucket[indexBucket], list->pf->data[i]->pf->data, &set->pf->count);
     }
 
     list->delete(&list);
@@ -396,70 +494,6 @@ int compareCharStr(char* s1, char* s2) {
 
 int compareStr(string s1, string s2) {
     return strcmp(s1->pf->data, s2->pf->data);
-}
-
-static bool isContains(StrSetNode node, string s) {
-    if (node != NULL) {
-        isContains(node->left, s);
-        if (compareCharStr(node->str->pf->data, s->pf->data) == 0)
-            return true;
-        isContains(node->right, s);
-    }
-    return false;
-}
-
-static void toListAndSort(StrSet set, StrList list) {
-    setToArr(set, list);
-    quickSortStr(list->pf->str, 0, list->pf->count);
-}
-
-static void quickSortStr(String** strList, int low, int high) {
-    int i = low;
-    int j = high - 1;
-    String* temp;
-    do {
-        while (j > i) {
-            if (compareStr(strList[i], strList[j]) > 0) {
-                temp = strList[i];
-                strList[i] = strList[j];
-                strList[j] = temp;
-                ++i;
-                break;
-            }
-            --j;
-        }
-        while (i < j) {
-            if (compareStr(strList[i], strList[j]) > 0) {
-                temp = strList[i];
-                strList[i] = strList[j];
-                strList[j] = temp;
-                --j;
-                break;
-            }
-            ++i;
-        }
-    } while (i < j);
-
-    if (i < high - 1)
-        quickSortStr(strList, i + 1, high);
-    if (low < j - 1)
-        quickSortStr(strList, low, j);
-}
-
-static bool binarySearch(string s, String** strList, int high) {
-    int low, middle;
-    --high;
-    low = 0;
-    while (low <= high) {
-        middle = (low + high) / 2;
-        if (compareStr(s, strList[middle]) < 0)
-            high = middle - 1;
-        else if (compareStr(s, strList[middle]) > 0)
-            low = middle + 1;
-        else
-            return true;
-    }
-    return false;
 }
 
 static void removeNode(StrSetNode* node, StrSetNode* previous, string s, bool* found) {
@@ -594,4 +628,34 @@ static void checkCapacity(char* text, int* count, int strLength) {
         *count = (*count + strLength) * 2;
         realloc(text, *count * sizeof(char));
     }
+}
+
+static int hashString(const char* str) {
+    unsigned long hash = 5381;
+    int c;
+
+    while ((c = (int)*str++)) {
+        hash = ((hash << 5) + hash) + c;  // hash * 33 + c
+    }
+
+    return (int) hash;
+}
+
+static bool findKey(NodeSetStr** node, string s) {
+    if (node == NULL || *node == NULL) return false;
+
+    int cmp = compareStr(s, (*node)->str);
+    if (cmp == 0) {
+        return true;
+    } else if (cmp < 0) {
+        findKey(&((*node)->left), s);
+    } else {
+        findKey(&((*node)->right), s);
+    }
+    return false;
+}
+
+static bool containsKeyStr(StrSet set, string s) {
+    int indexBucket = (int) (hashString(s->pf->data) % set->pf->capacity);
+    return findKey(&set->pf->bucket[indexBucket], s);
 }

@@ -102,12 +102,7 @@ void clearDoubleSet(DoubleSet set) {
 }
 
 bool containsDoubleSet(DoubleSet set, double num) {
-    for (int i = 0; i < set->pf->capacity; ++i) {
-        if(isContains(set->pf->bucket[i], num))
-            return true;
-    }
-
-    return false;
+    return containsKeyDouble(set, num);
 }
 
 bool containsAllDoubleSet(DoubleSet set, void* source) {

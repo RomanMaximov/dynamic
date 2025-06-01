@@ -694,7 +694,8 @@ static bool binarySearch(int elem, const int* arr, int high) {
 static void checkCapacity(char* text, int* count, int strLength) {
     if (strLength >= *count - strlen(text)) {
         *count = (*count + strLength) * 2;
-        realloc(text, *count * sizeof(char));
+        text = realloc(text, *count * sizeof(char));
+        assert(text != NULL);
     }
 }
 

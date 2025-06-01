@@ -105,27 +105,27 @@ bool containsAllIntSet(IntSet set, void* source) {
     Ctx ctx = (Ctx) source;
 
     if (ctx->type == INT_LIST) {
-        IntList list2 = (IntList) ctx->collection;
-        if (list2->pf->count > set->pf->count)
+        IntList list = (IntList) ctx->collection;
+        if (list->pf->count > set->pf->count)
             return false;
 
-        if (list2->pf->count == 0) return true;
+        if (list->pf->count == 0) return true;
 
-        for (int i = 0; i < list2->pf->count; ++i) {
-            if (!containsKeyInt(set, list2->pf->data[i])) {
+        for (int i = 0; i < list->pf->count; ++i) {
+            if (!containsKeyInt(set, list->pf->data[i])) {
                 return false;
             }
         }
     }
 
     if (ctx->type == INT_LL) {
-        IntLinkedList list2 = (IntLinkedList) ctx->collection;
-        if (list2->pf->count > set->pf->count)
+        IntLinkedList list = (IntLinkedList) ctx->collection;
+        if (list->pf->count > set->pf->count)
             return false;
 
-        if (list2->pf->count == 0) return true;
+        if (list->pf->count == 0) return true;
 
-        IntNode current = list2->pf->begin;
+        IntNode current = list->pf->begin;
         while (current != NULL) {
             if (!containsKeyInt(set, current->data)) {
                 return false;

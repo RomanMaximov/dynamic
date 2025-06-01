@@ -8,6 +8,7 @@
 #define ARRAYLISTUTIL_H
 
 #include <stdint.h>
+#include <string.h>
 #include <math.h>
 #include "../linkedlist.h"
 #include "../set.h"
@@ -129,6 +130,14 @@ static void setToArrInt(IntSet set, int* arr) {
     }
 }
 
+static void setToArrIntVoidPtr(void* source, int* arr) {
+    IntSet set = (IntSet) source;
+    int index = 0;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        copyValuesToArrInt(set->pf->bucket[i], arr, &index);
+    }
+}
+
 static void copyValuesToArrDouble(DoubleSetNode node, double* arr, int* index) {
     if (node != NULL) {
         copyValuesToArrDouble(node->left, arr, index);
@@ -144,6 +153,14 @@ static void setToArrDouble(DoubleSet set, double* arr) {
     }
 }
 
+static void setToArrDoubleVoidPtr(void* source, double* arr) {
+    DoubleSet set = (DoubleSet) source;
+    int index = 0;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        copyValuesToArrDouble(set->pf->bucket[i], arr, &index);
+    }
+}
+
 static void copyValuesToList(StrSetNode node, StrList list) {
     if (node != NULL) {
         copyValuesToList(node->left, list);
@@ -153,6 +170,14 @@ static void copyValuesToList(StrSetNode node, StrList list) {
 }
 
 static void setToStrList(StrSet set, StrList list) {
+    int index = 0;
+    for (int i = 0; i < set->pf->capacity; ++i) {
+        copyValuesToList(set->pf->bucket[i], list);
+    }
+}
+
+static void setToStrListVoidPtr(void* source, StrList list) {
+    StrSet set = (StrSet) source;
     int index = 0;
     for (int i = 0; i < set->pf->capacity; ++i) {
         copyValuesToList(set->pf->bucket[i], list);

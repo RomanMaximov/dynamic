@@ -67,6 +67,8 @@ typedef String* string;
 // prototypes common funcs
 static void initFuncs(Type type, void* data);
 static void* add(Type type);
+static void* addStr();
+static void* addLiteral();
 static void* addAll(Type type);
 static void* clear(Type type);
 static void* contains(Type type);
@@ -312,11 +314,17 @@ static void* add(Type type) {
             return addIntSet;
         case DOUBLE_SET:
             return addDoubleSet;
-        case STR_SET:
-            return addStrSet;
         default:
             return NULL;
     }
+}
+
+static void* addStr() {
+    return addStrSet;
+}
+
+static void* addLiteral() {
+    return addCharArrSet;
 }
 
 static void* addAll(Type type) {
@@ -414,12 +422,12 @@ static void* subtract(Type type) {
     switch (type) {
         case INT_SET:
             return subtractIntSet;
-        /*case DOUBLE_SET:
+        case DOUBLE_SET:
             return subtractDoubleSet;
         case STR_SET:
             return subtractStrSet;
         default:
-            return NULL;*/
+            return NULL;
     }
 }
 
@@ -489,7 +497,9 @@ static void* delete(Type type) {
 }
 
 static void initFuncs(Type type, void* data) {
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->add = add(type) : type == DOUBLE_SET ? ((DoubleSet) data)->add = add(type) : (((StrSet) data)->add = add(type));
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->add = add(type) : type == DOUBLE_SET ? ((DoubleSet) data)->add = add(type) : (((StrSet) data)->addStr = addStr());
+    if (type == STR_SET)
+        ((StrSet) data)->addLiteral = addLiteral();
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->addAll = addAll(type) : type == DOUBLE_SET ? ((DoubleSet) data)->addAll = addAll(type) : (((StrSet) data)->addAll = addAll(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->clear = clear(type) : type == DOUBLE_SET ? ((DoubleSet) data)->clear = clear(type) : (((StrSet) data)->clear = clear(type));
     type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->contains = contains(type) : type == DOUBLE_SET ? ((DoubleSet) data)->contains = contains(type) : (((StrSet) data)->contains = contains(type));
