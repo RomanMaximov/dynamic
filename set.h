@@ -42,7 +42,7 @@ typedef struct SetDouble {
     void* values;                // private field
     // funcs pointers
     void (*add)(struct SetDouble* set, double number);
-    void (*addAll)(struct SetDouble* set1, struct SetDouble* set2);
+    void (*addAll)(struct SetDouble* set1, void* source);
     void (*clear)(struct SetDouble* set);
     bool (*contains)(struct SetDouble* set, double number);
     bool (*containsAll)(struct SetDouble* set1, struct SetDouble* set2);

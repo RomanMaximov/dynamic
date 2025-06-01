@@ -15,13 +15,13 @@ typedef SetDouble* DoubleSet;
 
 
 void addDoubleSet(DoubleSet, double);
-void addAllDoubleSet(DoubleSet, DoubleSet);
+void addAllDoubleSet(DoubleSet, void*);
 void clearDoubleSet(DoubleSet);
 bool containsDoubleSet(DoubleSet, double);
-bool containsAllDoubleSet(DoubleSet, DoubleSet);
-bool containsAnyDoubleSet(DoubleSet, DoubleSet);
+bool containsAllDoubleSet(DoubleSet, void*);
+bool containsAnyDoubleSet(DoubleSet, void*);
 bool removeDoubleSet(DoubleSet, double);
-bool removeAllDoubleSet(DoubleSet, DoubleSet);
+bool removeAllDoubleSet(DoubleSet, void*);
 DoubleSet subtractDoubleSet(DoubleSet, void*);
 bool isEmptyDoubleSet(DoubleSet);
 int sizeDoubleSet(DoubleSet);

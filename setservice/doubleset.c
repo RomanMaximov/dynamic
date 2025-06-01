@@ -10,6 +10,7 @@
 #include <string.h>
 #include <math.h>
 #include "doubleset.h"
+#include "../util/setutil.h"
 
 #define ACCURACY 0.000000001
 
@@ -42,14 +43,12 @@ static void deleteNodes(NodeSetDouble** buckets, int capacity);
 static void deleteInOrder(DoubleSetNode node);
 static bool isContains(DoubleSetNode node, double num);
 static int compareqsort(const void* elem1, const void* elem2);
-static bool binarySearch(double elem, const double* arr, int high);
-static void toArrAndSort(DoubleSet set, double* arr);
 static void removeNode(DoubleSetNode* node, DoubleSetNode* previous, double num, bool* found);
 static DoubleSetNode findNode(DoubleSetNode* node, DoubleSetNode* previous);
 static bool isRoot(DoubleSetNode* node, DoubleSetNode* previous);
 static int hashDouble(double value);
 static  void toStringInOrder(DoubleSetNode node, int* counter, char* text, int* count);
-
+static bool containsKeyDouble(DoubleSet set, double num);
 
 
 void addDoubleSet(DoubleSet set, double num) {
@@ -60,20 +59,32 @@ void addDoubleSet(DoubleSet set, double num) {
     insertNode(&set->pf->bucket[indexBucket], num, &set->pf->count);
 }
 
-void addAllDoubleSet(DoubleSet set1, DoubleSet set2) {
-    if (set2 == NULL) return;
+void addAllDoubleSet(DoubleSet set, void* source) {
+    if (set == NULL || source == NULL) return;
 
-    if (isCapacityFull(set1))
-        increaseCapacity(set1);
+    Ctx ctx = (Ctx) source;
+    if (ctx->type == DOUBLE_LIST) {
+        DoubleList from = (DoubleList) ctx->collection;
+        for (int i = 0; i < from->pf->count; ++i) {
+            addDoubleSet(set, from->pf->data[i]);
+        }
+    }
 
-    int count = set2->pf->count;
-    double arr[count];
+    if (ctx->type == DOUBLE_LL) {
+        DoubleLinkedList from = (DoubleLinkedList) ctx->collection;
+        DoubleNode current = from->pf->begin;
+        while (current != NULL) {
+            addDoubleSet(set, current->data);
+            current = current->next;
+        }
+    }
 
-    setToArr(set2, arr);
-
-    for (int i = 0; i < count; ++i) {
-        int indexBucket = hashDouble(arr[i]) % set1->pf->capacity;
-        insertNode(&set1->pf->bucket[indexBucket], arr[i], &set1->pf->count);
+    if (ctx->type == DOUBLE_SET) {
+        DoubleSet from = (DoubleSet) ctx->collection;
+        double arr[from->pf->count];
+        setToArr(from, arr);
+        for (int i = 0; i < from->pf->count; ++i)
+            addDoubleSet(set, arr[i]);
     }
 }
 
@@ -99,40 +110,98 @@ bool containsDoubleSet(DoubleSet set, double num) {
     return false;
 }
 
-bool containsAllDoubleSet(DoubleSet set1, DoubleSet set2) {
-    if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
-    if (isEmptyDoubleSet(set2)) return true;
+bool containsAllDoubleSet(DoubleSet set, void* source) {
+    if (set == NULL || source == NULL) return false;
 
-    int count2 = set2->pf->count;
-    double arr2[count2];
-    setToArr(set2, arr2);
+    Ctx ctx = (Ctx) source;
 
-    int count1 = set1->pf->count;
-    double arr1[count1];
-    toArrAndSort(set1, arr1);
-
-    for (int i = 0; i < count2; ++i) {
-        if(!binarySearch(arr2[i], arr1, count1))
+    if (ctx->type == DOUBLE_LIST) {
+        DoubleList list2 = (DoubleList) ctx->collection;
+        if (list2->pf->count > set->pf->count)
             return false;
+
+        if (list2->pf->count == 0) return true;
+
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (!containsKeyDouble(set, list2->pf->data[i])) {
+                return false;
+            }
+        }
+    }
+
+    if (ctx->type == DOUBLE_LL) {
+        DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
+        if (list2->pf->count > set->pf->count)
+            return false;
+
+        if (list2->pf->count == 0) return true;
+
+        DoubleNode current = list2->pf->begin;
+        while (current != NULL) {
+            if (!containsKeyDouble(set, current->data)) {
+                return false;
+            }
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == DOUBLE_SET) {
+        DoubleSet setFrom = (DoubleSet) ctx->collection;
+        if (setFrom->pf->count > set->pf->count)
+            return false;
+
+        if (setFrom->pf->count == 0) return true;
+
+        DoubleList listFrom = pr_initLd_(listFrom, setFrom->values);
+
+        for (int i = 0; i < listFrom->pf->count; ++i) {
+            if (!containsKeyDouble(set, listFrom->pf->data[i])) {
+                return false;
+            }
+        }
+        listFrom->delete(&listFrom);
     }
 
     return  true;
 }
 
-bool containsAnyDoubleSet(DoubleSet set1, DoubleSet set2) {
-    if (set1 == NULL || set2 == NULL || set2->pf->count > set1->pf->count) return false;
+bool containsAnyDoubleSet(DoubleSet set, void* source) {
+    if (set == NULL || source == NULL) return false;
 
-    int count2 = set2->pf->count;
-    double arr2[count2];
-    setToArr(set2, arr2);
+    Ctx ctx = (Ctx) source;
 
-    int count1 = set1->pf->count;
-    double arr1[count1];
-    toArrAndSort(set1, arr1);
+    if (ctx->type == DOUBLE_LIST) {
+        DoubleList list2 = (DoubleList) ctx->collection;
 
-    for (int i = 0; i < count2; ++i) {
-        if(binarySearch(arr2[i], arr1, count1))
-            return true;
+        for (int i = 0; i < list2->pf->count; ++i) {
+            if (containsKeyDouble(set, list2->pf->data[i])) {
+                return true;
+            }
+        }
+    }
+
+    if (ctx->type == DOUBLE_LL) {
+        DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
+        DoubleNode current = list2->pf->begin;
+
+        while (current != NULL) {
+            if (containsKeyDouble(set, current->data)) {
+                return true;
+            }
+            current = current->next;
+        }
+    }
+
+    if (ctx->type == DOUBLE_SET) {
+        DoubleSet setFrom = (DoubleSet) ctx->collection;
+        DoubleList listFrom = pr_initLd_(listFrom, setFrom->values);
+
+        for (int i = 0; i < listFrom->pf->count; ++i) {
+            if (containsKeyDouble(set, listFrom->pf->data[i])) {
+                return true;
+            }
+        }
+        listFrom->delete(&listFrom);
     }
 
     return  false;
@@ -150,40 +219,103 @@ bool removeDoubleSet(DoubleSet set, double num) {
     return true;
 }
 
-bool removeAllDoubleSet(DoubleSet set1, DoubleSet set2) {
-    double arr[set2->pf->count];
-    setToArr(set2, arr);
+bool removeAllDoubleSet(DoubleSet set, void* source) {
+    if (set == NULL || source == NULL) return false;
 
-    for (int i = 0; i < set2->pf->count; ++i) {
-        removeDoubleSet(set1, arr[i]);
+    Ctx ctx = (Ctx) source;
+    DoubleSet tempList;
+
+    if (ctx->type == DOUBLE_LIST) {
+        DoubleList list = (DoubleList) ctx->collection;
+        tempList = subtractDoubleSet(set, list->values);
     }
+
+    if (ctx->type == DOUBLE_LL) {
+        DoubleLinkedList list = (DoubleLinkedList) ctx->collection;
+        tempList = subtractDoubleSet(set, list->values);
+    }
+
+    if (ctx->type == DOUBLE_SET) {
+        DoubleSet set2 = (DoubleSet) ctx->collection;
+        tempList = subtractDoubleSet(set, set2->values);
+    }
+
+    set->delete(&set);
+    set = tempList;
 
     return true;
 }
 
 DoubleSet subtractDoubleSet(DoubleSet set, void* source) {
-    // TODO
+    if (isEmptyDoubleSet(set)) {
+        DoubleList temp = NULL;
+        return pr_initSd_(temp, NULL);
+    }
+
+    Ctx ctx = (Ctx) source;
+    DoubleSet tempSet = pr_initSd_(tempSet, set->values);
+
+    if (ctx->type == DOUBLE_LIST) {
+        DoubleList list = (DoubleList) ctx->collection;
+        if (list->pf->count == 0) {
+            DoubleSet temp = pr_initSd_(temp, set->values);
+            return temp;
+        }
+
+        DoubleSet setFrom = pr_initSd_(setFrom, list->values);
+        Iterator iter = iterator(set->values);
+        while (hasNext(iter)) {
+            double num = nextDouble(iter);
+            if (!setFrom->contains(setFrom, num))
+                tempSet->removeElem(tempSet, num);
+        }
+
+        setFrom->delete(&setFrom);
+        deleteItr(&iter);
+    }
+
+    if (ctx->type == DOUBLE_LL) {
+        DoubleLinkedList list = (DoubleLinkedList) ctx->collection;
+        if (list->pf->count == 0) {
+            DoubleSet temp = pr_initSd_(temp, set->values);
+            return temp;
+        }
+
+        DoubleSet setFrom = pr_initSd_(setFrom, list->values);
+        Iterator iter = iterator(set->values);
+        while (hasNext(iter)) {
+            double num = nextDouble(iter);
+            if (!setFrom->contains(setFrom, num))
+                tempSet->removeElem(tempSet, num);
+        }
+
+        setFrom->delete(&setFrom);
+        deleteItr(&iter);
+    }
+
+    if (ctx->type == DOUBLE_SET) {
+        DoubleSet setFrom = (DoubleSet) ctx->collection;
+        if (setFrom->pf->count == 0) {
+            DoubleSet temp = pr_initSd_(temp, set->values);
+            return temp;
+        }
+
+        Iterator iter = iterator(set->values);
+        while (hasNext(iter)) {
+            double num = nextDouble(iter);
+            if (!setFrom->contains(setFrom, num))
+                tempSet->removeElem(tempSet, num);
+        }
+
+        setFrom->delete(&setFrom);
+        deleteItr(&iter);
+    }
+
+    return tempSet;
 }
 
 bool isEmptyDoubleSet(DoubleSet set) {
     return set == NULL || set->pf->count == 0;
-}
-
-bool isEqualsDoubleSet(DoubleSet set1, DoubleSet set2) {
-    if (set1 == NULL || set2 == NULL || set1->pf->count != set2->pf->count) return false;
-
-    double arr1[set1->pf->count];
-    double arr2[set2->pf->count];
-
-    toArrAndSort(set1, arr1);
-    toArrAndSort(set2, arr2);
-
-    for (int i = 0; i < set1->pf->count; ++i) {
-        if (compareDouble(arr1[i], arr2[i]) != 0)
-            return false;
-    }
-
-    return true;
 }
 
 int sizeDoubleSet(DoubleSet set) {
@@ -251,15 +383,6 @@ void deleteDoubleSet(DoubleSet* set) {
 }
 
 // ===================== private funcs =======================
-
-static int hashDouble(double value) {
-    uint64_t intRepresentation;
-    memcpy(&intRepresentation, &value, sizeof(double));
-    intRepresentation = (intRepresentation ^ (intRepresentation >> 32)) * 0x45d9f3b;
-    intRepresentation = (intRepresentation ^ (intRepresentation >> 16)) * 0x45d9f3b;
-    intRepresentation = intRepresentation ^ (intRepresentation >> 16);
-    return (int)intRepresentation;
-}
 
 static bool isCapacityFull(DoubleSet set) {
     int counter = 0;
@@ -370,11 +493,6 @@ static bool isContains(DoubleSetNode node, double num) {
     return false;
 }
 
-static void toArrAndSort(DoubleSet set, double* arr) {
-    setToArr(set, arr);
-    qsort(arr, set->pf->count, sizeof(int), compareqsort);
-}
-
 static int compareqsort(const void* elem1, const void* elem2) {
     if (fabs(*(double*)elem1 - *(double*)elem2) < ACCURACY)
         return 0;
@@ -386,22 +504,6 @@ static int compareqsort(const void* elem1, const void* elem2) {
 
 static bool isRoot(DoubleSetNode* node, DoubleSetNode* previous) {
     return (*node)->data == (*previous)->data;
-}
-
-static bool binarySearch(double elem, const double* arr, int high) {
-    int low, middle;
-    --high;
-    low = 0;
-    while (low <= high) {
-        middle = (low + high) / 2;
-        if (elem < arr[middle])
-            high = middle - 1;
-        else if (elem > arr[middle])
-            low = middle + 1;
-        else
-            return true;
-    }
-    return false;
 }
 
 static void removeNode(DoubleSetNode* node, DoubleSetNode* previous, double num, bool* found) {
@@ -519,4 +621,32 @@ static  void toStringInOrder(DoubleSetNode node, int* counter, char* text, int* 
         }
         toStringInOrder(node->right, counter, text, count);
     }
+}
+
+static int hashDouble(double value) {
+    uint64_t intRepresentation;
+    memcpy(&intRepresentation, &value, sizeof(double));
+    intRepresentation = (intRepresentation ^ (intRepresentation >> 32)) * 0x45d9f3b;
+    intRepresentation = (intRepresentation ^ (intRepresentation >> 16)) * 0x45d9f3b;
+    intRepresentation = intRepresentation ^ (intRepresentation >> 16);
+    return (int)intRepresentation;
+}
+
+static bool findKey(NodeSetDouble** node, double num) {
+    if (node == NULL || *node == NULL) return false;
+
+    int cmp = compareDouble(num, (*node)->data);
+    if (cmp == 0) {
+        return true;
+    } else if (cmp < 0) {
+        findKey(&((*node)->left), num);
+    } else {
+        findKey(&((*node)->right), num);
+    }
+    return false;
+}
+
+static bool containsKeyDouble(DoubleSet set, double num) {
+    int indexBucket = (int) (hashDouble(num) % set->pf->capacity);
+    return findKey(&set->pf->bucket[indexBucket], num);
 }

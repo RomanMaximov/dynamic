@@ -38,9 +38,6 @@ static void copyValuesToArr(IntSetNode node, int* arr, int* index);
 static void setToArr(IntSet set, int* arr);
 static void deleteNodes(NodeSetInt** buckets, int capacity);
 static void deleteInOrder(IntSetNode node);
-static int compareqsort(const void* elem1, const void* elem2);
-//static bool binarySearch(int elem, const int* arr, int high);
-//static void toArrAndSort(IntSet set, int* arr);
 static void removeNode(IntSetNode* node, IntSetNode* previous, int num, bool* found);
 static IntSetNode findNode(IntSetNode* node, IntSetNode* previous);
 static bool isRoot(IntSetNode* node, IntSetNode* previous);
@@ -151,6 +148,7 @@ bool containsAllIntSet(IntSet set, void* source) {
                 return false;
             }
         }
+        listFrom->delete(&listFrom);
     }
 
     return  true;
@@ -192,6 +190,7 @@ bool containsAnyIntSet(IntSet set, void* source) {
                 return true;
             }
         }
+        listFrom->delete(&listFrom);
     }
 
     return  false;
@@ -239,7 +238,7 @@ bool removeAllIntSet(IntSet set, void* source) {
 
 IntSet subtractIntSet(IntSet set, void* source) {
     if (isEmptyIntSet(set)) {
-        IntList temp = NULL;
+        IntSet temp = NULL;
         return pr_initSi_(temp, NULL);
     }
 
@@ -394,26 +393,6 @@ static int compareInt(int elem1, int elem2) {
         return 1;
     else
         return -1;
-}
-
-static int compareqsort(const void* elem1, const void* elem2) {
-    return (*(int*)elem1 - *(int*)elem2);
-}
-
-static bool binarySearch(int elem, const int* arr, int high) {
-    int low, middle;
-    --high;
-    low = 0;
-    while (low <= high) {
-        middle = (low + high) / 2;
-        if (elem < arr[middle])
-            high = middle - 1;
-        else if (elem > arr[middle])
-            low = middle + 1;
-        else
-            return true;
-    }
-    return false;
 }
 
 static void insertNode(NodeSetInt** node, int num, int* counter) {
@@ -610,11 +589,6 @@ static void deleteInOrder(IntSetNode node) {
     deleteInOrder(node->right);
 
     free(node);
-}
-
-static void  toArrAndSort(IntSet set, int* arr) {
-    setToArr(set, arr);
-    qsort(arr, set->pf->count, sizeof(int), compareqsort);
 }
 
 static bool isRoot(IntSetNode* node, IntSetNode* previous) {
