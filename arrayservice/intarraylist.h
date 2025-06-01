@@ -30,7 +30,7 @@ bool containsAllIntList(IntList, void*);
 bool containsAnyIntList(IntList, void*);
 bool removeIntList(IntList, int);
 bool removeAllIntList(IntList, void*);
-IntList subtractIntList(IntList, IntList);
+IntList subtractIntList(IntList, void*);
 bool isEmptyIntList(IntList);
 void reverseIntList(IntList);
 bool isEqualsIntList(IntList, IntList);

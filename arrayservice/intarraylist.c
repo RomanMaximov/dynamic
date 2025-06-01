@@ -153,19 +153,19 @@ bool containsIntList(IntList list, int num) {
     return false;
 }
 
-bool containsAllIntList(IntList list1, void* source) {
-    if (list1 == NULL || source == NULL) return false;
+bool containsAllIntList(IntList list, void* source) {
+    if (list == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
 
     if (ctx->type == INT_LIST) {
         IntList list2 = (IntList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
+        if (list2->pf->count > list->pf->count)
             return false;
 
         if (list2->pf->count == 0) return true;
 
-        IntSet set = pr_initSi_(set, list1->values);
+        IntSet set = pr_initSi_(set, list->values);
         for (int i = 0; i < list2->pf->count; ++i) {
             if (!containsKeyInt(set, list2->pf->data[i])) {
                 set->delete(&set);
@@ -177,12 +177,12 @@ bool containsAllIntList(IntList list1, void* source) {
 
     if (ctx->type == INT_LL) {
         IntLinkedList list2 = (IntLinkedList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
+        if (list2->pf->count > list->pf->count)
             return false;
 
         if (list2->pf->count == 0) return true;
 
-        IntSet set = pr_initSi_(set, list1->values);
+        IntSet set = pr_initSi_(set, list->values);
         IntNode current = list2->pf->begin;
         while (current != NULL) {
             if (!containsKeyInt(set, current->data)) {
@@ -196,12 +196,12 @@ bool containsAllIntList(IntList list1, void* source) {
 
     if (ctx->type == INT_SET) {
         IntSet setFrom = (IntSet) ctx->collection;
-        if (setFrom->pf->count > list1->pf->count)
+        if (setFrom->pf->count > list->pf->count)
             return false;
 
         if (setFrom->pf->count == 0) return true;
 
-        IntSet setTemp = pr_initSi_(setTemp, list1->values);
+        IntSet setTemp = pr_initSi_(setTemp, list->values);
         IntList listFrom = pr_initLi_(listFrom, setFrom->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
@@ -218,14 +218,14 @@ bool containsAllIntList(IntList list1, void* source) {
     return true;
 }
 
-bool containsAnyIntList(IntList list1, void* source) {
-    if (list1 == NULL || source == NULL || isEmptyIntList(list1)) return false;
+bool containsAnyIntList(IntList list, void* source) {
+    if (list == NULL || source == NULL || isEmptyIntList(list)) return false;
 
     Ctx ctx = (Ctx) source;
 
     if (ctx->type == INT_LIST) {
         IntList list2 = (IntList) ctx->collection;
-        IntSet set = pr_initSi_(set, list1->values);
+        IntSet set = pr_initSi_(set, list->values);
 
         for (int i = 0; i < list2->pf->count; ++i) {
             if (containsKeyInt(set, list2->pf->data[i])) {
@@ -238,7 +238,7 @@ bool containsAnyIntList(IntList list1, void* source) {
 
     if (ctx->type == INT_LL) {
         IntLinkedList list2 = (IntLinkedList) ctx->collection;
-        IntSet set = pr_initSi_(set, list1->values);
+        IntSet set = pr_initSi_(set, list->values);
         IntNode current = list2->pf->begin;
 
         while (current != NULL) {
@@ -253,7 +253,7 @@ bool containsAnyIntList(IntList list1, void* source) {
 
     if (ctx->type == INT_SET) {
         IntSet setFrom = (IntSet) ctx->collection;
-        IntSet setTemp = pr_initSi_(setTemp, list1->values);
+        IntSet setTemp = pr_initSi_(setTemp, list->values);
         IntList listFrom = pr_initLi_(listFrom, setFrom->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
@@ -301,22 +301,22 @@ bool removeIntList(IntList list, int index) {
     return true;
 }
 
-bool removeAllIntList(IntList list1, void* source) {
-    if (list1 == NULL || source == NULL) return false;
+bool removeAllIntList(IntList list, void* source) {
+    if (list == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
     IntList tempList;
 
     if (ctx->type == INT_LIST) {
         IntList list2 = (IntList) ctx->collection;
-        tempList = subtractIntList(list1, list2);
+        tempList = subtractIntList(list, list2);
     }
 
     if (ctx->type == INT_LL) {
         IntLinkedList list2 = (IntLinkedList) ctx->collection;
         IntList copyValues = pr_initLi_(copyValues, list2->values);
 
-        tempList = subtractIntList(list1, copyValues);
+        tempList = subtractIntList(list, copyValues);
         copyValues->delete(&copyValues);
     }
 
@@ -324,38 +324,77 @@ bool removeAllIntList(IntList list1, void* source) {
         IntSet set = (IntSet) ctx->collection;
         IntList copyValues = pr_initLi_(copyValues, set->values);
 
-        tempList = subtractIntList(list1, copyValues);
+        tempList = subtractIntList(list, copyValues);
         copyValues->delete(&copyValues);
     }
 
-    list1->delete(&list1);
-    list1 = tempList;
+    list->delete(&list);
+    list = tempList;
 
     return true;
 }
 
-IntList subtractIntList(IntList list1, IntList list2) {
-    if (isEmptyIntList(list1)) {
+IntList subtractIntList(IntList list, void* source) {
+    if (isEmptyIntList(list)) {
         IntList temp = NULL;
         return pr_initLi_(temp, NULL);
     }
 
-    if (isEmptyIntList(list2)) {
-        IntList temp = pr_initLi_(temp, list1->values);
+    if (source == NULL) {
+        IntList temp = pr_initLi_(temp, list->values);
         return temp;
     }
 
-    IntSet set = pr_initSi_(set, list2->values);
-    IntList temp = pr_initLi_(temp, NULL);
+    Ctx ctx = (Ctx) source;
+    IntList tempList = pr_initLi_(tempList, NULL);
 
-    for (int i = 0; i < list1->pf->count; ++i) {
-        if (!set->contains(set, list1->pf->data[i]))
-            temp->add(temp, list1->pf->data[i]);
+    if (ctx->type == INT_LIST) {
+        IntList listSource = (IntList) ctx->collection;
+        if (listSource->pf->count == 0) {
+            IntList temp = pr_initLi_(temp, list->values);
+            return temp;
+        }
+
+        IntSet setFrom = pr_initSi_(setFrom, listSource->values);
+        for (int i = 0; i < list->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, list->pf->data[i]))
+                tempList->add(tempList, list->pf->data[i]);
+        }
+        setFrom->delete(&setFrom);
     }
 
-    set->delete(&set);
+    if (ctx->type == INT_LL) {
+        IntLinkedList listSource = (IntLinkedList) ctx->collection;
+        if (listSource->pf->count == 0) {
+            IntList temp = pr_initLi_(temp, list->values);
+            return temp;
+        }
 
-    return temp;
+        IntSet setFrom = pr_initSi_(setFrom, listSource->values);
+        for (int i = 0; i < list->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, list->pf->data[i]))
+                tempList->add(tempList, list->pf->data[i]);
+        }
+        setFrom->delete(&setFrom);
+    }
+
+    if (ctx->type == INT_SET) {
+        IntSet setFrom = (IntSet) ctx->collection;
+        if (setFrom->pf->count == 0) {
+            IntList temp = pr_initLi_(temp, list->values);
+            return temp;
+        }
+
+        for (int i = 0; i < list->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, list->pf->data[i]))
+                tempList->add(tempList, list->pf->data[i]);
+        }
+    }
+
+    list->delete(&list);
+    list = tempList;
+
+    return list;
 }
 
 bool isEmptyIntList(IntList list) {

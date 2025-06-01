@@ -264,6 +264,11 @@ StrSet subtractStrSet(StrSet set, void* source) {
         return pr_initSs_(temp, NULL);
     }
 
+    if (source == NULL) {
+        StrSet temp = pr_initSs_(temp, set->values);
+        return temp;
+    }
+
     Ctx ctx = (Ctx) source;
     StrSet tempSet = pr_initSs_(tempSet, set->values);
 
@@ -319,7 +324,6 @@ StrSet subtractStrSet(StrSet set, void* source) {
                 tempSet->removeElem(tempSet, s);
         }
 
-        setFrom->delete(&setFrom);
         deleteItr(&iter);
     }
 

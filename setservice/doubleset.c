@@ -243,8 +243,13 @@ bool removeAllDoubleSet(DoubleSet set, void* source) {
 
 DoubleSet subtractDoubleSet(DoubleSet set, void* source) {
     if (isEmptyDoubleSet(set)) {
-        DoubleList temp = NULL;
+        DoubleSet temp = NULL;
         return pr_initSd_(temp, NULL);
+    }
+
+    if (source == NULL) {
+        DoubleSet temp = pr_initSd_(temp, set->values);
+        return temp;
     }
 
     Ctx ctx = (Ctx) source;
@@ -302,7 +307,6 @@ DoubleSet subtractDoubleSet(DoubleSet set, void* source) {
                 tempSet->removeElem(tempSet, num);
         }
 
-        setFrom->delete(&setFrom);
         deleteItr(&iter);
     }
 

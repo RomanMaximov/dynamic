@@ -242,6 +242,11 @@ IntSet subtractIntSet(IntSet set, void* source) {
         return pr_initSi_(temp, NULL);
     }
 
+    if (source == NULL) {
+        IntSet temp = pr_initSi_(temp, set->values);
+        return temp;
+    }
+
     Ctx ctx = (Ctx) source;
     IntSet tempSet = pr_initSi_(tempSet, set->values);
 
@@ -297,7 +302,6 @@ IntSet subtractIntSet(IntSet set, void* source) {
                 tempSet->removeElem(tempSet, num);
         }
 
-        setFrom->delete(&setFrom);
         deleteItr(&iter);
     }
 

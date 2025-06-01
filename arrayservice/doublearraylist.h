@@ -28,7 +28,7 @@ bool containsAllDoubleList(DoubleList, void*);
 bool containsAnyDoubleList(DoubleList, void*);
 bool removeDoubleList(DoubleList, int);
 bool removeAllDoubleList(DoubleList, void*);
-DoubleList subtractDoubleList(DoubleList, DoubleList);
+DoubleList subtractDoubleList(DoubleList, void*);
 bool isEmptyDoubleList(DoubleList);
 void reverseDoubleList(DoubleList);
 bool isEqualsDoubleList(DoubleList, DoubleList);
