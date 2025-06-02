@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "strlinkedlist.h"
 #include "../util/linkedlistutil.h"
 
@@ -270,19 +271,19 @@ bool containsStrLL(StrLinkedList list, string s) {
     return false;
 }
 
-bool containsAllStrLL(StrLinkedList list1, void* source) {
-    if (list1 == NULL || source == NULL) return false;
+bool containsAllStrLL(StrLinkedList list, void* source) {
+    if (list == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
 
     if (ctx->type == STR_LIST) {
         StrList list2 = (StrList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
+        if (list2->pf->count > list->pf->count)
             return false;
 
         if (list2->pf->count == 0) return true;
 
-        StrSet set = pr_initSs_(set, list1->values);
+        StrSet set = pr_initSs_(set, list->values);
         for (int i = 0; i < list2->pf->count; ++i) {
             if (!containsKeyStr(set, list2->pf->data[i])) {
                 set->delete(&set);
@@ -294,12 +295,12 @@ bool containsAllStrLL(StrLinkedList list1, void* source) {
 
     if (ctx->type == STR_LL) {
         StrLinkedList list2 = (StrLinkedList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
+        if (list2->pf->count > list->pf->count)
             return false;
 
         if (list2->pf->count == 0) return true;
 
-        StrSet set = pr_initSs_(set, list1->values);
+        StrSet set = pr_initSs_(set, list->values);
         StrNode current = list2->pf->begin;
         while (current != NULL) {
             if (!containsKeyStr(set, current->data)) {
@@ -313,12 +314,12 @@ bool containsAllStrLL(StrLinkedList list1, void* source) {
 
     if (ctx->type == STR_SET) {
         StrSet setFrom = (StrSet) ctx->collection;
-        if (setFrom->pf->count > list1->pf->count)
+        if (setFrom->pf->count > list->pf->count)
             return false;
 
         if (setFrom->pf->count == 0) return true;
 
-        StrSet setTemp = pr_initSs_(setTemp, list1->values);
+        StrSet setTemp = pr_initSs_(setTemp, list->values);
         StrList listFrom = pr_initLs_(listFrom, setFrom->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
@@ -335,14 +336,14 @@ bool containsAllStrLL(StrLinkedList list1, void* source) {
     return true;
 }
 
-bool containsAnyStrLL(StrLinkedList list1, void* source) {
-    if (list1 == NULL || source == NULL) return false;
+bool containsAnyStrLL(StrLinkedList list, void* source) {
+    if (list == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
 
     if (ctx->type == STR_LIST) {
         StrList list2 = (StrList) ctx->collection;
-        StrSet set = pr_initSs_(set, list1->values);
+        StrSet set = pr_initSs_(set, list->values);
 
         for (int i = 0; i < list2->pf->count; ++i) {
             if (containsKeyStr(set, list2->pf->data[i])) {
@@ -355,7 +356,7 @@ bool containsAnyStrLL(StrLinkedList list1, void* source) {
 
     if (ctx->type == STR_LL) {
         StrLinkedList list2 = (StrLinkedList) ctx->collection;
-        StrSet set = pr_initSs_(set, list1->values);
+        StrSet set = pr_initSs_(set, list->values);
         StrNode current = list2->pf->begin;
 
         while (current != NULL) {
@@ -370,7 +371,7 @@ bool containsAnyStrLL(StrLinkedList list1, void* source) {
 
     if (ctx->type == STR_SET) {
         StrSet setFrom = (StrSet) ctx->collection;
-        StrSet setTemp = pr_initSs_(setTemp, list1->values);
+        StrSet setTemp = pr_initSs_(setTemp, list->values);
         StrList listFrom = pr_initLs_(listFrom, setFrom->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
@@ -413,61 +414,107 @@ bool removeStrLL(StrLinkedList list, int index) {
     return removeNodeStr(list, current, previous, index);
 }
 
-bool removeAllStrLL(StrLinkedList list1, void* source) {
-    if (list1 == NULL || source == NULL) return false;
+bool removeAllStrLL(StrLinkedList list, void* source) {
+    if (list == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
     StrLinkedList tempList;
 
     if (ctx->type == STR_LIST) {
-        StrList list2 = (IntList) ctx->collection;
+        StrList list2 = (StrList) ctx->collection;
         StrLinkedList copyValues = pr_initLLs_(copyValues, list2->values);
-        tempList = subtractStrLL(list1, copyValues);
+        tempList = subtractStrLL(list, copyValues);
     }
 
     if (ctx->type == STR_LL) {
         StrLinkedList list2 = (StrLinkedList) ctx->collection;
-        tempList = subtractStrLL(list1, list2);
+        tempList = subtractStrLL(list, list2);
     }
 
     if (ctx->type == STR_SET) {
         StrSet set = (StrSet) ctx->collection;
         StrLinkedList copyValues = pr_initLLs_(copyValues, set->values);
 
-        tempList = subtractStrLL(list1, copyValues);
+        tempList = subtractStrLL(list, copyValues);
         copyValues->delete(&copyValues);
     }
 
-    list1->delete(&list1);
-    list1 = tempList;
+    list->delete(&list);
+    list = tempList;
 
     return true;
 }
 
-StrLinkedList subtractStrLL(StrLinkedList list1, StrLinkedList list2) {
-    if (isEmptyStrLL(list1)) {
+StrLinkedList subtractStrLL(StrLinkedList list, void* source) {
+    if (isEmptyStrLL(list)) {
         StrLinkedList temp = NULL;
         return pr_initLLs_(temp, NULL);
     }
 
-    if (isEmptyStrLL(list2)) {
-        StrLinkedList temp = pr_initLLs_(temp, list1->values);
+    if (source == NULL) {
+        StrLinkedList temp = pr_initLLs_(temp, list->values);
         return temp;
     }
 
-    StrSet set = pr_initSs_(set, list2->values);
-    StrLinkedList temp = pr_initLLs_(temp, NULL);
+    Ctx ctx = (Ctx) source;
+    StrLinkedList tempList = pr_initLLs_(tempList, NULL);
 
-    StrNode current = list1->pf->begin;
-    while (current != NULL) {
-        if (!set->contains(set, current->data))
-            temp->add(temp, current->data);
-        current = current->next;
+    if (ctx->type == STR_LIST) {
+        StrList listSource = (StrList) ctx->collection;
+        if (listSource->pf->count == 0) {
+            StrLinkedList temp = pr_initLLs_(temp, list->values);
+            return temp;
+        }
+
+        StrSet setFrom = pr_initSs_(setFrom, listSource->values);
+        StrNode current = list->pf->begin;
+        while (current != NULL) {
+            if (!setFrom->contains(setFrom, current->data)) {
+                tempList->add(tempList, current->data);
+                current = current->next;
+            }
+        }
+        setFrom->delete(&setFrom);
     }
 
-    set->delete(&set);
+    if (ctx->type == STR_LL) {
+        StrLinkedList listSource = (StrLinkedList) ctx->collection;
+        if (listSource->pf->count == 0) {
+            StrLinkedList temp = pr_initLLs_(temp, list->values);
+            return temp;
+        }
 
-    return temp;
+        StrSet setFrom = pr_initSs_(setFrom, listSource->values);
+        StrNode current = list->pf->begin;
+        while (current != NULL) {
+            if (!setFrom->contains(setFrom, current->data)) {
+                tempList->add(tempList, current->data);
+                current = current->next;
+            }
+        }
+        setFrom->delete(&setFrom);
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet setFrom = (StrSet) ctx->collection;
+        if (setFrom->pf->count == 0) {
+            StrLinkedList temp = pr_initLLs_(temp, list->values);
+            return temp;
+        }
+
+        StrNode current = list->pf->begin;
+        while (current != NULL) {
+            if (!setFrom->contains(setFrom, current->data)) {
+                tempList->add(tempList, current->data);
+                current = current->next;
+            }
+        }
+    }
+
+    list->delete(&list);
+    list = tempList;
+
+    return list;
 }
 
 void reverseStrLL(StrLinkedList list) {
@@ -773,6 +820,7 @@ static int compareStr(string s1, string s2) {
 static void checkCapacity(char* text, int* count, int strLength) {
     if (strLength >= *count - strlen(text)) {
         *count = (*count + strLength) * 2;
-        realloc(text, *count * sizeof(char));
+        text = realloc(text, *count * sizeof(char));
+        assert(text != NULL);
     }
 }

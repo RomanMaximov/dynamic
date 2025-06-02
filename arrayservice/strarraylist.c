@@ -30,9 +30,7 @@ static int compareStr(string s1, string s2);
 static void quickSort(String** strList, int low, int high);
 static void quickSortReverse(String** strList, int low, int high);
 static bool isFull(StrList list);
-static bool binarySearchStr(string s, String** strList, int high);
 static int compareInt(const void* elem1, const void* elem2);
-static bool binarySearch(int elem, const int* arr, int high);
 static void checkCapacity(char* text, int* count, int strLength);
 static void deleteStr(string* s);
 
@@ -200,14 +198,14 @@ bool containsStrList(StrList list, string str) {
     return false;
 }
 
-bool containsAllStrList(StrList list1, void* source) {
-    if (list1 == NULL || source == NULL) return false;
+bool containsAllStrList(StrList list, void* source) {
+    if (list == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
 
     if (ctx->type == STR_LIST) {
         StrList list2 = (StrList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
+        if (list2->pf->count > list->pf->count)
             return false;
 
         if (list2->pf->count == 0) return true;
@@ -224,12 +222,12 @@ bool containsAllStrList(StrList list1, void* source) {
 
     if (ctx->type == STR_LL) {
         StrLinkedList list2 = (StrLinkedList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
+        if (list2->pf->count > list->pf->count)
             return false;
 
         if (list2->pf->count == 0) return true;
 
-        StrSet set = pr_initSs_(set, list1->values);
+        StrSet set = pr_initSs_(set, list->values);
         StrNode current = list2->pf->begin;
         while (current != NULL) {
             if (!containsKeyStr(set, current->data)) {
@@ -243,13 +241,13 @@ bool containsAllStrList(StrList list1, void* source) {
 
     if (ctx->type == STR_SET) {
         StrSet setFrom = (StrSet) ctx->collection;
-        if (setFrom->pf->count > list1->pf->count)
+        if (setFrom->pf->count > list->pf->count)
             return false;
 
         if (setFrom->pf->count == 0) return true;
 
         StrList strList = pr_initLs_(strList, setFrom->values);
-        StrSet setTemp = pr_initSs_(setTemp, list1->values);
+        StrSet setTemp = pr_initSs_(setTemp, list->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
             if (!containsKeyStr(setTemp, strList->pf->data[i])) {
@@ -265,8 +263,8 @@ bool containsAllStrList(StrList list1, void* source) {
     return true;
 }
 
-bool containsAnyStrList(StrList list1, void* source) {
-    if (list1 == NULL || source == NULL) return false;
+bool containsAnyStrList(StrList list, void* source) {
+    if (list == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
 
@@ -285,7 +283,7 @@ bool containsAnyStrList(StrList list1, void* source) {
 
     if (ctx->type == STR_LL) {
         StrLinkedList list2 = (StrLinkedList) ctx->collection;
-        StrSet set = pr_initSs_(set, list1->values);
+        StrSet set = pr_initSs_(set, list->values);
         StrNode current = list2->pf->begin;
 
         while (current != NULL) {
@@ -301,7 +299,7 @@ bool containsAnyStrList(StrList list1, void* source) {
     if (ctx->type == STR_SET) {
         StrSet setFrom = (StrSet) ctx->collection;
         StrList strList = pr_initLs_(strList, setFrom->values);
-        StrSet setTemp = pr_initSs_(setTemp, list1->values);
+        StrSet setTemp = pr_initSs_(setTemp, list->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
             if (containsKeyStr(setTemp, strList->pf->data[i])) {
@@ -351,22 +349,22 @@ bool removeStrList(StrList list, int index) {
     return true;
 }
 
-bool removeAllStrList(StrList list1, void* source) {
-    if (list1 == NULL || source == NULL) return false;
+bool removeAllStrList(StrList list, void* source) {
+    if (list == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
     StrList tempList;
 
     if (ctx->type == STR_LIST) {
         StrList list2 = (StrList) ctx->collection;
-        tempList = subtractStrList(list1, list2);
+        tempList = subtractStrList(list, list2);
     }
 
     if (ctx->type == STR_LL) {
         StrLinkedList list2 = (StrLinkedList) ctx->collection;
         StrList copyValues = pr_initLs_(copyValues, list2->values);
 
-        tempList = subtractStrList(list1, copyValues);
+        tempList = subtractStrList(list, copyValues);
         copyValues->delete(&copyValues);
     }
 
@@ -374,42 +372,81 @@ bool removeAllStrList(StrList list1, void* source) {
         StrSet set = (StrSet) ctx->collection;
         StrList copyValues = pr_initLs_(copyValues, set->values);
 
-        tempList = subtractStrList(list1, copyValues);
+        tempList = subtractStrList(list, copyValues);
         copyValues->delete(&copyValues);
     }
 
-    for (int i = 0; i <list1->pf->count; ++i) {
-        deleteStr(&list1->pf->data[i]);
-        list1->pf->data[i] = strOf(tempList->pf->data[i]->pf->data);
+    for (int i = 0; i <list->pf->count; ++i) {
+        deleteStr(&list->pf->data[i]);
+        list->pf->data[i] = strOf(tempList->pf->data[i]->pf->data);
     }
-    list1->pf->count = tempList->pf->count;
+    list->pf->count = tempList->pf->count;
     tempList->delete(&tempList);
 
     return true;
 }
 
-StrList subtractStrList(StrList list1, StrList list2) {
-    if (isEmptyStrList(list1)) {
+StrList subtractStrList(StrList list, void* source) {
+    if (isEmptyStrList(list)) {
         StrList temp = NULL;
         return pr_initLs_(temp, NULL);
     }
 
-    if (isEmptyStrList(list2)) {
-        StrList temp = pr_initLs_(temp, list1->values);
+    if (source == NULL) {
+        StrList temp = pr_initLs_(temp, list->values);
         return temp;
     }
 
-    StrSet set = pr_initSs_(set, list2->values);
-    StrList temp = pr_initLs_(temp, NULL);
+    Ctx ctx = (Ctx) source;
+    StrList tempList = pr_initLs_(tempList, NULL);
 
-    for (int i = 0; i < list1->pf->count; ++i) {
-        if (!set->contains(set, list1->pf->data[i]))
-            temp->add(temp, list1->pf->data[i]);
+    if (ctx->type == STR_LIST) {
+        StrList listSource = (StrList) ctx->collection;
+        if (listSource->pf->count == 0) {
+            StrList temp = pr_initLs_(temp, list->values);
+            return temp;
+        }
+
+        StrSet setFrom = pr_initSs_(setFrom, listSource->values);
+        for (int i = 0; i < list->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, list->pf->data[i]))
+                tempList->add(tempList, list->pf->data[i]);
+        }
+        setFrom->delete(&setFrom);
     }
 
-    set->delete(&set);
+    if (ctx->type == STR_LL) {
+        StrLinkedList listSource = (StrLinkedList) ctx->collection;
+        if (listSource->pf->count == 0) {
+            StrList temp = pr_initLs_(temp, list->values);
+            return temp;
+        }
 
-    return temp;
+        StrSet setFrom = pr_initSs_(setFrom, listSource->values);
+        for (int i = 0; i < list->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, list->pf->data[i]))
+                tempList->add(tempList, list->pf->data[i]);
+        }
+        setFrom->delete(&setFrom);
+    }
+
+    if (ctx->type == STR_SET) {
+        StrSet setFrom = (StrSet) ctx->collection;
+        if (setFrom->pf->count == 0) {
+            StrList temp = pr_initLs_(temp, list->values);
+            return temp;
+        }
+
+        for (int i = 0; i < list->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, list->pf->data[i]))
+                tempList->add(tempList, list->pf->data[i]);
+        }
+    }
+
+    list->delete(&list);
+    list = tempList;
+
+    return list;
 }
 
 bool isEmptyStrList(StrList list) {
@@ -655,40 +692,8 @@ static bool isFull(StrList list) {
     return list->pf->count >= list->pf->capacity / 5 * 4;
 }
 
-static bool binarySearchStr(string s, String** strList, int high) {
-    int low, middle;
-    --high;
-    low = 0;
-    while (low <= high) {
-        middle = (low + high) / 2;
-        if (compareStr(s, strList[middle]) < 0)
-            high = middle - 1;
-        else if (compareStr(s, strList[middle]) > 0)
-            low = middle + 1;
-        else
-            return true;
-    }
-    return false;
-}
-
 static int compareInt(const void* elem1, const void* elem2) {
     return (*(int*)elem1 - *(int*)elem2);
-}
-
-static bool binarySearch(int elem, const int* arr, int high) {
-    int low, middle;
-    --high;
-    low = 0;
-    while (low <= high) {
-        middle = (low + high) / 2;
-        if (elem < arr[middle])
-            high = middle - 1;
-        else if (elem > arr[middle])
-            low = middle + 1;
-        else
-            return true;
-    }
-    return false;
 }
 
 static void checkCapacity(char* text, int* count, int strLength) {

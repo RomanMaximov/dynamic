@@ -28,7 +28,7 @@ bool containsAllIntLL(IntLinkedList, void*);
 bool containsAnyIntLL(IntLinkedList, void*);
 bool removeIntLL(IntLinkedList, int);
 bool removeAllIntLL(IntLinkedList, void*);
-IntLinkedList subtractIntLL(IntLinkedList, IntLinkedList);
+IntLinkedList subtractIntLL(IntLinkedList, void*);
 bool isEmptyIntLL(IntLinkedList);
 void reverseIntLL(IntLinkedList);
 bool isEqualListsIntLL(IntLinkedList, IntLinkedList);

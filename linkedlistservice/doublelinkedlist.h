@@ -26,7 +26,7 @@ bool containsAllDoubleLL(DoubleLinkedList, void*);
 bool containsAnyDoubleLL(DoubleLinkedList, void*);
 bool removeDoubleLL(DoubleLinkedList, int);
 bool removeAllDoubleLL(DoubleLinkedList, void*);
-DoubleLinkedList subtractDoubleLL(DoubleLinkedList, DoubleLinkedList);
+DoubleLinkedList subtractDoubleLL(DoubleLinkedList, void*);
 bool isEmptyDoubleLL(DoubleLinkedList);
 void reverseDoubleLL(DoubleLinkedList);
 bool isEqualListsDoubleLL(DoubleLinkedList, DoubleLinkedList);

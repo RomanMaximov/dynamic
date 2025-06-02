@@ -234,19 +234,19 @@ bool containsDoubleLL(DoubleLinkedList list, double num) {
     return false;
 }
 
-bool containsAllDoubleLL(DoubleLinkedList list1, void* source) {
-    if (list1 == NULL || source == NULL) return false;
+bool containsAllDoubleLL(DoubleLinkedList list, void* source) {
+    if (list == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
 
     if (ctx->type == DOUBLE_LIST) {
         DoubleList list2 = (DoubleList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
+        if (list2->pf->count > list->pf->count)
             return false;
 
         if (list2->pf->count == 0) return true;
 
-        DoubleSet set = pr_initSd_(set, list1->values);
+        DoubleSet set = pr_initSd_(set, list->values);
         for (int i = 0; i < list2->pf->count; ++i) {
             if (!containsKeyDouble(set, list2->pf->data[i])) {
                 set->delete(&set);
@@ -258,12 +258,12 @@ bool containsAllDoubleLL(DoubleLinkedList list1, void* source) {
 
     if (ctx->type == DOUBLE_LL) {
         DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
-        if (list2->pf->count > list1->pf->count)
+        if (list2->pf->count > list->pf->count)
             return false;
 
         if (list2->pf->count == 0) return true;
 
-        DoubleSet set = pr_initSd_(set, list1->values);
+        DoubleSet set = pr_initSd_(set, list->values);
         DoubleNode current = list2->pf->begin;
         while (current != NULL) {
             if (!containsKeyDouble(set, current->data)) {
@@ -277,12 +277,12 @@ bool containsAllDoubleLL(DoubleLinkedList list1, void* source) {
 
     if (ctx->type == DOUBLE_SET) {
         DoubleSet setFrom = (DoubleSet) ctx->collection;
-        if (setFrom->pf->count > list1->pf->count)
+        if (setFrom->pf->count > list->pf->count)
             return false;
 
         if (setFrom->pf->count == 0) return true;
 
-        DoubleSet setTemp = pr_initSd_(setTemp, list1->values);
+        DoubleSet setTemp = pr_initSd_(setTemp, list->values);
         DoubleList listFrom = pr_initLd_(listFrom, setFrom->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
@@ -299,14 +299,14 @@ bool containsAllDoubleLL(DoubleLinkedList list1, void* source) {
     return true;
 }
 
-bool containsAnyDoubleLL(DoubleLinkedList list1, void* source) {
-    if (list1 == NULL || source == NULL) return false;
+bool containsAnyDoubleLL(DoubleLinkedList list, void* source) {
+    if (list == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
 
     if (ctx->type == DOUBLE_LIST) {
         DoubleList list2 = (DoubleList) ctx->collection;
-        DoubleSet set = pr_initSd_(set, list1->values);
+        DoubleSet set = pr_initSd_(set, list->values);
 
         for (int i = 0; i < list2->pf->count; ++i) {
             if (containsKeyDouble(set, list2->pf->data[i])) {
@@ -319,7 +319,7 @@ bool containsAnyDoubleLL(DoubleLinkedList list1, void* source) {
 
     if (ctx->type == DOUBLE_LL) {
         DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
-        DoubleSet set = pr_initSd_(set, list1->values);
+        DoubleSet set = pr_initSd_(set, list->values);
         DoubleNode current = list2->pf->begin;
 
         while (current != NULL) {
@@ -334,7 +334,7 @@ bool containsAnyDoubleLL(DoubleLinkedList list1, void* source) {
 
     if (ctx->type == DOUBLE_SET) {
         DoubleSet setFrom = (DoubleSet) ctx->collection;
-        DoubleSet setTemp = pr_initSd_(setTemp, list1->values);
+        DoubleSet setTemp = pr_initSd_(setTemp, list->values);
         DoubleList listFrom = pr_initLd_(listFrom, setFrom->values);
 
         for (int i = 0; i < setFrom->pf->count; ++i) {
@@ -377,8 +377,8 @@ bool removeDoubleLL(DoubleLinkedList list, int index) {
     return removeNodeDouble(list, current, previous, index);
 }
 
-bool removeAllDoubleLL(DoubleLinkedList list1, void* source) {
-    if (list1 == NULL || source == NULL) return false;
+bool removeAllDoubleLL(DoubleLinkedList list, void* source) {
+    if (list == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
     DoubleLinkedList tempList;
@@ -386,24 +386,24 @@ bool removeAllDoubleLL(DoubleLinkedList list1, void* source) {
     if (ctx->type == DOUBLE_LIST) {
         DoubleList list2 = (DoubleList) ctx->collection;
         DoubleLinkedList copyValues = pr_initLLd_(copyValues, list2->values);
-        tempList = subtractDoubleLL(list1, copyValues);
+        tempList = subtractDoubleLL(list, copyValues);
     }
 
     if (ctx->type == DOUBLE_LL) {
         DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
-        tempList = subtractDoubleLL(list1, list2);
+        tempList = subtractDoubleLL(list, list2);
     }
 
     if (ctx->type == DOUBLE_SET) {
         DoubleSet set = (DoubleSet) ctx->collection;
         DoubleLinkedList copyValues = pr_initLLd_(copyValues, set->values);
 
-        tempList = subtractDoubleLL(list1, copyValues);
+        tempList = subtractDoubleLL(list, copyValues);
         copyValues->delete(&copyValues);
     }
 
-    list1->delete(&list1);
-    list1 = tempList;
+    list->delete(&list);
+    list = tempList;
 
     return true;
 }
@@ -425,30 +425,76 @@ void reverseDoubleLL(DoubleLinkedList list) {
     free(arr);
 }
 
-DoubleLinkedList subtractDoubleLL(DoubleLinkedList list1, DoubleLinkedList list2) {
-    if (isEmptyDoubleLL(list1)) {
+DoubleLinkedList subtractDoubleLL(DoubleLinkedList list, void* source) {
+    if (isEmptyDoubleLL(list)) {
         DoubleLinkedList temp = NULL;
         return pr_initLLd_(temp, NULL);
     }
 
-    if (isEmptyDoubleLL(list2)) {
-        DoubleLinkedList temp = pr_initLLd_(temp, list1->values);
+    if (source == NULL) {
+        DoubleLinkedList temp = pr_initLLd_(temp, list->values);
         return temp;
     }
 
-    DoubleSet set = pr_initSd_(set, list2->values);
-    DoubleLinkedList temp = pr_initLLd_(temp, NULL);
+    Ctx ctx = (Ctx) source;
+    DoubleLinkedList tempList = pr_initLLd_(tempList, NULL);
 
-    DoubleNode current = list1->pf->begin;
-    while (current != NULL) {
-        if (!set->contains(set, current->data))
-            temp->add(temp, current->data);
-        current = current->next;
+    if (ctx->type == DOUBLE_LIST) {
+        DoubleList listSource = (DoubleList) ctx->collection;
+        if (listSource->pf->count == 0) {
+            DoubleLinkedList temp = pr_initLLd_(temp, list->values);
+            return temp;
+        }
+
+        DoubleSet setFrom = pr_initSd_(setFrom, listSource->values);
+        DoubleNode current = list->pf->begin;
+        while (current != NULL) {
+            if (!setFrom->contains(setFrom, current->data)) {
+                tempList->add(tempList, current->data);
+                current = current->next;
+            }
+        }
+        setFrom->delete(&setFrom);
     }
 
-    set->delete(&set);
+    if (ctx->type == DOUBLE_LL) {
+        DoubleLinkedList listSource = (DoubleLinkedList) ctx->collection;
+        if (listSource->pf->count == 0) {
+            DoubleLinkedList temp = pr_initLLd_(temp, list->values);
+            return temp;
+        }
 
-    return temp;
+        DoubleSet setFrom = pr_initSd_(setFrom, listSource->values);
+        DoubleNode current = list->pf->begin;
+        while (current != NULL) {
+            if (!setFrom->contains(setFrom, current->data)) {
+                tempList->add(tempList, current->data);
+                current = current->next;
+            }
+        }
+        setFrom->delete(&setFrom);
+    }
+
+    if (ctx->type == DOUBLE_SET) {
+        DoubleSet setFrom = (DoubleSet) ctx->collection;
+        if (setFrom->pf->count == 0) {
+            DoubleLinkedList temp = pr_initLLd_(temp, list->values);
+            return temp;
+        }
+
+        DoubleNode current = list->pf->begin;
+        while (current != NULL) {
+            if (!setFrom->contains(setFrom, current->data)) {
+                tempList->add(tempList, current->data);
+                current = current->next;
+            }
+        }
+    }
+
+    list->delete(&list);
+    list = tempList;
+
+    return list;
 }
 
 bool isEmptyDoubleLL(DoubleLinkedList list) {

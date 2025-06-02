@@ -32,14 +32,13 @@ bool containsAllStrList(StrList, void*);
 bool containsAnyStrList(StrList, void*);
 bool removeStrList(StrList, int);
 bool removeAllStrList(StrList, void*);
-StrList subtractStrList(StrList, StrList);
+StrList subtractStrList(StrList, void*);
 bool isEmptyStrList(StrList);
 void reverseStrList(StrList);
 bool isEqualsStrList(StrList, StrList);
 int sizeStrList(StrList);
 string joinStrList(StrList, char*);
 string toStrStrList(StrList list);
-Iterator iteratorStrList(StrList);
 
 void printStrList(StrList);
 void deleteStrList(StrList*);

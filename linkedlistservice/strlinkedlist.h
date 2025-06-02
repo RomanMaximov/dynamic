@@ -30,7 +30,7 @@ bool containsAllStrLL(StrLinkedList, void*);
 bool containsAnyStrLL(StrLinkedList, void*);
 bool removeStrLL(StrLinkedList, int); // by index
 bool removeAllStrLL(StrLinkedList, void*);
-StrLinkedList subtractStrLL(StrLinkedList, StrLinkedList);
+StrLinkedList subtractStrLL(StrLinkedList, void*);
 void reverseStrLL(StrLinkedList);
 bool isEqualListsStrLL(StrLinkedList, StrLinkedList);
 bool isEmptyStrLL(StrLinkedList);

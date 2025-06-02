@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "strset.h"
 #include "../util/setutil.h"
 
@@ -52,7 +53,7 @@ static void quickSortStr(String** strList, int low, int high);
 static void removeNode(StrSetNode* node, StrSetNode* previous, string s, bool* found);
 static StrSetNode findNode(StrSetNode* node, StrSetNode* previous);
 static bool isRoot(StrSetNode* node, StrSetNode* previous);
-static  void toStringInOrder(StrSetNode node, int* counter, char* text, int* count);
+static void toStringInOrder(StrSetNode node, int* counter, char* text, int* count);
 static void checkCapacity(char* text, int* count, int strLength);
 static bool containsKeyStr(StrSet set, string s);
 
@@ -612,7 +613,7 @@ static  void printInOrder(StrSetNode node, int* counter) {
 static  void toStringInOrder(StrSetNode node, int* counter, char* text, int* count) {
     if (node != NULL) {
         toStringInOrder(node->left, counter, text, count);
-        checkCapacity(text, &count, node->str->pf->count);
+        checkCapacity(text, count, node->str->pf->count);
         sprintf(&text[strlen(text)], "%s,", node->str->pf->data);
         if (strlen(text) > (int)(*count / 8 * 7)) {
             *count *= 2;
@@ -630,7 +631,8 @@ static  void toStringInOrder(StrSetNode node, int* counter, char* text, int* cou
 static void checkCapacity(char* text, int* count, int strLength) {
     if (strLength >= *count - strlen(text)) {
         *count = (*count + strLength) * 2;
-        realloc(text, *count * sizeof(char));
+        text = realloc(text, *count * sizeof(char));
+        assert(text != NULL);
     }
 }
 
