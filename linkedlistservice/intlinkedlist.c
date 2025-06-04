@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "intlinkedlist.h"
 #include "../util/linkedlistutil.h"
 
@@ -21,9 +22,9 @@ typedef struct NodeInt {
 typedef struct InnerIntLL {
     int count;
     int index;
-    NodeInt* nodes;
-    NodeInt* begin;
-    NodeInt* end;
+    struct NodeInt* nodes;
+    struct NodeInt* begin;
+    struct NodeInt* end;
 } InnerIntLL;
 
 
@@ -32,16 +33,12 @@ typedef NodeInt* IntNode;
 typedef Itr* Iterator;
 
 
-// funcs prototypes
+// private funcs prototypes
 static void fillNodeInt(IntNode node, int num, int* index);
-static bool binarySearch(int elem, const int* arr, int high);
 static void deleteNodeInt(IntLinkedList list, IntNode current, IntNode previous);
 static void deleteFirstNodeInt(IntLinkedList list, IntNode current);
 static bool removeNodeInt(IntLinkedList list, IntNode current, IntNode previous, int index);
-static void toArrAndSort(IntLinkedList list, int* arr);
 static void copyLLToArray(IntLinkedList list, int* arr);
-static int indexOf(int* arr, int size, int num);
-static IntLinkedList copyIntLL(IntLinkedList list);
 static void reverseArr(int* arr, int size);
 static int compareInt(const void* elem1, const void* elem2);
 static int compareIntReverse(const void* elem1, const void* elem2);
@@ -578,6 +575,7 @@ string toStrIntLL(IntLinkedList list) {
         if (strlen(text) > (int)(count / 8 * 7)) {
             count *= 2;
             text = realloc(text, count * sizeof(char));
+            assert(text != NULL);
         }
         current = current->next;
     }
@@ -683,48 +681,11 @@ static bool removeNodeInt(IntLinkedList list, IntNode current, IntNode previous,
     }
 }
 
-static bool binarySearch(int elem, const int* arr, int high) {
-    int low, middle;
-    --high;
-    low = 0;
-    while (low <= high) {
-        middle = (low + high) / 2;
-        if (elem < arr[middle])
-            high = middle - 1;
-        else if (elem > arr[middle])
-            low = middle + 1;
-        else
-            return true;
-    }
-    return false;
-}
-
-static void toArrAndSort(IntLinkedList list, int* arr) {
-    IntNode current = list->pf->begin;
-    int index = 0;
-    while (current != NULL) {
-        arr[index++] = current->data;
-        current = current->next;
-    }
-
-    qsort(arr, list->pf->count, sizeof(int), compareInt);
-}
-
 static void fillNodeInt(IntNode node, int num, int* index) {
     node->data = num;
     node->next = NULL;
     node->prev = NULL;
     ++(*index);
-}
-
-static int indexOf(int* arr, int size, int num) {
-    for (int i = 0; i < size; ++i) {
-        if (num == arr[i]) {
-            return i;
-        }
-    }
-
-    return -1;
 }
 
 static void copyLLToArray(IntLinkedList list, int* arr) {
@@ -734,17 +695,6 @@ static void copyLLToArray(IntLinkedList list, int* arr) {
         arr[index++] = current->data;
         current = current->next;
     }
-}
-
-static IntLinkedList copyIntLL(IntLinkedList list) {
-    IntLinkedList temp = pr_initLLi_(temp, NULL);
-    IntNode current = list->pf->begin;
-
-    while (current != NULL) {
-        addIntLL(temp, current->data);
-        current = current->next;
-    }
-    return temp;
 }
 
 static void reverseArr(int* arr, int size) {

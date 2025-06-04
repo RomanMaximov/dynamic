@@ -33,7 +33,6 @@ bool isEmptyIntLL(IntLinkedList);
 void reverseIntLL(IntLinkedList);
 bool isEqualListsIntLL(IntLinkedList, IntLinkedList);
 int sizeIntLL(IntLinkedList);
-Iterator iteratorIntLL(IntLinkedList);
 
 string toStrIntLL(IntLinkedList);
 void printIntLL(IntLinkedList);

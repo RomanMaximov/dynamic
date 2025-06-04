@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include <math.h>
 #include "doublelinkedlist.h"
 #include "../util/linkedlistutil.h"
@@ -21,9 +22,9 @@ typedef struct NodeDouble {
 typedef struct InnerDoubleLL {
     int count;
     int index;
-    NodeDouble* nodes;
-    NodeDouble* begin;
-    NodeDouble* end;
+    struct NodeDouble* nodes;
+    struct NodeDouble* begin;
+    struct NodeDouble* end;
 } InnerDoubleLL;
 
 typedef struct NodeDouble NodeDouble;
@@ -32,14 +33,9 @@ typedef NodeDouble* DoubleNode;
 
 // funcs prototypes
 static void fillNodeDouble(DoubleNode node, double num, int* index);
-static bool binarySearch(double elem, const double* arr, int high);
-static void deleteNodeDouble(DoubleLinkedList list, DoubleNode current, DoubleNode previous);
 static void deleteFirstNodeDouble(DoubleLinkedList list, DoubleNode current);
 static bool removeNodeDouble(DoubleLinkedList list, DoubleNode current, DoubleNode previous, int index);
-static void toArrAndSort(DoubleLinkedList list, double* arr);
 static void copyLLToArray(DoubleLinkedList list, double* arr);
-static int indexOf(const double* arr, int size, double num);
-static DoubleLinkedList copyDoubleLL(DoubleLinkedList list);
 static void reverseArr(double* arr, int size);
 static int compareDouble(const void* elem1, const void* elem2);
 static int compareDoubleReverse(const void* elem1, const void* elem2);
@@ -546,6 +542,7 @@ string toStrDoubleLL(DoubleLinkedList list) {
         if (strlen(text) > (int)(count / 8 * 7)) {
             count *= 2;
             text = realloc(text, count * sizeof(char));
+            assert(text != NULL);
         }
         current = current->next;
     }
@@ -651,43 +648,6 @@ static bool removeNodeDouble(DoubleLinkedList list, DoubleNode current, DoubleNo
     }
 }
 
-static bool binarySearch(double elem, const double* arr, int high) {
-    int low, middle;
-    --high;
-    low = 0;
-    while (low <= high) {
-        middle = (low + high) / 2;
-        if (elem < arr[middle])
-            high = middle - 1;
-        else if (elem > arr[middle])
-            low = middle + 1;
-        else
-            return true;
-    }
-    return false;
-}
-
-static void toArrAndSort(DoubleLinkedList list, double * arr) {
-    DoubleNode current = list->pf->begin;
-    int index = 0;
-    while (current != NULL) {
-        arr[index++] = current->data;
-        current = current->next;
-    }
-
-    qsort(arr, list->pf->count, sizeof(double), compareDouble);
-}
-
-static int indexOf(const double* arr, int size, double num) {
-    for (int i = 0; i < size; ++i) {
-        if (num == arr[i]) {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
 static void copyLLToArray(DoubleLinkedList list, double* arr) {
     DoubleNode current = list->pf->begin;
     int index = 0;
@@ -695,17 +655,6 @@ static void copyLLToArray(DoubleLinkedList list, double* arr) {
         arr[index++] = current->data;
         current = current->next;
     }
-}
-
-static DoubleLinkedList copyDoubleLL(DoubleLinkedList list) {
-    DoubleLinkedList temp = pr_initLLd_(temp, NULL);
-    DoubleNode current = list->pf->begin;
-
-    while (current != NULL) {
-        addDoubleLL(temp, current->data);
-        current = current->next;
-    }
-    return temp;
 }
 
 static void reverseArr(double* arr, int size) {

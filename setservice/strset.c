@@ -21,7 +21,7 @@ typedef struct NodeSetStr {
 typedef struct InnerStrSet {
     int count;
     int capacity;
-    NodeSetStr** bucket;
+    struct NodeSetStr** bucket;
 } InnerStrSet;
 
 // String data encapsulation
@@ -436,7 +436,6 @@ static void increaseCapacity(StrSet set) {
 }
 
 static void setToArr(StrSet set, StrList list) {
-    int index = 0;
     for (int i = 0; i < set->pf->capacity; ++i) {
         copyValuesToList(set->pf->bucket[i], list);
     }
@@ -618,6 +617,7 @@ static  void toStringInOrder(StrSetNode node, int* counter, char* text, int* cou
         if (strlen(text) > (int)(*count / 8 * 7)) {
             *count *= 2;
             text = realloc(text, *count * sizeof(char));
+            assert(text != NULL);
         }
 
         if (*counter - 1 != 0) {

@@ -54,7 +54,7 @@ typedef struct InnerDoubleList {
 
 typedef struct InnerStrList {
     int count;
-    String** data;
+    struct String** data;
     int capacity;
 } InnerStrList;
 

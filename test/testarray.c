@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include"testarray.h"
-#include"../arraylist.h"
 
 
 void test() {
@@ -48,16 +47,11 @@ void test() {
     deleteList(arrInt);*/
 }
 
-void assertInt(unsigned int result, unsigned int nominal) {
-    if (result == nominal)
+void assertInt(int result, int expected ) {
+    if (result == expected)
         printf("test: \t%sOK%s\n", GREEN, RESET);
     else
         printf("test: \t%sFAILURE%s\n", RED, RESET);
 }
 
-void assertNotNullInt(IntList arr) {
-    if (arr != NULL)
-        printf("test: \t%sOK%s\n", GREEN, RESET);
-    else
-        printf("test: \t%sFAILURE%s\n", RED, RESET);
-}
+

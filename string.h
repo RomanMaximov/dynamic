@@ -45,29 +45,7 @@ typedef ArrayListStr* StrList;
 
 string strOf(char* s);
 string emptyStr();
-//int length(string s);
-//string concat(string s1, string s2);
-//string replace(string s, char ch1, char ch2);
-//string toLowerCase(string s);
-//string toUpperCase(string s);
 string joinStr(char* delimeter, int countParams, ...);
-//char charAt(string s, int index);
-//bool containsSubStr(string str, string substr);
-//bool startsWith(string str, string substr);
-//bool endsWith(string str, string substr);
-//string reverseStr(string s);
-//int indexOfStr(string s, char ch);
-//int indexOfSubStr(string str, string sub);
-//StrList split(string s, char delimeter);
-//string trim(string s);
-//bool isEmptyStr(string s);
-//bool isBlank(string s);
-//bool isNotBlank(string s);
-//string joinStrList(StrList list, char* delimeter);
-//string defaultIfNull(string, string);
-
-//void printString(string s);
-//oid deleteString(string* s);
 
 
 #endif

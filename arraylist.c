@@ -28,7 +28,7 @@ typedef struct InnerDoubleList {
 // ArrayList data encapsulation
 typedef struct InnerStrList {
     int count;
-    String** data;
+    struct String** data;
     int capacity;
 } InnerStrList;
 
@@ -543,7 +543,7 @@ static void* delete(Type type) {
     }
 }
 
-static void* joinList(Type type) {
+static void* joinList() {
     return joinStrList;
 }
 
@@ -568,7 +568,7 @@ static void initFuncs(Type type, void* data) {
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->size = size(type) : type == DOUBLE_LIST ? ((DoubleList) data)->size = size(type) : (((StrList) data)->size = size(type));
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->toString = toString(type) : type == DOUBLE_LIST ? ((DoubleList) data)->toString = toString(type) : (((StrList) data)->toString= toString(type));
     if (type == STR_LIST)
-        ((StrList) data)->joinList = joinList(type);
+        ((StrList) data)->joinList = joinList();
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->print = print(type) : type == DOUBLE_LIST ? ((DoubleList) data)->print = print(type) : (((StrList) data)->print = print(type));
     type != DOUBLE_LIST && type != STR_LIST ? ((IntList) data)->delete = delete(type) : type == DOUBLE_LIST ? ((DoubleList) data)->delete = delete(type) : (((StrList) data)->delete = delete(type));
 }

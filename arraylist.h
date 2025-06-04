@@ -25,7 +25,7 @@ typedef struct ArrayListInt {
     void* values;              // private field
     // funcs pointers
     void (*add)(struct ArrayListInt* list, int number);
-    void (*addAll)(struct ArrayListInt* list1, void* list2);
+    void (*addAll)(struct ArrayListInt* list, void* source);
     int (*get)(struct ArrayListInt* list, int index);
     bool (*set)(struct ArrayListInt* list, int index, int number);
     int (*indexOf)(struct ArrayListInt* list, int number);
@@ -33,11 +33,11 @@ typedef struct ArrayListInt {
     void (*sortReverse)(struct ArrayListInt* list);
     void (*clear)(struct ArrayListInt* list);
     bool (*contains)(struct ArrayListInt* list, int number);
-    bool (*containsAll)(struct ArrayListInt* list1, void* list2);
-    bool (*containsAny)(struct ArrayListInt* list1, void* list2);
+    bool (*containsAll)(struct ArrayListInt* list, void* source);
+    bool (*containsAny)(struct ArrayListInt* list, void* source);
     bool (*removeElem)(struct ArrayListInt* list, int number);
-    bool (*removeAll)(struct ArrayListInt* list1, void* list2);
-    struct ArrayListInt* (*subtract)(struct ArrayListInt* list1, struct ArrayListInt* list2);
+    bool (*removeAll)(struct ArrayListInt* list, void* source);
+    struct ArrayListInt* (*subtract)(struct ArrayListInt* list, void* source);
     bool (*isEmpty)(struct ArrayListInt* list);
     void (*reverse)(struct ArrayListInt* list);
     bool (*isEquals)(struct ArrayListInt* list1, struct ArrayListInt* list2);
@@ -52,7 +52,7 @@ typedef struct ArrayListDouble {
     void* values;                 // private field
     // funcs pointers
     void (*add)(struct ArrayListDouble* list, double number);
-    void (*addAll)(struct ArrayListDouble* list1, void* list2);
+    void (*addAll)(struct ArrayListDouble* list, void* source);
     double (*get)(struct ArrayListDouble* list, int index);
     bool (*set)(struct ArrayListDouble* list, int index, double number);
     int (*indexOf)(struct ArrayListDouble* list, double number);
@@ -60,11 +60,11 @@ typedef struct ArrayListDouble {
     void (*sortReverse)(struct ArrayListDouble* list);
     void (*clear)(struct ArrayListDouble* list);
     bool (*contains)(struct ArrayListDouble* list, double number);
-    bool (*containsAll)(struct ArrayListDouble* list1, void* list2);
-    bool (*containsAny)(struct ArrayListDouble* list1, void* list2);
+    bool (*containsAll)(struct ArrayListDouble* list, void* source);
+    bool (*containsAny)(struct ArrayListDouble* list, void* source);
     bool (*removeElem)(struct ArrayListDouble* list, int number);
-    bool (*removeAll)(struct ArrayListDouble* list1, void* list2);
-    struct ArrayListDouble* (*subtract)(struct ArrayListDouble* list1, struct ArrayListDouble* list2);
+    bool (*removeAll)(struct ArrayListDouble* list, void* source);
+    struct ArrayListDouble* (*subtract)(struct ArrayListDouble* list, void* source);
     bool (*isEmpty)(struct ArrayListDouble* list);
     void (*reverse)(struct ArrayListDouble* list);
     bool (*isEquals)(struct ArrayListDouble* list1, struct ArrayListDouble* list2);
@@ -79,7 +79,7 @@ typedef struct ArrayListStr {
     void* values;              // private field
     // funcs pointers
     void (*add)(struct ArrayListStr* list, struct String* s);
-    void (*addAll)(struct ArrayListStr* list1, void* list2);
+    void (*addAll)(struct ArrayListStr* list1, void* source);
     struct String* (*get)(struct ArrayListStr* list, int index);
     bool (*set)(struct ArrayListStr* list, int index, struct String* s);
     int (*indexOf)(struct ArrayListStr* list, struct String* s);
@@ -87,11 +87,11 @@ typedef struct ArrayListStr {
     void (*sortReverse)(struct ArrayListStr* list);
     void (*clear)(struct ArrayListStr* list);
     bool (*contains)(struct ArrayListStr* list, struct String* s);
-    bool (*containsAll)(struct ArrayListStr* list1, void* list2);
-    bool (*containsAny)(struct ArrayListStr* list1, void* list2);
+    bool (*containsAll)(struct ArrayListStr* list1, void* source);
+    bool (*containsAny)(struct ArrayListStr* list1, void* source);
     bool (*removeElem)(struct ArrayListStr* list, int number);
-    bool (*removeAll)(struct ArrayListStr* list1, void* list2);
-    struct ArrayListStr* (*subtract)(struct ArrayListStr* list1, struct ArrayListStr* list2);
+    bool (*removeAll)(struct ArrayListStr* list1, void* source);
+    struct ArrayListStr* (*subtract)(struct ArrayListStr* list, void* source);
     bool (*isEmpty)(struct ArrayListStr* list);
     void (*reverse)(struct ArrayListStr* list);
     bool (*isEquals)(struct ArrayListStr* list1, struct ArrayListStr* list2);

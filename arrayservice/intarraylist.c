@@ -24,7 +24,6 @@ static int* increaseCapacity(IntList list);
 static int* increaseCapacityAddAll(IntList list, int size);
 static int compareInt(const void* elem1, const void* elem2);
 static int compareReverse(const void* elem1, const void* elem2);
-static bool binarySearch(int elem, const int* arr, int high);
 
 
 void addIntList(IntList list, int num) {
@@ -456,6 +455,7 @@ string toStrIntList(IntList list) {
         if (strlen(text) > (int)(count / 8 * 7)) {
             count *= 2;
             text = realloc(text, count * sizeof(char));
+            assert(text != NULL);
         }
     }
 
@@ -521,20 +521,4 @@ static int compareInt(const void* elem1, const void* elem2) {
 
 static int compareReverse(const void* elem1, const void* elem2) {
     return (*(int*)elem2 - *(int*)elem1);
-}
-
-static bool binarySearch(int elem, const int* arr, int high) {
-    int low, middle;
-    --high;
-    low = 0;
-    while (low <= high) {
-        middle = (low + high) / 2;
-        if (elem < arr[middle])
-            high = middle - 1;
-        else if (elem > arr[middle])
-            low = middle + 1;
-        else
-            return true;
-    }
-    return false;
 }

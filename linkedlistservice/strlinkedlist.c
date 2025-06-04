@@ -21,9 +21,9 @@ typedef struct NodeStr {
 typedef struct InnerStrLL {
     int count;
     int index;
-    NodeStr* nodes;
-    NodeStr* begin;
-    NodeStr* end;
+    struct NodeStr* nodes;
+    struct NodeStr* begin;
+    struct NodeStr* end;
 } InnerStrLL;
 
 typedef struct NodeStr NodeStr;
@@ -32,16 +32,13 @@ typedef String* string;
 typedef ArrayListStr* StrList;
 
 
-// prototypes
+// private funcs prototypes
 static void fillNodeStr(StrNode node, char* s, int* index);
 static void quickSortStr(String** strList, int low, int high);
 static void quickSortStrReverse(String** strList, int low, int high);
-static bool binarySearchStr(string s, String** strList, int high);
 static bool removeNodeStr(StrLinkedList list, StrNode current, StrNode previous, int index);
 static void deleteFirstNodeStr(StrLinkedList list, StrNode current);
 static void deleteNodeStr(StrLinkedList list, StrNode current, StrNode previous);
-static void copyLLToStrList(StrLinkedList strLL, StrList strList);
-static StrLinkedList copyStrLL(StrLinkedList list);
 static int compareStr(string s1, string s2);
 static void checkCapacity(char* text, int* count, int strLength);
 
@@ -770,22 +767,6 @@ static void quickSortStr(String** strList, int low, int high) {
         quickSortStrReverse(strList, low, j);
 }
 
-static bool binarySearchStr(string s, String** strList, int high) {
-    int low, middle;
-    --high;
-    low = 0;
-    while (low <= high) {
-        middle = (low + high) / 2;
-        if (compareStr(s, strList[middle]) < 0)
-            high = middle - 1;
-        else if (compareStr(s, strList[middle]) > 0)
-            low = middle + 1;
-        else
-            return true;
-    }
-    return false;
-}
-
 static void fillNodeStr(StrNode node, char* s, int* index) {
     node->data = strOf(s);
     node->next = NULL;
@@ -793,28 +774,8 @@ static void fillNodeStr(StrNode node, char* s, int* index) {
     ++(*index);
 }
 
-static void copyLLToStrList(StrLinkedList strLL, StrList strList) {
-    StrNode current = strLL->pf->begin;
-    while (current != NULL) {
-        strList->add(strList, current->data);
-        current = current->next;
-    }
-}
-
-static StrLinkedList copyStrLL(StrLinkedList list) {
-    StrLinkedList temp = pr_initLLs_(temp, NULL);
-    StrNode current = list->pf->begin;
-
-    while (current != NULL) {
-        addStrLL(temp, current->data);
-        current = current->next;
-    }
-    return temp;
-}
-
 static int compareStr(string s1, string s2) {
-    int result = strcmp(s1->pf->data, s2->pf->data);
-    return result;
+    return strcmp(s1->pf->data, s2->pf->data);
 }
 
 static void checkCapacity(char* text, int* count, int strLength) {

@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "intset.h"
 #include "../util/setutil.h"
 
@@ -20,7 +21,7 @@ typedef struct NodeSetInt {
 typedef struct InnerIntSet {
     int count;
     int capacity;
-    NodeSetInt** bucket;
+    struct NodeSetInt** bucket;
 } InnerIntSet;
 
 typedef SetInt* IntSet;
@@ -553,7 +554,7 @@ static void removeNode(IntSetNode* node, IntSetNode* previous, int num, bool* fo
     }
 }
 
-// служебная функция для вывода дерева
+// debugging func for tree
 void outputTree(IntSetNode node, int* counter) {
     if (node != NULL) {
         ++(*counter);
@@ -564,11 +565,6 @@ void outputTree(IntSetNode node, int* counter) {
         outputTree(node->left, counter);
         --(*counter);
     }
-}
-
-void printTree(IntSet set) {
-    int counter = 0;
-    outputTree(set->pf->bucket[0], &counter);
 }
 
 static void setToArr(IntSet set, int* arr) {
@@ -606,6 +602,7 @@ static  void toStringInOrder(IntSetNode node, int* counter, char* text, int* cou
         if (strlen(text) > (int)(*count / 8 * 7)) {
             *count *= 2;
             text = realloc(text, *count * sizeof(char));
+            assert(text != NULL);
         }
 
         if (*counter - 1 != 0) {

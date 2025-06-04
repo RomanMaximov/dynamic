@@ -22,14 +22,14 @@ typedef struct SetInt {
     void* values;             // private field
     // funcs pointers
     void (*add)(struct SetInt* set, int number);
-    void (*addAll)(struct SetInt* set1, struct SetInt* set2);
+    void (*addAll)(struct SetInt* set, void* source);
     void (*clear)(struct SetInt* set);
     bool (*contains)(struct SetInt* set, int number);
-    bool (*containsAll)(struct SetInt* set1, struct SetInt* set2);
-    bool (*containsAny)(struct SetInt* set1, struct SetInt* set2);
+    bool (*containsAll)(struct SetInt* set, void* source);
+    bool (*containsAny)(struct SetInt* set, void* source);
     bool (*removeElem)(struct SetInt* set, int number);
-    bool (*removeAll)(struct SetInt* set1, struct SetInt* set2);
-    struct SetInt* (*subtract)(struct SetInt* set1, void* source);
+    bool (*removeAll)(struct SetInt* set, void* source);
+    struct SetInt* (*subtract)(struct SetInt* set, void* source);
     bool (*isEmpty)(struct SetInt* set);
     int (*size)(struct SetInt* set);
     string (*toString)(struct SetInt* set);
@@ -42,14 +42,14 @@ typedef struct SetDouble {
     void* values;                // private field
     // funcs pointers
     void (*add)(struct SetDouble* set, double number);
-    void (*addAll)(struct SetDouble* set1, void* source);
+    void (*addAll)(struct SetDouble* set, void* source);
     void (*clear)(struct SetDouble* set);
     bool (*contains)(struct SetDouble* set, double number);
-    bool (*containsAll)(struct SetDouble* set1, struct SetDouble* set2);
-    bool (*containsAny)(struct SetDouble* set1, struct SetDouble* set2);
+    bool (*containsAll)(struct SetDouble* set, void* source);
+    bool (*containsAny)(struct SetDouble* set, void* source);
     bool (*removeElem)(struct SetDouble* set, double number);
-    bool (*removeAll)(struct SetDouble* set1, struct SetDouble* set2);
-    struct SetDouble* (*subtract)(struct SetDouble* set1, void* source);
+    bool (*removeAll)(struct SetDouble* set, void* source);
+    struct SetDouble* (*subtract)(struct SetDouble* set, void* source);
     bool (*isEmpty)(struct SetDouble* set);
     int (*size)(struct SetDouble* set);
     string (*toString)(struct SetDouble* set);
@@ -63,14 +63,14 @@ typedef struct SetStr {
     // funcs pointers
     void (*addStr)(struct SetStr* set, string s);
     void (*addLiteral)(struct SetStr* set, char* s);
-    void (*addAll)(struct SetStr* set1, struct SetStr* set2);
+    void (*addAll)(struct SetStr* set, void* source);
     void (*clear)(struct SetStr* set);
     bool (*contains)(struct SetStr* set, string s);
-    bool (*containsAll)(struct SetStr* set1, struct SetStr* set2);
-    bool (*containsAny)(struct SetStr* set1, struct SetStr* set2);
+    bool (*containsAll)(struct SetStr* set, void* source);
+    bool (*containsAny)(struct SetStr* set, void* source);
     bool (*removeElem)(struct SetStr* set, string s);
-    bool (*removeAll)(struct SetStr* set1, struct SetStr* set2);
-    struct SetStr* (*subtract)(struct SetStr* set1, void* source);
+    bool (*removeAll)(struct SetStr* set, void* source);
+    struct SetStr* (*subtract)(struct SetStr* set, void* source);
     bool (*isEmpty)(struct SetStr* set);
     int (*size)(struct SetStr* set);
     string (*toString)(struct SetStr* set);

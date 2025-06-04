@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include <math.h>
 #include "doubleset.h"
 #include "../util/setutil.h"
@@ -24,7 +25,7 @@ typedef struct NodeSetDouble {
 typedef struct InnerDoubleSet {
     int count;
     int capacity;
-    NodeSetDouble** bucket;
+    struct NodeSetDouble** bucket;
 } InnerDoubleSet;
 
 typedef SetDouble* DoubleSet;
@@ -41,8 +42,6 @@ static void copyValuesToArr(DoubleSetNode node, double* arr, int* index);
 static void setToArr(DoubleSet set, double* arr);
 static void deleteNodes(NodeSetDouble** buckets, int capacity);
 static void deleteInOrder(DoubleSetNode node);
-static bool isContains(DoubleSetNode node, double num);
-static int compareqsort(const void* elem1, const void* elem2);
 static void removeNode(DoubleSetNode* node, DoubleSetNode* previous, double num, bool* found);
 static DoubleSetNode findNode(DoubleSetNode* node, DoubleSetNode* previous);
 static bool isRoot(DoubleSetNode* node, DoubleSetNode* previous);
@@ -482,16 +481,6 @@ static void copyValuesToArr(DoubleSetNode node, double* arr, int* index) {
     }
 }
 
-static bool isContains(DoubleSetNode node, double num) {
-    if (node != NULL) {
-        isContains(node->left, num);
-        if (compareDouble(node->data, num) == 0)
-            return true;
-        isContains(node->right, num);
-    }
-    return false;
-}
-
 static int compareqsort(const void* elem1, const void* elem2) {
     if (fabs(*(double*)elem1 - *(double*)elem2) < ACCURACY)
         return 0;
@@ -612,6 +601,7 @@ static  void toStringInOrder(DoubleSetNode node, int* counter, char* text, int* 
         if (strlen(text) > (int)(*count / 8 * 7)) {
             *count *= 2;
             text = realloc(text, *count * sizeof(char));
+            assert(text != NULL);
         }
 
         if (*counter - 1 != 0) {

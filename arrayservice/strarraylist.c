@@ -17,7 +17,7 @@
 
 typedef struct InnerStrList {
     int count;
-    String** data;
+    struct String** data;
     int capacity;
 } InnerStrList;
 
@@ -45,7 +45,6 @@ void addStrList(StrList list, string str) {
         list->pf->data[list->pf->count] = NULL;
         list->pf->count++;
     } else {
-        string temp = strOf(str->pf->data);
         if (isFull(list)) {
             list->pf->data = increaseCapacity(list);
             list->pf->data[list->pf->count] = strOf(str->pf->data);
@@ -59,8 +58,6 @@ void addStrList(StrList list, string str) {
 
 void addCharArrList(StrList list, char* str) {
     if (str == NULL || list == NULL) return;
-
-    string elem = strOf(str);
 
     if (isFull(list)) {
         list->pf->data = increaseCapacity(list);

@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <assert.h>
 #include "string.h"
 #include "arraylist.h"
 #include "arrayservice/strarraylist.h"
@@ -23,7 +24,7 @@ typedef struct InnerStr {
 // ArrayList data encapsulation
 typedef struct InnerStrList {
     int count;
-    String** data;
+    struct String** data;
     int capacity;
 } InnerStrList;
 
@@ -103,6 +104,7 @@ void concatStr(string s1, string s2) {
     char temp[s1->pf->count + 1];
     strcpy(temp, s1->pf->data);
     s1->pf->data = realloc(s1->pf->data, count * sizeof(char));
+    assert(s1->pf->data != NULL);
 
     strcpy(s1->pf->data, temp);
     strcat(s1->pf->data, s2->pf->data);
@@ -332,7 +334,6 @@ StrList splitStr(string s, const char* delimeter) {
     StrList list = pr_initLs_(list, NULL);
 
     char* text = s->pf->data;
-    char* current = text;
     char temp[s->pf->count];
     int counter = 0;
     bool lastStr = false;
@@ -472,7 +473,7 @@ static String** increaseCapacity(StrList list) {
 }
 
 
-// private prototypes funcs for pointers initialization
+// private funcs for pointers initialization
 static void* length() {
     return lengthStr;
 }

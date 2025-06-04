@@ -26,7 +26,6 @@ typedef struct InnerDoubleList {
 static double* increaseCapacity(DoubleList list);
 static int compareDouble(const void* elem1, const void* elem2);
 static int compareReverse(const void* elem1, const void* elem2);
-static bool binarySearch(double elem, const double* arr, int high);
 
 
 void addDoubleList(DoubleList list, double num) {
@@ -445,6 +444,7 @@ string toStrDoubleList(DoubleList list) {
         if (strlen(text) > (int)(count / 8 * 7)) {
             count *= 2;
             text = realloc(text, count * sizeof(char));
+            assert(text != NULL);
         }
     }
 
@@ -505,22 +505,6 @@ static double* increaseCapacity(DoubleList list) {
     assert(list->pf->data != NULL);
 
     return list->pf->data;
-}
-
-static bool binarySearch(double elem, const double* arr, int high) {
-    int low, middle;
-    --high;
-    low = 0;
-    while (low <= high) {
-        middle = (low + high) / 2;
-        if (elem < arr[middle])
-            high = middle - 1;
-        else if (elem > arr[middle])
-            low = middle + 1;
-        else
-            return true;
-    }
-    return false;
 }
 
 
