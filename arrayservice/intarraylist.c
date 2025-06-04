@@ -48,10 +48,10 @@ void addAllIntList(IntList dest, void* source) {
         IntList from = (IntList) ctx->collection;
         if (dest->pf->capacity <= from->pf->count + dest->pf->count) {
             dest->pf->data = increaseCapacityAddAll(dest, from->pf->count);
-            memcpy(&dest->pf->data[dest->pf->count], from, sizeof(int));
+            memcpy(&dest->pf->data[dest->pf->count], from->pf->data, sizeof(int) * from->pf->count);
             dest->pf->count += from->pf->count;
         } else {
-            memcpy(&dest->pf->data[dest->pf->count], from, sizeof(int));
+            memcpy(&dest->pf->data[dest->pf->count], from->pf->data, sizeof(int) * from->pf->count);
             dest->pf->count += from->pf->count;
         }
     }
@@ -307,28 +307,22 @@ bool removeAllIntList(IntList list, void* source) {
     IntList tempList;
 
     if (ctx->type == INT_LIST) {
-        IntList list2 = (IntList) ctx->collection;
-        tempList = subtractIntList(list, list2);
+        tempList = subtractIntList(list, (void*) ctx);
     }
 
     if (ctx->type == INT_LL) {
-        IntLinkedList list2 = (IntLinkedList) ctx->collection;
-        IntList copyValues = pr_initLi_(copyValues, list2->values);
-
-        tempList = subtractIntList(list, copyValues);
-        copyValues->delete(&copyValues);
+        tempList = subtractIntList(list, (void*) ctx);
     }
 
     if (ctx->type == INT_SET) {
-        IntSet set = (IntSet) ctx->collection;
-        IntList copyValues = pr_initLi_(copyValues, set->values);
-
-        tempList = subtractIntList(list, copyValues);
-        copyValues->delete(&copyValues);
+        tempList = subtractIntList(list, (void*) ctx);
     }
 
-    list->delete(&list);
-    list = tempList;
+    free(list->pf->data);
+    list->pf->count = tempList->pf->count;
+    list->pf->data = malloc(list->pf->capacity * sizeof(int));
+    assert(list->pf->data != NULL);
+    memcpy(&list->pf->data[0], tempList->pf->data, sizeof(int) * tempList->pf->count);
 
     return true;
 }
@@ -390,10 +384,7 @@ IntList subtractIntList(IntList list, void* source) {
         }
     }
 
-    list->delete(&list);
-    list = tempList;
-
-    return list;
+    return tempList;
 }
 
 bool isEmptyIntList(IntList list) {

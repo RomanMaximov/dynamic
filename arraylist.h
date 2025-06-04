@@ -35,7 +35,7 @@ typedef struct ArrayListInt {
     bool (*contains)(struct ArrayListInt* list, int number);
     bool (*containsAll)(struct ArrayListInt* list, void* source);
     bool (*containsAny)(struct ArrayListInt* list, void* source);
-    bool (*removeElem)(struct ArrayListInt* list, int number);
+    bool (*removeElem)(struct ArrayListInt* list, int index);
     bool (*removeAll)(struct ArrayListInt* list, void* source);
     struct ArrayListInt* (*subtract)(struct ArrayListInt* list, void* source);
     bool (*isEmpty)(struct ArrayListInt* list);
@@ -62,7 +62,7 @@ typedef struct ArrayListDouble {
     bool (*contains)(struct ArrayListDouble* list, double number);
     bool (*containsAll)(struct ArrayListDouble* list, void* source);
     bool (*containsAny)(struct ArrayListDouble* list, void* source);
-    bool (*removeElem)(struct ArrayListDouble* list, int number);
+    bool (*removeElem)(struct ArrayListDouble* list, int index);
     bool (*removeAll)(struct ArrayListDouble* list, void* source);
     struct ArrayListDouble* (*subtract)(struct ArrayListDouble* list, void* source);
     bool (*isEmpty)(struct ArrayListDouble* list);
@@ -89,7 +89,7 @@ typedef struct ArrayListStr {
     bool (*contains)(struct ArrayListStr* list, struct String* s);
     bool (*containsAll)(struct ArrayListStr* list1, void* source);
     bool (*containsAny)(struct ArrayListStr* list1, void* source);
-    bool (*removeElem)(struct ArrayListStr* list, int number);
+    bool (*removeElem)(struct ArrayListStr* list, int index);
     bool (*removeAll)(struct ArrayListStr* list1, void* source);
     struct ArrayListStr* (*subtract)(struct ArrayListStr* list, void* source);
     bool (*isEmpty)(struct ArrayListStr* list);

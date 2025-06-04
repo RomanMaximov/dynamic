@@ -302,28 +302,22 @@ bool removeAllDoubleList(DoubleList list, void* source) {
     DoubleList tempList;
 
     if (ctx->type == DOUBLE_LIST) {
-        DoubleList list2 = (DoubleList) ctx->collection;
-        tempList = subtractDoubleList(list, list2);
+        tempList = subtractDoubleList(list, (void*) ctx);
     }
 
     if (ctx->type == DOUBLE_LL) {
-        DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
-        DoubleList copyValues = pr_initLd_(copyValues, list2->values);
-
-        tempList = subtractDoubleList(list, copyValues);
-        copyValues->delete(&copyValues);
+        tempList = subtractDoubleList(list, (void*) ctx);
     }
 
     if (ctx->type == DOUBLE_SET) {
-        DoubleSet set = (DoubleSet) ctx->collection;
-        DoubleList copyValues = pr_initLd_(copyValues, set->values);
-
-        tempList = subtractDoubleList(list, copyValues);
-        copyValues->delete(&copyValues);
+        tempList = subtractDoubleList(list, (void*) ctx);
     }
 
-    list->delete(&list);
-    list = tempList;
+    free(list->pf->data);
+    list->pf->count = tempList->pf->count;
+    list->pf->data = malloc(list->pf->capacity * sizeof(double));
+    assert(list->pf->data != NULL);
+    memcpy(&list->pf->data[0], tempList->pf->data, sizeof(double) * tempList->pf->count);
 
     return true;
 }
@@ -385,10 +379,7 @@ DoubleList subtractDoubleList(DoubleList list, void* source) {
         }
     }
 
-    list->delete(&list);
-    list = tempList;
-
-    return list;
+    return tempList;
 }
 
 bool isEmptyDoubleList(DoubleList list) {

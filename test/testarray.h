@@ -1,7 +1,7 @@
 #ifndef TESTARRAY_H
 #define TESTARRAY_H
 
-#include "../dynamiccollection.h"
+#include "string.h"
 #define true 1
 #define false 0
 

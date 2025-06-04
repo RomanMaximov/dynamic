@@ -353,30 +353,24 @@ bool removeAllStrList(StrList list, void* source) {
     StrList tempList;
 
     if (ctx->type == STR_LIST) {
-        StrList list2 = (StrList) ctx->collection;
-        tempList = subtractStrList(list, list2);
+        tempList = subtractStrList(list, (void*) ctx);
     }
 
     if (ctx->type == STR_LL) {
-        StrLinkedList list2 = (StrLinkedList) ctx->collection;
-        StrList copyValues = pr_initLs_(copyValues, list2->values);
-
-        tempList = subtractStrList(list, copyValues);
-        copyValues->delete(&copyValues);
+        tempList = subtractStrList(list, (void*) ctx);
     }
 
     if (ctx->type == STR_SET) {
-        StrSet set = (StrSet) ctx->collection;
-        StrList copyValues = pr_initLs_(copyValues, set->values);
-
-        tempList = subtractStrList(list, copyValues);
-        copyValues->delete(&copyValues);
+        tempList = subtractStrList(list, (void*) ctx);
     }
 
     for (int i = 0; i <list->pf->count; ++i) {
         deleteStr(&list->pf->data[i]);
+    }
+    for (int i = 0; i <tempList->pf->count; ++i) {
         list->pf->data[i] = strOf(tempList->pf->data[i]->pf->data);
     }
+
     list->pf->count = tempList->pf->count;
     tempList->delete(&tempList);
 
@@ -440,10 +434,7 @@ StrList subtractStrList(StrList list, void* source) {
         }
     }
 
-    list->delete(&list);
-    list = tempList;
-
-    return list;
+    return tempList;
 }
 
 bool isEmptyStrList(StrList list) {
