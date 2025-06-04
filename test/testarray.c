@@ -4,11 +4,50 @@
 
 
 // funcs prototypes
-void assertInt(int, int);
-void assertNotNull(void*);
+static void assertInt(int, int);
+static void assertDouble(double, double);
+static void assertStr(string , string);
+static void assertChar(char, char);
+static void assertNotNull(void*);
+static void testIntList();
+static void testDoubleList();
 
 void testArrayList() {
 
+    testIntList();
+    testDoubleList();
+}
+
+static void assertInt(int result, int expected ) {
+    if (result == expected) {
+        printf("test: \t%sOK%s\n", GREEN, RESET);
+    } else {
+        printf("test: \t%sFAILURE%s\n", RED, RESET);
+        printf("expected: %d, but result: %d\n", expected, result);
+        puts("");
+    }
+}
+
+static void assertDouble(double result, double expected) {
+    if (result == expected) {
+        printf("test: \t%sOK%s\n", GREEN, RESET);
+    } else {
+        printf("test: \t%sFAILURE%s\n", RED, RESET);
+        printf("expected: %lf, but result: %lf\n", expected, result);
+        puts("");
+    }
+}
+
+static void assertNotNull(void* source) {
+    if (source != NULL) {
+        printf("Collection non null, test: \t%sOK%s\n", GREEN, RESET);
+    } else {
+        printf("test: \t%sFAILURE%s\n", RED, RESET);
+        printf("expected: %s, but result: %s\n", "not NULL", "NULL");
+    }
+}
+
+static void testIntList() {
     puts("=========== test IntArrayList ===========");
     IntList intList = newList(intList, NULL);
     assertNotNull((void*) intList);
@@ -172,23 +211,168 @@ void testArrayList() {
     strList3->delete(&strList3);
 }
 
-void assertInt(int result, int expected ) {
-    if (result == expected) {
-        printf("test: \t%sOK%s\n", GREEN, RESET);
-    } else {
-        printf("test: \t%sFAILURE%s\n", RED, RESET);
-        printf("expected: %d, but result: %d\n", expected, result);
-        puts("");
-    }
-}
+static void testDoubleList() {
+    puts("=========== test DoubleArrayList ===========");
+    DoubleList doubleList = newList(doubleList, NULL);
+    assertNotNull((void*) doubleList);
+    doubleList->delete(&doubleList);
+    if (doubleList == NULL)
+        puts("Collection after delete is NULL");
+    puts("");
 
-void assertNotNull(void* source) {
-    if (source != NULL) {
-        printf("Collection non null, test: \t%sOK%s\n", GREEN, RESET);
-    } else {
-        printf("test: \t%sFAILURE%s\n", RED, RESET);
-        printf("expected: %s, but result: %s\n", "not NULL", "NULL");
+    printf("Create collection as listOfArr\n");
+    double temp[] = {23.55, 67.037, 55.999, 4.37};
+    DoubleList doubleList2 = listOfArr(doubleList2, temp, 4);
+    printf("Collection size, ");
+    assertInt(doubleList2->size(doubleList2), 4);
+    doubleList2->delete(&doubleList2);
+    puts("");
+
+    printf("Create collection as listOf\n");
+    DoubleList doubleList3 = listOf(doubleList3, 4, 23.55, 67.037, 55.999, 4.37);
+    doubleList3->print(doubleList3);
+    DoubleList addDoubleList = listOf(addDoubleList, 4, 11.01, 12.01, 13.01, 14.01);
+    printf("Collection size, ");
+    assertInt(doubleList3->size(doubleList3), 4);
+
+    printf("Get element by index[2]\n");
+    double num = doubleList3->get(doubleList3, 2);
+    assertDouble(num, 55.999);
+
+    printf("Add all from list2\n");
+    doubleList3->addAll(doubleList3, addDoubleList->values);
+    doubleList3->print(doubleList3);
+    printf("Collection size, ");
+    assertInt(doubleList3->size(doubleList3), 8);
+    printf("Get element by index[7]\n");
+    num = doubleList3->get(doubleList3, 7);
+    doubleList3->print(doubleList3);
+    assertDouble(num, 14.01);
+    addDoubleList->delete(&addDoubleList);
+
+    DoubleList addDoubleList2 = listOf(addDoubleList2, 20, 1.05,2.05,3.05,4.05,5.05,6.05,7.05,8.05,9.05,10.05,11.05,12.05,13.05,14.05,15.05,16.05,17.05,18.05,19.05,20.05);
+    printf("Add all from list3\n");
+    doubleList3->addAll(doubleList3, addDoubleList2->values);
+    doubleList3->print(doubleList3);
+    printf("Collection size, ");
+    assertInt(doubleList3->size(doubleList3), 28);
+    printf("Get element by index[27]\n");
+    num = doubleList3->get(doubleList3, 27);
+    assertDouble(num, 20.05);
+    addDoubleList2->delete(&addDoubleList2);
+
+    printf("Set element by index[25] by 777.345\n");
+    doubleList3->set(doubleList3, 25, 777.345);
+    num = doubleList3->get(doubleList3, 25);
+    assertDouble(num, 777.345);
+    doubleList3->print(doubleList3);
+
+    printf("Index of element with value 777.345\n");
+    int index = doubleList3->indexOf(doubleList3, 777.345);
+    assertInt(index, 25);
+
+    printf("Sort collection\n");
+    doubleList3->sort(doubleList3);
+    doubleList3->print(doubleList3);
+    printf("Get element by index[1] after sort\n");
+    num = doubleList3->get(doubleList3, 1);
+    assertDouble(num, 2.05);
+
+    printf("Reverse sort collection\n");
+    doubleList3->sortReverse(doubleList3);
+    doubleList3->print(doubleList3);
+    printf("Get element by index[1] after reverse sort\n");
+    num = doubleList3->get(doubleList3, 1);
+    assertDouble(num, 67.037);
+
+    printf("Clear collection\n");
+    doubleList3->clear(doubleList3);
+    doubleList3->print(doubleList3);
+    printf("Collection size, ");
+    assertInt(doubleList3->size(doubleList3), 0);
+
+    printf("Empty collection\n");
+    bool isEmpty = doubleList3->isEmpty(doubleList3);
+    if (isEmpty) {
+        printf("collection is empty, ");
+        assertInt(1, 1);
     }
+
+    printf("Add all from list4\n");
+    DoubleList addDoubleList3 = listOf(addDoubleList3, 20, 1.05,2.05,3.05,4.05,5.05,6.05,7.05,8.05,9.05,10.05,11.05,12.05,13.05,14.05,15.05,16.05,17.05,18.05,19.05,20.05);
+    doubleList3->addAll(doubleList3, addDoubleList3->values);
+    doubleList3->print(doubleList3);
+    addDoubleList3->delete(&addDoubleList3);
+    printf("Collection contains value 10.05\n");
+    bool isContains = doubleList3->contains(doubleList3, 10.05);
+    if (isContains)
+        assertInt(1, 1);
+
+    DoubleList containsDoubleList = listOf(containsDoubleList, 5, 10.05,11.05,12.05,13.05,14.05);
+    printf("Collection contains all from list5\n");
+    containsDoubleList->print(containsDoubleList);
+    isContains = doubleList3->containsAll(doubleList3, containsDoubleList->values);
+    if (isContains)
+        assertInt(1, 1);
+
+    printf("Collection contains any from list5\n");
+    containsDoubleList->print(containsDoubleList);
+    isContains = doubleList3->containsAny(doubleList3, containsDoubleList->values);
+    if (isContains)
+        assertInt(1, 1);
+
+    printf("Remove elem by index[8] from collection\n");
+    doubleList3->removeElem(doubleList3, 8);
+    doubleList3->print(doubleList3);
+    printf("Collection size, ");
+    assertInt(doubleList3->size(doubleList3), 19);
+    printf("Get element by index[8] after reverse sort\n");
+    num = doubleList3->get(doubleList3, 8);
+    assertDouble(num, 10.05);
+
+    printf("Remove all from list5\n");
+    containsDoubleList->print(containsDoubleList);
+    doubleList3->removeAll(doubleList3, containsDoubleList->values);
+    printf("Collection size, ");
+    doubleList3->print(doubleList3);
+    assertInt(doubleList3->size(doubleList3), 14);
+    containsDoubleList->delete(&containsDoubleList);
+
+
+    printf("Subtract from collection\n");
+    DoubleList subtractDoubleList = listOf(subtractDoubleList, 5, 15.05,16.05,17.05,18.05,19.05);
+    DoubleList subtractDouble = doubleList3->subtract(doubleList3, subtractDoubleList->values);
+    printf("new subtract collection: ");
+    subtractDouble->print(subtractDouble);
+    assertInt(1, 1);
+    subtractDoubleList->delete(&subtractDoubleList);
+    subtractDouble->delete(&subtractDouble);
+
+    printf("reverse collection\n");
+    doubleList3->reverse(doubleList3);
+    doubleList3->print(doubleList3);
+    printf("Get element by index[0] after reverse\n");
+    num = doubleList3->get(doubleList3, 0);
+    assertDouble(num, 20.05);
+
+    printf("Collection equals list6\n");
+    DoubleList doubleList4 = listOf(doubleList4, 14, 1.05, 2.05, 3.05, 4.05, 5.05, 6.05, 7.05, 8.05, 15.05, 16.05, 17.05, 18.05, 19.05, 20.05);
+    printf("Collection after reverse\n");
+    doubleList3->reverse(doubleList3);
+    doubleList3->print(doubleList3);
+    bool isEquals = doubleList3->isEquals(doubleList3, doubleList4);
+    if (isEquals) {
+        printf("collection is equals list6, ");
+        assertInt(1, 1);
+    }
+    doubleList4->delete(&doubleList4);
+
+    printf("Collection to string\n");
+    string strListDouble = doubleList3->toString(doubleList3);
+    strListDouble->print(strListDouble);
+    assertInt(1, 1);
+    doubleList3->delete(&doubleList3);
+    strListDouble->delete(&strListDouble);
 }
 
 

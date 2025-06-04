@@ -24,6 +24,7 @@ typedef struct InnerDoubleList {
 
 // private funcs prototypes
 static double* increaseCapacity(DoubleList list);
+static double* increaseCapacityAddAll(DoubleList list, int size);
 static int compareDouble(const void* elem1, const void* elem2);
 static int compareReverse(const void* elem1, const void* elem2);
 
@@ -49,9 +50,14 @@ void addAllDoubleList(DoubleList dest, void* source) {
 
     if (ctx->type == DOUBLE_LIST) {
         DoubleList from = (DoubleList) ctx->collection;
-
-        for (int i = 0; i < from->pf->count; ++i)
-            addDoubleList(dest, from->pf->data[i]);
+        if (dest->pf->capacity <= from->pf->count + dest->pf->count) {
+            dest->pf->data = increaseCapacityAddAll(dest, from->pf->count);
+            memcpy(&dest->pf->data[dest->pf->count], from->pf->data, sizeof(double) * from->pf->count);
+            dest->pf->count += from->pf->count;
+        } else {
+            memcpy(&dest->pf->data[dest->pf->count], from->pf->data, sizeof(double) * from->pf->count);
+            dest->pf->count += from->pf->count;
+        }
     }
 
     if (ctx->type == DOUBLE_LL) {
@@ -65,13 +71,17 @@ void addAllDoubleList(DoubleList dest, void* source) {
     }
 
     if (ctx->type == DOUBLE_SET) {
-        DoubleSet from = (DoubleSet) ctx->collection;
-
-        double* arr = malloc(from->pf->count * sizeof(double));
-        setToArrDouble(from, arr);
-
-        for (int i = 0; i < from->pf->count; ++i)
-            addDoubleList(dest, arr[i]);
+        DoubleSet fromSet = (DoubleSet) ctx->collection;
+        double* arr = malloc(fromSet->pf->count * sizeof(double));
+        setToArrDouble(fromSet, arr);
+        if (dest->pf->capacity <= fromSet->pf->count + dest->pf->count) {
+            dest->pf->data = increaseCapacityAddAll(dest, fromSet->pf->count);
+            memcpy(&dest->pf->data[dest->pf->count], arr, sizeof(double));
+            dest->pf->count += fromSet->pf->count;
+        } else {
+            memcpy(&dest->pf->data[dest->pf->count], arr, sizeof(double));
+            dest->pf->count += fromSet->pf->count;
+        }
 
         free(arr);
     }
@@ -492,6 +502,14 @@ static int compareReverse(const void* elem1, const void* elem2) {
 
 static double* increaseCapacity(DoubleList list) {
     list->pf->capacity *= 2;
+    list->pf->data = realloc(list->pf->data, list->pf->capacity * sizeof(double));
+    assert(list->pf->data != NULL);
+
+    return list->pf->data;
+}
+
+static double* increaseCapacityAddAll(DoubleList list, int size) {
+    list->pf->capacity += size;
     list->pf->data = realloc(list->pf->data, list->pf->capacity * sizeof(double));
     assert(list->pf->data != NULL);
 

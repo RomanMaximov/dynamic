@@ -27,9 +27,9 @@ typedef struct NodeInt {
 typedef struct InnerIntLL {
     int count;
     int index;
-    NodeInt* nodes;
-    NodeInt* begin;
-    NodeInt* end;
+    struct NodeInt* nodes;
+    struct NodeInt* begin;
+    struct NodeInt* end;
 } InnerIntLL;
 
 typedef struct NodeSetInt {
@@ -206,18 +206,19 @@ static int compareStrings(string s1, string s2) {
     return strcmp(s1->pf->data, s2->pf->data);
 }
 
-static bool findKeyInt(NodeSetInt** node, int num) {
+static bool findKeyInt(NodeSetInt** node, int num, bool* found) {
     if (node == NULL || *node == NULL) return false;
 
     int cmp = compareIntNums(num, (*node)->data);
     if (cmp == 0) {
+        *found = true;
         return true;
     } else if (cmp < 0) {
-        findKeyInt(&((*node)->left), num);
+        findKeyInt(&((*node)->left), num, found);
     } else {
-        findKeyInt(&((*node)->right), num);
+        findKeyInt(&((*node)->right), num, found);
     }
-    return false;
+    return *found ;
 }
 
 static unsigned long long hashCode(int key) {
@@ -227,22 +228,24 @@ static unsigned long long hashCode(int key) {
 }
 
 static bool containsKeyInt(IntSet set, int num) {
+    bool found = false;
     int indexBucket = (int) (hashCode(num) % set->pf->capacity);
-    return findKeyInt(&set->pf->bucket[indexBucket], num);
+    return findKeyInt(&set->pf->bucket[indexBucket], num, &found);
 }
 
-static bool findKeyDouble(NodeSetDouble** node, double num) {
+static bool findKeyDouble(NodeSetDouble** node, double num, bool* found) {
     if (node == NULL || *node == NULL) return false;
 
     int cmp = compareDoubleNums(num, (*node)->data);
     if (cmp == 0) {
+        *found = true;
         return true;
     } else if (cmp < 0) {
-        findKeyDouble(&((*node)->left), num);
+        findKeyDouble(&((*node)->left), num, found);
     } else {
-        findKeyDouble(&((*node)->right), num);
+        findKeyDouble(&((*node)->right), num, found);
     }
-    return false;
+    return *found;
 }
 
 static int hashDouble(double value) {
@@ -251,26 +254,28 @@ static int hashDouble(double value) {
     intRepresentation = (intRepresentation ^ (intRepresentation >> 32)) * 0x45d9f3b;
     intRepresentation = (intRepresentation ^ (intRepresentation >> 16)) * 0x45d9f3b;
     intRepresentation = intRepresentation ^ (intRepresentation >> 16);
-    return (int)intRepresentation;
+    return abs((int)intRepresentation);
 }
 
 static bool containsKeyDouble(DoubleSet set, double num) {
+    bool found = false;
     int indexBucket = (int) (hashDouble(num) % set->pf->capacity);
-    return findKeyDouble(&set->pf->bucket[indexBucket], num);
+    return findKeyDouble(&set->pf->bucket[indexBucket], num, &found);
 }
 
-static bool findKeyStr(NodeSetStr** node, string s) {
+static bool findKeyStr(NodeSetStr** node, string s, bool* found) {
     if (node == NULL || *node == NULL) return false;
 
     int cmp = compareStrings(s, (*node)->str);
     if (cmp == 0) {
+        *found = true;
         return true;
     } else if (cmp < 0) {
-        findKeyStr(&((*node)->left), s);
+        findKeyStr(&((*node)->left), s, found);
     } else {
-        findKeyStr(&((*node)->right), s);
+        findKeyStr(&((*node)->right), s, found);
     }
-    return false;
+    return *found;
 }
 
 static int hashString(const char* str) {
@@ -285,8 +290,9 @@ static int hashString(const char* str) {
 }
 
 static bool containsKeyStr(StrSet set, string s) {
+    bool found = false;
     int indexBucket = (int) (hashString(s->pf->data) % set->pf->capacity);
-    return findKeyStr(&set->pf->bucket[indexBucket], s);
+    return findKeyStr(&set->pf->bucket[indexBucket], s, &found);
 }
 
 #endif

@@ -20,9 +20,9 @@ typedef struct NodeInt {
 typedef struct InnerIntLL {
     int count;
     int index;
-    NodeInt* nodes;
-    NodeInt* begin;
-    NodeInt* end;
+    struct NodeInt* nodes;
+    struct NodeInt* begin;
+    struct NodeInt* end;
 } InnerIntLL;
 
 typedef struct NodeDouble {
@@ -67,7 +67,7 @@ typedef struct InnerDoubleList {
 
 typedef struct InnerStrList {
     int count;
-    String** data;
+    struct String** data;
     int capacity;
 } InnerStrList;
 

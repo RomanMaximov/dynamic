@@ -9,11 +9,6 @@
 #define RED     "\033[1;31m"
 #define GREEN  "\033[1;32m"
 
-
-void assertInt(int, int);
-void assertDouble(double , double);
-void assertStr(string , string);
-void assertChar(char, char);
 void testArrayList();
 void testLinkedList();
 void testSet();

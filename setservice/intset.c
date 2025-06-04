@@ -619,21 +619,23 @@ static unsigned long long hashCode(int key) {
     return tempKey;
 }
 
-static bool findKey(NodeSetInt** node, int num) {
+static bool findKey(NodeSetInt** node, int num, bool* found) {
     if (node == NULL || *node == NULL) return false;
 
     int cmp = compareInt(num, (*node)->data);
     if (cmp == 0) {
+        *found = true;
         return true;
     } else if (cmp < 0) {
-        findKey(&((*node)->left), num);
+        findKey(&((*node)->left), num, found);
     } else {
-        findKey(&((*node)->right), num);
+        findKey(&((*node)->right), num, found);
     }
-    return false;
+    return *found;
 }
 
 static bool containsKeyInt(IntSet set, int num) {
+    bool found = false;
     int indexBucket = (int) (hashCode(num) % set->pf->capacity);
-    return findKey(&set->pf->bucket[indexBucket], num);
+    return findKey(&set->pf->bucket[indexBucket], num, &found);
 }

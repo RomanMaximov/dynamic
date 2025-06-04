@@ -618,24 +618,26 @@ static int hashDouble(double value) {
     intRepresentation = (intRepresentation ^ (intRepresentation >> 32)) * 0x45d9f3b;
     intRepresentation = (intRepresentation ^ (intRepresentation >> 16)) * 0x45d9f3b;
     intRepresentation = intRepresentation ^ (intRepresentation >> 16);
-    return (int)intRepresentation;
+    return abs((int)intRepresentation);
 }
 
-static bool findKey(NodeSetDouble** node, double num) {
+static bool findKey(NodeSetDouble** node, double num, bool* found) {
     if (node == NULL || *node == NULL) return false;
 
     int cmp = compareDouble(num, (*node)->data);
     if (cmp == 0) {
+        *found = true;
         return true;
     } else if (cmp < 0) {
-        findKey(&((*node)->left), num);
+        findKey(&((*node)->left), num, found);
     } else {
-        findKey(&((*node)->right), num);
+        findKey(&((*node)->right), num, found);
     }
-    return false;
+    return *found;
 }
 
 static bool containsKeyDouble(DoubleSet set, double num) {
+    bool found = false;
     int indexBucket = (int) (hashDouble(num) % set->pf->capacity);
-    return findKey(&set->pf->bucket[indexBucket], num);
+    return findKey(&set->pf->bucket[indexBucket], num, &found);
 }
