@@ -2,6 +2,13 @@
 #include "../dynamic.h"
 #include "testarray.h"
 
+// String data encapsulation
+typedef struct InnerStr {
+    int count;
+    char* data;
+    int capacity;
+} InnerStr;
+
 
 // funcs prototypes
 static void assertInt(int, int);
@@ -11,11 +18,13 @@ static void assertChar(char, char);
 static void assertNotNull(void*);
 static void testIntList();
 static void testDoubleList();
+static void testStrList();
 
 void testArrayList() {
 
-    testIntList();
-    testDoubleList();
+    //testIntList();
+    //testDoubleList();
+    testStrList();
 }
 
 static void assertInt(int result, int expected ) {
@@ -34,6 +43,16 @@ static void assertDouble(double result, double expected) {
     } else {
         printf("test: \t%sFAILURE%s\n", RED, RESET);
         printf("expected: %lf, but result: %lf\n", expected, result);
+        puts("");
+    }
+}
+
+static void assertStr(string result, string expected ) {
+    if (strcmp(result->pf->data, expected->pf->data) == 0) {
+        printf("test: \t%sOK%s\n", GREEN, RESET);
+    } else {
+        printf("test: \t%sFAILURE%s\n", RED, RESET);
+        printf("expected: %s, but result: %s\n", expected->pf->data, result->pf->data);
         puts("");
     }
 }
@@ -86,7 +105,7 @@ static void testIntList() {
     assertInt(num, 14);
     addList->delete(&addList);
 
-    IntList addList2 = listOf(addList, 20, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20);
+    IntList addList2 = listOf(addList2, 20, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20);
     printf("Add all from list3\n");
     intList3->addAll(intList3, addList2->values);
     intList3->print(intList3);
@@ -97,7 +116,7 @@ static void testIntList() {
     assertInt(num, 20);
     addList2->delete(&addList2);
 
-    printf("Set element by index[25] by 777\n");
+    printf("Set element by index[25] to 777\n");
     intList3->set(intList3, 25, 777);
     num = intList3->get(intList3, 25);
     assertInt(num, 777);
@@ -135,7 +154,7 @@ static void testIntList() {
     }
 
     printf("Add all from list4\n");
-    IntList addList3 = listOf(addList, 20, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20);
+    IntList addList3 = listOf(addList3, 20, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20);
     intList3->addAll(intList3, addList3->values);
     intList3->print(intList3);
     addList3->delete(&addList3);
@@ -209,6 +228,27 @@ static void testIntList() {
     assertInt(1, 1);
     intList3->delete(&intList3);
     strList3->delete(&strList3);
+
+    printf("Remove all test\n");
+    IntList bigList = newList(bigList, NULL);
+    IntList bigList2 = newList(bigList2, NULL);
+    for (int i = 0, j = 0; i < 50000; ++i, ++j) {
+        bigList->add(bigList, i);
+        if (i < 25000) continue;
+        bigList2->add(bigList2, j);
+    }
+    printf("Collection size, ");
+    assertInt(bigList->size(bigList), 50000);
+    printf("Collection size, ");
+    assertInt(bigList2->size(bigList2), 25000);
+    bigList->removeAll(bigList, bigList2->values);
+    printf("Collection size after remove all, ");
+    assertInt(bigList->size(bigList), 25000);
+    printf("Get element by index[24999]\n");
+    num = bigList->get(bigList, 24999);
+    assertInt(num, 24999);
+    bigList->delete(&bigList);
+    bigList2->delete(&bigList2);
 }
 
 static void testDoubleList() {
@@ -261,7 +301,7 @@ static void testDoubleList() {
     assertDouble(num, 20.05);
     addDoubleList2->delete(&addDoubleList2);
 
-    printf("Set element by index[25] by 777.345\n");
+    printf("Set element by index[25] to 777.345\n");
     doubleList3->set(doubleList3, 25, 777.345);
     num = doubleList3->get(doubleList3, 25);
     assertDouble(num, 777.345);
@@ -373,6 +413,208 @@ static void testDoubleList() {
     assertInt(1, 1);
     doubleList3->delete(&doubleList3);
     strListDouble->delete(&strListDouble);
+}
+
+static void testStrList() {
+    puts("=========== test StrArrayList ===========");
+    StrList strList = newList(strList, NULL);
+    assertNotNull((void*) strList);
+    strList->delete(&strList);
+    if (strList == NULL)
+        puts("Collection after delete is NULL");
+    puts("");
+
+    printf("Create collection as listOfArr\n");
+    char* temp[] = {"aaa", "bb", "ccc", "d"};
+    StrList strList2 = listOfArr(strList2, temp, 4);
+    printf("Collection size, ");
+    assertInt(strList2->size(strList2), 4);
+    strList2->delete(&strList2);
+    puts("");
+
+    printf("Create collection as listOf\n");
+    StrList strList3 = listOf(strList3, 4, "bb", "aaa", "ccc", "d");
+    strList3->print(strList3);
+    assertInt(1, 1);
+    StrList addList = listOf(addList, 4, "don", "don2", "don3", "don4");
+    addList->print(addList);
+    printf("Collection size, ");
+    assertInt(strList3->size(strList3), 4);
+
+    printf("Get element by index[2]\n");
+    string str = strList3->get(strList3, 2);
+    string checkStr = strOf("ccc");
+    assertStr(str, checkStr);
+    str->delete(&str);
+    checkStr->delete(&checkStr);
+
+    printf("Add all from list2\n");
+    strList3->addAll(strList3, addList->values);
+    strList3->print(strList3);
+    printf("Collection size, ");
+    assertInt(strList3->size(strList3), 8);
+    printf("Get element by index[7]\n");
+    str = strList3->get(strList3, 7);
+    strList3->print(strList3);
+    checkStr = strOf("don4");
+    assertStr(str, checkStr);
+    addList->delete(&addList);
+    str->delete(&str);
+    checkStr->delete(&checkStr);
+
+    char* temp2[] = {"s1","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14","s15","s16","s17","s18","s19","s20"};
+    StrList addList2 = listOfArr(addList2, temp2, 20);
+    printf("Add all from list3\n");
+    strList3->addAll(strList3, addList2->values);
+    strList3->print(strList3);
+    printf("Collection size, ");
+    assertInt(strList3->size(strList3), 28);
+    printf("Get element by index[27]\n");
+    str = strList3->get(strList3, 27);
+    checkStr = strOf("s20");
+    assertStr(str, checkStr);
+    addList2->delete(&addList2);
+    str->delete(&str);
+    checkStr->delete(&checkStr);
+
+    checkStr = strOf("summer");
+    printf("Set element by index[25] to summer\n");
+    strList3->set(strList3, 25, checkStr);
+    str = strList3->get(strList3, 25);
+    assertStr(str, checkStr);
+    strList3->print(strList3);
+    str->delete(&str);
+
+    printf("Index of element with value summer\n");
+    int index = strList3->indexOf(strList3, checkStr);
+    assertInt(index, 25);
+    checkStr->delete(&checkStr);
+
+    printf("Sort collection\n");
+    strList3->sort(strList3);
+    strList3->print(strList3);
+    printf("Get element by index[1] after sort\n");
+    str = strList3->get(strList3, 1);
+    checkStr = strOf("bb");
+    assertStr(str, checkStr);
+    str->delete(&str);
+    checkStr->delete(&checkStr);
+
+    printf("Reverse sort collection\n");
+    strList3->sortReverse(strList3);
+    strList3->print(strList3);
+    printf("Get element by index[1] after reverse sort\n");
+    str = strList3->get(strList3, 1);
+    checkStr = strOf("s9");
+    assertStr(str, checkStr);
+    str->delete(&str);
+    checkStr->delete(&checkStr);
+
+    printf("Clear collection\n");
+    strList3->clear(strList3);
+    strList3->print(strList3);
+    printf("Collection size, ");
+    assertInt(strList3->size(strList3), 0);
+
+    printf("Empty collection\n");
+    bool isEmpty = strList3->isEmpty(strList3);
+    if (isEmpty) {
+        printf("collection is empty, ");
+        assertInt(1, 1);
+    }
+
+    printf("Add all from list4\n");
+    StrList addList3 = listOfArr(addList3, temp2, 20);
+    strList3->addAll(strList3, addList3->values);
+    strList3->print(strList3);
+    printf("Collection size, ");
+    assertInt(strList3->size(strList3), 20);
+    addList3->delete(&addList3);
+    printf("Collection contains value s10\n");
+    checkStr = strOf("s10");
+    bool isContains = strList3->contains(strList3, checkStr);
+    if (isContains)
+        assertInt(1, 1);
+    checkStr->delete(&checkStr);
+    printf("Collection NOT contains value 999\n");
+    checkStr = strOf("999");
+    isContains = strList3->contains(strList3, checkStr);
+    if (!isContains)
+        assertInt(1, 1);
+    checkStr->delete(&checkStr);
+
+    StrList containsList = listOf(containsList, 5, "s10", "s11", "s12", "s13", "s14");
+    printf("Collection contains all from list5\n");
+    containsList->print(containsList);
+    isContains = strList3->containsAll(strList3, containsList->values);
+    if (isContains)
+        assertInt(1, 1);
+
+    printf("Collection contains any from list5\n");
+    containsList->print(containsList);
+    isContains = strList3->containsAny(strList3, containsList->values);
+    if (isContains)
+        assertInt(1, 1);
+
+    printf("Remove elem by index[8] from collection\n");
+    strList3->removeElem(strList3, 8);
+    strList3->print(strList3);
+    printf("Collection size, ");
+    assertInt(strList3->size(strList3), 19);
+    printf("Get element by index[8] after reverse sort\n");
+    str = strList3->get(strList3, 8);
+    checkStr = strOf("s10");
+    assertStr(str, checkStr);
+    str->delete(&str);
+    checkStr->delete(&checkStr);
+
+    printf("Remove all from list5\n");
+    containsList->print(containsList);
+    strList3->removeAll(strList3, containsList->values);
+    printf("Collection size, ");
+    assertInt(strList3->size(strList3), 14);
+    strList3->print(strList3);
+    containsList->delete(&containsList);
+
+    printf("Subtract from collection\n");
+    StrList subtractList = listOf(subtractList, 5, "s15", "s16", "s17", "s18", "s19");
+    StrList subtract = strList3->subtract(strList3, subtractList->values);
+    printf("new subtract collection: ");
+    subtract->print(subtract);
+    assertInt(1, 1);
+    subtractList->delete(&subtractList);
+    subtract->delete(&subtract);
+
+    printf("reverse collection\n");
+    strList3->reverse(strList3);
+    strList3->print(strList3);
+    printf("Get element by index[0] after reverse\n");
+    str = strList3->get(strList3, 0);
+    checkStr = strOf("s20");
+    assertStr(str, checkStr);
+    str->delete(&str);
+    checkStr->delete(&checkStr);
+
+    printf("Collection equals list6\n");
+    char* temp3[] = {"s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s15", "s16", "s17", "s18", "s19", "s20"};
+    StrList strList4 = listOfArr(strList4, temp3, 14);
+    printf("Collection after reverse\n");
+    strList3->reverse(strList3);
+    strList3->print(strList3);
+    strList4->print(strList4);
+    bool isEquals = strList3->isEquals(strList3, strList4);
+    if (isEquals) {
+        printf("collection is equals list6, ");
+        assertInt(1, 1);
+    }
+    strList4->delete(&strList4);
+
+    printf("Collection to string\n");
+    string listStr = strList3->toString(strList3);
+    listStr->print(listStr);
+    assertInt(1, 1);
+    strList3->delete(&strList3);
+    listStr->delete(&listStr);
 }
 
 

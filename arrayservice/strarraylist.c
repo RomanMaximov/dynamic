@@ -207,7 +207,7 @@ bool containsAllStrList(StrList list, void* source) {
 
         if (list2->pf->count == 0) return true;
 
-        StrSet set = pr_initSs_(set, NULL);
+        StrSet set = pr_initSs_(set, list->values);
         for (int i = 0; i < list2->pf->count; ++i) {
             if (!containsKeyStr(set, list2->pf->data[i])) {
                 set->delete(&set);
@@ -267,7 +267,7 @@ bool containsAnyStrList(StrList list, void* source) {
 
     if (ctx->type == STR_LIST) {
         StrList list2 = (StrList) ctx->collection;
-        StrSet set = pr_initSs_(set, NULL);
+        StrSet set = pr_initSs_(set, list->values);
 
         for (int i = 0; i < list2->pf->count; ++i) {
             if (containsKeyStr(set, list2->pf->data[i])) {
