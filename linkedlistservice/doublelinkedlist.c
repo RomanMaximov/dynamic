@@ -447,8 +447,8 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list, void* source) {
         while (current != NULL) {
             if (!setFrom->contains(setFrom, current->data)) {
                 tempList->add(tempList, current->data);
-                current = current->next;
             }
+            current = current->next;
         }
         setFrom->delete(&setFrom);
     }
@@ -465,8 +465,8 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list, void* source) {
         while (current != NULL) {
             if (!setFrom->contains(setFrom, current->data)) {
                 tempList->add(tempList, current->data);
-                current = current->next;
             }
+            current = current->next;
         }
         setFrom->delete(&setFrom);
     }
@@ -482,15 +482,12 @@ DoubleLinkedList subtractDoubleLL(DoubleLinkedList list, void* source) {
         while (current != NULL) {
             if (!setFrom->contains(setFrom, current->data)) {
                 tempList->add(tempList, current->data);
-                current = current->next;
             }
+            current = current->next;
         }
     }
 
-    list->delete(&list);
-    list = tempList;
-
-    return list;
+    return tempList;
 }
 
 bool isEmptyDoubleLL(DoubleLinkedList list) {

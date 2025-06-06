@@ -6,7 +6,7 @@ set(CMAKE_C_STANDARD 17)
 add_executable(DynamicCollection main.c
         string.c
         linkedlist.c
-        test/testarray.c
+        test/testarraylist.c
         linkedlistservice/intlinkedlist.h
         linkedlistservice/intlinkedlist.c
         linkedlistservice/doublelinkedlist.h
@@ -33,4 +33,4 @@ add_executable(DynamicCollection main.c
         arrayservice/strarraylist.c
         util/arraylistutil.h
         context.h
-        util/setutil.h util/linkedlistutil.h iterator.c logerrors.h)
+        util/setutil.h util/linkedlistutil.h iterator.c logerrors.h test/testlinkedlist.h test/testlinkedlist.c)

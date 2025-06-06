@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "../dynamic.h"
-#include "testarray.h"
+#include "testarraylist.h"
 
 // String data encapsulation
 typedef struct InnerStr {
@@ -20,13 +20,15 @@ static void testIntList();
 static void testDoubleList();
 static void testStrList();
 
-void testArrayList() {
 
-    //testIntList();
+void testArrayList() {
+    testIntList();
     //testDoubleList();
-    testStrList();
+    //testStrList();
 }
 
+
+// private funcs
 static void assertInt(int result, int expected ) {
     if (result == expected) {
         printf("test: \t%sOK%s\n", GREEN, RESET);

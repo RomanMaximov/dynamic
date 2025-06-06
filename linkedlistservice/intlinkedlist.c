@@ -21,7 +21,6 @@ typedef struct NodeInt {
 
 typedef struct InnerIntLL {
     int count;
-    int index;
     struct NodeInt* nodes;
     struct NodeInt* begin;
     struct NodeInt* end;
@@ -34,7 +33,7 @@ typedef Itr* Iterator;
 
 
 // private funcs prototypes
-static void fillNodeInt(IntNode node, int num, int* index);
+static void fillNodeInt(IntNode node, int num);
 static void deleteNodeInt(IntLinkedList list, IntNode current, IntNode previous);
 static void deleteFirstNodeInt(IntLinkedList list, IntNode current);
 static bool removeNodeInt(IntLinkedList list, IntNode current, IntNode previous, int index);
@@ -43,7 +42,7 @@ static void reverseArr(int* arr, int size);
 static int compareInt(const void* elem1, const void* elem2);
 static int compareIntReverse(const void* elem1, const void* elem2);
 
-static void insertBeginInt(IntLinkedList list, int num, int* index) {
+static void insertBeginInt(IntLinkedList list, int num) {
     IntNode newNodeStart = NULL;
     IntNode newNodeEnd = NULL;
     IntNode current = NULL;
@@ -51,7 +50,7 @@ static void insertBeginInt(IntLinkedList list, int num, int* index) {
     if (list->pf->count == 0) {
         newNodeEnd = malloc(sizeof(NodeInt));
         if (newNodeEnd != NULL) {
-            fillNodeInt(newNodeEnd, num, index);
+            fillNodeInt(newNodeEnd, num);
         }
 
         newNodeEnd = list->pf->nodes;
@@ -61,7 +60,7 @@ static void insertBeginInt(IntLinkedList list, int num, int* index) {
     } else {
         newNodeStart = malloc(sizeof(NodeInt));
         if (newNodeStart != NULL) {
-            fillNodeInt(newNodeStart, num, index);
+            fillNodeInt(newNodeStart, num);
         }
 
         newNodeStart->next = list->pf->nodes;
@@ -77,12 +76,11 @@ void addIntLL(IntLinkedList list, int num) {
     IntNode newNodeEnd = NULL;
     IntNode newNode = NULL;
     IntNode current = list->pf->end;
-    int* index = &list->pf->index;
 
     if (list->pf->count == 0) {
         newNode = malloc(sizeof(NodeInt));
         if (newNode != NULL) {
-            fillNodeInt(newNode, num, index);
+            fillNodeInt(newNode, num);
         }
 
         newNode->next = list->pf->nodes;
@@ -93,7 +91,7 @@ void addIntLL(IntLinkedList list, int num) {
     } else {
         newNodeEnd = malloc(sizeof(NodeInt));
         if (newNodeEnd != NULL) {
-            fillNodeInt(newNodeEnd, num, index);
+            fillNodeInt(newNodeEnd, num);
         }
 
         current->next = newNodeEnd;
@@ -244,7 +242,6 @@ void clearIntLL(IntLinkedList list) {
     }
 
     list->pf->count = 0;
-    list->pf->index = 0;
     list->pf->begin = NULL;
     list->pf->end = NULL;
     list->pf->nodes = NULL;
@@ -398,7 +395,6 @@ bool removeIntLL(IntLinkedList list, int index) {
         list->pf->begin = NULL;
         list->pf->end = NULL;
         list->pf->count = 0;
-        list->pf->index = 0;
         free(temp);
         return true;
     }
@@ -413,26 +409,20 @@ bool removeAllIntLL(IntLinkedList list, void* source) {
     IntLinkedList tempList;
 
     if (ctx->type == INT_LIST) {
-        IntList list2 = (IntList) ctx->collection;
-        IntLinkedList copyValues = pr_initLLi_(copyValues, list2->values);
-        tempList = subtractIntLL(list, copyValues);
+        tempList = subtractIntLL(list, (void*) ctx);
     }
 
     if (ctx->type == INT_LL) {
-        IntLinkedList list2 = (IntLinkedList) ctx->collection;
-        tempList = subtractIntLL(list, list2);
+        tempList = subtractIntLL(list, (void*) ctx);
     }
 
     if (ctx->type == INT_SET) {
-        IntSet set = (IntSet) ctx->collection;
-        IntLinkedList copyValues = pr_initLLi_(copyValues, set->values);
-
-        tempList = subtractIntLL(list, copyValues);
-        copyValues->delete(&copyValues);
+        tempList = subtractIntLL(list, (void*) ctx);
     }
 
-    list->delete(&list);
-    list = tempList;
+    clearIntLL(list);
+    list->addAll(list, tempList->values);
+    tempList->delete(&tempList);
 
     return true;
 }
@@ -463,8 +453,8 @@ IntLinkedList subtractIntLL(IntLinkedList list, void* source) {
         while (current != NULL) {
             if (!setFrom->contains(setFrom, current->data)) {
                 tempList->add(tempList, current->data);
-                current = current->next;
             }
+            current = current->next;
         }
         setFrom->delete(&setFrom);
     }
@@ -481,8 +471,8 @@ IntLinkedList subtractIntLL(IntLinkedList list, void* source) {
         while (current != NULL) {
             if (!setFrom->contains(setFrom, current->data)) {
                 tempList->add(tempList, current->data);
-                current = current->next;
             }
+            current = current->next;
         }
         setFrom->delete(&setFrom);
     }
@@ -498,15 +488,12 @@ IntLinkedList subtractIntLL(IntLinkedList list, void* source) {
         while (current != NULL) {
             if (!setFrom->contains(setFrom, current->data)) {
                 tempList->add(tempList, current->data);
-                current = current->next;
             }
+            current = current->next;
         }
     }
 
-    list->delete(&list);
-    list = tempList;
-
-    return list;
+    return tempList;
 }
 
 bool isEmptyIntLL(IntLinkedList list) {
@@ -635,7 +622,6 @@ static void deleteFirstNodeInt(IntLinkedList list, IntNode current) {
     list->pf->nodes = current;
     list->pf->begin = current;
     list->pf->count--;
-    list->pf->index--;
     free(temp);
 }
 
@@ -651,7 +637,6 @@ static void deleteNodeInt(IntLinkedList list, IntNode current, IntNode previous)
 
     previous->next = current;
     list->pf->count--;
-    list->pf->index--;
     free(temp);
 }
 
@@ -681,11 +666,10 @@ static bool removeNodeInt(IntLinkedList list, IntNode current, IntNode previous,
     }
 }
 
-static void fillNodeInt(IntNode node, int num, int* index) {
+static void fillNodeInt(IntNode node, int num) {
     node->data = num;
     node->next = NULL;
     node->prev = NULL;
-    ++(*index);
 }
 
 static void copyLLToArray(IntLinkedList list, int* arr) {

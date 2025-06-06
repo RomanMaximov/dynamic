@@ -7,11 +7,13 @@
 #include "setservice/intset.h"
 #include "iterator.h"
 #include "logerrors.h"
-#include "test/testarray.h"
+#include "test/testarraylist.h"
+#include "test/testlinkedlist.h"
 
 int main()
 {
-    testArrayList();
+    //testArrayList();
+    testLinkedList();
 
     return 0;
 }

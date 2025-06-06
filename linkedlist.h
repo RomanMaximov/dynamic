@@ -42,7 +42,7 @@ typedef struct LinkedListInt {
     void (*reverse)(struct LinkedListInt* list);
     bool (*isEquals)(struct LinkedListInt* list1, struct LinkedListInt* list2);
     int (*size)(struct LinkedListInt* list);
-    void (*toString)(struct LinkedListInt* list);
+    string (*toString)(struct LinkedListInt* list);
     void (*print)(struct LinkedListInt* list);
     void (*delete)(struct LinkedListInt** list);
 } LinkedListInt;
@@ -69,7 +69,7 @@ typedef struct LinkedListDouble {
     void (*reverse)(struct LinkedListDouble* list);
     bool (*isEquals)(struct LinkedListDouble* list1, struct LinkedListDouble* list2);
     int (*size)(struct LinkedListDouble* list);
-    void (*toString)(struct LinkedListDouble* list);
+    string (*toString)(struct LinkedListDouble* list);
     void (*print)(struct LinkedListDouble* list);
     void (*delete)(struct LinkedListDouble** list);
 } LinkedListDouble;
@@ -96,7 +96,7 @@ typedef struct LinkedListStr {
     void (*reverse)(struct LinkedListStr* list);
     bool (*isEquals)(struct LinkedListStr* list1, struct LinkedListStr* list2);
     int (*size)(struct LinkedListStr* list);
-    void (*toString)(struct LinkedListStr* list);
+    string (*toString)(struct LinkedListStr* list);
     void (*print)(struct LinkedListStr* list);
     void (*delete)(struct LinkedListStr** list);
 } LinkedListStr;

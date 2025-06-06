@@ -21,7 +21,6 @@ typedef struct NodeInt {
 // LinkedList data encapsulation
 typedef struct InnerIntLL {
     int count;
-    int index;
     struct NodeInt* nodes;
     struct NodeInt* begin;
     struct NodeInt* end;
@@ -98,7 +97,6 @@ IntLinkedList pr_initLLi_(IntLinkedList temp, void* collection) {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
     list->pf = malloc(sizeof(InnerIntLL));
     list->pf->count = 0;
-    list->pf->index = 0;
     list->pf->nodes = NULL;
     list->pf->begin = NULL;
     list->pf->end = NULL;
@@ -120,7 +118,6 @@ IntLinkedList pr_initLLi_lo_(IntLinkedList temp, int paramCount, ...) {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
     list->pf = malloc(sizeof(InnerIntLL));
     list->pf->count = 0;
-    list->pf->index = 0;
     list->pf->nodes = NULL;
     list->pf->begin = NULL;
     list->pf->end = NULL;
@@ -145,7 +142,6 @@ IntLinkedList pr_initLLi_loa_(IntLinkedList temp, int* arr, int size) {
     IntLinkedList list = malloc(sizeof(LinkedListInt));
     list->pf = malloc(sizeof(InnerIntLL));
     list->pf->count = 0;
-    list->pf->index = 0;
     list->pf->nodes = NULL;
     list->pf->begin = NULL;
     list->pf->end = NULL;

@@ -318,11 +318,9 @@ bool removeAllIntList(IntList list, void* source) {
         tempList = subtractIntList(list, (void*) ctx);
     }
 
-    free(list->pf->data);
-    list->pf->count = tempList->pf->count;
-    list->pf->data = malloc(list->pf->capacity * sizeof(int));
-    assert(list->pf->data != NULL);
-    memcpy(&list->pf->data[0], tempList->pf->data, sizeof(int) * tempList->pf->count);
+    clearIntList(list);
+    list->addAll(list, tempList->values);
+    tempList->delete(&tempList);
 
     return true;
 }

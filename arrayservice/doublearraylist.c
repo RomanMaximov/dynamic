@@ -323,11 +323,9 @@ bool removeAllDoubleList(DoubleList list, void* source) {
         tempList = subtractDoubleList(list, (void*) ctx);
     }
 
-    free(list->pf->data);
-    list->pf->count = tempList->pf->count;
-    list->pf->data = malloc(list->pf->capacity * sizeof(double));
-    assert(list->pf->data != NULL);
-    memcpy(&list->pf->data[0], tempList->pf->data, sizeof(double) * tempList->pf->count);
+    clearDoubleList(list);
+    list->addAll(list, tempList->values);
+    tempList->delete(&tempList);
 
     return true;
 }
