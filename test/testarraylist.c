@@ -22,9 +22,9 @@ static void testStrList();
 
 
 void testArrayList() {
-    testIntList();
+    //testIntList();
     //testDoubleList();
-    //testStrList();
+    testStrList();
 }
 
 
@@ -490,7 +490,6 @@ static void testStrList() {
     printf("Index of element with value summer\n");
     int index = strList3->indexOf(strList3, checkStr);
     assertInt(index, 25);
-    checkStr->delete(&checkStr);
 
     printf("Sort collection\n");
     strList3->sort(strList3);

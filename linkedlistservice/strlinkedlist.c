@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "string.h"
 #include "strlinkedlist.h"
 #include "../util/linkedlistutil.h"
 
@@ -20,7 +21,6 @@ typedef struct NodeStr {
 
 typedef struct InnerStrLL {
     int count;
-    int index;
     struct NodeStr* nodes;
     struct NodeStr* begin;
     struct NodeStr* end;
@@ -33,7 +33,7 @@ typedef ArrayListStr* StrList;
 
 
 // private funcs prototypes
-static void fillNodeStr(StrNode node, char* s, int* index);
+static void fillNodeStr(StrNode node, char* s);
 static void quickSortStr(String** strList, int low, int high);
 static void quickSortStrReverse(String** strList, int low, int high);
 static bool removeNodeStr(StrLinkedList list, StrNode current, StrNode previous, int index);
@@ -48,12 +48,11 @@ void addStrLL(StrLinkedList list, string s) {
     StrNode newNodeEnd = NULL;
     StrNode newNode = NULL;
     StrNode current = list->pf->end;
-    int* index = &list->pf->index;
 
     if (list->pf->count == 0) {
         newNode = malloc(sizeof(NodeStr));
         if (newNode != NULL) {
-            fillNodeStr(newNode, s->pf->data, index);
+            fillNodeStr(newNode, s->pf->data);
         }
 
         newNode->next = list->pf->nodes;
@@ -64,7 +63,7 @@ void addStrLL(StrLinkedList list, string s) {
     } else {
         newNodeEnd = malloc(sizeof(NodeStr));
         if (newNodeEnd != NULL) {
-            fillNodeStr(newNodeEnd, s->pf->data, index);
+            fillNodeStr(newNodeEnd, s->pf->data);
         }
 
         current->next = newNodeEnd;
@@ -79,12 +78,11 @@ void addArrCharLL(StrLinkedList list, char* arr) {
     StrNode newNodeEnd = NULL;
     StrNode newNode = NULL;
     StrNode current = list->pf->end;
-    int* index = &list->pf->index;
 
     if (list->pf->count == 0) {
         newNode = malloc(sizeof(NodeStr));
         if (newNode != NULL) {
-            fillNodeStr(newNode, arr, index);
+            fillNodeStr(newNode, arr);
         }
 
         newNode->next = list->pf->nodes;
@@ -95,7 +93,7 @@ void addArrCharLL(StrLinkedList list, char* arr) {
     } else {
         newNodeEnd = malloc(sizeof(NodeStr));
         if (newNodeEnd != NULL) {
-            fillNodeStr(newNodeEnd, arr, index);
+            fillNodeStr(newNodeEnd, arr);
         }
 
         current->next = newNodeEnd;
@@ -166,6 +164,7 @@ bool setStrLL(StrLinkedList list, int index, string s) {
     StrNode current = list->pf->begin;
     while (current != NULL) {
         if (index == tempIndex) {
+            deleteStr(&current->data);
             current->data = s;
             return true;
         }
@@ -176,14 +175,11 @@ bool setStrLL(StrLinkedList list, int index, string s) {
 }
 
 void sortStrLL(StrLinkedList list) {
-    StrList strList = pr_initLs_(strList, NULL);
-    StrNode current = list->pf->begin;
+    StrList strList = pr_initLs_(strList, list->values);
+    puts("//////////////////////////////////");
+    strList->print(strList);
     StrNode temp = list->pf->begin;
     int index = 0;
-    while (current != NULL) {
-        strList->add(strList, current->data);
-        current = current->next;
-    }
 
     quickSortStr(strList->pf->data, 0, strList->pf->count);
 
@@ -224,7 +220,7 @@ int indexOfStrLL(StrLinkedList list, string s) {
     StrNode current = list->pf->begin;
     int index = 0;
     while (current != NULL) {
-        if (compareStr(s, current->data) == 1)
+        if (compareStr(s, current->data) == 0)
             return index;
 
         current = current->next;
@@ -249,7 +245,6 @@ void clearStrLL(StrLinkedList list) {
     }
 
     list->pf->count = 0;
-    list->pf->index = 0;
     list->pf->begin = NULL;
     list->pf->end = NULL;
     list->pf->nodes = NULL;
@@ -403,7 +398,6 @@ bool removeStrLL(StrLinkedList list, int index) {
         list->pf->begin = NULL;
         list->pf->end = NULL;
         list->pf->count = 0;
-        list->pf->index = 0;
         free(temp);
         return true;
     }
@@ -418,26 +412,20 @@ bool removeAllStrLL(StrLinkedList list, void* source) {
     StrLinkedList tempList;
 
     if (ctx->type == STR_LIST) {
-        StrList list2 = (StrList) ctx->collection;
-        StrLinkedList copyValues = pr_initLLs_(copyValues, list2->values);
-        tempList = subtractStrLL(list, copyValues);
+        tempList = subtractStrLL(list, (void*) ctx);
     }
 
     if (ctx->type == STR_LL) {
-        StrLinkedList list2 = (StrLinkedList) ctx->collection;
-        tempList = subtractStrLL(list, list2);
+        tempList = subtractStrLL(list, (void*) ctx);
     }
 
     if (ctx->type == STR_SET) {
-        StrSet set = (StrSet) ctx->collection;
-        StrLinkedList copyValues = pr_initLLs_(copyValues, set->values);
-
-        tempList = subtractStrLL(list, copyValues);
-        copyValues->delete(&copyValues);
+        tempList = subtractStrLL(list, (void*) ctx);
     }
 
-    list->delete(&list);
-    list = tempList;
+    clearStrLL(list);
+    list->addAll(list, tempList->values);
+    tempList->delete(&tempList);
 
     return true;
 }
@@ -676,7 +664,6 @@ static void deleteFirstNodeStr(StrLinkedList list, StrNode current) {
     list->pf->nodes = current;
     list->pf->begin = current;
     list->pf->count--;
-    list->pf->index--;
     temp->data->delete(&temp->data);
     free(temp);
 }
@@ -693,7 +680,6 @@ static void deleteNodeStr(StrLinkedList list, StrNode current, StrNode previous)
 
     previous->next = current;
     list->pf->count--;
-    list->pf->index--;
     temp->data->delete(&temp->data);
     free(temp);
 }
@@ -764,11 +750,10 @@ static void quickSortStr(String** strList, int low, int high) {
         quickSortStrReverse(strList, low, j);
 }
 
-static void fillNodeStr(StrNode node, char* s, int* index) {
+static void fillNodeStr(StrNode node, char* s) {
     node->data = strOf(s);
     node->next = NULL;
     node->prev = NULL;
-    ++(*index);
 }
 
 static int compareStr(string s1, string s2) {

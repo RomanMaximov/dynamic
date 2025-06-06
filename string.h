@@ -45,6 +45,7 @@ typedef ArrayListStr* StrList;
 
 string strOf(char* s);
 string emptyStr();
+void deleteStr(string*);
 string joinStr(char* delimeter, int countParams, ...);
 
 

@@ -365,7 +365,6 @@ bool removeDoubleLL(DoubleLinkedList list, int index) {
         list->pf->begin = NULL;
         list->pf->end = NULL;
         list->pf->count = 0;
-        list->pf->index = 0;
         free(temp);
         return true;
     }
@@ -380,32 +379,26 @@ bool removeAllDoubleLL(DoubleLinkedList list, void* source) {
     DoubleLinkedList tempList;
 
     if (ctx->type == DOUBLE_LIST) {
-        DoubleList list2 = (DoubleList) ctx->collection;
-        DoubleLinkedList copyValues = pr_initLLd_(copyValues, list2->values);
-        tempList = subtractDoubleLL(list, copyValues);
+        tempList = subtractDoubleLL(list, (void*) ctx);
     }
 
     if (ctx->type == DOUBLE_LL) {
-        DoubleLinkedList list2 = (DoubleLinkedList) ctx->collection;
-        tempList = subtractDoubleLL(list, list2);
+        tempList = subtractDoubleLL(list, (void*) ctx);
     }
 
     if (ctx->type == DOUBLE_SET) {
-        DoubleSet set = (DoubleSet) ctx->collection;
-        DoubleLinkedList copyValues = pr_initLLd_(copyValues, set->values);
-
-        tempList = subtractDoubleLL(list, copyValues);
-        copyValues->delete(&copyValues);
+        tempList = subtractDoubleLL(list, (void*) ctx);
     }
 
-    list->delete(&list);
-    list = tempList;
+    clearDoubleLL(list);
+    list->addAll(list, tempList->values);
+    tempList->delete(&tempList);
 
     return true;
 }
 
 void reverseDoubleLL(DoubleLinkedList list) {
-    double* arr = malloc(list->pf->count * sizeof(int));
+    double* arr = malloc(list->pf->count * sizeof(double));
     copyLLToArray(list, arr);
 
     reverseArr(arr, list->pf->count);

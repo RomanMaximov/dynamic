@@ -13,8 +13,6 @@
 #include "../util/arraylistutil.h"
 
 
-
-
 typedef struct InnerStrList {
     int count;
     struct String** data;
@@ -32,7 +30,6 @@ static void quickSortReverse(String** strList, int low, int high);
 static bool isFull(StrList list);
 static int compareInt(const void* elem1, const void* elem2);
 static void checkCapacity(char* text, int* count, int strLength);
-static void deleteStr(string* s);
 
 
 void addStrList(StrList list, string str) {
@@ -84,6 +81,7 @@ void addAllStrList(StrList dest, void* source) {
     if (ctx->type == STR_LL) {
         StrLinkedList from = (StrLinkedList) ctx->collection;
         if (from == NULL) return;
+
         StrNode current = from->pf->begin;
         while (current != NULL) {
             addStrList(dest, current->data);
@@ -127,7 +125,8 @@ bool setStrList(StrList list, int index, string str) {
         return false;
     }
 
-    list->pf->data[index] = strOf(str->pf->data);
+    deleteStr(&list->pf->data[index]);
+    list->pf->data[index] = str;
     return true;
 }
 
@@ -594,12 +593,7 @@ static String** increaseCapacity(StrList list) {
         list->pf->data[i] = NULL;
 
     for (int i = 0; i < oldSize; ++i)
-        list->pf->data[i] = strOf(temp[i]->pf->data);
-
-    for (int i = 0; i < oldSize; ++i)
-        temp[i]->delete(&temp[i]);
-
-    free(temp);
+        list->pf->data[i] = temp[i];
 
     return list->pf->data;
 }
@@ -690,15 +684,4 @@ static void checkCapacity(char* text, int* count, int strLength) {
         text = realloc(text, *count * sizeof(char));
         assert(text != NULL);
     }
-}
-
-static void deleteStr(string* s) {
-    if (s != NULL || *s != NULL) {
-        if ((*s)->pf->data != NULL) {
-            free((*s)->pf->data);
-        }
-        free((*s)->pf);
-    }
-    free(*s);
-    *s = NULL;
 }

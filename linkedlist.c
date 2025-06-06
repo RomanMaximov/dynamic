@@ -35,7 +35,6 @@ typedef struct NodeDouble {
 // LinkedList data encapsulation
 typedef struct InnerDoubleLL {
     int count;
-    int index;
     struct NodeDouble* nodes;
     struct NodeDouble* begin;
     struct NodeDouble* end;
@@ -50,7 +49,6 @@ typedef struct NodeStr {
 // LinkedList data encapsulation
 typedef struct InnerStrLL {
     int count;
-    int index;
     struct NodeStr* nodes;
     struct NodeStr* begin;
     struct NodeStr* end;
@@ -164,7 +162,6 @@ DoubleLinkedList pr_initLLd_(DoubleLinkedList temp, void* collection) {
     DoubleLinkedList list = malloc(sizeof(LinkedListDouble));
     list->pf = malloc(sizeof(InnerDoubleLL));
     list->pf->count = 0;
-    list->pf->index = 0;
     list->pf->nodes = NULL;
     list->pf->begin = NULL;
     list->pf->end = NULL;
@@ -186,7 +183,6 @@ DoubleLinkedList pr_initLLd_lo_(DoubleLinkedList temp, int paramCount, ...) {
     DoubleLinkedList list = malloc(sizeof(LinkedListDouble));
     list->pf = malloc(sizeof(InnerDoubleLL));
     list->pf->count = 0;
-    list->pf->index = 0;
     list->pf->nodes = NULL;
     list->pf->begin = NULL;
     list->pf->end = NULL;
@@ -201,7 +197,7 @@ DoubleLinkedList pr_initLLd_lo_(DoubleLinkedList temp, int paramCount, ...) {
     va_list param;
     va_start(param, paramCount);
     for (int i = 0; i < paramCount; ++i) {
-        addDoubleLL(list, va_arg(param, int));
+        addDoubleLL(list, va_arg(param, double));
     }
     va_end(param);
     return list;
@@ -211,7 +207,6 @@ DoubleLinkedList pr_initLLd_loa_(DoubleLinkedList temp, double* arr, int size) {
     DoubleLinkedList list = malloc(sizeof(LinkedListDouble));
     list->pf = malloc(sizeof(InnerDoubleLL));
     list->pf->count = 0;
-    list->pf->index = 0;
     list->pf->nodes = NULL;
     list->pf->begin = NULL;
     list->pf->end = NULL;
@@ -234,7 +229,6 @@ StrLinkedList pr_initLLs_(StrLinkedList temp, void* collection) {
     StrLinkedList list = malloc(sizeof(LinkedListStr));
     list->pf = malloc(sizeof(InnerStrLL));
     list->pf->count = 0;
-    list->pf->index = 0;
     list->pf->nodes = NULL;
     list->pf->begin = NULL;
     list->pf->end = NULL;
@@ -253,7 +247,6 @@ StrLinkedList pr_initLLs_lo_(StrLinkedList temp, int paramCount, ...) {
     StrLinkedList list = malloc(sizeof(LinkedListStr));
     list->pf = malloc(sizeof(InnerStrLL));
     list->pf->count = 0;
-    list->pf->index = 0;
     list->pf->nodes = NULL;
     list->pf->begin = NULL;
     list->pf->end = NULL;
@@ -278,7 +271,6 @@ StrLinkedList pr_initLLs_loa_(StrLinkedList temp, char* arr[], int size) {
     StrLinkedList list = malloc(sizeof(LinkedListStr));
     list->pf = malloc(sizeof(InnerStrLL));
     list->pf->count = 0;
-    list->pf->index = 0;
     list->pf->nodes = NULL;
     list->pf->begin = NULL;
     list->pf->end = NULL;

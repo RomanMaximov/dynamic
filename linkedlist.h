@@ -35,7 +35,7 @@ typedef struct LinkedListInt {
     bool (*contains)(struct LinkedListInt* list, int number);
     bool (*containsAll)(struct LinkedListInt* list, void* source);
     bool (*containsAny)(struct LinkedListInt* list, void* source);
-    bool (*removeElem)(struct LinkedListInt* list, int number);
+    bool (*removeElem)(struct LinkedListInt* list, int index);
     bool (*removeAll)(struct LinkedListInt* list, void* source);
     struct LinkedListInt* (*subtract)(struct LinkedListInt* list, void* source);
     bool (*isEmpty)(struct LinkedListInt* list);
@@ -62,7 +62,7 @@ typedef struct LinkedListDouble {
     bool (*contains)(struct LinkedListDouble* list, double number);
     bool (*containsAll)(struct LinkedListDouble* list, void* source);
     bool (*containsAny)(struct LinkedListDouble* list, void* source);
-    bool (*removeElem)(struct LinkedListDouble* list, double number);
+    bool (*removeElem)(struct LinkedListDouble* list, int index);
     bool (*removeAll)(struct LinkedListDouble* list, void* source);
     struct LinkedListDouble* (*subtract)(struct LinkedListDouble* list1, void* source);
     bool (*isEmpty)(struct LinkedListDouble* list);
@@ -89,7 +89,7 @@ typedef struct LinkedListStr {
     bool (*contains)(struct LinkedListStr* list, String* s);
     bool (*containsAll)(struct LinkedListStr* list, void* source);
     bool (*containsAny)(struct LinkedListStr* list, void* source);
-    bool (*removeElem)(struct LinkedListStr* list, String* s);
+    bool (*removeElem)(struct LinkedListStr* list, int index);
     bool (*removeAll)(struct LinkedListStr* list, void* source);
     struct LinkedListStr* (*subtract)(struct LinkedListStr* list, void* source);
     bool (*isEmpty)(struct LinkedListStr* list);
