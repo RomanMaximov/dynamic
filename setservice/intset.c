@@ -143,9 +143,11 @@ bool containsAllIntSet(IntSet set, void* source) {
         if (setFrom->pf->count == 0) return true;
 
         IntList listFrom = pr_initLi_(listFrom, setFrom->values);
+        listFrom->print(listFrom);
 
         for (int i = 0; i < listFrom->pf->count; ++i) {
             if (!containsKeyInt(set, listFrom->pf->data[i])) {
+                listFrom->delete(&listFrom);
                 return false;
             }
         }
@@ -217,22 +219,20 @@ bool removeAllIntSet(IntSet set, void* source) {
     IntSet tempList;
 
     if (ctx->type == INT_LIST) {
-        IntList list = (IntList) ctx->collection;
-        tempList = subtractIntSet(set, list->values);
+        tempList = subtractIntSet(set, (void*) ctx);
     }
 
     if (ctx->type == INT_LL) {
-        IntLinkedList list = (IntLinkedList) ctx->collection;
-        tempList = subtractIntSet(set, list->values);
+        tempList = subtractIntSet(set, (void*) ctx);
     }
 
     if (ctx->type == INT_SET) {
-        IntSet set2 = (IntSet) ctx->collection;
-        tempList = subtractIntSet(set, set2->values);
+        tempList = subtractIntSet(set, (void*) ctx);
     }
 
-    set->delete(&set);
-    set = tempList;
+    clearIntSet(set);
+    set->addAll(set, tempList->values);
+    tempList->delete(&tempList);
 
     return true;
 }
@@ -249,7 +249,7 @@ IntSet subtractIntSet(IntSet set, void* source) {
     }
 
     Ctx ctx = (Ctx) source;
-    IntSet tempSet = pr_initSi_(tempSet, set->values);
+    IntSet tempSet = pr_initSi_(tempSet, NULL);
 
     if (ctx->type == INT_LIST) {
         IntList list = (IntList) ctx->collection;
@@ -263,7 +263,7 @@ IntSet subtractIntSet(IntSet set, void* source) {
         while (hasNext(iter)) {
             int num = nextInt(iter);
             if (!setFrom->contains(setFrom, num))
-                tempSet->removeElem(tempSet, num);
+                tempSet->add(tempSet, num);
         }
 
         setFrom->delete(&setFrom);
@@ -282,7 +282,7 @@ IntSet subtractIntSet(IntSet set, void* source) {
         while (hasNext(iter)) {
             int num = nextInt(iter);
             if (!setFrom->contains(setFrom, num))
-                tempSet->removeElem(tempSet, num);
+                tempSet->add(tempSet, num);
         }
 
         setFrom->delete(&setFrom);
@@ -300,7 +300,7 @@ IntSet subtractIntSet(IntSet set, void* source) {
         while (hasNext(iter)) {
             int num = nextInt(iter);
             if (!setFrom->contains(setFrom, num))
-                tempSet->removeElem(tempSet, num);
+                tempSet->add(tempSet, num);
         }
 
         deleteItr(&iter);
@@ -598,7 +598,7 @@ static bool isRoot(IntSetNode* node, IntSetNode* previous) {
 static  void toStringInOrder(IntSetNode node, int* counter, char* text, int* count) {
     if (node != NULL) {
         toStringInOrder(node->left, counter, text, count);
-        sprintf(&text[strlen(text)], "%d,", node->data);
+        sprintf(&text[strlen(text)], "%d", node->data);
         if (strlen(text) > (int)(*count / 8 * 7)) {
             *count *= 2;
             text = realloc(text, *count * sizeof(char));
@@ -606,9 +606,9 @@ static  void toStringInOrder(IntSetNode node, int* counter, char* text, int* cou
         }
 
         if (*counter - 1 != 0) {
-            printf("%s", ",");
-            --(*counter);
+            sprintf(&text[strlen(text)], "%s", ",");
         }
+        --(*counter);
         toStringInOrder(node->right, counter, text, count);
     }
 }

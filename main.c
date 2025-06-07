@@ -9,11 +9,13 @@
 #include "logerrors.h"
 #include "test/testarraylist.h"
 #include "test/testlinkedlist.h"
+#include "test/testset.h"
 
 int main()
 {
     //testArrayList();
-    testLinkedList();
+    //testLinkedList();
+    testSet();
 
     return 0;
 }

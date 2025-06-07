@@ -443,7 +443,7 @@ static void testStrList() {
     StrLinkedList strList3 = listOf(strList3, 4, "bb", "aaa", "com", "gg");
     strList3->print(strList3);
     assertInt(1, 1);
-    StrLinkedList addList = listOf(addList, 4, "don", "don2", "don3", "don4");
+    StrLinkedList addList = listOf(addList, 4, "corn", "don2", "don3", "don4");
     addList->print(addList);
     printf("Collection size, ");
     assertInt(strList3->size(strList3), 4);

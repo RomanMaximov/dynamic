@@ -111,7 +111,7 @@ IntSet pr_initSi_so_(IntSet temp, int paramCount, ...) {
     IntSet set = malloc(sizeof(SetInt));
     set->pf = malloc(sizeof(InnerIntSet));
     set->pf->count = 0;
-    set->pf->capacity = 64;
+    set->pf->capacity = 32;
     set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
@@ -138,7 +138,7 @@ IntSet pr_initSi_soa_(IntSet temp, int* arr, int size) {
     IntSet set = malloc(sizeof(SetInt));
     set->pf = malloc(sizeof(InnerIntSet));
     set->pf->count = 0;
-    set->pf->capacity = 64;
+    set->pf->capacity = 32;
     set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
@@ -162,7 +162,7 @@ DoubleSet pr_initSd_(DoubleSet temp, void* collection) {
     DoubleSet set = malloc(sizeof(SetDouble));
     set->pf = malloc(sizeof(InnerDoubleSet));
     set->pf->count = 0;
-    set->pf->capacity = 64;
+    set->pf->capacity = 32;
     set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;

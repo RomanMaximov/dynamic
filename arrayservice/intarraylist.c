@@ -71,10 +71,10 @@ void addAllIntList(IntList dest, void* source) {
         setToArrInt(fromSet, arr);
         if (dest->pf->capacity <= fromSet->pf->count + dest->pf->count) {
             dest->pf->data = increaseCapacityAddAll(dest, fromSet->pf->count);
-            memcpy(&dest->pf->data[dest->pf->count], arr, sizeof(int));
+            memcpy(&dest->pf->data[dest->pf->count], arr, fromSet->pf->count * sizeof(int));
             dest->pf->count += fromSet->pf->count;
         } else {
-            memcpy(&dest->pf->data[dest->pf->count], arr, sizeof(int));
+            memcpy(&dest->pf->data[dest->pf->count], arr, fromSet->pf->count * sizeof(int));
             dest->pf->count += fromSet->pf->count;
         }
 

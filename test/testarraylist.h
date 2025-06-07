@@ -10,9 +10,5 @@
 #define GREEN  "\033[1;32m"
 
 void testArrayList();
-//void testLinkedList();
-//void testSet();
-//void testString();
-
 
 #endif

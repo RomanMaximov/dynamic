@@ -143,7 +143,7 @@ string getStrLL(StrLinkedList list, int index) {
     StrNode current = list->pf->nodes;
     while (current != NULL) {
         if (tempIndex == index)
-            return current->data;
+            return strOf(current->data->pf->data);
 
         ++tempIndex;
         current = current->next;
@@ -176,7 +176,6 @@ bool setStrLL(StrLinkedList list, int index, string s) {
 
 void sortStrLL(StrLinkedList list) {
     StrList strList = pr_initLs_(strList, list->values);
-    puts("//////////////////////////////////");
     strList->print(strList);
     StrNode temp = list->pf->begin;
     int index = 0;
