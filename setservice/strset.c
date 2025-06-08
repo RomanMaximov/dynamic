@@ -169,6 +169,7 @@ bool containsAllStrSet(StrSet set, void* source) {
 
         for (int i = 0; i < listFrom->pf->count; ++i) {
             if (!containsKeyStr(set, listFrom->pf->data[i])) {
+                listFrom->delete(&listFrom);
                 return false;
             }
         }
@@ -239,22 +240,20 @@ bool removeAllStrSet(StrSet set, void* source) {
     StrSet tempList;
 
     if (ctx->type == STR_LIST) {
-        StrList list = (StrList) ctx->collection;
-        tempList = subtractStrSet(set, list->values);
+        tempList = subtractStrSet(set, (void*) ctx);
     }
 
     if (ctx->type == STR_LL) {
-        StrLinkedList list = (StrLinkedList) ctx->collection;
-        tempList = subtractStrSet(set, list->values);
+        tempList = subtractStrSet(set, (void*) ctx);
     }
 
     if (ctx->type == STR_SET) {
-        StrSet set2 = (StrSet) ctx->collection;
-        tempList = subtractStrSet(set, set2->values);
+        tempList = subtractStrSet(set, (void*) ctx);
     }
 
-    set->delete(&set);
-    set = tempList;
+    clearStrSet(set);
+    set->addAll(set, tempList->values);
+    tempList->delete(&tempList);
 
     return true;
 }
@@ -271,7 +270,7 @@ StrSet subtractStrSet(StrSet set, void* source) {
     }
 
     Ctx ctx = (Ctx) source;
-    StrSet tempSet = pr_initSs_(tempSet, set->values);
+    StrSet tempSet = pr_initSs_(tempSet, NULL);
 
     if (ctx->type == STR_LIST) {
         StrList list = (StrList) ctx->collection;
@@ -285,7 +284,7 @@ StrSet subtractStrSet(StrSet set, void* source) {
         while (hasNext(iter)) {
             string s = nextStr(iter);
             if (!setFrom->contains(setFrom, s))
-                tempSet->removeElem(tempSet, s);
+                tempSet->addStr(tempSet, s);
         }
 
         setFrom->delete(&setFrom);
@@ -304,7 +303,7 @@ StrSet subtractStrSet(StrSet set, void* source) {
         while (hasNext(iter)) {
             string s = nextStr(iter);
             if (!setFrom->contains(setFrom, s))
-                tempSet->removeElem(tempSet, s);
+                tempSet->addStr(tempSet, s);
         }
 
         setFrom->delete(&setFrom);
@@ -322,7 +321,7 @@ StrSet subtractStrSet(StrSet set, void* source) {
         while (hasNext(iter)) {
             string s = nextStr(iter);
             if (!setFrom->contains(setFrom, s))
-                tempSet->removeElem(tempSet, s);
+                tempSet->addStr(tempSet, s);
         }
 
         deleteItr(&iter);
@@ -613,7 +612,7 @@ static  void toStringInOrder(StrSetNode node, int* counter, char* text, int* cou
     if (node != NULL) {
         toStringInOrder(node->left, counter, text, count);
         checkCapacity(text, count, node->str->pf->count);
-        sprintf(&text[strlen(text)], "%s,", node->str->pf->data);
+        sprintf(&text[strlen(text)], "%s", node->str->pf->data);
         if (strlen(text) > (int)(*count / 8 * 7)) {
             *count *= 2;
             text = realloc(text, *count * sizeof(char));
@@ -621,9 +620,9 @@ static  void toStringInOrder(StrSetNode node, int* counter, char* text, int* cou
         }
 
         if (*counter - 1 != 0) {
-            printf("%s", ",");
-            --(*counter);
+            sprintf(&text[strlen(text)], "%s", ",");
         }
+        --(*counter);
         toStringInOrder(node->right, counter, text, count);
     }
 }
@@ -647,21 +646,23 @@ static int hashString(const char* str) {
     return (int) hash;
 }
 
-static bool findKey(NodeSetStr** node, string s) {
+static bool findKey(NodeSetStr** node, string s, bool* found) {
     if (node == NULL || *node == NULL) return false;
 
     int cmp = compareStr(s, (*node)->str);
     if (cmp == 0) {
+        *found = true;
         return true;
     } else if (cmp < 0) {
-        findKey(&((*node)->left), s);
+        findKey(&((*node)->left), s, found);
     } else {
-        findKey(&((*node)->right), s);
+        findKey(&((*node)->right), s, found);
     }
-    return false;
+    return *found;
 }
 
 static bool containsKeyStr(StrSet set, string s) {
+    bool found = false;
     int indexBucket = (int) (hashString(s->pf->data) % set->pf->capacity);
-    return findKey(&set->pf->bucket[indexBucket], s);
+    return findKey(&set->pf->bucket[indexBucket], s, &found);
 }

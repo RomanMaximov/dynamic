@@ -27,9 +27,9 @@ static void testStrSet();
 
 
 void testSet() {
-    testIntSet();
+    //testIntSet();
     //testDoubleSet();
-    //testStrSet();
+    testStrSet();
 }
 
 
@@ -199,7 +199,239 @@ static void testIntSet() {
     isContains = bigSet->contains(bigSet, 24999);
     if (isContains)
         assertInt(1, 1);
+    printf("Collection NOT contains value 35000\n");
+    isContains = bigSet->contains(bigSet, 35000);
+    if (!isContains)
+        assertInt(1, 1);
 
     bigSet->delete(&bigSet);
     bigSet2->delete(&bigSet2);
+}
+
+static void testDoubleSet() {
+    puts("=========== test DoubleSet ===========");
+    DoubleSet doubleSet = newSet(doubleSet, NULL);
+    assertNotNull((void*) doubleSet);
+    doubleSet->delete(&doubleSet);
+    if (doubleSet == NULL)
+        puts("Collection after delete is NULL");
+    puts("");
+
+    printf("Create collection as listOfArr\n");
+    double temp[] = {23.55, 67.037, 55.999, 4.37};
+    DoubleSet doubleSet2 = setOfArr(doubleSet2, temp, 4);
+    printf("Collection size, ");
+    assertInt(doubleSet2->size(doubleSet2), 4);
+    doubleSet2->delete(&doubleSet2);
+    puts("");
+
+    printf("Create collection as listOf\n");
+    DoubleSet doubleSet3 = setOf(doubleSet3, 4, 23.55, 67.037, 55.999, 4.37);
+    doubleSet3->print(doubleSet3);
+    DoubleSet adddoubleSet = setOf(adddoubleSet, 4, 11.01, 12.01, 13.01, 14.01);
+    printf("Collection size, ");
+    assertInt(doubleSet3->size(doubleSet3), 4);
+
+    printf("Add all from list2\n");
+    doubleSet3->addAll(doubleSet3, adddoubleSet->values);
+    doubleSet3->print(doubleSet3);
+    printf("Collection size, ");
+    assertInt(doubleSet3->size(doubleSet3), 8);
+    doubleSet3->print(doubleSet3);
+    adddoubleSet->delete(&adddoubleSet);
+
+    DoubleSet adddoubleSet2 = setOf(adddoubleSet2, 20, 1.05,2.05,3.05,4.05,5.05,6.05,7.05,8.05,9.05,10.05,11.05,12.05,13.05,14.05,15.05,16.05,17.05,18.05,19.05,20.05);
+    printf("Add all from list3\n");
+    doubleSet3->addAll(doubleSet3, adddoubleSet2->values);
+    doubleSet3->print(doubleSet3);
+    printf("Collection size, ");
+    assertInt(doubleSet3->size(doubleSet3), 28);
+    adddoubleSet2->delete(&adddoubleSet2);
+
+    printf("Clear collection\n");
+    doubleSet3->clear(doubleSet3);
+    doubleSet3->print(doubleSet3);
+    printf("Collection size, ");
+    assertInt(doubleSet3->size(doubleSet3), 0);
+
+    printf("Empty collection\n");
+    bool isEmpty = doubleSet3->isEmpty(doubleSet3);
+    if (isEmpty) {
+        printf("collection is empty, ");
+        assertInt(1, 1);
+    }
+
+    printf("Add all from list4\n");
+    DoubleSet adddoubleSet3 = setOf(adddoubleSet3, 20, 1.05,2.05,3.05,4.05,5.05,6.05,7.05,8.05,9.05,10.05,11.05,12.05,13.05,14.05,15.05,16.05,17.05,18.05,19.05,20.05);
+    doubleSet3->addAll(doubleSet3, adddoubleSet3->values);
+    doubleSet3->print(doubleSet3);
+    adddoubleSet3->delete(&adddoubleSet3);
+    printf("Collection contains value 10.05\n");
+    bool isContains = doubleSet3->contains(doubleSet3, 10.05);
+    if (isContains)
+        assertInt(1, 1);
+
+    DoubleSet containsdoubleSet = setOf(containsdoubleSet, 5, 10.05,11.05,12.05,13.05,14.05);
+    printf("Collection contains all from list5\n");
+    containsdoubleSet->print(containsdoubleSet);
+    isContains = doubleSet3->containsAll(doubleSet3, containsdoubleSet->values);
+    if (isContains)
+        assertInt(1, 1);
+
+    printf("Collection contains any from list5\n");
+    containsdoubleSet->print(containsdoubleSet);
+    isContains = doubleSet3->containsAny(doubleSet3, containsdoubleSet->values);
+    if (isContains)
+        assertInt(1, 1);
+
+    printf("Remove elem with value 9.05 from collection\n");
+    doubleSet3->removeElem(doubleSet3, 9.05);
+    doubleSet3->print(doubleSet3);
+    printf("Collection size, ");
+    assertInt(doubleSet3->size(doubleSet3), 19);
+
+    printf("Remove all from list5\n");
+    containsdoubleSet->print(containsdoubleSet);
+    doubleSet3->removeAll(doubleSet3, containsdoubleSet->values);
+    printf("Collection size, ");
+    doubleSet3->print(doubleSet3);
+    assertInt(doubleSet3->size(doubleSet3), 14);
+    containsdoubleSet->delete(&containsdoubleSet);
+
+    printf("Subtract from collection\n");
+    DoubleSet subtractdoubleSet = setOf(subtractdoubleSet, 5, 15.05,16.05,17.05,18.05,19.05);
+    DoubleSet subtractDouble = doubleSet3->subtract(doubleSet3, subtractdoubleSet->values);
+    printf("new subtract collection: ");
+    subtractDouble->print(subtractDouble);
+    assertInt(1, 1);
+    subtractdoubleSet->delete(&subtractdoubleSet);
+    subtractDouble->delete(&subtractDouble);
+
+    printf("Collection to string\n");
+    string strSetDouble = doubleSet3->toString(doubleSet3);
+    strSetDouble->print(strSetDouble);
+    assertInt(1, 1);
+    doubleSet3->delete(&doubleSet3);
+    strSetDouble->delete(&strSetDouble);
+}
+
+static void testStrSet() {
+    puts("=========== test StrSet ===========");
+    StrSet strSet = newSet(strSet, NULL);
+    assertNotNull((void*) strSet);
+    strSet->delete(&strSet);
+    if (strSet == NULL)
+        puts("Collection after delete is NULL");
+    puts("");
+
+    printf("Create collection as listOfArr\n");
+    char* temp[] = {"aaa", "bb", "ccc", "d"};
+    StrSet strSet2 = setOfArr(strSet2, temp, 4);
+    printf("Collection size, ");
+    assertInt(strSet2->size(strSet2), 4);
+    strSet2->delete(&strSet2);
+    puts("");
+
+    printf("Create collection as listOf\n");
+    StrSet strSet3 = setOf(strSet3, 4, "bb", "aaa", "ccc", "d");
+    strSet3->print(strSet3);
+    assertInt(1, 1);
+    StrSet addList = setOf(addList, 4, "don", "don2", "don3", "don4");
+    addList->print(addList);
+    printf("Collection size, ");
+    assertInt(strSet3->size(strSet3), 4);
+
+    printf("Add all from list2\n");
+    strSet3->addAll(strSet3, addList->values);
+    strSet3->print(strSet3);
+    printf("Collection size, ");
+    assertInt(strSet3->size(strSet3), 8);
+    addList->delete(&addList);
+
+    char* temp2[] = {"s1","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14","s15","s16","s17","s18","s19","s20"};
+    StrSet addList2 = setOfArr(addList2, temp2, 20);
+    printf("Add all from list3\n");
+    strSet3->addAll(strSet3, addList2->values);
+    strSet3->print(strSet3);
+    printf("Collection size, ");
+    assertInt(strSet3->size(strSet3), 28);
+    addList2->delete(&addList2);
+
+    printf("Clear collection\n");
+    strSet3->clear(strSet3);
+    strSet3->print(strSet3);
+    printf("Collection size, ");
+    assertInt(strSet3->size(strSet3), 0);
+
+    printf("Empty collection\n");
+    bool isEmpty = strSet3->isEmpty(strSet3);
+    if (isEmpty) {
+        printf("collection is empty, ");
+        assertInt(1, 1);
+    }
+
+    printf("Add all from list4\n");
+    StrSet addList3 = setOfArr(addList3, temp2, 20);
+    strSet3->addAll(strSet3, addList3->values);
+    strSet3->print(strSet3);
+    printf("Collection size, ");
+    assertInt(strSet3->size(strSet3), 20);
+    addList3->delete(&addList3);
+    printf("Collection contains value s10\n");
+    string checkStr = strOf("s10");
+    bool isContains = strSet3->contains(strSet3, checkStr);
+    if (isContains)
+        assertInt(1, 1);
+    checkStr->delete(&checkStr);
+    printf("Collection NOT contains value 999\n");
+    checkStr = strOf("999");
+    isContains = strSet3->contains(strSet3, checkStr);
+    if (!isContains)
+        assertInt(1, 1);
+    checkStr->delete(&checkStr);
+
+    StrSet containsList = setOf(containsList, 5, "s10", "s11", "s12", "s13", "s14");
+    printf("Collection contains all from list5\n");
+    containsList->print(containsList);
+    isContains = strSet3->containsAll(strSet3, containsList->values);
+    if (isContains)
+        assertInt(1, 1);
+
+    printf("Collection contains any from list5\n");
+    containsList->print(containsList);
+    isContains = strSet3->containsAny(strSet3, containsList->values);
+    if (isContains)
+        assertInt(1, 1);
+
+    printf("Remove elem with value s9 from collection\n");
+    checkStr = strOf("s9");
+    strSet3->removeElem(strSet3, checkStr);
+    strSet3->print(strSet3);
+    printf("Collection size, ");
+    assertInt(strSet3->size(strSet3), 19);
+    checkStr->delete(&checkStr);
+
+    printf("Remove all from list5\n");
+    containsList->print(containsList);
+    strSet3->removeAll(strSet3, containsList->values);
+    printf("Collection size, ");
+    assertInt(strSet3->size(strSet3), 14);
+    strSet3->print(strSet3);
+    containsList->delete(&containsList);
+
+    printf("Subtract from collection\n");
+    StrSet subtractList = setOf(subtractList, 5, "s15", "s16", "s17", "s18", "s19");
+    StrSet subtract = strSet3->subtract(strSet3, subtractList->values);
+    printf("new subtract collection: ");
+    subtract->print(subtract);
+    assertInt(1, 1);
+    subtractList->delete(&subtractList);
+    subtract->delete(&subtract);
+
+    printf("Collection to string\n");
+    string listStr = strSet3->toString(strSet3);
+    listStr->print(listStr);
+    assertInt(1, 1);
+    strSet3->delete(&strSet3);
+    listStr->delete(&listStr);
 }

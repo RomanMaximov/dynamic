@@ -76,10 +76,10 @@ void addAllDoubleList(DoubleList dest, void* source) {
         setToArrDouble(fromSet, arr);
         if (dest->pf->capacity <= fromSet->pf->count + dest->pf->count) {
             dest->pf->data = increaseCapacityAddAll(dest, fromSet->pf->count);
-            memcpy(&dest->pf->data[dest->pf->count], arr, sizeof(double));
+            memcpy(&dest->pf->data[dest->pf->count], arr, sizeof(double) * fromSet->pf->count);
             dest->pf->count += fromSet->pf->count;
         } else {
-            memcpy(&dest->pf->data[dest->pf->count], arr, sizeof(double));
+            memcpy(&dest->pf->data[dest->pf->count], arr, sizeof(double) * fromSet->pf->count);
             dest->pf->count += fromSet->pf->count;
         }
 

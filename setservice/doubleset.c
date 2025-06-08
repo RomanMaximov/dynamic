@@ -220,22 +220,20 @@ bool removeAllDoubleSet(DoubleSet set, void* source) {
     DoubleSet tempList;
 
     if (ctx->type == DOUBLE_LIST) {
-        DoubleList list = (DoubleList) ctx->collection;
-        tempList = subtractDoubleSet(set, list->values);
+        tempList = subtractDoubleSet(set, (void*) ctx);
     }
 
     if (ctx->type == DOUBLE_LL) {
-        DoubleLinkedList list = (DoubleLinkedList) ctx->collection;
-        tempList = subtractDoubleSet(set, list->values);
+        tempList = subtractDoubleSet(set, (void*) ctx);
     }
 
     if (ctx->type == DOUBLE_SET) {
-        DoubleSet set2 = (DoubleSet) ctx->collection;
-        tempList = subtractDoubleSet(set, set2->values);
+        tempList = subtractDoubleSet(set, (void*) ctx);
     }
 
-    set->delete(&set);
-    set = tempList;
+    clearDoubleSet(set);
+    set->addAll(set, tempList->values);
+    tempList->delete(&tempList);
 
     return true;
 }
@@ -252,7 +250,7 @@ DoubleSet subtractDoubleSet(DoubleSet set, void* source) {
     }
 
     Ctx ctx = (Ctx) source;
-    DoubleSet tempSet = pr_initSd_(tempSet, set->values);
+    DoubleSet tempSet = pr_initSd_(tempSet, NULL);
 
     if (ctx->type == DOUBLE_LIST) {
         DoubleList list = (DoubleList) ctx->collection;
@@ -266,7 +264,7 @@ DoubleSet subtractDoubleSet(DoubleSet set, void* source) {
         while (hasNext(iter)) {
             double num = nextDouble(iter);
             if (!setFrom->contains(setFrom, num))
-                tempSet->removeElem(tempSet, num);
+                tempSet->add(tempSet, num);
         }
 
         setFrom->delete(&setFrom);
@@ -285,7 +283,7 @@ DoubleSet subtractDoubleSet(DoubleSet set, void* source) {
         while (hasNext(iter)) {
             double num = nextDouble(iter);
             if (!setFrom->contains(setFrom, num))
-                tempSet->removeElem(tempSet, num);
+                tempSet->add(tempSet, num);
         }
 
         setFrom->delete(&setFrom);
@@ -303,7 +301,7 @@ DoubleSet subtractDoubleSet(DoubleSet set, void* source) {
         while (hasNext(iter)) {
             double num = nextDouble(iter);
             if (!setFrom->contains(setFrom, num))
-                tempSet->removeElem(tempSet, num);
+                tempSet->add(tempSet, num);
         }
 
         deleteItr(&iter);
@@ -597,7 +595,7 @@ static  void printInOrder(DoubleSetNode node, int* counter) {
 static  void toStringInOrder(DoubleSetNode node, int* counter, char* text, int* count) {
     if (node != NULL) {
         toStringInOrder(node->left, counter, text, count);
-        sprintf(&text[strlen(text)], "%.9f,", node->data);
+        sprintf(&text[strlen(text)], "%.9f", node->data);
         if (strlen(text) > (int)(*count / 8 * 7)) {
             *count *= 2;
             text = realloc(text, *count * sizeof(char));
@@ -605,9 +603,9 @@ static  void toStringInOrder(DoubleSetNode node, int* counter, char* text, int* 
         }
 
         if (*counter - 1 != 0) {
-            printf("%s", ",");
-            --(*counter);
+            sprintf(&text[strlen(text)], "%s", ",");
         }
+        --(*counter);
         toStringInOrder(node->right, counter, text, count);
     }
 }

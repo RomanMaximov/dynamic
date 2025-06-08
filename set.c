@@ -185,7 +185,7 @@ DoubleSet pr_initSd_so_(DoubleSet temp, int paramCount, ...) {
     DoubleSet set = malloc(sizeof(SetDouble));
     set->pf = malloc(sizeof(InnerDoubleSet));
     set->pf->count = 0;
-    set->pf->capacity = 64;
+    set->pf->capacity = 32;
     set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
@@ -212,7 +212,7 @@ DoubleSet pr_initSd_soa_(DoubleSet temp, double* arr, int size) {
     DoubleSet set = malloc(sizeof(SetDouble));
     set->pf = malloc(sizeof(InnerDoubleSet));
     set->pf->count = 0;
-    set->pf->capacity = 64;
+    set->pf->capacity = 32;
     set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
@@ -236,7 +236,7 @@ StrSet pr_initSs_(StrSet temp, void* collection) {
     StrSet set = malloc(sizeof(SetStr));
     set->pf = malloc(sizeof(InnerStrSet));
     set->pf->count = 0;
-    set->pf->capacity = 64;
+    set->pf->capacity = 32;
     set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetStr*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
@@ -259,7 +259,7 @@ StrSet pr_initSs_so_(StrSet temp, int paramCount, ...) {
     StrSet set = malloc(sizeof(SetStr));
     set->pf = malloc(sizeof(InnerStrSet));
     set->pf->count = 0;
-    set->pf->capacity = 64;
+    set->pf->capacity = 32;
     set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetStr*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
@@ -286,7 +286,7 @@ StrSet pr_initSs_soa_(StrSet temp, char* arr[], int size) {
     StrSet set = malloc(sizeof(SetStr));
     set->pf = malloc(sizeof(InnerStrSet));
     set->pf->count = 0;
-    set->pf->capacity = 64;
+    set->pf->capacity = 32;
     set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetStr*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
