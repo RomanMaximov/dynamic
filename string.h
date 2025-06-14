@@ -22,8 +22,8 @@ typedef struct String {
     void (*toUpperCase)(struct String* str);
     char (*charAt)(struct String* str, int index);
     bool (*containsSubStr)(struct String* str, struct String* subStr);
-    bool (*startsWith)(struct String* str, struct String* subStr);
-    bool (*endsWith)(struct String* str, struct String* subStr);
+    bool (*startsWith)(struct String* str, char* subStr);
+    bool (*endsWith)(struct String* str, char* subStr);
     void (*reverse)(struct String* str);
     int (*indexOf)(struct String* str, char ch);
     int (*indexOfSubStr)(struct String* str, struct String* subStr);

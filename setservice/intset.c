@@ -227,7 +227,6 @@ bool removeAllIntSet(IntSet set, void* source) {
     }
 
     if (ctx->type == INT_SET) {
-        //tempList = subtractIntSet(set, (void*) ctx);
         IntSet setFrom = (IntSet) ctx->collection;
         if (setFrom->pf->count == 0) {
             return true;

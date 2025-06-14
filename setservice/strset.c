@@ -248,7 +248,17 @@ bool removeAllStrSet(StrSet set, void* source) {
     }
 
     if (ctx->type == STR_SET) {
-        tempList = subtractStrSet(set, (void*) ctx);
+        StrSet setFrom = (StrSet) ctx->collection;
+        if (setFrom->pf->count == 0) {
+            return true;
+        }
+
+        StrList listFrom = pr_initLs_(listFrom, setFrom->values);
+        for (int i = 0; i < listFrom->pf->count; ++i) {
+            removeStrSet(set, listFrom->pf->data[i]);
+        }
+        listFrom->delete(&listFrom);
+        return true;
     }
 
     clearStrSet(set);

@@ -75,7 +75,7 @@ string strOf(char* s) {
     strcpy(str->pf->data, s);
 
     str->pf->count = length;
-    str->pf->capacity = length;
+    str->pf->capacity = length + 1;
     initFuncs(str);
 
     return str;
@@ -109,9 +109,10 @@ void concatStr(string s1, string s2) {
 
     strcat(s1->pf->data, s2->pf->data);
     s1->pf->count += s2->pf->count;
+    s1->pf->capacity = count;
 }
 
-void replaceStr(string s, char* ch1, char* ch2) { // TODO через char*
+void replaceStr(string s, char* ch1, char* ch2) {
     if (s == NULL || s->pf->data == NULL || ch1 == NULL || ch2 == NULL) {
         printf("Error: string is empty or null \n");
         return;
@@ -131,21 +132,21 @@ void replaceStr(string s, char* ch1, char* ch2) { // TODO через char*
     int counterEmbbeded = countStrEmbbeded(s, ch1);
     if (counterEmbbeded == 0) return;
 
-    int newSize = s->pf->count - (lenS1 * counterEmbbeded) + (lenS2 * counterEmbbeded);
-    char temp[s->pf->count];
+    int newSize = s->pf->count - (lenS1 * counterEmbbeded) + (lenS2 * counterEmbbeded) + 1;
+    char temp[s->pf->count + 1];
     strcpy(temp, s->pf->data);
-    if (true) {
-        free(s->pf->data);
-        s->pf->data = malloc(newSize * sizeof(char));
-        assert(s->pf->data != NULL);
-    }
-    s->pf->count = newSize;
 
-    int lenTemp = strlen(temp);
+    free(s->pf->data);
+    s->pf->data = malloc(newSize * sizeof(char));
+    assert(s->pf->data != NULL);
+
+    s->pf->count = newSize;
+    s->pf->capacity = newSize + 1;
+
+    int lenTemp = (int) strlen(temp);
     int tempIndex = 0;
     int destIndex = 0;
     int currentIndex = 0;
-    bool isFirstAdd = true;
     int counter = 0;
     while(counter < lenTemp) {
         currentIndex = indexOfSub(temp, ch1, tempIndex);
@@ -169,7 +170,6 @@ void replaceStr(string s, char* ch1, char* ch2) { // TODO через char*
 
         counter = tempIndex;
     }
-    s->pf->data[newSize] = '\0';
 }
 
 void* toLowerCaseStr(String* s) {
@@ -262,12 +262,12 @@ bool containsSubString(String* str, String* substr) {
         return false;
 }
 
-bool startsWithStr(string str, string substr) {
-    if (str == NULL || substr == NULL || substr->pf->count > str->pf->count)
+bool startsWithStr(string str, char* substr) {
+    if (str == NULL || substr == NULL || strlen(substr) > str->pf->count)
         return false;
 
     const char* text = str->pf->data;
-    const char* sub = substr->pf->data;
+    const char* sub = substr;
     while(*sub != '\0') {
         if (*text != *sub)
             return false;
@@ -278,16 +278,16 @@ bool startsWithStr(string str, string substr) {
     return true;
 }
 
-bool endsWithStr(string str, string substr) {
-    if (str == NULL || substr == NULL || substr->pf->count > str->pf->count)
+bool endsWithStr(string str, char* substr) {
+    if (str == NULL || substr == NULL || strlen(substr) > str->pf->count)
         return false;
 
     const char* text = str->pf->data;
-    const char* sub = substr->pf->data;
+    const char* sub = substr;
     while(*text != '\0')
         ++text;
 
-    text -= substr->pf->count - 1;
+    text -= strlen(substr);
 
     while(*sub != '\0') {
         if (*text != *sub)
@@ -491,12 +491,12 @@ void printStr(string s) {
 }
 
 void deleteStr(string* s) {
-    if (s != NULL || *s != NULL) {
-        if ((*s)->pf->data != NULL) {
-            free((*s)->pf->data);
-        }
-        free((*s)->pf);
+    if (s == NULL || *s == NULL) return;
+
+    if ((*s)->pf->data != NULL) {
+        free((*s)->pf->data);
     }
+    free((*s)->pf);
     free(*s);
     *s = NULL;
 }

@@ -228,7 +228,17 @@ bool removeAllDoubleSet(DoubleSet set, void* source) {
     }
 
     if (ctx->type == DOUBLE_SET) {
-        tempList = subtractDoubleSet(set, (void*) ctx);
+        DoubleSet setFrom = (DoubleSet) ctx->collection;
+        if (setFrom->pf->count == 0) {
+            return true;
+        }
+
+        DoubleList listFrom = pr_initLd_(listFrom, setFrom->values);
+        for (int i = 0; i < listFrom->pf->count; ++i) {
+            removeDoubleSet(set, listFrom->pf->data[i]);
+        }
+        listFrom->delete(&listFrom);
+        return true;
     }
 
     clearDoubleSet(set);

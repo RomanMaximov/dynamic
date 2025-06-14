@@ -99,7 +99,38 @@ void testString() {
     }
     deleteStr(&subStr);
 
+    printf("String starts with substr \"NE\"\n");
+    bool isStartWith = str3->startsWith(str3, "NE");
+    if (isStartWith) {
+        printf("String starts with substr \"NE\", ");
+        assertInt(1, 1);
+    }
+    printf("String starts NOT with substr \"St\"\n");
+    isStartWith = str3->startsWith(str3, "St");
+    if (!isStartWith) {
+        printf("String starts NOT with substr \"NE\", ");
+        assertInt(1, 1);
+    }
 
+    printf("String ends with substr \"ING\"\n");
+    bool isEndsWith = str3->endsWith(str3, "ING");
+    if (isEndsWith) {
+        printf("String ends with substr \"ING\", ");
+        assertInt(1, 1);
+    }
+    printf("String ends NOT with substr \"St\"\n");
+    isEndsWith = str3->endsWith(str3, "St");
+    if (!isEndsWith) {
+        printf("String ends NOT with substr \"St\", ");
+        assertInt(1, 1);
+    }
+
+    printf("String reverse\n");
+    str3->reverse(str3);
+    str3->print(str3);
+    printf("Char value with index[0] after reverse\n");
+    checkChar = 'G';
+    assertChar(str3->charAt(str3, 0), checkChar);
 
 
 
