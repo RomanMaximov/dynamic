@@ -33,4 +33,4 @@ add_executable(DynamicCollection main.c
         arrayservice/strarraylist.c
         util/arraylistutil.h
         context.h
-        util/setutil.h util/linkedlistutil.h iterator.c logerrors.h test/testlinkedlist.h test/testlinkedlist.c test/testset.h test/testset.c)
+        util/setutil.h util/linkedlistutil.h iterator.c logerrors.h test/testlinkedlist.h test/testlinkedlist.c test/testset.h test/testset.c test/teststring.h test/teststring.c)

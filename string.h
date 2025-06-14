@@ -17,7 +17,7 @@ typedef struct String {
     struct InnerStr* pf;   // private field
     int (*length)(struct String* str);
     void (*concat)(struct String* str1, struct String* str2);
-    void (*replace)(struct String* str, char ch1, char ch2);
+    void (*replace)(struct String* str, char* ch1, char* ch2);
     void (*toLowerCase)(struct String* str);
     void (*toUpperCase)(struct String* str);
     char (*charAt)(struct String* str, int index);

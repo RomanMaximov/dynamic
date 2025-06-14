@@ -1,3 +1,9 @@
+//
+// Created by Roman Maximov on 13.06.2025.
+// License: MIT License.
+// Copyright (c) 2024 Roman Maximov.
+//
+
 #include <stdio.h>
 #include "../dynamic.h"
 #include "testarraylist.h"

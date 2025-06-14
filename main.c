@@ -10,12 +10,14 @@
 #include "test/testarraylist.h"
 #include "test/testlinkedlist.h"
 #include "test/testset.h"
+#include "test/teststring.h"
 
 int main()
 {
     //testArrayList();
     //testLinkedList();
-    testSet();
+    //testSet();
+    testString();
 
     return 0;
 }

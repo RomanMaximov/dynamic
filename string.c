@@ -31,6 +31,9 @@ typedef struct InnerStrList {
 
 // prototypes private funcs
 static String** increaseCapacity(StrList list);
+static int countStrEmbbeded(string s, char* sub);
+static int indexOfSub(char* source, char* sub, int offset);
+static void copyArr(char* dest, int destIndex, char* source, int tempIndex, int size);
 
 
 // private prototypes funcs for pointers initialization
@@ -101,25 +104,72 @@ void concatStr(string s1, string s2) {
     }
 
     int count = s1->pf->count + s2->pf->count + 1;
-    char temp[s1->pf->count + 1];
-    strcpy(temp, s1->pf->data);
     s1->pf->data = realloc(s1->pf->data, count * sizeof(char));
     assert(s1->pf->data != NULL);
 
-    strcpy(s1->pf->data, temp);
     strcat(s1->pf->data, s2->pf->data);
+    s1->pf->count += s2->pf->count;
 }
 
-void replaceStr(string s, char ch1, char ch2) { // TODO через char*
-    if (s == NULL || s->pf->data == NULL) {
+void replaceStr(string s, char* ch1, char* ch2) { // TODO через char*
+    if (s == NULL || s->pf->data == NULL || ch1 == NULL || ch2 == NULL) {
         printf("Error: string is empty or null \n");
         return;
     }
 
-    for (int i = 0; i < s->pf->count; ++i) {
-        if (s->pf->data[i] == ch1)
-            s->pf->data[i] = ch2;
+    int lenS1 = (int) strlen(ch1);
+    int lenS2 = (int) strlen(ch2);
+
+    if (lenS1 == 1 && lenS2 == 1) {
+        for (int i = 0; i < s->pf->count; ++i) {
+            if (s->pf->data[i] == ch1[0])
+                s->pf->data[i] = ch2[0];
+        }
+        return;
     }
+
+    int counterEmbbeded = countStrEmbbeded(s, ch1);
+    if (counterEmbbeded == 0) return;
+
+    int newSize = s->pf->count - (lenS1 * counterEmbbeded) + (lenS2 * counterEmbbeded);
+    char temp[s->pf->count];
+    strcpy(temp, s->pf->data);
+    if (true) {
+        free(s->pf->data);
+        s->pf->data = malloc(newSize * sizeof(char));
+        assert(s->pf->data != NULL);
+    }
+    s->pf->count = newSize;
+
+    int lenTemp = strlen(temp);
+    int tempIndex = 0;
+    int destIndex = 0;
+    int currentIndex = 0;
+    bool isFirstAdd = true;
+    int counter = 0;
+    while(counter < lenTemp) {
+        currentIndex = indexOfSub(temp, ch1, tempIndex);
+        if (currentIndex != 0 && currentIndex != -1) {
+            int size = currentIndex - tempIndex;
+            copyArr(s->pf->data, destIndex, temp, tempIndex, size);
+            tempIndex = currentIndex;
+            destIndex += size;
+        }
+
+        if (currentIndex != -1) {
+            copyArr(s->pf->data, destIndex, ch2, 0, lenS2);
+            destIndex += lenS2;
+            tempIndex += lenS1;
+        }
+
+        if (currentIndex == -1 && (lenTemp-tempIndex != 0)) {
+            copyArr(s->pf->data, destIndex, temp, tempIndex, lenTemp-tempIndex);
+            tempIndex += lenTemp-tempIndex;
+        }
+
+        counter = tempIndex;
+    }
+    s->pf->data[newSize] = '\0';
 }
 
 void* toLowerCaseStr(String* s) {
@@ -433,6 +483,8 @@ void printStr(string s) {
 
     if (s->pf->data == NULL) {
         puts("null");
+    } else if (s->pf->count == 0) {
+        printf("%s\n", "[]");
     } else {
         printf("%s\n", s->pf->data);
     }
@@ -470,6 +522,84 @@ static String** increaseCapacity(StrList list) {
     free(temp);
 
     return list->pf->data;
+}
+
+static int countStrEmbbeded(string s, char* sub) {
+    int embbeded = 0;
+    char* text = s->pf->data;
+    char* textCurrent = s->pf->data;
+    char* subStr = sub;
+    char* currentSubStr = sub;
+    int subLength = (int) strlen(sub);
+    int counter = 0;
+
+    while(*text != '\0') {
+        if (*textCurrent == *currentSubStr) {
+            ++counter;
+            if (counter == subLength) {
+                ++embbeded;
+                counter = 0;
+                ++textCurrent;
+                currentSubStr = subStr;
+                ++text;
+            } else {
+                ++textCurrent;
+                ++currentSubStr;
+                ++text;
+            }
+        } else {
+            ++text;
+            textCurrent = text;
+            currentSubStr = subStr;
+            counter = 0;
+        }
+    }
+
+    return embbeded;
+}
+
+static int indexOfSub(char* source, char* sub, int offset) {
+    char* text = source + offset;
+    char* textCurrent = source + offset;
+    char* subStr = sub;
+    char* currentSubStr = sub;
+    int subLength = (int) strlen(sub);
+    int index = offset;
+    int foundIndex = -1;
+    int counter = subLength;
+
+    while(*text != '\0') {
+        if (*textCurrent == *currentSubStr) {
+            if (counter == subLength)
+                foundIndex = index;
+
+            --counter;
+            ++textCurrent;
+            ++currentSubStr;
+            ++text;
+        } else {
+            ++text;
+            textCurrent = text;
+            currentSubStr = subStr;
+            counter = subLength;
+            foundIndex = -1;
+        }
+
+        if (counter == 0) {
+            return foundIndex;
+        }
+
+        ++index;
+    }
+
+    return foundIndex;
+}
+
+static void copyArr(char* dest, int destIndex, char* source, int tempIndex, int size) {
+    while (size != 0) {
+        dest[destIndex++] = source[tempIndex++];
+        --size;
+    }
 }
 
 
