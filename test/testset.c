@@ -5,6 +5,7 @@
 //
 
 #include <stdio.h>
+#include <time.h>
 #include "../dynamic.h"
 #include "testset.h"
 
@@ -27,9 +28,9 @@ static void testStrSet();
 
 
 void testSet() {
-    //testIntSet();
+    testIntSet();
     //testDoubleSet();
-    testStrSet();
+    //testStrSet();
 }
 
 
@@ -192,7 +193,12 @@ static void testIntSet() {
     assertInt( bigSet->size( bigSet), 50000);
     printf("Collection size, ");
     assertInt( bigSet2->size(bigSet2), 25000);
+    clock_t start = clock();
     bigSet->removeAll(bigSet, bigSet2->values);
+    clock_t end = clock();
+    double time_spent = (double)(end - start) / 1000000;
+    printf("total time for removeAll function: %ld\n", (long) time_spent);
+
     printf("Collection size after remove all, ");
     assertInt(bigSet->size(bigSet), 25000);
     printf("Collection contains value 24999\n");

@@ -53,13 +53,51 @@ void testString() {
     concatStr->delete(&concatStr);
     deleteStr(&checkStr);
 
-    printf("Replace letter 's' to 'W'\n");
-    str2->replace(str2, "s", "W");
+    printf("Replace substr \"st\" to \"W\"\n");
+    str2->replace(str2, "st", "W");
     str2->print(str2);
-    checkStr = strOf("firWt WtrCONCAT");
+    checkStr = strOf("firW WrCONCAT");
     assertStr(str2, checkStr);
     deleteStr(&checkStr);
+    deleteStr(&str2);
 
+    printf("String to LowerCase\n");
+    string str3 = strOf("New String");
+    str3->print(str3);
+    checkStr = strOf("new string");
+    str3->toLowerCase(str3);
+    str3->print(str3);
+    assertStr(str3, checkStr);
+    deleteStr(&checkStr);
+
+    printf("String to UpperCase\n");
+    str3->print(str3);
+    checkStr = strOf("NEW STRING");
+    str3->toUpperCase(str3);
+    str3->print(str3);
+    assertStr(str3, checkStr);
+    deleteStr(&checkStr);
+
+    printf("Char value with index[4]\n");
+    char checkChar = 'S';
+    assertChar(str3->charAt(str3, 4), checkChar);
+
+    printf("String contains substr \"RING\"\n");
+    string subStr = strOf("RING");
+    bool isContains = str3->containsSubStr(str3, subStr);
+    if (isContains) {
+        printf("String contains substr \"RING\", ");
+        assertInt(1, 1);
+    }
+    deleteStr(&subStr);
+    printf("String contains NO substr \"sun\"\n");
+    subStr = strOf("sun");
+    isContains = str3->containsSubStr(str3, subStr);
+    if (!isContains) {
+        printf("String contains NO substr \"sun\", ");
+        assertInt(1, 1);
+    }
+    deleteStr(&subStr);
 
 
 

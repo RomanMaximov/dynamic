@@ -227,7 +227,18 @@ bool removeAllIntSet(IntSet set, void* source) {
     }
 
     if (ctx->type == INT_SET) {
-        tempList = subtractIntSet(set, (void*) ctx);
+        //tempList = subtractIntSet(set, (void*) ctx);
+        IntSet setFrom = (IntSet) ctx->collection;
+        if (setFrom->pf->count == 0) {
+            return true;
+        }
+
+        IntList listFrom = pr_initLi_(listFrom, setFrom->values);
+        for (int i = 0; i < listFrom->pf->count; ++i) {
+            removeIntSet(set, listFrom->pf->data[i]);
+        }
+        listFrom->delete(&listFrom);
+        return true;
     }
 
     clearIntSet(set);
