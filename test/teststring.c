@@ -155,7 +155,6 @@ void testString() {
     assertStr(splitList->get(splitList, 1), checkStr);
     checkStr->delete(&checkStr);
     splitStr->delete(&splitStr);
-    splitList->delete(&splitList);
 
     printf("Trim string\n");
     string trimStr = strOf(" trimTest ");
@@ -202,6 +201,16 @@ void testString() {
     string defaultStr = defaultIfNull(NULL, "defaultStr");
     defaultStr->print(defaultStr);
     assertInt(1, 1);
+
+    printf("Join to string\n");
+    string joinStr = join(":", 3, "total", "money", "dollar");
+    joinStr->print(joinStr);
+    joinStr->delete(&joinStr);
+
+    joinStr = joinFromList(splitList, ":");
+    joinStr->print(joinStr);
+    joinStr->delete(&joinStr);
+    splitList->delete(&splitList);
 }
 
 

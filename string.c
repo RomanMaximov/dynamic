@@ -228,12 +228,34 @@ string join(char* delimeter, int countParams, ...) {
     temp[count] = '\0';
     va_end(params);
 
-    String* s = strOf(temp);
-    return s;
+    return strOf(temp);
 }
 
 string joinFromList(StrList list, char* delimeter) {
-    // TODO
+    int count = 0;
+    int number = 0;
+    for (int i = 0; i < list->pf->count; ++i) {
+        if (i > 0)
+            count += (int) strlen(delimeter);
+
+        count += list->pf->data[i]->pf->count;
+        ++number;
+    }
+
+    char temp[count + 1];
+    for (int i = 0; i < number; ++i) {
+        if (i == 0) {
+            strcpy(temp, list->pf->data[i]->pf->data);
+            continue;
+        }
+        if (i > 0) {
+            strcat(temp, delimeter);
+        }
+        strcat(temp, list->pf->data[i]->pf->data);
+    }
+    temp[count] = '\0';
+
+    return strOf(temp);
 }
 
 char charAtStr(String* s, int index) {
