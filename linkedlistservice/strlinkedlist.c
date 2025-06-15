@@ -164,7 +164,7 @@ bool setStrLL(StrLinkedList list, int index, string s) {
     StrNode current = list->pf->begin;
     while (current != NULL) {
         if (index == tempIndex) {
-            deleteStr(&current->data);
+            current->data->delete(&current->data);
             current->data = s;
             return true;
         }

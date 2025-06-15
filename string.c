@@ -33,7 +33,7 @@ typedef struct InnerStrList {
 static String** increaseCapacity(StrList list);
 static int countStrEmbbeded(string s, char* sub);
 static int indexOfSub(char* source, char* sub, int offset);
-static void copyArr(char* dest, int destIndex, char* source, int tempIndex, int size);
+static void copyInArr(char* dest, int destIndex, char* source, int tempIndex, int size);
 
 
 // private prototypes funcs for pointers initialization
@@ -54,8 +54,6 @@ static void* split();
 static void* trim();
 static void* isEmpty();
 static void* isBlank();
-static void* isNotBlank();
-static void* defaultIfNull();
 static void* getBytes();
 static void* print();
 static void* delete();
@@ -75,7 +73,7 @@ string strOf(char* s) {
     strcpy(str->pf->data, s);
 
     str->pf->count = length;
-    str->pf->capacity = length + 1;
+    str->pf->capacity = length;
     initFuncs(str);
 
     return str;
@@ -132,12 +130,12 @@ void replaceStr(string s, char* ch1, char* ch2) {
     int counterEmbbeded = countStrEmbbeded(s, ch1);
     if (counterEmbbeded == 0) return;
 
-    int newSize = s->pf->count - (lenS1 * counterEmbbeded) + (lenS2 * counterEmbbeded) + 1;
+    int newSize = s->pf->count - (lenS1 * counterEmbbeded) + (lenS2 * counterEmbbeded);
     char temp[s->pf->count + 1];
     strcpy(temp, s->pf->data);
 
     free(s->pf->data);
-    s->pf->data = malloc(newSize * sizeof(char));
+    s->pf->data = malloc((newSize + 1) * sizeof(char));
     assert(s->pf->data != NULL);
 
     s->pf->count = newSize;
@@ -152,24 +150,25 @@ void replaceStr(string s, char* ch1, char* ch2) {
         currentIndex = indexOfSub(temp, ch1, tempIndex);
         if (currentIndex != 0 && currentIndex != -1) {
             int size = currentIndex - tempIndex;
-            copyArr(s->pf->data, destIndex, temp, tempIndex, size);
+            copyInArr(s->pf->data, destIndex, temp, tempIndex, size);
             tempIndex = currentIndex;
             destIndex += size;
         }
 
         if (currentIndex != -1) {
-            copyArr(s->pf->data, destIndex, ch2, 0, lenS2);
+            copyInArr(s->pf->data, destIndex, ch2, 0, lenS2);
             destIndex += lenS2;
             tempIndex += lenS1;
         }
 
         if (currentIndex == -1 && (lenTemp-tempIndex != 0)) {
-            copyArr(s->pf->data, destIndex, temp, tempIndex, lenTemp-tempIndex);
+            copyInArr(s->pf->data, destIndex, temp, tempIndex, lenTemp-tempIndex);
             tempIndex += lenTemp-tempIndex;
         }
 
         counter = tempIndex;
     }
+    s->pf->data[newSize] = '\0';
 }
 
 void* toLowerCaseStr(String* s) {
@@ -194,18 +193,18 @@ void* toUpperCaseStr(String* s) {
     return s;
 }
 
-string joinStr(char* delimeter, int countParams, ...) {
+string join(char* delimeter, int countParams, ...) {
     va_list counter;
     va_start(counter, countParams);
 
     int count = 0;
     int number = 0;
     for (int i = 0; i < countParams; ++i) {
-        String* tempStr = va_arg(counter, String*);
+        char* tempStr = va_arg(counter, char*);
         if (i > 0)
             count += (int) strlen(delimeter);
 
-        count += tempStr->pf->count;
+        count += (int) strlen(tempStr);
         ++number;
     }
     va_end(counter);
@@ -216,21 +215,25 @@ string joinStr(char* delimeter, int countParams, ...) {
     va_start(params, countParams);
 
     for (int i = 0; i < number; ++i) {
-        String* tempStr = va_arg(params, String*);
+        char* tempStr = va_arg(params, char*);
         if (i == 0) {
-            strcpy(temp, tempStr->pf->data);
+            strcpy(temp, tempStr);
             continue;
         }
         if (i > 0) {
             strcat(temp, delimeter);
         }
-        strcat(temp, tempStr->pf->data);
+        strcat(temp, tempStr);
     }
     temp[count] = '\0';
     va_end(params);
 
     String* s = strOf(temp);
     return s;
+}
+
+string joinFromList(StrList list, char* delimeter) {
+    // TODO
 }
 
 char charAtStr(String* s, int index) {
@@ -419,18 +422,20 @@ void trimStr(string s) {
 
     const char* start = s->pf->data;
     while (*start && isspace((unsigned char)*start)) {
-        start++;
+        ++start;
     }
 
     const char* end = s->pf->data + strlen(s->pf->data) - 1;
-    while (end > start && isspace((unsigned char)*end)) {
-        end--;
+    while (*end && isspace((unsigned char)*end)) {
+        --end;
     }
 
     int length = (int) (end - start + 1);
 
     strncpy(s->pf->data, start, length);
     s->pf->data[length] = '\0';
+    s->pf->count = length;
+    s->pf->capacity = length + 1;
 }
 
 bool isEmptyStr(string s) {
@@ -451,22 +456,8 @@ bool isBlankStr(string s) {
     return true;
 }
 
-bool isNotBlankStr(string s) {
-    if (s == NULL || s->pf->count == 0)
-        return false;
-
-    char* text = s->pf->data;
-    while (*text != '\0') {
-        if (*text != ' ')
-            return true;
-
-        ++text;
-    }
-    return false;
-}
-
-string defaultIfNullStr(string s1, string s2) {
-    return s1 == NULL ? s2 : s1;
+string defaultIfNull(string s1, char* s2) {
+    return s1 == NULL ? strOf(s2) : s1;
 }
 
 byte* getBytesStr(string s) {
@@ -481,13 +472,18 @@ void printStr(string s) {
     if (s == NULL)
         return;
 
+    if (s->pf->count == 0) {
+        printf("%s\n", "[]");
+        return;
+    }
+
+    printf("%s", "[");
     if (s->pf->data == NULL) {
         puts("null");
-    } else if (s->pf->count == 0) {
-        printf("%s\n", "[]");
     } else {
-        printf("%s\n", s->pf->data);
+        printf("%s", s->pf->data);
     }
+    printf("%s\n", "]");
 }
 
 void deleteStr(string* s) {
@@ -595,7 +591,7 @@ static int indexOfSub(char* source, char* sub, int offset) {
     return foundIndex;
 }
 
-static void copyArr(char* dest, int destIndex, char* source, int tempIndex, int size) {
+static void copyInArr(char* dest, int destIndex, char* source, int tempIndex, int size) {
     while (size != 0) {
         dest[destIndex++] = source[tempIndex++];
         --size;
@@ -668,14 +664,6 @@ static void* isBlank() {
     return isBlankStr;
 }
 
-static void* isNotBlank() {
-    return isNotBlankStr;
-}
-
-static void* defaultIfNull() {
-    return defaultIfNullStr;
-}
-
 static void* getBytes() {
     return getBytesStr;
 }
@@ -706,8 +694,6 @@ static void initFuncs(string str) {
     str->trim = trim();
     str->isEmpty = isEmpty();
     str->isBlank = isBlank();
-    str->isNotBlank = isNotBlank();
-    str->defaultIfNull = defaultIfNull();
     str->getBytes = getBytes();
     str->print = print();
     str->delete = delete();

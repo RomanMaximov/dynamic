@@ -31,8 +31,6 @@ typedef struct String {
     void (*trim)(struct String* str);
     bool (*isEmpty)(struct String* str);
     bool (*isBlank)(struct String* str);
-    bool (*isNotBlank)(struct String* str);
-    struct String* (*defaultIfNull)(struct String* str1, struct String* str2);
     byte* (*getBytes)(struct String* str);
     void (*print)(struct String* str);
     void (*delete)(struct String** str);
@@ -45,8 +43,9 @@ typedef ArrayListStr* StrList;
 
 string strOf(char* s);
 string emptyStr();
-void deleteStr(string*);
-string joinStr(char* delimeter, int countParams, ...);
+string defaultIfNull(string str, char* defaultStr);
+string join(char* delimeter, int countParams, ...);
+string joinFromList(StrList list, char* delimeter);
 
 
 #endif

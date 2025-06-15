@@ -125,7 +125,7 @@ bool setStrList(StrList list, int index, string str) {
         return false;
     }
 
-    deleteStr(&list->pf->data[index]);
+    list->pf->data[index]->delete(&list->pf->data[index]);
     list->pf->data[index] = str;
     return true;
 }
@@ -364,7 +364,7 @@ bool removeAllStrList(StrList list, void* source) {
     }
 
     for (int i = 0; i <list->pf->count; ++i) {
-        deleteStr(&list->pf->data[i]);
+        list->pf->data[i]->delete(&list->pf->data[i]);
     }
     for (int i = 0; i <tempList->pf->count; ++i) {
         list->pf->data[i] = strOf(tempList->pf->data[i]->pf->data);

@@ -51,15 +51,15 @@ void testString() {
     strLength = str2->length(str2);
     assertInt(strLength, 15);
     concatStr->delete(&concatStr);
-    deleteStr(&checkStr);
+    checkStr->delete(&checkStr);
 
     printf("Replace substr \"st\" to \"W\"\n");
     str2->replace(str2, "st", "W");
     str2->print(str2);
     checkStr = strOf("firW WrCONCAT");
     assertStr(str2, checkStr);
-    deleteStr(&checkStr);
-    deleteStr(&str2);
+    checkStr->delete(&checkStr);
+    str2->delete(&str2);
 
     printf("String to LowerCase\n");
     string str3 = strOf("New String");
@@ -68,7 +68,7 @@ void testString() {
     str3->toLowerCase(str3);
     str3->print(str3);
     assertStr(str3, checkStr);
-    deleteStr(&checkStr);
+    checkStr->delete(&checkStr);
 
     printf("String to UpperCase\n");
     str3->print(str3);
@@ -76,7 +76,7 @@ void testString() {
     str3->toUpperCase(str3);
     str3->print(str3);
     assertStr(str3, checkStr);
-    deleteStr(&checkStr);
+    checkStr->delete(&checkStr);
 
     printf("Char value with index[4]\n");
     char checkChar = 'S';
@@ -89,7 +89,7 @@ void testString() {
         printf("String contains substr \"RING\", ");
         assertInt(1, 1);
     }
-    deleteStr(&subStr);
+    subStr->delete(&subStr);
     printf("String contains NO substr \"sun\"\n");
     subStr = strOf("sun");
     isContains = str3->containsSubStr(str3, subStr);
@@ -97,7 +97,7 @@ void testString() {
         printf("String contains NO substr \"sun\", ");
         assertInt(1, 1);
     }
-    deleteStr(&subStr);
+    subStr->delete(&subStr);
 
     printf("String starts with substr \"NE\"\n");
     bool isStartWith = str3->startsWith(str3, "NE");
@@ -132,7 +132,42 @@ void testString() {
     checkChar = 'G';
     assertChar(str3->charAt(str3, 0), checkChar);
 
+    printf("Index of 'N'\n");
+    str3->print(str3);
+    assertInt(str3->indexOf(str3, 'N'), 1);
 
+    printf("Index of subStr \"RTS\"\n");
+    checkStr = strOf("RTS");
+    int index = str3->indexOfSubStr(str3, checkStr);
+    assertInt(index, 3);
+    checkStr->delete(&checkStr);
+    str3->delete(&str3);
+
+    printf("Split string\n");
+    string splitStr = strOf("sun,son,sam,snow,wow");
+    splitStr->print(splitStr);
+    StrList splitList = splitStr->split(splitStr, ",");
+    printf("Split list size, ");
+    assertInt(splitList->size(splitList), 5);
+    splitList->print(splitList);
+    checkStr = strOf("son");
+    printf("Split string value with index[1]\n");
+    assertStr(splitList->get(splitList, 1), checkStr);
+    checkStr->delete(&checkStr);
+    splitStr->delete(&splitStr);
+    splitList->delete(&splitList);
+
+    printf("Trim string\n");
+    string trimStr = strOf(" trimTest ");
+    int len = trimStr->length(trimStr);
+    printf("Trim string len, ");
+    assertInt(len, 10);
+    trimStr->trim(trimStr);
+    trimStr->print(trimStr);
+    len = trimStr->length(trimStr);
+    printf("Trim string len after trim, ");
+    assertInt(len, 8);
+    trimStr->delete(&trimStr);
 
     printf("String is empty\n");
     string empty = emptyStr();
@@ -144,7 +179,29 @@ void testString() {
     }
     empty->delete(&empty);
 
+    printf("String is blank\n");
+    string blank = strOf("  ");
+    blank->print(blank);
+    bool isBlank = blank->isBlank(blank);
+    if (isBlank) {
+        printf("String is blank, ");
+        assertInt(1, 1);
+    }
+    blank->delete(&blank);
+    printf("String is NOT blank\n");
+    blank = strOf("f");
+    blank->print(blank);
+    isBlank = blank->isBlank(blank);
+    if (!isBlank) {
+        printf("String is NOT blank, ");
+        assertInt(1, 1);
+    }
+    blank->delete(&blank);
 
+    printf("String default\n");
+    string defaultStr = defaultIfNull(NULL, "defaultStr");
+    defaultStr->print(defaultStr);
+    assertInt(1, 1);
 }
 
 
