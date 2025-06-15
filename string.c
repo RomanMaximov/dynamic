@@ -30,7 +30,6 @@ typedef struct InnerStrList {
 
 
 // prototypes private funcs
-static String** increaseCapacity(StrList list);
 static int countStrEmbbeded(string s, char* sub);
 static int indexOfSub(char* source, char* sub, int offset);
 static void copyInArr(char* dest, int destIndex, char* source, int tempIndex, int size);
@@ -520,27 +519,6 @@ void deleteStr(string* s) {
 }
 
 // =================  private funcs  ===================
-
-static String** increaseCapacity(StrList list) {
-    int oldSize = list->pf->count;
-    list->pf->capacity *= 2;
-
-    String** temp = list->pf->data;
-    list->pf->data = malloc(list->pf->capacity * sizeof(String*));
-
-    for (int i = 0; i < list->pf->capacity; ++i)
-        list->pf->data[i] = NULL;
-
-    for (int i = 0; i < oldSize; ++i)
-        list->pf->data[i] = strOf(temp[i]->pf->data);
-
-    for (int i = 0; i < oldSize; ++i)
-        temp[i]->delete(&temp[i]);
-
-    free(temp);
-
-    return list->pf->data;
-}
 
 static int countStrEmbbeded(string s, char* sub) {
     int embbeded = 0;
