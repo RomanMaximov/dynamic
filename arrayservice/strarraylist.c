@@ -326,20 +326,22 @@ bool removeStrList(StrList list, int index) {
         return true;
     }
 
-    int sizeTemp = list->pf->count - index - 1;
-    String** temp = malloc(sizeTemp * sizeof(String*));
-    int counter = index;
-    ++counter;
+    list->pf->data[index]->delete(&list->pf->data[index]);
+    list->pf->data[index] = NULL;
+    String** temp = list->pf->data;
 
-    for (int i = 0; i < sizeTemp; ++i) {
-        temp[i] = list->pf->data[counter++];
+    int sizeTemp = list->pf->count - 1;
+    list->pf->data = malloc(sizeTemp * sizeof(String*));
+
+    int counter = 0;
+    for (int i = 0; i < list->pf->count; ++i) {
+        if (temp[i] == NULL) continue;
+
+        list->pf->data[counter] = temp[i];
+        ++counter;
     }
 
-    for (int i = 0; i < sizeTemp; ++i) {
-        list->pf->data[index++] = temp[i];
-    }
     list->pf->count--;
-
     free(temp);
 
     return true;
@@ -364,7 +366,8 @@ bool removeAllStrList(StrList list, void* source) {
     }
 
     for (int i = 0; i <list->pf->count; ++i) {
-        list->pf->data[i]->delete(&list->pf->data[i]);
+        if (list->pf->data[i] != NULL)
+            list->pf->data[i]->delete(&list->pf->data[i]);
     }
     for (int i = 0; i <tempList->pf->count; ++i) {
         list->pf->data[i] = strOf(tempList->pf->data[i]->pf->data);
@@ -399,6 +402,8 @@ StrList subtractStrList(StrList list, void* source) {
 
         StrSet setFrom = pr_initSs_(setFrom, listSource->values);
         for (int i = 0; i < list->pf->count; ++i) {
+            string temp = list->pf->data[i];
+            if (list->pf->data[i] == NULL) continue;
             if (!setFrom->contains(setFrom, list->pf->data[i]))
                 tempList->add(tempList, list->pf->data[i]);
         }
@@ -545,14 +550,19 @@ void printStrList(StrList list) {
     int counter = list->pf->count;
     printf("%s", "[");
     for (int i = 0; i < counter; ++i) {
+        string temp = list->pf->data[i];
         if (i == counter - 1) {
-            if (list->pf->data[i] == NULL || list->pf->data[i]->pf->data == NULL)
+            if (list->pf->data[i] != NULL && list->pf->data[i]->pf->data == NULL)
                 printf("%s", "null");
+            else if (list->pf->data[i] == NULL)
+                continue;
             else
                 printf("%s", list->pf->data[i]->pf->data);
         } else {
-            if (list->pf->data[i] == NULL || list->pf->data[i]->pf->data == NULL)
+            if (list->pf->data[i] != NULL && list->pf->data[i]->pf->data == NULL)
                 printf("%s, ", "null");
+            else if (list->pf->data[i] == NULL)
+                continue;
             else
                 printf("%s, ", list->pf->data[i]->pf->data);
         }

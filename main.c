@@ -14,10 +14,10 @@
 
 int main()
 {
-    //testArrayList();
+    testArrayList();
     //testLinkedList();
     //testSet();
-    testString();
+    //testString();
 
     return 0;
 }

@@ -120,6 +120,7 @@ void clearStrSet(StrSet set) {
 }
 
 bool containsStrSet(StrSet set, string s) {
+    if (s == NULL) return false;
     return containsKeyStr(set, s);
 }
 

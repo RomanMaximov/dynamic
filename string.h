@@ -46,6 +46,7 @@ string emptyStr();
 string defaultIfNull(string str, char* defaultStr);
 string join(char* delimeter, int countParams, ...);
 string joinFromList(StrList list, char* delimeter);
+char* toCharArr(string s);
 
 
 #endif

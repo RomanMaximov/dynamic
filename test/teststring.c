@@ -211,6 +211,11 @@ void testString() {
     joinStr->print(joinStr);
     joinStr->delete(&joinStr);
     splitList->delete(&splitList);
+
+    char* arr = toCharArr(defaultStr);
+    puts(arr);
+    free(arr);
+    defaultStr->delete(&defaultStr);
 }
 
 

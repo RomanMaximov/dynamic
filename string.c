@@ -518,6 +518,10 @@ void deleteStr(string* s) {
     *s = NULL;
 }
 
+char* toCharArr(string s) {
+    return strdup(s->pf->data);
+}
+
 // =================  private funcs  ===================
 
 static int countStrEmbbeded(string s, char* sub) {
