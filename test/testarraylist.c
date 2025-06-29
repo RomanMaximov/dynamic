@@ -28,9 +28,9 @@ static void testStrList();
 
 
 void testArrayList() {
-    //testIntList();
+    testIntList();
     //testDoubleList();
-    testStrList();
+    //testStrList();
 }
 
 

@@ -325,7 +325,7 @@ bool removeAllIntList(IntList list, void* source) {
     return true;
 }
 
-IntList subtractIntList(IntList list, void* source) {
+void* subtractIntList(IntList list, void* source) {
     if (isEmptyIntList(list)) {
         IntList temp = NULL;
         return pr_initLi_(temp, NULL);
@@ -423,7 +423,7 @@ int sizeIntList(IntList list) {
     return list->pf->count;
 }
 
-string toStrIntList(IntList list) {
+void* toStrIntList(IntList list) {
     if (list == NULL)
         return NULL;
 

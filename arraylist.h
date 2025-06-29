@@ -37,12 +37,12 @@ typedef struct ArrayListInt {
     bool (*containsAny)(struct ArrayListInt* list, void* source);
     bool (*removeElem)(struct ArrayListInt* list, int index);
     bool (*removeAll)(struct ArrayListInt* list, void* source);
-    struct ArrayListInt* (*subtract)(struct ArrayListInt* list, void* source);
+    void* (*subtract)(struct ArrayListInt* list, void* source);
     bool (*isEmpty)(struct ArrayListInt* list);
     void (*reverse)(struct ArrayListInt* list);
     bool (*isEquals)(struct ArrayListInt* list1, struct ArrayListInt* list2);
     int (*size)(struct ArrayListInt* list);
-    struct String* (*toString)(struct ArrayListInt* list);
+    void* (*toString)(struct ArrayListInt* list);
     void (*print)(struct ArrayListInt* list);
     void (*delete)(struct ArrayListInt** list);
 } ArrayListInt;

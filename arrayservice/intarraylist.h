@@ -30,12 +30,12 @@ bool containsAllIntList(IntList, void*);
 bool containsAnyIntList(IntList, void*);
 bool removeIntList(IntList, int);
 bool removeAllIntList(IntList, void*);
-IntList subtractIntList(IntList, void*);
+void* subtractIntList(IntList, void*);
 bool isEmptyIntList(IntList);
 void reverseIntList(IntList);
 bool isEqualsIntList(IntList, IntList);
 int sizeIntList(IntList);
-string toStrIntList(IntList);
+void* toStrIntList(IntList);
 
 void printIntList(IntList);
 void deleteIntList(IntList*);

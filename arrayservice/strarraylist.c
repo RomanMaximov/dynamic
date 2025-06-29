@@ -331,7 +331,9 @@ bool removeStrList(StrList list, int index) {
     String** temp = list->pf->data;
 
     int sizeTemp = list->pf->count - 1;
-    list->pf->data = malloc(sizeTemp * sizeof(String*));
+    list->pf->data = malloc(list->pf->capacity * sizeof(String*));
+    for (int i = 0; i < list->pf->capacity; ++i)
+        list->pf->data[i] = NULL;
 
     int counter = 0;
     for (int i = 0; i < list->pf->count; ++i) {
@@ -402,7 +404,6 @@ StrList subtractStrList(StrList list, void* source) {
 
         StrSet setFrom = pr_initSs_(setFrom, listSource->values);
         for (int i = 0; i < list->pf->count; ++i) {
-            string temp = list->pf->data[i];
             if (list->pf->data[i] == NULL) continue;
             if (!setFrom->contains(setFrom, list->pf->data[i]))
                 tempList->add(tempList, list->pf->data[i]);
