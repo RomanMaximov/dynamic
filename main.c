@@ -16,8 +16,8 @@ int main()
 {
     //testArrayList();
     //testLinkedList();
-    //testSet();
-    testString();
+    testSet();
+    //testString();
 
     return 0;
 }
