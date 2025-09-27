@@ -621,7 +621,7 @@ static void quickSort(String** strList, int low, int high)
     String* temp;
     do {
         while (j > i) {
-            if (compareStr(strList[i], strList[j]) == 1) {
+            if (compareStr(strList[i], strList[j]) > 0) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;
@@ -631,7 +631,7 @@ static void quickSort(String** strList, int low, int high)
             --j;
         }
         while (i < j) {
-            if (compareStr(strList[i], strList[j]) == 1) {
+            if (compareStr(strList[i], strList[j]) > 0) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;
@@ -654,7 +654,7 @@ static void quickSortReverse(String** strList, int low, int high) {
     String* temp;
     do {
         while (j > i) {
-            if (compareStr(strList[i], strList[j]) == -1) {
+            if (compareStr(strList[i], strList[j]) < 0) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;
@@ -664,7 +664,7 @@ static void quickSortReverse(String** strList, int low, int high) {
             --j;
         }
         while (i < j) {
-            if (compareStr(strList[i], strList[j]) == -1) {
+            if (compareStr(strList[i], strList[j]) < 0) {
                 temp = strList[i];
                 strList[i] = strList[j];
                 strList[j] = temp;

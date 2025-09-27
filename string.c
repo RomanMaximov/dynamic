@@ -33,6 +33,8 @@ typedef struct InnerStrList {
 static int countStrEmbbeded(string s, char* sub);
 static int indexOfSub(char* source, char* sub, int offset);
 static void copyInArr(char* dest, int destIndex, char* source, int tempIndex, int size);
+static void strupr(char* s);
+static void strlwr(char* s);
 
 
 // private prototypes funcs for pointers initialization
@@ -599,6 +601,18 @@ static void copyInArr(char* dest, int destIndex, char* source, int tempIndex, in
     while (size != 0) {
         dest[destIndex++] = source[tempIndex++];
         --size;
+    }
+}
+
+static void strlwr(char* s) {
+    for (; *s; ++s) {
+        *s = (char)tolower((unsigned char)*s);
+    }
+}
+
+static void strupr(char* s) {
+    for (; *s; ++s) {
+        *s = (char)toupper((unsigned char)*s);
     }
 }
 
