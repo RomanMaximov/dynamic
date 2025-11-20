@@ -21,6 +21,7 @@ typedef struct NodeSetInt {
 typedef struct InnerIntSet {
     int count;
     int capacity;
+    int capacityCounter;
     struct NodeSetInt** bucket;
 } InnerIntSet;
 
@@ -30,7 +31,7 @@ typedef NodeSetInt* IntSetNode;
 // prototypes private funcs
 static IntSetNode createNode(int num);
 static int compareInt(int elem1, int elem2);
-static void insertNode(NodeSetInt** node, int num, int* counter);
+static void insertNode(NodeSetInt** node, NodeSetInt** previous, int num, int* counter, int* capacityCounter);
 static void printInOrder(IntSetNode node, int* counter);
 static bool isCapacityFull(IntSet set);
 static unsigned long long hashCode(int key);
@@ -39,7 +40,7 @@ static void copyValuesToArr(IntSetNode node, int* arr, int* index);
 static void setToArr(IntSet set, int* arr);
 static void deleteNodes(NodeSetInt** buckets, int capacity);
 static void deleteInOrder(IntSetNode node);
-static void removeNode(IntSetNode* node, IntSetNode* previous, int num, bool* found);
+static void removeNode(IntSetNode* node, IntSetNode* previous, int num, bool* found, int* capacityCounter);
 static IntSetNode findNode(IntSetNode* node, IntSetNode* previous);
 static bool isRoot(IntSetNode* node, IntSetNode* previous);
 static  void toStringInOrder(IntSetNode node, int* counter, char* text, int* count);
@@ -51,7 +52,8 @@ void addIntSet(IntSet set, int num) {
         increaseCapacity(set);
 
     int indexBucket = (int) (hashCode(num) % set->pf->capacity);
-    insertNode(&set->pf->bucket[indexBucket], num, &set->pf->count);
+    NodeSetInt* previous = set->pf->bucket[indexBucket];
+    insertNode(&set->pf->bucket[indexBucket], &previous, num, &set->pf->count, &set->pf->capacityCounter);
 }
 
 void addAllIntSet(IntSet set, void* source) {
@@ -90,7 +92,8 @@ void clearIntSet(IntSet set) {
     }
 
     set->pf->count = 0;
-    set->pf->capacity = 16;
+    set->pf->capacity = 64;
+    set->pf->capacityCounter = 0;
     set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
@@ -205,7 +208,7 @@ bool removeIntSet(IntSet set, int num) {
     int indexBucket = (int) (hashCode(num) % set->pf->capacity);
     IntSetNode previous = set->pf->bucket[indexBucket];
     bool found = false;
-    removeNode(&set->pf->bucket[indexBucket], &previous, num, &found);
+    removeNode(&set->pf->bucket[indexBucket], &previous, num, &found, &set->pf->capacityCounter);
     if (found)
         set->pf->count--;
 
@@ -410,8 +413,9 @@ static int compareInt(int elem1, int elem2) {
         return -1;
 }
 
-static void insertNode(NodeSetInt** node, int num, int* counter) {
+static void insertNode(NodeSetInt** node, NodeSetInt** previous, int num, int* counter, int* capacityCounter) {
     if (*node == NULL) {
+        if (*node == NULL && *previous == NULL) (*capacityCounter)++;
         *node = createNode(num);
         (*counter)++;
     } else {
@@ -419,9 +423,9 @@ static void insertNode(NodeSetInt** node, int num, int* counter) {
         if (cmp == 0) {
             return;
         } else if (cmp < 0) {
-            insertNode(&((*node)->left), num, counter);
+            insertNode(&((*node)->left), &(*previous), num, counter, capacityCounter);
         } else {
-            insertNode(&((*node)->right), num, counter);
+            insertNode(&((*node)->right), &(*previous), num, counter, capacityCounter);
         }
     }
 }
@@ -436,13 +440,8 @@ static IntSetNode createNode(int num) {
 }
 
 static bool isCapacityFull(IntSet set) {
-    int counter = 0;
     int fullCapacity = set->pf->capacity / 8 * 6;
-    for (int i = 0; i < set->pf->capacity; ++i) {
-        if (set->pf->bucket[i] != NULL) ++counter;
-    }
-
-    return counter >= fullCapacity;
+    return set->pf->capacityCounter >= fullCapacity;
 }
 
 static void increaseCapacity(IntSet set) {
@@ -461,7 +460,8 @@ static void increaseCapacity(IntSet set) {
 
     for (int i = 0; i < count; ++i) {
         int indexBucket = (int) (hashCode(arr[i]) % set->pf->capacity);
-        insertNode(&set->pf->bucket[indexBucket], arr[i], &set->pf->count);
+        NodeSetInt* previous = set->pf->bucket[indexBucket];
+        insertNode(&set->pf->bucket[indexBucket], &previous, arr[i], &set->pf->count, &set->pf->capacityCounter);
     }
 
     deleteNodes(temp, oldCapacity);
@@ -486,7 +486,7 @@ static IntSetNode findNode(IntSetNode* node, IntSetNode* previous) {
     return findNode(&(*node)->right, &(*node));
 }
 
-static void removeNode(IntSetNode* node, IntSetNode* previous, int num, bool* found) {
+static void removeNode(IntSetNode* node, IntSetNode* previous, int num, bool* found, int* capacityCounter) {
     if (*found) return;
 
     if (*node != NULL && *previous != NULL) {
@@ -496,6 +496,7 @@ static void removeNode(IntSetNode* node, IntSetNode* previous, int num, bool* fo
                     IntSetNode temp = *node;
                     *node = NULL;
                     free(temp);
+                    (*capacityCounter)--;
                     *found = true;
                     return;
                 }
@@ -556,8 +557,8 @@ static void removeNode(IntSetNode* node, IntSetNode* previous, int num, bool* fo
                 return;
             }
         } else {
-            removeNode(&(*node)->left, &(*node), num, found);
-            removeNode(&(*node)->right, &(*node), num, found);
+            removeNode(&(*node)->left, &(*node), num, found, capacityCounter);
+            removeNode(&(*node)->right, &(*node), num, found, capacityCounter);
         }
 
         return;

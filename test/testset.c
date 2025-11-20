@@ -181,6 +181,7 @@ static void testIntSet() {
     intSet3->delete(&intSet3);
     strSet3->delete(&strSet3);
 
+    clock_t start = clock();
     printf("Remove all test\n");
     IntSet bigSet = newSet( bigSet, NULL);
     IntSet  bigSet2 = newSet(bigSet2, NULL);
@@ -189,15 +190,19 @@ static void testIntSet() {
         if (i < 25000) continue;
         bigSet2->add(bigSet2, j);
     }
+    clock_t end = clock();
+    double time_spent = (double)(end - start) / 1000;
+    printf("========= Total time filling collections: %lf\n", (double) time_spent);
+
     printf("Collection size, ");
     assertInt( bigSet->size( bigSet), 50000);
     printf("Collection size, ");
     assertInt( bigSet2->size(bigSet2), 25000);
-    clock_t start = clock();
+
     bigSet->removeAll(bigSet, bigSet2->values);
-    clock_t end = clock();
-    double time_spent = (double)(end - start) / 1000000;
-    printf("total time for removeAll function: %ld\n", (long) time_spent);
+    end = clock();
+    time_spent = (double)(end - start) / 1000;
+    printf("========= Total time for removeAll function: %lf\n", (double) time_spent);
 
     printf("Collection size after remove all, ");
     assertInt(bigSet->size(bigSet), 25000);

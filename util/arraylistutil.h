@@ -42,6 +42,7 @@ typedef struct NodeSetInt {
 typedef struct InnerIntSet {
     int count;
     int capacity;
+    int capacityCounter;
     struct NodeSetInt** bucket;
 } InnerIntSet;
 
