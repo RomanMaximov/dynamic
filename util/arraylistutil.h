@@ -83,6 +83,7 @@ typedef struct NodeSetDouble {
 typedef struct InnerDoubleSet {
     int count;
     int capacity;
+    int capacityCounter;
     struct NodeSetDouble** bucket;
 } InnerDoubleSet;
 
@@ -95,6 +96,7 @@ typedef struct NodeSetStr {
 typedef struct InnerStrSet {
     int count;
     int capacity;
+    int capacityCounter;
     struct NodeSetStr** bucket;
 } InnerStrSet;
 

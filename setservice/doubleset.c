@@ -25,6 +25,7 @@ typedef struct NodeSetDouble {
 typedef struct InnerDoubleSet {
     int count;
     int capacity;
+    int capacityCounter;
     struct NodeSetDouble** bucket;
 } InnerDoubleSet;
 
@@ -34,15 +35,16 @@ typedef NodeSetDouble* DoubleSetNode;
 // prototypes private funcs
 static DoubleSetNode createNode(double num);
 static int compareDouble(double elem1, double elem2);
-static void insertNode(NodeSetDouble** node, double num, int* counter);
+static void insertNode(NodeSetDouble** node, NodeSetDouble** previous, double num, int* counter, int* capacityCounter);
 static void printInOrder(DoubleSetNode node, int* counter);
 static bool isCapacityFull(DoubleSet set);
 static void increaseCapacity(DoubleSet set);
+static void increaseCapacityForAddAll(DoubleSet set, int newSize);
 static void copyValuesToArr(DoubleSetNode node, double* arr, int* index);
 static void setToArr(DoubleSet set, double* arr);
 static void deleteNodes(NodeSetDouble** buckets, int capacity);
 static void deleteInOrder(DoubleSetNode node);
-static void removeNode(DoubleSetNode* node, DoubleSetNode* previous, double num, bool* found);
+static void removeNode(DoubleSetNode* node, DoubleSetNode* previous, double num, bool* found, int* capacityCounter);
 static DoubleSetNode findNode(DoubleSetNode* node, DoubleSetNode* previous);
 static bool isRoot(DoubleSetNode* node, DoubleSetNode* previous);
 static int hashDouble(double value);
@@ -55,7 +57,8 @@ void addDoubleSet(DoubleSet set, double num) {
         increaseCapacity(set);
 
     int indexBucket = hashDouble(num) % set->pf->capacity;
-    insertNode(&set->pf->bucket[indexBucket], num, &set->pf->count);
+    NodeSetDouble* previous = set->pf->bucket[indexBucket];
+    insertNode(&set->pf->bucket[indexBucket], &previous, num, &set->pf->count, &set->pf->capacityCounter);
 }
 
 void addAllDoubleSet(DoubleSet set, void* source) {
@@ -64,6 +67,7 @@ void addAllDoubleSet(DoubleSet set, void* source) {
     Ctx ctx = (Ctx) source;
     if (ctx->type == DOUBLE_LIST) {
         DoubleList from = (DoubleList) ctx->collection;
+        increaseCapacityForAddAll(set, from->pf->count);
         for (int i = 0; i < from->pf->count; ++i) {
             addDoubleSet(set, from->pf->data[i]);
         }
@@ -72,6 +76,7 @@ void addAllDoubleSet(DoubleSet set, void* source) {
     if (ctx->type == DOUBLE_LL) {
         DoubleLinkedList from = (DoubleLinkedList) ctx->collection;
         DoubleNode current = from->pf->begin;
+        increaseCapacityForAddAll(set, from->pf->count);
         while (current != NULL) {
             addDoubleSet(set, current->data);
             current = current->next;
@@ -82,6 +87,7 @@ void addAllDoubleSet(DoubleSet set, void* source) {
         DoubleSet from = (DoubleSet) ctx->collection;
         double arr[from->pf->count];
         setToArr(from, arr);
+        increaseCapacityForAddAll(set, from->pf->count);
         for (int i = 0; i < from->pf->count; ++i)
             addDoubleSet(set, arr[i]);
     }
@@ -205,7 +211,7 @@ bool removeDoubleSet(DoubleSet set, double num) {
     for (int i = 0; i < set->pf->capacity; ++i) {
         DoubleSetNode previous = set->pf->bucket[i];
         bool found = false;
-        removeNode(&set->pf->bucket[i], &previous, num, &found);
+        removeNode(&set->pf->bucket[i], &previous, num, &found, &set->pf->capacityCounter);
         if (found)
             set->pf->count--;
     }
@@ -220,30 +226,36 @@ bool removeAllDoubleSet(DoubleSet set, void* source) {
     DoubleSet tempList;
 
     if (ctx->type == DOUBLE_LIST) {
-        tempList = subtractDoubleSet(set, (void*) ctx);
+        DoubleList listFrom = (DoubleList) ctx->collection;
+        if (listFrom->pf->count == 0) return true;
+
+        for (int i = 0; i < listFrom->pf->count; ++i) {
+            removeDoubleSet(set, listFrom->pf->data[i]);
+        }
     }
 
     if (ctx->type == DOUBLE_LL) {
-        tempList = subtractDoubleSet(set, (void*) ctx);
+        DoubleLinkedList listFrom = (DoubleLinkedList) ctx->collection;
+        if (listFrom->pf->count == 0) return true;
+
+        DoubleNode current = listFrom->pf->begin;
+        while (current != NULL) {
+            removeDoubleSet(set, current->data);
+            current = current->next;
+        }
     }
 
     if (ctx->type == DOUBLE_SET) {
         DoubleSet setFrom = (DoubleSet) ctx->collection;
-        if (setFrom->pf->count == 0) {
-            return true;
-        }
+        if (setFrom->pf->count == 0) return true;
 
-        DoubleList listFrom = pr_initLd_(listFrom, setFrom->values);
-        for (int i = 0; i < listFrom->pf->count; ++i) {
-            removeDoubleSet(set, listFrom->pf->data[i]);
+        double* arr = malloc(setFrom->pf->count * sizeof(double));
+        setToArr(setFrom, arr);
+        for (int i = 0; i < setFrom->pf->count; ++i) {
+            removeDoubleSet(set, arr[i]);
         }
-        listFrom->delete(&listFrom);
-        return true;
+        free(arr);
     }
-
-    clearDoubleSet(set);
-    set->addAll(set, tempList->values);
-    tempList->delete(&tempList);
 
     return true;
 }
@@ -263,22 +275,22 @@ DoubleSet subtractDoubleSet(DoubleSet set, void* source) {
     DoubleSet tempSet = pr_initSd_(tempSet, NULL);
 
     if (ctx->type == DOUBLE_LIST) {
-        DoubleList list = (DoubleList) ctx->collection;
-        if (list->pf->count == 0) {
+        DoubleList listFrom = (DoubleList) ctx->collection;
+        if (listFrom->pf->count == 0) {
             DoubleSet temp = pr_initSd_(temp, set->values);
             return temp;
         }
 
-        DoubleSet setFrom = pr_initSd_(setFrom, list->values);
-        Iterator iter = iterator(set->values);
-        while (hasNext(iter)) {
-            double num = nextDouble(iter);
-            if (!setFrom->contains(setFrom, num))
-                tempSet->add(tempSet, num);
+        DoubleSet setFrom = pr_initSd_(setFrom, listFrom->values);
+        double* arr = malloc(set->pf->count * sizeof(double));
+        setToArr(set, arr);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, arr[i]))
+                tempSet->add(tempSet, arr[i]);
         }
 
         setFrom->delete(&setFrom);
-        deleteItr(&iter);
+        free(arr);
     }
 
     if (ctx->type == DOUBLE_LL) {
@@ -289,15 +301,15 @@ DoubleSet subtractDoubleSet(DoubleSet set, void* source) {
         }
 
         DoubleSet setFrom = pr_initSd_(setFrom, list->values);
-        Iterator iter = iterator(set->values);
-        while (hasNext(iter)) {
-            double num = nextDouble(iter);
-            if (!setFrom->contains(setFrom, num))
-                tempSet->add(tempSet, num);
+        double* arr = malloc(set->pf->count * sizeof(double));
+        setToArr(set, arr);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, arr[i]))
+                tempSet->add(tempSet, arr[i]);
         }
 
         setFrom->delete(&setFrom);
-        deleteItr(&iter);
+        free(arr);
     }
 
     if (ctx->type == DOUBLE_SET) {
@@ -307,14 +319,14 @@ DoubleSet subtractDoubleSet(DoubleSet set, void* source) {
             return temp;
         }
 
-        Iterator iter = iterator(set->values);
-        while (hasNext(iter)) {
-            double num = nextDouble(iter);
-            if (!setFrom->contains(setFrom, num))
-                tempSet->add(tempSet, num);
+        double* arr = malloc(set->pf->count * sizeof(double));
+        setToArr(set, arr);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, arr[i]))
+                tempSet->add(tempSet, arr[i]);
         }
 
-        deleteItr(&iter);
+        free(arr);
     }
 
     return tempSet;
@@ -410,21 +422,52 @@ static void increaseCapacity(DoubleSet set) {
 
     set->pf->capacity *= 2;
     set->pf->count = 0;
+    set->pf->capacityCounter = 0;
     set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
 
     for (int i = 0; i < count; ++i) {
         int indexBucket = hashDouble(arr[i]) % set->pf->capacity;
-        insertNode(&set->pf->bucket[indexBucket], arr[i], &set->pf->count);
+        NodeSetDouble* previous = set->pf->bucket[indexBucket];
+        insertNode(&set->pf->bucket[indexBucket], &previous, arr[i], &set->pf->count, &set->pf->capacityCounter);
     }
 
     deleteNodes(temp, oldCapacity);
     free(temp);
 }
 
-static void insertNode(NodeSetDouble** node, double num, int* counter) {
+static void increaseCapacityForAddAll(DoubleSet set, int newSize) {
+    if (newSize < (set->pf->capacity - set->pf->capacityCounter)) return;
+
+    int oldCapacity = set->pf->capacity;
+    int count = set->pf->count;
+    NodeSetDouble** temp = set->pf->bucket;
+
+    double* arr = malloc(count * sizeof(double));
+    setToArr(set, arr);
+
+    set->pf->capacity *= 2;
+    set->pf->count = 0;
+    set->pf->capacityCounter = 0;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
+
+    for (int i = 0; i < count; ++i) {
+        int indexBucket = hashDouble(arr[i]) % set->pf->capacity;
+        NodeSetDouble* previous = set->pf->bucket[indexBucket];
+        insertNode(&set->pf->bucket[indexBucket], &previous, arr[i], &set->pf->count, &set->pf->capacityCounter);
+    }
+
+    deleteNodes(temp, oldCapacity);
+    free(arr);
+    free(temp);
+}
+
+static void insertNode(NodeSetDouble** node, NodeSetDouble** previous, double num, int* counter, int* capacityCounter) {
     if (*node == NULL) {
+        if (*node == NULL && *previous == NULL) (*capacityCounter)++;
         *node = createNode(num);
         (*counter)++;
     } else {
@@ -432,9 +475,9 @@ static void insertNode(NodeSetDouble** node, double num, int* counter) {
         if (cmp == 0) {
             return;
         } else if (cmp < 0) {
-            insertNode(&((*node)->left), num, counter);
+            insertNode(&((*node)->left), &(*previous), num, counter, capacityCounter);
         } else {
-            insertNode(&((*node)->right), num, counter);
+            insertNode(&((*node)->right), &(*previous), num, counter, capacityCounter);
         }
     }
 }
@@ -502,7 +545,7 @@ static bool isRoot(DoubleSetNode* node, DoubleSetNode* previous) {
     return (*node)->data == (*previous)->data;
 }
 
-static void removeNode(DoubleSetNode* node, DoubleSetNode* previous, double num, bool* found) {
+static void removeNode(DoubleSetNode* node, DoubleSetNode* previous, double num, bool* found, int* capacityCounter) {
     if (*found) return;
 
     if (*node != NULL && *previous != NULL) {
@@ -512,6 +555,7 @@ static void removeNode(DoubleSetNode* node, DoubleSetNode* previous, double num,
                     DoubleSetNode temp = *node;
                     *node = NULL;
                     free(temp);
+                    (*capacityCounter)--;
                     *found = true;
                     return;
                 }
@@ -572,8 +616,8 @@ static void removeNode(DoubleSetNode* node, DoubleSetNode* previous, double num,
                 return;
             }
         } else {
-            removeNode(&(*node)->left, &(*node), num, found);
-            removeNode(&(*node)->right, &(*node), num, found);
+            removeNode(&(*node)->left, &(*node), num, found, capacityCounter);
+            removeNode(&(*node)->right, &(*node), num, found, capacityCounter);
         }
 
         return;

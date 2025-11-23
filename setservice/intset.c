@@ -485,7 +485,7 @@ static void increaseCapacityForAddAll(IntSet set, int newSize) {
     int count = set->pf->count;
     NodeSetInt** temp = set->pf->bucket;
 
-    int arr[count];
+    int* arr = malloc(count * sizeof(int));
     setToArr(set, arr);
 
     set->pf->capacity = (int)(set->pf->capacity + newSize + (newSize * 0.5));
@@ -502,6 +502,7 @@ static void increaseCapacityForAddAll(IntSet set, int newSize) {
     }
 
     deleteNodes(temp, oldCapacity);
+    free(arr);
     free(temp);
 }
 
