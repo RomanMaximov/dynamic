@@ -81,11 +81,14 @@ void addAllIntSet(IntSet set, void* source) {
 
     if (ctx->type == INT_SET) {
         IntSet from = (IntSet) ctx->collection;
-        int arr[from->pf->count];
+        int* arr = malloc(from->pf->count * sizeof(int));
         setToArr(from, arr);
         increaseCapacityForAddAll(set, from->pf->count);
-        for (int i = 0; i < from->pf->count; ++i)
+        for (int i = 0; i < from->pf->count; ++i) {
             addIntSet(set, arr[i]);
+        }
+
+        free(arr);
     }
 }
 

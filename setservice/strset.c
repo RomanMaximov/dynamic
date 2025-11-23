@@ -462,7 +462,7 @@ static void increaseCapacityForAddAll(StrSet set, int newSize) {
     StrList list = pr_initLs_(list, NULL);
     setToArr(set, list);
 
-    set->pf->capacity *= 2;
+    set->pf->capacity = (int)(set->pf->capacity + newSize + (newSize * 0.5));
     set->pf->count = 0;
     set->pf->capacityCounter = 0;
     set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetStr*));
