@@ -1,0 +1,14 @@
+{"timestamp":"2025.05.02T12:05:23", "message":"Response: code = 200, description = OK"}
+[Fri May 02 12:05:23 2025] C:/C/C projects/DynamicCollection/main.c:41 (main) | error: intList is NULL
+{"timestamp":"2025.05.02T12:07:15", "message":"Response: code = 200, description = OK"}
+[Fri May 02 12:07:15 2025] C:/C/C projects/DynamicCollection/main.c:41 (main) | error: intList is NULL
+{"timestamp":"2025.05.02T12:08:05", "message":"Response: code = 200, description = OK"}
+[Fri May 02 12:08:05 2025] C:/C/C projects/DynamicCollection/main.c:41 (main) | error: intList is NULL
+{"timestamp":"2025.05.02T12:08:29", "message":"Response: code = 200, description = OK"}
+[Fri May 02 12:08:29 2025] C:/C/C projects/DynamicCollection/main.c:41 (main) | error: intList is NULL
+{"timestamp":"2025.05.11T09:59:50", "message":"Response: code = 200, description = OK"}
+[Sun May 11 09:59:50 2025] C:/C/C projects/DynamicCollection/main.c:39 (main) | error: intList is NULL
+{"timestamp":"2025.05.11T10:00:39", "message":"Response: code = 200, description = OK"}
+[Sun May 11 10:00:39 2025] C:/C/C projects/DynamicCollection/main.c:39 (main) | error: intList is NULL
+{"timestamp":"2025.05.18T14:45:27", "message":"Response: code = 200, description = OK"}
+[Sun May 18 14:45:27 2025] C:/C/C projects/DynamicCollection/main.c:39 (main) | error: intList is NULL
