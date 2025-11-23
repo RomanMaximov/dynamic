@@ -186,7 +186,7 @@ static void testIntSet() {
     IntSet bigSet = newSet( bigSet, NULL);
     IntSet  bigSet2 = newSet(bigSet2, NULL);
     for (int i = 0, j = 0; i < 50000; ++i, ++j) {
-        bigSet->add( bigSet, i);
+        bigSet->add(bigSet, i);
         if (i < 25000) continue;
         bigSet2->add(bigSet2, j);
     }
@@ -195,7 +195,7 @@ static void testIntSet() {
     printf("========= Total time filling collections: %lf\n", (double) time_spent);
 
     printf("Collection size, ");
-    assertInt( bigSet->size( bigSet), 50000);
+    assertInt( bigSet->size(bigSet), 50000);
     printf("Collection size, ");
     assertInt( bigSet2->size(bigSet2), 25000);
 
@@ -215,8 +215,27 @@ static void testIntSet() {
     if (!isContains)
         assertInt(1, 1);
 
+    
+    IntSet bigSet3 = newSet(bigSet3, NULL);
+    IntSet bigSet4 = newSet(bigSet4, NULL);
+
+    for (int i = 0, j = 50000; i < 50000; ++i, ++j) {
+        bigSet4->add(bigSet4, i);
+        if (j >= 50010) continue;
+        bigSet3->add(bigSet3, j);
+    }
+    start = clock();
+    bigSet3->addAll(bigSet3, bigSet4->values);
+    end = clock();
+    time_spent = (double)(end - start) / 1000;
+    printf("========= Total time for addAll function: %lf\n", (double) time_spent);
+    printf("Collection size after add all, ");
+    assertInt( bigSet3->size(bigSet3), 50010);
+
     bigSet->delete(&bigSet);
     bigSet2->delete(&bigSet2);
+    bigSet3->delete(&bigSet3);
+    bigSet4->delete(&bigSet4);
 }
 
 static void testDoubleSet() {

@@ -85,7 +85,6 @@ typedef String* string;
 
 // func prototypes
 IntSet pr_initSi_(IntSet, void*);
-IntSet newSetCap(IntSet, int);
 DoubleSet pr_initSd_(DoubleSet, void*);
 StrSet pr_initSs_(StrSet, void*);
 

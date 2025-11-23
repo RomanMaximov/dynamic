@@ -24,6 +24,8 @@ static int* increaseCapacity(IntList list);
 static int* increaseCapacityAddAll(IntList list, int size);
 static int compareInt(const void* elem1, const void* elem2);
 static int compareReverse(const void* elem1, const void* elem2);
+static void llToArrInt(IntLinkedList from, int* arr);
+static void arrAddition(IntList dest, int fromCount, int* arr);
 
 
 void addIntList(IntList list, int num) {
@@ -46,38 +48,22 @@ void addAllIntList(IntList dest, void* source) {
 
     if (ctx->type == INT_LIST) {
         IntList from = (IntList) ctx->collection;
-        if (dest->pf->capacity <= from->pf->count + dest->pf->count) {
-            dest->pf->data = increaseCapacityAddAll(dest, from->pf->count);
-            memcpy(&dest->pf->data[dest->pf->count], from->pf->data, sizeof(int) * from->pf->count);
-            dest->pf->count += from->pf->count;
-        } else {
-            memcpy(&dest->pf->data[dest->pf->count], from->pf->data, sizeof(int) * from->pf->count);
-            dest->pf->count += from->pf->count;
-        }
+        arrAddition(dest, from->pf->count, from->pf->data);
     }
 
     if (ctx->type == INT_LL) {
         IntLinkedList from = (IntLinkedList) ctx->collection;
-        IntNode current = from->pf->begin;
-        while (current != NULL) {
-            addIntList(dest, current->data);
-            current = current->next;
-        }
+        int* arr = malloc(from->pf->count * sizeof(int));
+        llToArrInt(from, arr);
+        arrAddition(dest, from->pf->count, arr);
+        free(arr);
     }
 
     if (ctx->type == INT_SET) {
         IntSet fromSet = (IntSet) ctx->collection;
         int* arr = malloc(fromSet->pf->count * sizeof(int));
         setToArrInt(fromSet, arr);
-        if (dest->pf->capacity <= fromSet->pf->count + dest->pf->count) {
-            dest->pf->data = increaseCapacityAddAll(dest, fromSet->pf->count);
-            memcpy(&dest->pf->data[dest->pf->count], arr, fromSet->pf->count * sizeof(int));
-            dest->pf->count += fromSet->pf->count;
-        } else {
-            memcpy(&dest->pf->data[dest->pf->count], arr, fromSet->pf->count * sizeof(int));
-            dest->pf->count += fromSet->pf->count;
-        }
-
+        arrAddition(dest, fromSet->pf->count, arr);
         free(arr);
     }
 }
@@ -510,4 +496,24 @@ static int compareInt(const void* elem1, const void* elem2) {
 
 static int compareReverse(const void* elem1, const void* elem2) {
     return (*(int*)elem2 - *(int*)elem1);
+}
+
+static void llToArrInt(IntLinkedList from, int* arr) {
+    IntNode current = from->pf->begin;
+    int index = 0;
+    while (current != NULL) {
+        arr[index++] = current->data;
+        current = current->next;
+    }
+}
+
+static void arrAddition(IntList dest, int fromCount, int* arr) {
+    if (dest->pf->capacity <= fromCount + dest->pf->count) {
+        dest->pf->data = increaseCapacityAddAll(dest, fromCount);
+        memcpy(&dest->pf->data[dest->pf->count], arr, fromCount * sizeof(int));
+        dest->pf->count += fromCount;
+    } else {
+        memcpy(&dest->pf->data[dest->pf->count], arr, fromCount * sizeof(int));
+        dest->pf->count += fromCount;
+    }
 }

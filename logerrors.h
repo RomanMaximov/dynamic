@@ -11,6 +11,7 @@
 #include <errno.h>
 #include <string.h>
 #include <time.h>
+#include <stdarg.h>
 
 #define LOG_ERROR(msg) logError(__FILE__, __func__, __LINE__, msg)
 #define LOG_INFO(fmt, ...) logInfo(__func__, fmt, ##__VA_ARGS__)

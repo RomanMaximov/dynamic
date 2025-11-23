@@ -107,25 +107,6 @@ IntSet pr_initSi_(IntSet temp, void* collection) {
     return set;
 }
 
-IntSet newSetCap(IntSet temp, int capacity) {
-    IntSet set = malloc(sizeof(SetInt));
-    set->pf = malloc(sizeof(InnerIntSet));
-    set->pf->count = 0;
-    set->pf->capacity = capacity;
-    set->pf->capacityCounter = 0;
-    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetInt*));
-
-    initFuncs(INT_SET, (void*)set);
-
-    Ctx ctx = malloc(sizeof(Context));
-    ctx->type = INT_SET;
-    ctx->collection = (void*) set;
-
-    set->values = (void*) ctx;
-
-    return set;
-}
-
 IntSet pr_initSi_so_(IntSet temp, int paramCount, ...) {
     IntSet set = malloc(sizeof(SetInt));
     set->pf = malloc(sizeof(InnerIntSet));

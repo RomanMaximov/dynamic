@@ -36,6 +36,7 @@ static void printInOrder(IntSetNode node, int* counter);
 static bool isCapacityFull(IntSet set);
 static unsigned long long hashCode(int key);
 static void increaseCapacity(IntSet set);
+static void increaseCapacityForAddAll(IntSet set, int newSize);
 static void copyValuesToArr(IntSetNode node, int* arr, int* index);
 static void setToArr(IntSet set, int* arr);
 static void deleteNodes(NodeSetInt** buckets, int capacity);
@@ -62,6 +63,7 @@ void addAllIntSet(IntSet set, void* source) {
     Ctx ctx = (Ctx) source;
     if (ctx->type == INT_LIST) {
         IntList from = (IntList) ctx->collection;
+        increaseCapacityForAddAll(set, from->pf->count);
         for (int i = 0; i < from->pf->count; ++i) {
             addIntSet(set, from->pf->data[i]);
         }
@@ -70,6 +72,7 @@ void addAllIntSet(IntSet set, void* source) {
     if (ctx->type == INT_LL) {
         IntLinkedList from = (IntLinkedList) ctx->collection;
         IntNode current = from->pf->begin;
+        increaseCapacityForAddAll(set, from->pf->count);
         while (current != NULL) {
             addIntSet(set, current->data);
             current = current->next;
@@ -80,6 +83,7 @@ void addAllIntSet(IntSet set, void* source) {
         IntSet from = (IntSet) ctx->collection;
         int arr[from->pf->count];
         setToArr(from, arr);
+        increaseCapacityForAddAll(set, from->pf->count);
         for (int i = 0; i < from->pf->count; ++i)
             addIntSet(set, arr[i]);
     }
@@ -219,33 +223,38 @@ bool removeAllIntSet(IntSet set, void* source) {
     if (set == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
-    IntSet tempList;
 
     if (ctx->type == INT_LIST) {
-        tempList = subtractIntSet(set, (void*) ctx);
+        IntList listFrom = (IntList) ctx->collection;
+        if (listFrom->pf->count == 0) return true;
+
+        for (int i = 0; i < listFrom->pf->count; ++i) {
+            removeIntSet(set, listFrom->pf->data[i]);
+        }
     }
 
     if (ctx->type == INT_LL) {
-        tempList = subtractIntSet(set, (void*) ctx);
+        IntLinkedList listFrom = (IntLinkedList) ctx->collection;
+        if (listFrom->pf->count == 0) return true;
+
+        IntNode current = listFrom->pf->begin;
+        while (current != NULL) {
+            removeIntSet(set, current->data);
+            current = current->next;
+        }
     }
 
     if (ctx->type == INT_SET) {
         IntSet setFrom = (IntSet) ctx->collection;
-        if (setFrom->pf->count == 0) {
-            return true;
-        }
+        if (setFrom->pf->count == 0) return true;
 
-        IntList listFrom = pr_initLi_(listFrom, setFrom->values);
-        for (int i = 0; i < listFrom->pf->count; ++i) {
-            removeIntSet(set, listFrom->pf->data[i]);
+        int* arr = malloc(setFrom->pf->count * sizeof(int));
+        setToArr(setFrom, arr);
+        for (int i = 0; i < setFrom->pf->count; ++i) {
+            removeIntSet(set, arr[i]);
         }
-        listFrom->delete(&listFrom);
-        return true;
+        free(arr);
     }
-
-    clearIntSet(set);
-    set->addAll(set, tempList->values);
-    tempList->delete(&tempList);
 
     return true;
 }
@@ -265,22 +274,22 @@ IntSet subtractIntSet(IntSet set, void* source) {
     IntSet tempSet = pr_initSi_(tempSet, NULL);
 
     if (ctx->type == INT_LIST) {
-        IntList list = (IntList) ctx->collection;
-        if (list->pf->count == 0) {
+        IntList listFrom = (IntList) ctx->collection;
+        if (listFrom->pf->count == 0) {
             IntSet temp = pr_initSi_(temp, set->values);
             return temp;
         }
 
-        IntSet setFrom = pr_initSi_(setFrom, list->values);
-        Iterator iter = iterator(set->values);
-        while (hasNext(iter)) {
-            int num = nextInt(iter);
-            if (!setFrom->contains(setFrom, num))
-                tempSet->add(tempSet, num);
+        IntSet setFrom = pr_initSi_(setFrom, listFrom->values);
+        int* arr = malloc(set->pf->count * sizeof(int));
+        setToArr(set, arr);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, arr[i]))
+                tempSet->add(tempSet, arr[i]);
         }
 
         setFrom->delete(&setFrom);
-        deleteItr(&iter);
+        free(arr);
     }
 
     if (ctx->type == INT_LL) {
@@ -291,15 +300,15 @@ IntSet subtractIntSet(IntSet set, void* source) {
         }
 
         IntSet setFrom = pr_initSi_(setFrom, list->values);
-        Iterator iter = iterator(set->values);
-        while (hasNext(iter)) {
-            int num = nextInt(iter);
-            if (!setFrom->contains(setFrom, num))
-                tempSet->add(tempSet, num);
+        int* arr = malloc(set->pf->count * sizeof(int));
+        setToArr(set, arr);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, arr[i]))
+                tempSet->add(tempSet, arr[i]);
         }
 
         setFrom->delete(&setFrom);
-        deleteItr(&iter);
+        free(arr);
     }
 
     if (ctx->type == INT_SET) {
@@ -309,14 +318,14 @@ IntSet subtractIntSet(IntSet set, void* source) {
             return temp;
         }
 
-        Iterator iter = iterator(set->values);
-        while (hasNext(iter)) {
-            int num = nextInt(iter);
-            if (!setFrom->contains(setFrom, num))
-                tempSet->add(tempSet, num);
+        int* arr = malloc(set->pf->count * sizeof(int));
+        setToArr(set, arr);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, arr[i]))
+                tempSet->add(tempSet, arr[i]);
         }
 
-        deleteItr(&iter);
+        free(arr);
     }
 
     return tempSet;
@@ -454,6 +463,34 @@ static void increaseCapacity(IntSet set) {
 
     set->pf->capacity *= 2;
     set->pf->count = 0;
+    set->pf->capacityCounter = 0;
+    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
+    for (int i = 0; i < set->pf->capacity; ++i)
+        set->pf->bucket[i] = NULL;
+
+    for (int i = 0; i < count; ++i) {
+        int indexBucket = (int) (hashCode(arr[i]) % set->pf->capacity);
+        NodeSetInt* previous = set->pf->bucket[indexBucket];
+        insertNode(&set->pf->bucket[indexBucket], &previous, arr[i], &set->pf->count, &set->pf->capacityCounter);
+    }
+
+    deleteNodes(temp, oldCapacity);
+    free(temp);
+}
+
+static void increaseCapacityForAddAll(IntSet set, int newSize) {
+    if (newSize < (set->pf->capacity - set->pf->capacityCounter)) return;
+
+    int oldCapacity = set->pf->capacity;
+    int count = set->pf->count;
+    NodeSetInt** temp = set->pf->bucket;
+
+    int arr[count];
+    setToArr(set, arr);
+
+    set->pf->capacity = (int)(set->pf->capacity + newSize + (newSize * 0.5));
+    set->pf->count = 0;
+    set->pf->capacityCounter = 0;
     set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
     for (int i = 0; i < set->pf->capacity; ++i)
         set->pf->bucket[i] = NULL;
