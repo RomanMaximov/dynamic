@@ -98,9 +98,7 @@ void clearIntSet(IntSet set) {
     set->pf->count = 0;
     set->pf->capacity = 64;
     set->pf->capacityCounter = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetInt*));
 }
 
 bool containsIntSet(IntSet set, int num) {
@@ -253,6 +251,7 @@ bool removeAllIntSet(IntSet set, void* source) {
         for (int i = 0; i < setFrom->pf->count; ++i) {
             removeIntSet(set, arr[i]);
         }
+
         free(arr);
     }
 
@@ -464,9 +463,7 @@ static void increaseCapacity(IntSet set) {
     set->pf->capacity *= 2;
     set->pf->count = 0;
     set->pf->capacityCounter = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetInt*));
 
     for (int i = 0; i < count; ++i) {
         int indexBucket = (int) (hashCode(arr[i]) % set->pf->capacity);
@@ -491,9 +488,7 @@ static void increaseCapacityForAddAll(IntSet set, int newSize) {
     set->pf->capacity = (int)(set->pf->capacity + newSize + (newSize * 0.5));
     set->pf->count = 0;
     set->pf->capacityCounter = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetInt*));
 
     for (int i = 0; i < count; ++i) {
         int indexBucket = (int) (hashCode(arr[i]) % set->pf->capacity);

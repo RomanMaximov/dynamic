@@ -101,9 +101,7 @@ void clearDoubleSet(DoubleSet set) {
 
     set->pf->count = 0;
     set->pf->capacity = 16;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetDouble*));
 }
 
 bool containsDoubleSet(DoubleSet set, double num) {
@@ -403,13 +401,8 @@ void deleteDoubleSet(DoubleSet* set) {
 // ===================== private funcs =======================
 
 static bool isCapacityFull(DoubleSet set) {
-    int counter = 0;
     int fullCapacity = set->pf->capacity / 8 * 6;
-    for (int i = 0; i < set->pf->capacity; ++i) {
-        if (set->pf->bucket[i] != NULL) ++counter;
-    }
-
-    return counter >= fullCapacity;
+    return set->pf->capacityCounter >= fullCapacity;
 }
 
 static void increaseCapacity(DoubleSet set) {
@@ -423,9 +416,7 @@ static void increaseCapacity(DoubleSet set) {
     set->pf->capacity *= 2;
     set->pf->count = 0;
     set->pf->capacityCounter = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetDouble*));
 
     for (int i = 0; i < count; ++i) {
         int indexBucket = hashDouble(arr[i]) % set->pf->capacity;
@@ -450,9 +441,7 @@ static void increaseCapacityForAddAll(DoubleSet set, int newSize) {
     set->pf->capacity *= 2;
     set->pf->count = 0;
     set->pf->capacityCounter = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetDouble*));
 
     for (int i = 0; i < count; ++i) {
         int indexBucket = hashDouble(arr[i]) % set->pf->capacity;

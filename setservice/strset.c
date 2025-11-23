@@ -21,6 +21,7 @@ typedef struct NodeSetStr {
 typedef struct InnerStrSet {
     int count;
     int capacity;
+    int capacityCounter;
     struct NodeSetStr** bucket;
 } InnerStrSet;
 
@@ -41,16 +42,17 @@ static StrSetNode createNode(char* s);
 static int hashString(const char* str);
 static int compareCharStr(char* s1, char* s2);
 static int compareStr(string s1, string s2);
-static void insertNode(NodeSetStr** node, char* s, int* counter);
+static void insertNode(NodeSetStr** node, NodeSetStr** previous, char* s, int* counter, int* capacityCounter);
 static void printInOrder(StrSetNode node, int* counter);
 static bool isCapacityFull(StrSet set);
 static void increaseCapacity(StrSet set);
+static void increaseCapacityForAddAll(StrSet set, int newSize);
 static void copyValuesToList(StrSetNode node, StrList list);
 static void setToArr(StrSet set, StrList list);
 static void deleteNodes(NodeSetStr** buckets, int capacity);
 static void deleteInOrder(StrSetNode node);
 static void quickSortStr(String** strList, int low, int high);
-static void removeNode(StrSetNode* node, StrSetNode* previous, string s, bool* found);
+static void removeNode(StrSetNode* node, StrSetNode* previous, string s, bool* found, int* capacityCounter);
 static StrSetNode findNode(StrSetNode* node, StrSetNode* previous);
 static bool isRoot(StrSetNode* node, StrSetNode* previous);
 static void toStringInOrder(StrSetNode node, int* counter, char* text, int* count);
@@ -65,7 +67,8 @@ void addStrSet(StrSet set, string s) {
         increaseCapacity(set);
 
     int indexBucket = (hashString(s->pf->data) & 0x7FFFFFFF) % set->pf->capacity;
-    insertNode(&set->pf->bucket[indexBucket], s->pf->data, &set->pf->count);
+    NodeSetStr* previous = set->pf->bucket[indexBucket];
+    insertNode(&set->pf->bucket[indexBucket], &previous, s->pf->data, &set->pf->count, &set->pf->capacityCounter);
 }
 
 void addCharArrSet(StrSet set, char* s) {
@@ -73,7 +76,8 @@ void addCharArrSet(StrSet set, char* s) {
         increaseCapacity(set);
 
     int indexBucket = (hashString(s) & 0x7FFFFFFF) % set->pf->capacity;
-    insertNode(&set->pf->bucket[indexBucket], s, &set->pf->count);
+    NodeSetStr* previous = set->pf->bucket[indexBucket];
+    insertNode(&set->pf->bucket[indexBucket], &previous, s, &set->pf->count, &set->pf->capacityCounter);
 }
 
 void addAllStrSet(StrSet set, void* source) {
@@ -82,6 +86,7 @@ void addAllStrSet(StrSet set, void* source) {
     Ctx ctx = (Ctx) source;
     if (ctx->type == STR_LIST) {
         StrList from = (StrList) ctx->collection;
+        increaseCapacityForAddAll(set, from->pf->count);
         for (int i = 0; i < from->pf->count; ++i) {
             addStrSet(set, from->pf->data[i]);
         }
@@ -90,6 +95,7 @@ void addAllStrSet(StrSet set, void* source) {
     if (ctx->type == STR_LL) {
         StrLinkedList from = (StrLinkedList) ctx->collection;
         StrNode current = from->pf->begin;
+        increaseCapacityForAddAll(set, from->pf->count);
         while (current != NULL) {
             addStrSet(set, current->data);
             current = current->next;
@@ -98,11 +104,13 @@ void addAllStrSet(StrSet set, void* source) {
 
     if (ctx->type == STR_SET) {
         StrSet from = (StrSet) ctx->collection;
-        Iterator iter = iterator(from->values);
-        while (hasNext(iter)) {
-            addStrSet(set, nextStr(iter));
+        StrList list = pr_initLs_(list, from->values);
+        setToArr(set, list);
+        increaseCapacityForAddAll(set, from->pf->count);
+        for (int i = 0; i < from->pf->count; ++i) {
+            addStrSet(set, list->pf->data[i]);
         }
-        deleteItr(&iter);
+        list->delete(&list);
     }
 }
 
@@ -114,9 +122,7 @@ void clearStrSet(StrSet set) {
 
     set->pf->count = 0;
     set->pf->capacity = 16;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetStr*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetStr*));
 }
 
 bool containsStrSet(StrSet set, string s) {
@@ -226,7 +232,7 @@ bool removeStrSet(StrSet set, string s) {
     for (int i = 0; i < set->pf->capacity; ++i) {
         StrSetNode previous = set->pf->bucket[i];
         bool found = false;
-        removeNode(&set->pf->bucket[i], &previous, s, &found);
+        removeNode(&set->pf->bucket[i], &previous, s, &found, &set->pf->capacityCounter);
         if (found)
             set->pf->count--;
     }
@@ -238,33 +244,39 @@ bool removeAllStrSet(StrSet set, void* source) {
     if (set == NULL || source == NULL) return false;
 
     Ctx ctx = (Ctx) source;
-    StrSet tempList;
 
     if (ctx->type == STR_LIST) {
-        tempList = subtractStrSet(set, (void*) ctx);
+        StrList listFrom = (StrList) ctx->collection;
+        if (listFrom->pf->count == 0) return true;
+
+        for (int i = 0; i < listFrom->pf->count; ++i) {
+            removeStrSet(set, listFrom->pf->data[i]);
+        }
     }
 
     if (ctx->type == STR_LL) {
-        tempList = subtractStrSet(set, (void*) ctx);
+        //tempList = subtractStrSet(set, (void*) ctx);
+        StrLinkedList listFrom = (StrLinkedList) ctx->collection;
+        if (listFrom->pf->count == 0) return true;
+
+        StrNode current = listFrom->pf->begin;
+        while (current != NULL) {
+            removeStrSet(set, current->data);
+            current = current->next;
+        }
     }
 
     if (ctx->type == STR_SET) {
         StrSet setFrom = (StrSet) ctx->collection;
-        if (setFrom->pf->count == 0) {
-            return true;
-        }
+        if (setFrom->pf->count == 0) return true;
 
         StrList listFrom = pr_initLs_(listFrom, setFrom->values);
         for (int i = 0; i < listFrom->pf->count; ++i) {
             removeStrSet(set, listFrom->pf->data[i]);
         }
-        listFrom->delete(&listFrom);
-        return true;
-    }
 
-    clearStrSet(set);
-    set->addAll(set, tempList->values);
-    tempList->delete(&tempList);
+        listFrom->delete(&listFrom);
+    }
 
     return true;
 }
@@ -291,15 +303,15 @@ StrSet subtractStrSet(StrSet set, void* source) {
         }
 
         StrSet setFrom = pr_initSs_(setFrom, list->values);
-        Iterator iter = iterator(set->values);
-        while (hasNext(iter)) {
-            string s = nextStr(iter);
-            if (!setFrom->contains(setFrom, s))
-                tempSet->addStr(tempSet, s);
+        StrList listFrom = pr_initLs_(listFrom, NULL);
+        setToArr(set, listFrom);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, listFrom->pf->data[i]))
+                tempSet->addStr(tempSet, listFrom->pf->data[i]);
         }
 
         setFrom->delete(&setFrom);
-        deleteItr(&iter);
+        listFrom->delete(&listFrom);
     }
 
     if (ctx->type == STR_LL) {
@@ -310,15 +322,15 @@ StrSet subtractStrSet(StrSet set, void* source) {
         }
 
         StrSet setFrom = pr_initSs_(setFrom, list->values);
-        Iterator iter = iterator(set->values);
-        while (hasNext(iter)) {
-            string s = nextStr(iter);
-            if (!setFrom->contains(setFrom, s))
-                tempSet->addStr(tempSet, s);
+        StrList listFrom = pr_initLs_(listFrom, NULL);
+        setToArr(set, listFrom);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, listFrom->pf->data[i]))
+                tempSet->addStr(tempSet, listFrom->pf->data[i]);
         }
 
         setFrom->delete(&setFrom);
-        deleteItr(&iter);
+        listFrom->delete(&listFrom);
     }
 
     if (ctx->type == STR_SET) {
@@ -328,14 +340,14 @@ StrSet subtractStrSet(StrSet set, void* source) {
             return temp;
         }
 
-        Iterator iter = iterator(set->values);
-        while (hasNext(iter)) {
-            string s = nextStr(iter);
-            if (!setFrom->contains(setFrom, s))
-                tempSet->addStr(tempSet, s);
+        StrList listFrom = pr_initLs_(listFrom, NULL);
+        setToArr(set, listFrom);
+        for (int i = 0; i < set->pf->count; ++i) {
+            if (!setFrom->contains(setFrom, listFrom->pf->data[i]))
+                tempSet->addStr(tempSet, listFrom->pf->data[i]);
         }
 
-        deleteItr(&iter);
+        listFrom->delete(&listFrom);
     }
 
     return tempSet;
@@ -412,13 +424,8 @@ void deleteStrSet(StrSet* set) {
 // ===================== private funcs =======================
 
 static bool isCapacityFull(StrSet set) {
-    int counter = 0;
     int fullCapacity = set->pf->capacity / 8 * 6;
-    for (int i = 0; i < set->pf->capacity; ++i) {
-        if (set->pf->bucket[i] != NULL) ++counter;
-    }
-
-    return counter >= fullCapacity;
+    return set->pf->capacityCounter >= fullCapacity;
 }
 
 static void increaseCapacity(StrSet set) {
@@ -431,13 +438,39 @@ static void increaseCapacity(StrSet set) {
 
     set->pf->capacity *= 2;
     set->pf->count = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetStr*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->capacityCounter = 0;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetStr*));
 
     for (int i = 0; i < count; ++i) {
         int indexBucket = (hashString(list->pf->data[i]->pf->data) & 0x7FFFFFFF) % set->pf->capacity;
-        insertNode(&set->pf->bucket[indexBucket], list->pf->data[i]->pf->data, &set->pf->count);
+        NodeSetStr* previous = set->pf->bucket[indexBucket];
+        insertNode(&set->pf->bucket[indexBucket], &previous, list->pf->data[i]->pf->data, &set->pf->count, &set->pf->capacityCounter);
+    }
+
+    list->delete(&list);
+    deleteNodes(temp, oldCapacity);
+    free(temp);
+}
+
+static void increaseCapacityForAddAll(StrSet set, int newSize) {
+    if (newSize < (set->pf->capacity - set->pf->capacityCounter)) return;
+
+    int oldCapacity = set->pf->capacity;
+    int count = set->pf->count;
+    NodeSetStr** temp = set->pf->bucket;
+
+    StrList list = pr_initLs_(list, NULL);
+    setToArr(set, list);
+
+    set->pf->capacity *= 2;
+    set->pf->count = 0;
+    set->pf->capacityCounter = 0;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetStr*));
+
+    for (int i = 0; i < count; ++i) {
+        int indexBucket = (hashString(list->pf->data[i]->pf->data) & 0x7FFFFFFF) % set->pf->capacity;
+        NodeSetStr* previous = set->pf->bucket[indexBucket];
+        insertNode(&set->pf->bucket[indexBucket], &previous, list->pf->data[i]->pf->data, &set->pf->count, &set->pf->capacityCounter);
     }
 
     list->delete(&list);
@@ -459,8 +492,9 @@ static void copyValuesToList(StrSetNode node, StrList list) {
     }
 }
 
-static void insertNode(NodeSetStr** node, char* s, int* counter) {
+static void insertNode(NodeSetStr** node, NodeSetStr** previous, char* s, int* counter, int* capacityCounter) {
     if (*node == NULL) {
+        if (*node == NULL && *previous == NULL) (*capacityCounter)++;
         *node = createNode(s);
         (*counter)++;
     } else {
@@ -468,9 +502,9 @@ static void insertNode(NodeSetStr** node, char* s, int* counter) {
         if (cmp == 0) {
             return;
         } else if (cmp < 0) {
-            insertNode(&((*node)->left), s, counter);
+            insertNode(&((*node)->left), &(*previous), s, counter, capacityCounter);
         } else {
-            insertNode(&((*node)->right), s, counter);
+            insertNode(&((*node)->right), &(*previous), s, counter, capacityCounter);
         }
     }
 }
@@ -510,7 +544,7 @@ int compareStr(string s1, string s2) {
     return strcmp(s1->pf->data, s2->pf->data);
 }
 
-static void removeNode(StrSetNode* node, StrSetNode* previous, string s, bool* found) {
+static void removeNode(StrSetNode* node, StrSetNode* previous, string s, bool* found, int* capacityCounter) {
     if (*found) return;
 
     if (*node != NULL && *previous != NULL) {
@@ -521,6 +555,7 @@ static void removeNode(StrSetNode* node, StrSetNode* previous, string s, bool* f
                     *node = NULL;
                     temp->str->delete(&temp->str);
                     free(temp);
+                    (*capacityCounter)--;
                     *found = true;
                     return;
                 }
@@ -585,8 +620,8 @@ static void removeNode(StrSetNode* node, StrSetNode* previous, string s, bool* f
                 return;
             }
         } else {
-            removeNode(&(*node)->left, &(*node), s, found);
-            removeNode(&(*node)->right, &(*node), s, found);
+            removeNode(&(*node)->left, &(*node), s, found, capacityCounter);
+            removeNode(&(*node)->right, &(*node), s, found, capacityCounter);
         }
 
         return;

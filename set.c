@@ -115,9 +115,7 @@ IntSet pr_initSi_so_(IntSet temp, int paramCount, ...) {
     set->pf->count = 0;
     set->pf->capacity = 64;
     set->pf->capacityCounter = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetInt*));
 
     initFuncs(INT_SET, (void*)set);
 
@@ -143,9 +141,7 @@ IntSet pr_initSi_soa_(IntSet temp, int* arr, int size) {
     set->pf->count = 0;
     set->pf->capacity = 64 + size;
     set->pf->capacityCounter = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetInt*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetInt*));
 
     initFuncs(INT_SET, (void*)set);
 
@@ -168,9 +164,7 @@ DoubleSet pr_initSd_(DoubleSet temp, void* collection) {
     set->pf->count = 0;
     set->pf->capacity = 64;
     set->pf->capacityCounter = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetDouble*));
 
     initFuncs(DOUBLE_SET, (void*)set);
 
@@ -192,9 +186,7 @@ DoubleSet pr_initSd_so_(DoubleSet temp, int paramCount, ...) {
     set->pf->count = 0;
     set->pf->capacity = 64;
     set->pf->capacityCounter = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetDouble*));
 
     initFuncs(DOUBLE_SET, (void*)set);
 
@@ -220,9 +212,7 @@ DoubleSet pr_initSd_soa_(DoubleSet temp, double* arr, int size) {
     set->pf->count = 0;
     set->pf->capacity = 64 + size;
     set->pf->capacityCounter = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetDouble*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetDouble*));
 
     initFuncs(DOUBLE_SET, (void*)set);
 
@@ -245,9 +235,7 @@ StrSet pr_initSs_(StrSet temp, void* collection) {
     set->pf->count = 0;
     set->pf->capacity = 64;
     set->pf->capacityCounter = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetStr*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetStr*));
 
     initFuncs(STR_SET, (void*)set);
 
@@ -269,9 +257,7 @@ StrSet pr_initSs_so_(StrSet temp, int paramCount, ...) {
     set->pf->count = 0;
     set->pf->capacity = 64;
     set->pf->capacityCounter = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetStr*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetStr*));
 
     initFuncs(STR_SET, (void*)set);
 
@@ -297,9 +283,7 @@ StrSet pr_initSs_soa_(StrSet temp, char* arr[], int size) {
     set->pf->count = 0;
     set->pf->capacity = 64 + size;
     set->pf->capacityCounter = 0;
-    set->pf->bucket = malloc(set->pf->capacity * sizeof(NodeSetStr*));
-    for (int i = 0; i < set->pf->capacity; ++i)
-        set->pf->bucket[i] = NULL;
+    set->pf->bucket = calloc(set->pf->capacity, sizeof(NodeSetStr*));
 
     initFuncs(STR_SET, (void*)set);
 
