@@ -8,6 +8,8 @@
 #include "../dynamic.h"
 #include "teststring.h"
 
+#include <string.h>
+
 // String data encapsulation
 typedef struct InnerStr {
     int count;

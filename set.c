@@ -69,22 +69,6 @@ typedef String* string;
 
 // prototypes common funcs
 static void initFuncs(Type type, void* data);
-static void* add(Type type);
-static void* addStr();
-static void* addLiteral();
-static void* addAll(Type type);
-static void* clear(Type type);
-static void* contains(Type type);
-static void* containsAll(Type type);
-static void* containsAny(Type type);
-static void* removeElem(Type type);
-static void* removeAll(Type type);
-static void* isEmpty(Type type);
-
-static void* size(Type type);
-static void* toString(Type type);
-static void* print(Type type);
-static void* delete(Type type);
 
 // funcs
 IntSet pr_initSi_(IntSet temp, void* collection) {
@@ -300,211 +284,21 @@ StrSet pr_initSs_soa_(StrSet temp, char* arr[], int size) {
     return set;
 }
 
-
-// common init functions
-static void* add(Type type) {
-    switch (type) {
-        case INT_SET:
-            return addIntSet;
-        case DOUBLE_SET:
-            return addDoubleSet;
-        default:
-            return NULL;
-    }
-}
-
-static void* addStr() {
-    return addStrSet;
-}
-
-static void* addLiteral() {
-    return addCharArrSet;
-}
-
-static void* addAll(Type type) {
-    switch (type) {
-        case INT_SET:
-            return addAllIntSet;
-        case DOUBLE_SET:
-            return addAllDoubleSet;
-        case STR_SET:
-            return addAllStrSet;
-        default:
-            return NULL;
-    }
-}
-
-static void* clear(Type type) {
-    switch (type) {
-        case INT_SET:
-            return clearIntSet;
-        case DOUBLE_SET:
-            return clearDoubleSet;
-        case STR_SET:
-            return clearStrSet;
-        default:
-            return NULL;
-    }
-}
-
-static void* contains(Type type) {
-    switch (type) {
-        case INT_SET:
-            return containsIntSet;
-        case DOUBLE_SET:
-            return containsDoubleSet;
-        case STR_SET:
-            return containsStrSet;
-        default:
-            return NULL;
-    }
-}
-
-static void* containsAll(Type type) {
-    switch (type) {
-        case INT_SET:
-            return containsAllIntSet;
-        case DOUBLE_SET:
-            return containsAllDoubleSet;
-        case STR_SET:
-            return containsAllStrSet;
-        default:
-            return NULL;
-    }
-}
-
-static void* containsAny(Type type) {
-    switch (type) {
-        case INT_SET:
-            return containsAnyIntSet;
-        case DOUBLE_SET:
-            return containsAnyDoubleSet;
-        case STR_SET:
-            return containsAnyStrSet;
-        default:
-            return NULL;
-    }
-}
-
-static void* removeElem(Type type) {
-    switch (type) {
-        case INT_SET:
-            return removeIntSet;
-        case DOUBLE_SET:
-            return removeDoubleSet;
-        case STR_SET:
-            return removeStrSet;
-        default:
-            return NULL;
-    }
-}
-
-static void* removeAll(Type type) {
-    switch (type) {
-        case INT_SET:
-            return removeAllIntSet;
-        case DOUBLE_SET:
-            return removeAllDoubleSet;
-        case STR_SET:
-            return removeAllStrSet;
-        default:
-            return NULL;
-    }
-}
-
-static void* subtract(Type type) {
-    switch (type) {
-        case INT_SET:
-            return subtractIntSet;
-        case DOUBLE_SET:
-            return subtractDoubleSet;
-        case STR_SET:
-            return subtractStrSet;
-        default:
-            return NULL;
-    }
-}
-
-static void* isEmpty(Type type) {
-    switch (type) {
-        case INT_SET:
-            return isEmptyIntSet;
-        case DOUBLE_SET:
-            return isEmptyDoubleSet;
-        case STR_SET:
-            return isEmptyStrSet;
-        default:
-            return NULL;
-    }
-}
-
-static void* size(Type type) {
-    switch (type) {
-        case INT_SET:
-            return sizeIntSet;
-        case DOUBLE_SET:
-            return sizeDoubleSet;
-        case STR_SET:
-            return sizeStrSet;
-        default:
-            return NULL;
-    }
-}
-
-static void* toString(Type type) {
-    switch (type) {
-        case INT_SET:
-            return toStrIntSet;
-        case DOUBLE_SET:
-            return toStrDoubleSet;
-        case STR_SET:
-            return toStrStrSet;
-        default:
-            return NULL;
-    }
-}
-
-static void* print(Type type) {
-    switch (type) {
-        case INT_SET:
-            return printIntSet;
-        case DOUBLE_SET:
-            return printDoubleSet;
-        case STR_SET:
-            return printStrSet;
-        default:
-            return NULL;
-    }
-}
-
-static void* delete(Type type) {
-    switch (type) {
-        case INT_SET:
-            return deleteIntSet;
-        case DOUBLE_SET:
-            return deleteDoubleSet;
-        case STR_SET:
-            return deleteStrSet;
-        default:
-            return NULL;
-    }
-}
-
 static void initFuncs(Type type, void* data) {
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->add = add(type) : type == DOUBLE_SET ? ((DoubleSet) data)->add = add(type) : (((StrSet) data)->addStr = addStr());
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->add = addIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->add = addDoubleSet : (((StrSet) data)->addStr = addStrSet);
     if (type == STR_SET)
-        ((StrSet) data)->addLiteral = addLiteral();
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->addAll = addAll(type) : type == DOUBLE_SET ? ((DoubleSet) data)->addAll = addAll(type) : (((StrSet) data)->addAll = addAll(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->clear = clear(type) : type == DOUBLE_SET ? ((DoubleSet) data)->clear = clear(type) : (((StrSet) data)->clear = clear(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->contains = contains(type) : type == DOUBLE_SET ? ((DoubleSet) data)->contains = contains(type) : (((StrSet) data)->contains = contains(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->containsAll = containsAll(type) : type == DOUBLE_SET ? ((DoubleSet) data)->containsAll = containsAll(type) : (((StrSet) data)->containsAll = containsAll(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->containsAny = containsAny(type) : type == DOUBLE_SET ? ((DoubleSet) data)->containsAny = containsAny(type) : (((StrSet) data)->containsAny = containsAny(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->removeElem = removeElem(type) : type == DOUBLE_SET ? ((DoubleSet) data)->removeElem = removeElem(type) : (((StrSet) data)->removeElem = removeElem(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->removeAll = removeAll(type) : type == DOUBLE_SET ? ((DoubleSet) data)->removeAll = removeAll(type) : (((StrSet) data)->removeAll = removeAll(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->subtract = subtract(type) : type == DOUBLE_SET ? ((DoubleSet) data)->subtract = subtract(type) : (((StrSet) data)->subtract = subtract(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->isEmpty = isEmpty(type) : type == DOUBLE_SET ? ((DoubleSet) data)->isEmpty = isEmpty(type) : (((StrSet) data)->isEmpty = isEmpty(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->size = size(type) : type == DOUBLE_SET ? ((DoubleSet) data)->size = size(type) : (((StrSet) data)->size = size(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->toString = toString(type) : type == DOUBLE_SET ? ((DoubleSet) data)->toString = toString(type) : (((StrSet) data)->toString = toString(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->print = print(type) : type == DOUBLE_SET ? ((DoubleSet) data)->print = print(type) : (((StrSet) data)->print = print(type));
-    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->delete = delete(type) : type == DOUBLE_SET ? ((DoubleSet) data)->delete = delete(type) : (((StrSet) data)->delete = delete(type));
+        ((StrSet) data)->addLiteral = addCharArrSet;
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->addAll = addAllIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->addAll = addAllDoubleSet : (((StrSet) data)->addAll = addAllStrSet);
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->clear = clearIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->clear = clearDoubleSet : (((StrSet) data)->clear = clearStrSet);
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->contains = containsIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->contains = containsDoubleSet : (((StrSet) data)->contains = containsStrSet);
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->containsAll = containsAllIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->containsAll = containsAllDoubleSet : (((StrSet) data)->containsAll = containsAllStrSet);
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->containsAny = containsAnyIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->containsAny = containsAnyDoubleSet : (((StrSet) data)->containsAny = containsAnyStrSet);
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->removeElem = removeIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->removeElem = removeDoubleSet : (((StrSet) data)->removeElem = removeStrSet);
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->removeAll = removeAllIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->removeAll = removeAllDoubleSet : (((StrSet) data)->removeAll = removeAllStrSet);
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->subtract = subtractIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->subtract = subtractDoubleSet : (((StrSet) data)->subtract = subtractStrSet);
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->isEmpty = isEmptyIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->isEmpty = isEmptyDoubleSet : (((StrSet) data)->isEmpty = isEmptyStrSet);
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->size = sizeIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->size = sizeDoubleSet : (((StrSet) data)->size = sizeDoubleSet);
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->toString = toStrIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->toString = toStrDoubleSet : (((StrSet) data)->toString = toStrStrSet);
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->print = printIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->print = printDoubleSet : (((StrSet) data)->print = printStrSet);
+    type != DOUBLE_SET && type != STR_SET ? ((IntSet) data)->delete = deleteIntSet : type == DOUBLE_SET ? ((DoubleSet) data)->delete = deleteDoubleSet : (((StrSet) data)->delete = deleteStrSet);
 }

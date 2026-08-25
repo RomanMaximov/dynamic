@@ -36,9 +36,9 @@ void testLinkedList() {
 // private funcs
 static void assertInt(int result, int expected ) {
     if (result == expected) {
-        printf("test: \t%sOK%s\n", GREEN, RESET);
+        printf("test: ===== OK =====\n");
     } else {
-        printf("test: \t%sFAILURE%s\n", RED, RESET);
+        printf("test: =============================== FAILURE ===============================\n");
         printf("expected: %d, but result: %d\n", expected, result);
         puts("");
     }
@@ -56,9 +56,9 @@ static void assertDouble(double result, double expected) {
 
 static void assertStr(string result, string expected ) {
     if (strcmp(result->pf->data, expected->pf->data) == 0) {
-        printf("test: \t%sOK%s\n", GREEN, RESET);
+        printf("test: ===== OK =====\n");
     } else {
-        printf("test: \t%sFAILURE%s\n", RED, RESET);
+        printf("test: =============================== FAILURE ===============================\n");
         printf("expected: %s, but result: %s\n", expected->pf->data, result->pf->data);
         puts("");
     }

@@ -20,14 +20,6 @@ typedef struct Itr {
     Type type;
 } Itr;
 
-typedef struct ArrayListInt ArrayListInt;
-typedef struct LinkedListInt LinkedListInt;
-typedef struct LinkedListDouble LinkedListDouble;
-typedef struct LinkedListStr LinkedListStr;
-typedef struct String String;
-typedef struct SetInt SetInt;
-typedef struct SetDouble SetDouble;
-typedef struct SetStr SetStr;
 typedef SetInt* IntSet;
 
 typedef ArrayListInt* IntList;

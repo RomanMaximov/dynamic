@@ -51,9 +51,9 @@ int main()
     puts("");*/
 
 
-    //testArrayList();
+    testArrayList();
     //testLinkedList();
-    testSet();
+    //testSet();
     //testString();
 
     return 0;

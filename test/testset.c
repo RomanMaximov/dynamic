@@ -37,9 +37,9 @@ void testSet() {
 // private funcs
 static void assertInt(int result, int expected ) {
     if (result == expected) {
-        printf("test: \t%sOK%s\n", GREEN, RESET);
+        printf("test: ===== OK =====\n");
     } else {
-        printf("test: \t%sFAILURE%s\n", RED, RESET);
+        printf("test: =============================== FAILURE ===============================\n");
         printf("expected: %d, but result: %d\n", expected, result);
         puts("");
     }

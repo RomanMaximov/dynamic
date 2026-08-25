@@ -37,25 +37,6 @@ static void copyInArr(char* dest, int destIndex, char* source, int tempIndex, in
 
 // private prototypes funcs for pointers initialization
 static void initFuncs(string str);
-static void* length();
-static void* concat();
-static void* replace();
-static void* toLowerCase();
-static void* toUpperCase();
-static void* charAt();
-static void* containsSubStr();
-static void* startsWith();
-static void* endsWith();
-static void* reverse();
-static void* indexOf();
-static void* indexOfSubStr();
-static void* split();
-static void* trim();
-static void* isEmpty();
-static void* isBlank();
-static void* getBytes();
-static void* print();
-static void* delete();
 
 
 // funcs
@@ -170,26 +151,24 @@ void replaceStr(string s, char* ch1, char* ch2) {
     s->pf->data[newSize] = '\0';
 }
 
-void* toLowerCaseStr(String* s) {
+void toLowerCaseStr(String* s) {
     if (s == NULL || s->pf->data == NULL) {
         printf("Error: string is empty or null \n");
-        return NULL;
+        return;
     }
 
-    strlwr(s->pf->data);
-
-    return s;
+    for (char *p = s->pf->data; *p; ++p)
+        *p = (char)tolower((unsigned char)*p);
 }
 
-void* toUpperCaseStr(String* s) {
+void toUpperCaseStr(String* s) {
     if (s == NULL || s->pf->data == NULL) {
         printf("Error: string is empty or null \n");
-        return NULL;
+        return;
     }
 
-    strupr(s->pf->data);
-
-    return s;
+    for (char *p = s->pf->data; *p; ++p)
+        *p = (char)toupper((unsigned char)*p);
 }
 
 string join(char* delimeter, int countParams, ...) {
@@ -602,103 +581,25 @@ static void copyInArr(char* dest, int destIndex, char* source, int tempIndex, in
     }
 }
 
-
-// private funcs for pointers initialization
-static void* length() {
-    return lengthStr;
-}
-
-static void* concat() {
-    return concatStr;
-}
-
-static void* replace() {
-    return replaceStr;
-}
-
-static void* toLowerCase() {
-    return toLowerCaseStr;
-}
-
-static void* toUpperCase() {
-    return toUpperCaseStr;
-}
-
-static void* charAt() {
-    return charAtStr;
-}
-
-static void* containsSubStr() {
-    return containsSubString;
-}
-
-static void* startsWith() {
-    return startsWithStr;
-}
-
-static void* endsWith() {
-    return endsWithStr;
-}
-
-static void* reverse() {
-    return reverseStr;
-}
-
-static void* indexOf() {
-    return indexOfStr;
-}
-
-static void* indexOfSubStr() {
-    return indexOfSubString;
-}
-
-static void* split() {
-    return splitStr;
-}
-
-static void* trim() {
-    return trimStr;
-}
-
-static void* isEmpty() {
-    return isEmptyStr;
-}
-
-static void* isBlank() {
-    return isBlankStr;
-}
-
-static void* getBytes() {
-    return getBytesStr;
-}
-
-static void* print() {
-    return printStr;
-}
-
-static void* delete() {
-    return deleteStr;
-}
-
 // funcs pointers initialization
 static void initFuncs(string str) {
-    str->length = length();
-    str->concat = concat();
-    str->replace = replace();
-    str->toLowerCase = toLowerCase();
-    str->toUpperCase = toUpperCase();
-    str->charAt = charAt();
-    str->containsSubStr = containsSubStr();
-    str->startsWith = startsWith();
-    str->endsWith = endsWith();
-    str->reverse = reverse();
-    str->indexOf = indexOf();
-    str->indexOfSubStr = indexOfSubStr();
-    str->split = split();
-    str->trim = trim();
-    str->isEmpty = isEmpty();
-    str->isBlank = isBlank();
-    str->getBytes = getBytes();
-    str->print = print();
-    str->delete = delete();
+    str->length = lengthStr;
+    str->concat = concatStr;
+    str->replace = replaceStr;
+    str->toLowerCase = toLowerCaseStr;
+    str->toUpperCase = toUpperCaseStr;
+    str->charAt = charAtStr;
+    str->containsSubStr = containsSubString;
+    str->startsWith = startsWithStr;
+    str->endsWith = endsWithStr;
+    str->reverse = reverseStr;
+    str->indexOf = indexOfStr;
+    str->indexOfSubStr = indexOfSubString;
+    str->split = splitStr;
+    str->trim = trimStr;
+    str->isEmpty = isEmptyStr;
+    str->isBlank = isBlankStr;
+    str->getBytes = getBytesStr;
+    str->print = printStr;
+    str->delete = deleteStr;
 }
