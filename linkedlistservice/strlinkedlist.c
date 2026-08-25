@@ -604,6 +604,8 @@ void printStrLL(StrLinkedList list) {
 void deleteStrLL(StrLinkedList* list) {
     if (list == NULL || *list == NULL) return;
 
+    if ((*list)->values != NULL) free((*list)->values);
+
     if ((*list)->pf != NULL) {
         StrNode current = (*list)->pf->nodes;
         StrNode temp = NULL;

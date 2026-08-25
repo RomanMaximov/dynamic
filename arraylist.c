@@ -51,7 +51,7 @@ IntList pr_initLi_(IntList temp, void* collection) {
     list->pf->count = 0;
     list->pf->capacity = 20;
     list->pf->data = malloc(list->pf->capacity * sizeof(int));
-    initFuncs(INT_LIST, (void*)list);
+    initFuncs(INT_LIST, list);
 
     Ctx ctx = malloc(sizeof(Context));
     ctx->type = INT_LIST;
@@ -71,7 +71,7 @@ IntList pr_initLi_lo_(IntList temp, int paramCount, ...) {
     list->pf->count = 0;
     list->pf->capacity = 20;
     list->pf->data = malloc(list->pf->capacity * sizeof(int));
-    initFuncs(INT_LIST, (void*)list);
+    initFuncs(INT_LIST, list);
 
     Ctx ctx = malloc(sizeof(Context));
     ctx->type = INT_LIST;
@@ -94,7 +94,7 @@ IntList pr_initLi_loa_(IntList temp, int* arr, int size) {
     list->pf->count = 0;
     list->pf->capacity = 20;
     list->pf->data = malloc(list->pf->capacity * sizeof(int));
-    initFuncs(INT_LIST, (void*)list);
+    initFuncs(INT_LIST, list);
 
     Ctx ctx = malloc(sizeof(Context));
     ctx->type = INT_LIST;
@@ -115,7 +115,7 @@ DoubleList pr_initLd_(DoubleList temp, void* collection) {
     list->pf->count = 0;
     list->pf->capacity = 20;
     list->pf->data = malloc(list->pf->capacity * sizeof(double));
-    initFuncs(DOUBLE_LIST, (void*)list);
+    initFuncs(DOUBLE_LIST, list);
 
     Ctx ctx = malloc(sizeof(Context));
     ctx->type = DOUBLE_LIST;
@@ -135,7 +135,7 @@ DoubleList pr_initLd_lo_(DoubleList temp, int paramCount, ...) {
     list->pf->count = 0;
     list->pf->capacity = 20;
     list->pf->data = malloc(list->pf->capacity * sizeof(double));
-    initFuncs(DOUBLE_LIST, (void*)list);
+    initFuncs(DOUBLE_LIST, list);
 
     Ctx ctx = malloc(sizeof(Context));
     ctx->type = DOUBLE_LIST;
@@ -158,7 +158,7 @@ DoubleList pr_initLd_loa_(DoubleList temp, double* arr, int size) {
     list->pf->count = 0;
     list->pf->capacity = 20;
     list->pf->data = malloc(list->pf->capacity * sizeof(double));
-    initFuncs(DOUBLE_LIST, (void*)list);
+    initFuncs(DOUBLE_LIST, list);
 
     Ctx ctx = malloc(sizeof(Context));
     ctx->type = DOUBLE_LIST;
@@ -182,7 +182,7 @@ StrList pr_initLs_(StrList temp, void* collection) {
     for (int i = 0; i < list->pf->capacity; ++i)
         list->pf->data[i] = NULL;
 
-    initFuncs(STR_LIST, (void*)list);
+    initFuncs(STR_LIST, list);
 
     Ctx ctx = malloc(sizeof(Context));
     ctx->type = STR_LIST;
@@ -205,7 +205,7 @@ StrList pr_initLs_lo_(StrList temp, int paramCount, ...) {
     for (int i = 0; i < list->pf->capacity; ++i)
         list->pf->data[i] = NULL;
 
-    initFuncs(STR_LIST, (void*)list);
+    initFuncs(STR_LIST, list);
 
     Ctx ctx = malloc(sizeof(Context));
     ctx->type = STR_LIST;
@@ -231,7 +231,7 @@ StrList pr_initLs_loa_(StrList temp, char* arr[], int size) {
     for (int i = 0; i < list->pf->capacity; ++i)
         list->pf->data[i] = NULL;
 
-    initFuncs(STR_LIST, (void*)list);
+    initFuncs(STR_LIST, list);
 
     Ctx ctx = malloc(sizeof(Context));
     ctx->type = STR_LIST;

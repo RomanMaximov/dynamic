@@ -564,6 +564,8 @@ void printDoubleLL(DoubleLinkedList list) {
 void deleteDoubleLL(DoubleLinkedList* list) {
     if (list == NULL || *list == NULL) return;
 
+    if ((*list)->values != NULL) free((*list)->values);
+
     if ((*list)->pf != NULL) {
         DoubleNode current = (*list)->pf->begin;
         DoubleNode temp = NULL;

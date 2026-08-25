@@ -473,8 +473,9 @@ void printDoubleList(DoubleList list) {
 }
 
 void deleteDoubleList(DoubleList* list) {
-    if (list == NULL || *list == NULL)
-        return;
+    if (list == NULL || *list == NULL) return;
+
+    if ((*list)->values != NULL) free((*list)->values);
 
     if ((*list)->pf->data != NULL)
         free((*list)->pf->data);

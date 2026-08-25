@@ -412,6 +412,8 @@ void printStrSet(StrSet set) {
 void deleteStrSet(StrSet* set) {
     if (set == NULL || *set == NULL || (*set)->pf == NULL) return;
 
+    if ((*set)->values != NULL) free((*set)->values);
+
     if ((*set)->pf->bucket != NULL) {
         deleteNodes((*set)->pf->bucket, (*set)->pf->capacity);
         free((*set)->pf->bucket);

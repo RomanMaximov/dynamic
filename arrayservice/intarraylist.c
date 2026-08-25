@@ -461,8 +461,9 @@ void printIntList(IntList list) {
 }
 
 void deleteIntList(IntList* list) {
-    if (list == NULL || *list == NULL)
-        return;
+    if (list == NULL || *list == NULL) return;
+
+    if ((*list)->values != NULL) free((*list)->values);
 
     if ((*list)->pf->data != NULL)
         free((*list)->pf->data);

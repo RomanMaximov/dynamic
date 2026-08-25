@@ -594,6 +594,8 @@ void printIntLL(IntLinkedList list) {
 void deleteIntLL(IntLinkedList* list) {
     if (list == NULL || *list == NULL) return;
 
+    if ((*list)->values != NULL) free((*list)->values);
+
     if ((*list)->pf != NULL) {
         IntNode current = (*list)->pf->begin;
         IntNode temp = NULL;

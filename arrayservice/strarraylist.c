@@ -572,10 +572,9 @@ void printStrList(StrList list) {
 }
 
 void deleteStrList(StrList* list) {
-    if (list == NULL || *list == NULL) {
-        printf("%s\n", "List is NULL.");
-        return;
-    }
+    if (list == NULL || *list == NULL) return;
+
+    if ((*list)->values != NULL) free((*list)->values);
 
     if ((*list)->pf->data != NULL) {
         for (int i = 0; i < (*list)->pf->count; ++i) {
